@@ -4,6 +4,14 @@
 
 会員ログイン後の画面を中心に、ビルディのサイトと統一されたUI・UXを目指します。
 
-## Status
+## Prototype
 
-Initial setup
+`app/` に、現場一覧画面の操作可能なフロントエンド・プロトタイプがあります。
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+画面内の会社名・現場名・住所・IDはすべて匿名のサンプルデータです。
