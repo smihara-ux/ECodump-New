@@ -337,6 +337,9 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
         "更新日",
         "",
       ],
+      searchTexts: [...people, ...created].map(
+        (x) => `${x.branch} ${x.name} ${x.sub} ${x.account} ${x.type}`,
+      ),
       data: [...people, ...created].map((x) => [
         x.branch,
         <span>
@@ -368,6 +371,9 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
         "在籍状況",
         "",
       ],
+      searchTexts: workers.map(
+        (x) => `${x.branch} ${x.name} ${x.kana} ${x.ccus} ${x.status}`,
+      ),
       data: workers.map((x) => [
         <input type="checkbox" />,
         x.branch,
@@ -385,8 +391,10 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
         "__confirm",
       ]),
     };
-  const filtered = config.data.filter((r) => {
-    const text = String(r.map((x) => (typeof x === "string" ? x : "")));
+  const filtered = config.data.filter((r, index) => {
+    const text = `${config.searchTexts[index]} ${String(
+      r.map((x) => (typeof x === "string" ? x : "")),
+    )}`;
     return (
       text.includes(appliedQuery) &&
       (branch === "すべて" || text.includes(branch)) &&
@@ -415,7 +423,7 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
   return (
     <>
       <SearchBar
-        count={filtered.length || config.data.length}
+        count={filtered.length}
         query={query}
         setQuery={setQuery}
         placeholder={config.placeholder}

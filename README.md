@@ -15,3 +15,7 @@ npm run dev
 ```
 
 画面内の会社名・現場名・住所・IDはすべて匿名のサンプルデータです。
+
+## 共有用デモ
+
+ブラウザだけで操作できます：<https://smihara-ux.github.io/ECodump-New/>
