@@ -1616,16 +1616,22 @@ function ServiceFrame({ brand, menus, active, setActive, children, notice }) {
       <div className="product-body">
         <aside className="product-menu">
           <h2>機能一覧</h2>
-          {menus.map((m, i) => (
+          {menus.slice(0, -1).map((m) => (
             <button
               key={m}
               className={active === m ? "active" : ""}
               onClick={() => setActive(m)}
             >
-              {i === menus.length - 1 && <small>共通メニュー</small>}
               <span>{m}</span>
             </button>
           ))}
+          <h3>共通メニュー</h3>
+          <button
+            className={active === menus.at(-1) ? "active" : ""}
+            onClick={() => setActive(menus.at(-1))}
+          >
+            <span>{menus.at(-1)}</span>
+          </button>
         </aside>
         <main className="product-main">{children}</main>
       </div>

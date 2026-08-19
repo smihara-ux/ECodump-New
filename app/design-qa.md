@@ -1,5 +1,17 @@
 # Design QA
 
+## 2026-08-19 — Common menu navigation correction
+
+- Source: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_IkHSMv/スクリーンショット 2026-08-19 17.38.52.png` (486×274 px, @2x crop).
+- Implementation: `common-menu-fixed.png` (1280×720 full viewport); focused comparison `/tmp/common-menu-comparison.png` normalizes both menu crops to 243×137 CSS px.
+- P1 fixed: 共通メニュー was nested inside the 現場掲示板 button, combining two separate rows and their active state.
+- P2 fixed after first comparison: removed a 60px gap between 帳票印刷 and 共通メニュー; both header and destination now form consecutive 40px rows.
+- PASS: 共通メニュー is a non-interactive section heading; 現場掲示板 is an independent button with its own blue active rail.
+- PASS: all 16 Gatekeeper/Conference menu destinations were clicked and showed the matching page heading.
+- PASS: browser console warnings/errors: 0; `npm run build` passed.
+
+final result: passed
+
 ## 2026-08-19 — Three service buttons and product screens
 
 - Source icon truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_Tx0H85/スクリーンショット 2026-08-19 17.16.04.png` (280×108 px).
