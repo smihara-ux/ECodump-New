@@ -991,6 +991,8 @@ const greenMenus = [
   "配下作業員検索（送り出し教育）",
   "是正依頼内容の確認・返信",
   "書類一括出力",
+  "共通メニュー",
+  "現場掲示板",
 ];
 
 function GfFilter({ worker = false, onClose, onSearch }) {
@@ -1446,6 +1448,10 @@ function GreenfilePage({ setConfirm }) {
         </table>
       </section>
     );
+  else if (menu === "共通メニュー")
+    panel = <CommonMenuPage onOpenBoard={() => setMenu("現場掲示板")} />;
+  else if (menu === "現場掲示板")
+    panel = <BulletinBoard setConfirm={setConfirm} />;
   else panel = <BatchOutput setConfirm={setConfirm} />;
   return (
     <div className="service-shell">
@@ -1657,6 +1663,7 @@ const gateMenus = [
   "ダッシュボード",
   "入退場実績",
   "作業員設定状況一覧",
+  "共通メニュー",
   "現場掲示板",
 ];
 const conferenceMenus = [
@@ -1671,6 +1678,7 @@ const conferenceMenus = [
   "現場配置計画",
   "巡回記録/各種連絡",
   "帳票印刷",
+  "共通メニュー",
   "現場掲示板",
 ];
 
@@ -1690,7 +1698,7 @@ function ServiceFrame({ brand, menus, active, setActive, children, notice }) {
       <div className="product-body">
         <aside className="product-menu">
           <h2>機能一覧</h2>
-          {menus.slice(0, -1).map((m) => (
+          {menus.slice(0, -2).map((m) => (
             <button
               key={m}
               className={active === m ? "active" : ""}
@@ -1700,6 +1708,12 @@ function ServiceFrame({ brand, menus, active, setActive, children, notice }) {
             </button>
           ))}
           <h3>共通メニュー</h3>
+          <button
+            className={active === "共通メニュー" ? "active" : ""}
+            onClick={() => setActive("共通メニュー")}
+          >
+            <span>共通メニュー</span>
+          </button>
           <button
             className={active === menus.at(-1) ? "active" : ""}
             onClick={() => setActive(menus.at(-1))}
@@ -1870,6 +1884,8 @@ function GatekeeperPage({ setConfirm }) {
         </table>
       </>
     );
+  else if (active === "共通メニュー")
+    content = <CommonMenuPage onOpenBoard={() => setActive("現場掲示板")} />;
   else content = <BulletinBoard setConfirm={setConfirm} />;
   return (
     <ServiceFrame
@@ -1976,6 +1992,27 @@ function BulletinBoard({ setConfirm }) {
   );
 }
 
+function CommonMenuPage({ onOpenBoard }) {
+  return (
+    <>
+      <h1>共通メニュー</h1>
+      <p className="common-menu-lead">
+        現場と各サービスで共通して利用する機能を確認できます。
+      </p>
+      <div className="common-menu-grid">
+        <button onClick={onOpenBoard}>
+          <ClipboardList />
+          <span>
+            <b>現場掲示板</b>
+            <small>現場内のお知らせを確認・共有します</small>
+          </span>
+          <ChevronRight />
+        </button>
+      </div>
+    </>
+  );
+}
+
 function ConferencePage({ setConfirm }) {
   const [active, setActive] = useState("ダッシュボード");
   const configs = {
@@ -2030,6 +2067,8 @@ function ConferencePage({ setConfirm }) {
         </div>
       </>
     );
+  else if (active === "共通メニュー")
+    content = <CommonMenuPage onOpenBoard={() => setActive("現場掲示板")} />;
   else if (active === "現場掲示板")
     content = <BulletinBoard setConfirm={setConfirm} />;
   else

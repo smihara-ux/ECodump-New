@@ -3,6 +3,69 @@
   color: #1a1a1a;
   font-synthesis: none;
 }
+
+.common-menu-lead {
+  margin: 10px 0 28px;
+  color: #60656d;
+  font-size: 15px;
+}
+
+.common-menu-grid {
+  display: grid;
+  max-width: 720px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.common-menu-grid button {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid #d5d9df;
+  border-radius: 4px;
+  background: #fff;
+  color: #20242a;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.common-menu-grid button:hover,
+.common-menu-grid button:focus-visible {
+  border-color: #2681ff;
+  background: #f4f8ff;
+  outline: none;
+}
+
+.common-menu-grid button > svg:first-child {
+  width: 28px;
+  height: 28px;
+  color: #2681ff;
+}
+
+.common-menu-grid button > svg:last-child {
+  margin-left: auto;
+  color: #777e88;
+}
+
+.common-menu-grid span {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+}
+
+.common-menu-grid b {
+  font-size: 17px;
+}
+
+.common-menu-grid small {
+  color: #686e76;
+  font-size: 13px;
+}
 * {
   box-sizing: border-box;
 }

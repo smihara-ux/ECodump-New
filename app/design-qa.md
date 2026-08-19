@@ -190,3 +190,13 @@ final result: passed
 - Fresh-browser console check: no errors or warnings.
 
 final result: passed
+# 2026-08-19 — 共通メニュー概要ページ
+
+- 「共通メニュー」を区分見出しだけでなく、クリック可能な独立ページとして追加。
+- 共通メニュー内に「現場掲示板」カードを設置し、掲示板ページへ遷移可能にした。
+- 労務安全・入退場管理・調整会議の3サービスで同じ導線を実装。
+- E2E: 3サービスすべてで「共通メニュー → 現場掲示板」の表示・遷移を確認。
+- ブラウザの console warning / error: 0件。
+- `npm run build`: 成功。
+
+final result: passed
