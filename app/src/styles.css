@@ -10,7 +10,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  font-size: 14px;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
 }
@@ -55,7 +55,8 @@ button {
 .brand-row strong {
   white-space: nowrap;
   overflow: hidden;
-  font-size: 13px;
+  font-size: 14px;
+  text-overflow: ellipsis;
 }
 .brand-mark {
   width: 30px;
@@ -103,6 +104,7 @@ button {
   text-align: left;
   padding: 7px 8px;
   white-space: nowrap;
+  font-size: 15px;
 }
 .nav-group button svg,
 .sidebar-footer svg {
@@ -209,10 +211,14 @@ button {
   display: none;
 }
 .search-panel {
-  min-height: 69px;
+  min-height: 45px;
+  height: 45px;
   background: #f1f1f1;
   border-bottom: 1px solid #ccc;
-  padding: 7px 20px;
+  padding: 6px 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 .search-line {
   display: flex;
@@ -249,7 +255,7 @@ select {
   display: flex;
   gap: 12px;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 0;
 }
 .primary {
   border: 1px solid #2681ff;
@@ -328,7 +334,7 @@ tbody {
 thead tr,
 tbody tr {
   display: grid;
-  grid-template-columns: 16% 13% 22% 20% 11% 11% 11% 12%;
+  grid-template-columns: 13.5% 10.5% 20.5% 14.5% 8.5% 8.5% 7.5% 16.5%;
   min-width: 1090px;
 }
 thead tr {
@@ -343,7 +349,7 @@ th {
   color: white;
   text-align: left;
   padding: 3px 16px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   position: static;
   z-index: 2;
@@ -363,6 +369,7 @@ td {
   border-bottom: 1px solid #ccc;
   vertical-align: middle;
   line-height: 17px;
+  font-size: 14px;
 }
 tbody tr {
   transition: background 0.1s;
@@ -392,6 +399,46 @@ tbody tr.selected {
 .field-meta i {
   color: #26b785;
   font-style: normal;
+  display: inline-grid;
+  place-items: center;
+}
+.field-meta i svg {
+  width: 16px;
+  height: 16px;
+  fill: #17b77c;
+  color: #17b77c;
+}
+.service-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 4;
+}
+.service-app {
+  width: 33px;
+  height: 33px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 2px 5px #0004;
+  border: 0;
+  padding: 0;
+}
+.service-app svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.3;
+}
+.service-app.orange {
+  background: #f3a900;
+}
+.service-app.red {
+  background: #df482a;
+}
+.service-app.green {
+  background: #05ae54;
 }
 .status {
   background: #e7f8f1;

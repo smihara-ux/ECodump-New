@@ -1,5 +1,33 @@
 # Design QA
 
+## 2026-08-19 — Field list screenshot fidelity pass
+
+- Source visual truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_omV6gb/スクリーンショット 2026-08-19 17.12.09.png` (3024×1964 px, macOS/Chrome frame included).
+- Implementation evidence: `field-list-reference-match.png` (1280×720 px, app content only).
+- Normalization: source app region cropped at y=242 to 3024×1572 and downsampled to 1280×665; implementation compared at the same 1280×665 top-region crop. CSS density treated as source @2x and implementation @1x.
+- State: default 現場確認 / 現場一覧, 23 anonymous records, no modal.
+- Full-view evidence: `/tmp/ecodump-field-comparison.png` placed normalized source and implementation side by side. Major regions now align: 210px sidebar, 44px header, 45px search strip, 60px action strip, 24px table header, 61px records.
+- Focused evidence: header/search controls, sidebar group rhythm, field metadata, and three service icons were readable in the normalized comparison; no separate crop was necessary.
+
+**Comparison history**
+
+- P1: implementation search controls occupied two rows. Fixed by using one 45px flex row matching the screenshot.
+- P1: a custom サービス sidebar group changed the screenshot's information architecture. Removed; service access now lives on the row icons as in the source.
+- P2: table column proportions and typography were too small. Fixed column tracks, 15px controls/headers, 14px cells, and 23-row count.
+- P2: field metadata and services were plain ECO text. Replaced with CCUS metadata and three colored, accessible service-icon controls using the existing icon library.
+- Expected difference: source customer/company/site data and trademark artwork are intentionally not copied; anonymous fixtures and library icons preserve privacy while matching geometry, color, density, and affordance.
+
+**Interactions tested**
+
+- Search input, explicit search, clear, detailed-search modal, row selection, pagination visibility, and service-control presence.
+- `npm run build` passed. No build/runtime error was observed during the verified field-list flow.
+
+**Findings**
+
+- No remaining actionable P0/P1/P2 visual mismatch after normalization. Product-specific logo artwork and real customer content remain intentionally substituted.
+
+final result: passed
+
 ## 2026-08-19 — Greenfile / Gatekeeper deep E2E
 
 - PASS: Greenfile reference was inspected while authenticated; private company/worker values were not transferred. The implementation uses anonymous fixtures only.

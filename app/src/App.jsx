@@ -13,6 +13,8 @@ import {
   Network,
   Search,
   Settings,
+  ShieldCheck,
+  Trees,
   UserRound,
   UsersRound,
   X,
@@ -43,20 +45,13 @@ const navGroups = [
       [UsersRound, "自社の代行元一覧"],
     ],
   },
-  {
-    title: "サービス",
-    items: [
-      [ClipboardList, "労務安全"],
-      [HardHat, "入退場管理"],
-    ],
-  },
 ];
-const fields = Array.from({ length: 12 }, (_, i) => ({
-  id: `D-${String(i + 1).padStart(4, "0")}`,
-  company: `会社名 ${String.fromCharCode(65 + (i % 5))}`,
-  branch: `支店 ${(i % 3) + 1}`,
-  field: `サンプル現場 ${String.fromCharCode(65 + i)}`,
-  address: `サンプル住所 ${i + 1}`,
+const fields = Array.from({ length: 23 }, (_, i) => ({
+  id: `${32182 + i}`,
+  company: `サンプル建設株式会社 ${String.fromCharCode(65 + (i % 5))}`,
+  branch: ["東京支店", "首都圏建築支店", "関東支店"][i % 3],
+  field: `${i % 3 === 0 ? "（仮称）" : ""}サンプル現場 ${String.fromCharCode(65 + (i % 20))}${i > 19 ? i + 1 : ""}`,
+  address: `${["東京都中央区", "千葉県船橋市", "神奈川県川崎市"][i % 3]} サンプル${i + 1}-${(i % 5) + 1}`,
   start: `2026/${String((i % 9) + 1).padStart(2, "0")}/01`,
   end: `2027/${String((i % 9) + 1).padStart(2, "0")}/28`,
 }));
@@ -192,6 +187,7 @@ function FieldList({
   setSelected,
   copied,
   copyId,
+  navigate,
 }) {
   const filtered = useMemo(
     () =>
@@ -277,7 +273,10 @@ function FieldList({
                         <Copy />
                       </button>
                       <span>／</span>
-                      <i>●</i> ECO
+                      <i>
+                        <ShieldCheck />
+                      </i>{" "}
+                      CCUS
                     </div>
                     {copied === r.id && (
                       <em className="toast">現場IDをコピーしました</em>
@@ -286,10 +285,35 @@ function FieldList({
                   <td>{r.address}</td>
                   <td>{r.start}</td>
                   <td>{r.end}</td>
+                  <td></td>
                   <td>
-                    <span className="status">利用中</span>
+                    <div className="service-icons">
+                      <a
+                        className="service-app orange"
+                        aria-label="労務安全を開く"
+                        href="?page=labor"
+                      >
+                        <ShieldCheck />
+                      </a>
+                      <a
+                        className="service-app red"
+                        aria-label="入退場管理を開く"
+                        href="?page=gatekeeper"
+                      >
+                        <HardHat />
+                      </a>
+                      <button
+                        className="service-app green"
+                        aria-label="環境管理を開く"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelected(r.id);
+                        }}
+                      >
+                        <Trees />
+                      </button>
+                    </div>
                   </td>
-                  <td>ECO</td>
                 </tr>
               ))}
             </tbody>
@@ -1587,7 +1611,12 @@ function GatekeeperPermissionPage({ navigate }) {
 }
 
 export function App() {
-  const [page, setPage] = useState("現場一覧"),
+  const [page, setPage] = useState(() => {
+      const target = new URLSearchParams(location.search).get("page");
+      if (target === "labor") return "労務安全";
+      if (target === "gatekeeper") return "入退場管理";
+      return "現場一覧";
+    }),
     [collapsed, setCollapsed] = useState(false),
     [query, setQuery] = useState(""),
     [detailOpen, setDetailOpen] = useState(false),
@@ -1617,6 +1646,7 @@ export function App() {
           setSelected,
           copied,
           copyId,
+          navigate,
         }}
       />
     );
@@ -1647,7 +1677,7 @@ export function App() {
       <aside className="sidebar">
         <div className="brand-row">
           <div className="brand-mark">ED</div>
-          {!collapsed && <strong>ECODUMP NEW</strong>}
+          {!collapsed && <strong>サンプルグループ株式会社</strong>}
           <button
             className="collapse"
             onClick={() => setCollapsed((v) => !v)}
@@ -1656,7 +1686,6 @@ export function App() {
             {collapsed ? <ChevronRight /> : <ChevronLeft />}
           </button>
         </div>
-        {!collapsed && <div className="tenant">サンプルグループ</div>}
         <nav>
           {navGroups.map((g) => (
             <section className="nav-group" key={g.title}>
