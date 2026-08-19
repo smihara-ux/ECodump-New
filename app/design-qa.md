@@ -1,5 +1,34 @@
 # Design QA
 
+## 2026-08-19 — Labor Safety table and document-type correction
+
+- Issue evidence: `スクリーンショット 2026-08-19 17.40.16.png` and `17.40.25.png`; white table headings, overlapping columns, and indistinguishable document pages.
+- Source truth: authenticated Greenfile pages `/greenfile/shinkianquete/list` and `/greenfile/other_forms/confirm_template/list`, captured at 1280×720 as `/tmp/source-labor-survey.png` and `/tmp/source-labor-other.png`.
+- Implementation evidence: `labor-survey-fixed.png` and `labor-other-documents-fixed.png` at 1280×720; combined source/implementation evidence `/tmp/labor-survey-comparison.png`.
+
+**Comparison history**
+
+- P0: global master-table grid styles leaked into all `.gf-table` elements, producing white headings and overlapping fixed tracks. Fixed with scoped table/table-row-group/table-row/table-cell display rules and explicit dark header text.
+- P1: 元請会社新規入場者調査票 and その他の安全書類 shared the same generic component and columns. Fixed with distinct purpose descriptions, column schemas, sections, and interactions.
+- P2: narrow 操作 cells wrapped 確認 vertically. Fixed with 48px minimum action width and nowrap.
+- Expected difference: source company, worker, construction, and contact data remain anonymous.
+
+**Verified functional differences**
+
+- 元請指定調査票: company, first-tier contractor, work content, term, last update; separate self-submission and lower-company confirmation sections.
+- その他の安全書類: company, first-tier contractor, term; separate confirmation/submission and template-download tabs.
+
+**E2E evidence**
+
+- PASS: all nine Labor Safety pages opened with their matching heading.
+- PASS: every expected header including 受付日, 会社名, 作業内容, 工期, 出力状況, and 予約日時／予約者 is present.
+- PASS: all `.gf-table th` computed colors are non-white and all measured header heights are positive/non-collapsed.
+- PASS: table action buttons are at least 48px wide and do not wrap.
+- PASS: template tab switch and download confirmation modal work.
+- PASS: browser console warnings/errors: 0; `npm run build` passed.
+
+final result: passed
+
 ## 2026-08-19 — Common menu navigation correction
 
 - Source: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_IkHSMv/スクリーンショット 2026-08-19 17.38.52.png` (486×274 px, @2x crop).

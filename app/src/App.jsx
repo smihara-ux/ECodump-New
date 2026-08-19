@@ -1095,97 +1095,171 @@ function GfFilter({ worker = false, onClose, onSearch }) {
 
 function GreenDocumentList({ title, setConfirm }) {
   const [filter, setFilter] = useState(false);
-  const rows =
-    title === "元請帳票の確認"
-      ? []
+  const [otherTab, setOtherTab] = useState("書類の確認・提出");
+  const isSurvey = title.includes("新規入場者調査票");
+  const isOther = title === "その他の安全書類";
+  const isReport = title.includes("教育実施報告書");
+  const isOwner = title === "元請帳票の確認";
+  const columns = isOther
+    ? ["会社名", "一次協力会社名", "工期", "操作"]
+    : ["会社名", "一次協力会社名", "工事内容", "工期", "最終更新日時", "操作"];
+  const selfRow = isOwner
+    ? null
+    : isOther
+      ? [
+          "2次　サンプル協力会社A",
+          "サンプル建設株式会社",
+          "2026/04/08〜2027/01/31",
+        ]
       : [
-          [
-            "サンプル協力会社A",
-            "サンプル建設株式会社",
-            "サンプル現場A",
-            "2026/04/01〜2027/03/31",
-            "2026/08/18",
-          ],
+          "2次　サンプル協力会社A",
+          "サンプル建設株式会社",
+          isReport ? "新規入場時教育" : "足場組立・躯体工事",
+          "2026/04/08〜2027/01/31",
+          "2026/08/18 15:29",
         ];
+  const lowerRow =
+    isOther || isOwner
+      ? null
+      : [
+          "3次　サンプル協力会社B",
+          "サンプル協力会社A",
+          isReport ? "新規入場時教育" : "コンクリート打設",
+          "2026/06/04〜2027/01/31",
+          "2026/08/17 15:28",
+        ];
+  const purpose = isSurvey
+    ? "元請会社が独自に定めた、新規入場前の会社・工事内容に関する調査票です。"
+    : isOther
+      ? "元請会社が追加した任意様式の安全書類を、テンプレートから作成・提出します。"
+      : isReport
+        ? "新規入場時等教育の実施内容と実施日を会社単位で報告します。"
+        : "元請会社が公開した帳票の内容と提出状況を確認します。";
+  const renderTable = (row, emptyText) => (
+    <div className="gf-table-wrap">
+      <table className="gf-table">
+        <thead>
+          <tr>
+            {columns.map((x) => (
+              <th key={x}>{x}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {row ? (
+            <tr>
+              {row.map((x) => (
+                <td key={x}>{x}</td>
+              ))}
+              <td>
+                <button
+                  className="outline"
+                  onClick={() => setConfirm({ title: `${title} 詳細` })}
+                >
+                  確認
+                </button>
+              </td>
+            </tr>
+          ) : (
+            <tr>
+              <td colSpan={columns.length} className="gf-empty">
+                {emptyText}
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
   return (
     <section className="gf-page">
       <h2>{title}</h2>
-      <p className="gf-lead">
-        自社で作成・提出した書類と、配下協力会社の提出状況を確認できます。
-      </p>
-      <div className="gf-toolbar">
-        <b>検索結果：{rows.length}件</b>
-        <button className="outline" onClick={() => setFilter((v) => !v)}>
-          検索で絞り込む
-        </button>
-        <button className="outline" disabled>
-          Excel出力
-        </button>
+      <p className="gf-lead">{purpose}</p>
+      <div className="gf-purpose">
+        <b>
+          {isSurvey
+            ? "元請指定様式"
+            : isOther
+              ? "任意追加書類"
+              : "提出・確認書類"}
+        </b>
+        <span>{purpose}</span>
       </div>
-      {filter && (
-        <GfFilter
-          onClose={() => setFilter(false)}
-          onSearch={() => setFilter(false)}
-        />
+      {isOther && (
+        <div className="gf-inner-tabs">
+          <button
+            className={otherTab === "書類の確認・提出" ? "active" : ""}
+            onClick={() => setOtherTab("書類の確認・提出")}
+          >
+            書類の確認・提出
+          </button>
+          <button
+            className={
+              otherTab === "テンプレートのダウンロード" ? "active" : ""
+            }
+            onClick={() => setOtherTab("テンプレートのダウンロード")}
+          >
+            テンプレートのダウンロード
+          </button>
+        </div>
       )}
-      <div className="gf-subhead">
-        <b>自社作成・提出書類</b>
-        <button
-          className="primary"
-          onClick={() =>
-            setConfirm({
-              title: "書類を新規作成",
-              message:
-                "入力画面を開きました。匿名サンプルとして登録操作を確認できます。",
-            })
-          }
-        >
-          新規作成
-        </button>
-      </div>
-      <div className="generic-table-wrap">
-        <table className="gf-table">
-          <thead>
-            <tr>
-              {[
-                "会社名",
-                "一次協力会社",
-                "工事名",
-                "工期",
-                "最終更新日",
-                "操作",
-              ].map((x) => (
-                <th key={x}>{x}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length ? (
-              rows.map((r, i) => (
-                <tr key={i}>
-                  {r.map((x) => (
-                    <td key={x}>{x}</td>
-                  ))}
-                  <td>
-                    <button
-                      className="text-button"
-                      onClick={() => setConfirm({ title: "書類詳細" })}
-                    >
-                      確認
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="gf-empty">
-                  該当する書類はありません
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      {isOther && otherTab === "テンプレートのダウンロード" ? (
+        <>
+          <div className="gf-subhead">
+            <b>利用可能なテンプレート</b>
+          </div>
+          <div className="gf-download-list">
+            <FileText />
+            <span>安全書類テンプレート（匿名サンプル）</span>
+            <button
+              className="outline"
+              onClick={() =>
+                setConfirm({ title: "テンプレートをダウンロード" })
+              }
+            >
+              ダウンロード
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="gf-toolbar">
+            <b>検索結果：{selfRow ? 1 : 0}件</b>
+            <button className="outline" onClick={() => setFilter((v) => !v)}>
+              検索で絞り込む
+            </button>
+            <button className="outline" disabled>
+              Excel出力
+            </button>
+          </div>
+          {filter && (
+            <GfFilter
+              onClose={() => setFilter(false)}
+              onSearch={() => setFilter(false)}
+            />
+          )}
+          <div className="gf-subhead">
+            <b>自社が作成・提出する書類（ログイン中会社に関する事項）</b>
+            <button
+              className="primary"
+              onClick={() =>
+                setConfirm({
+                  title: "書類を新規作成",
+                  message:
+                    "入力画面を開きました。匿名サンプルとして登録操作を確認できます。",
+                })
+              }
+            >
+              新規作成
+            </button>
+          </div>
+          {renderTable(selfRow, "自社が作成・提出した書類はありません")}
+          <div className="gf-subhead">
+            <b>自社が確認を行う書類（下位協力会社に関する事項）</b>
+          </div>
+          {renderTable(lowerRow, "該当する下位協力会社の書類はありません")}
+        </>
+      )}
     </section>
   );
 }

@@ -1177,25 +1177,110 @@ tbody tr.selected {
 .gf-table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 12px;
+  font-size: 13px;
   background: #fff;
 }
-.gf-table th {
+.gf-page .gf-table {
+  display: table;
+  min-width: 100%;
+  width: 100%;
+  height: auto;
+  table-layout: auto;
+}
+.gf-page .gf-table thead,
+.gf-page .gf-table tbody {
+  display: table-row-group;
+}
+.gf-page .gf-table tr {
+  display: table-row;
+  min-width: 0;
+  height: auto;
+}
+.gf-page .gf-table th {
+  display: table-cell;
   background: #eff1f1;
+  color: #252525;
   font-weight: 600;
   white-space: nowrap;
+  height: auto !important;
+  min-height: 0;
+  max-height: none;
+  line-height: 1.4;
 }
-.gf-table th,
-.gf-table td {
+.gf-page .gf-table th,
+.gf-page .gf-table td {
+  display: table-cell;
+  height: auto;
   border: 1px solid #cfd3d3;
   padding: 10px;
   text-align: left;
+  vertical-align: middle;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.gf-page .gf-table .outline,
+.gf-page .gf-table .primary,
+.gf-page .gf-table .text-button {
+  min-width: 48px;
+  padding-inline: 8px;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.gf-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+.gf-purpose {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 14px;
+  border-left: 4px solid #13a99c;
+  background: #f0faf8;
+  margin-bottom: 16px;
+}
+.gf-purpose b {
+  flex: 0 0 auto;
+  color: #08786f;
+}
+.gf-inner-tabs {
+  display: flex;
+  border-bottom: 1px solid #bbb;
+  margin: 8px 0 16px;
+}
+.gf-inner-tabs button {
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: #fff;
+  padding: 11px 18px;
+}
+.gf-inner-tabs button.active {
+  border-color: #13a99c;
+  color: #08786f;
+  font-weight: 700;
+}
+.gf-download-list {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #d3d7d7;
+  padding: 14px;
+}
+.gf-download-list svg {
+  width: 22px;
+}
+.gf-download-list span {
+  margin-right: auto;
 }
 .gf-matrix-wrap {
   overflow: auto;
   margin-top: 12px;
 }
 .gf-matrix {
+  min-width: 1050px;
+}
+.gf-page .gf-matrix {
   min-width: 1050px;
 }
 .gf-status {
