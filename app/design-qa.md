@@ -42,4 +42,26 @@ Focused checks covered the header/search toolbar, left navigation, table header/
 
 - P3: source-specific proprietary icons and trademark assets are intentionally not copied.
 
+## Multi-page E2E expansion
+
+- Source captures: `../reference/company-info.jpg`, `users-list.jpg`, `workers-list.jpg`, `vehicles-list.jpg`, `agents-list.jpg`, `agency-requests.jpg`, and `principal-list.jpg` (local-only, excluded from Git).
+- Combined all-page comparison: `../reference/all-pages-qa.jpg` (local-only, excluded from Git).
+- Implementation evidence: `e2e-0-現場一覧.jpg` through `e2e-8-自社の代行元一覧.jpg`.
+- Mobile evidence: `e2e-all-pages-mobile.jpg`, 390 × 844 CSS px at 1×.
+
+All nine primary sidebar destinations were opened through the rendered navigation on desktop and mobile. Page headings, active navigation state, page-specific tables/forms, empty states, and pagination rendered successfully.
+
+Additional interaction checks passed:
+
+- Company-information tabs.
+- User search and result-count update.
+- Page-specific detailed-search modal.
+- Vehicle/machinery category tabs.
+- Agency-registration confirmation modal.
+- Detail/confirmation modal close behavior.
+
+Browser console was rechecked after fixing duplicate table-header keys: no errors or warnings.
+
+Intentional differences: all identifying source data and source trademarks are replaced by anonymous ECODUMP content; irreversible or external write actions are represented as safe local confirmation flows.
+
 final result: passed
