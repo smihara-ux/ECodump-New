@@ -200,3 +200,14 @@ final result: passed
 - `npm run build`: 成功。
 
 final result: passed
+# 2026-08-19 — 全画面再監査・公開確認
+
+- 基本ナビゲーション9ページ、会社情報4タブを実ブラウザで確認。
+- 労務安全11ページ、入退場管理5ページ、調整会議13ページを全件表示確認。
+- ユーザー／作業員氏名検索が装飾要素内の氏名を検索できない問題を修正。
+- 修正後、「サンプルユーザー 1」の検索結果が1件になることを確認。
+- 可視文字の意図しないクリッピング: 0件。console warning / error: 0件。
+- GitHub Pages公開URLでトップ、3サービス、共通メニューの操作を確認。
+- `npm run build`、`npm run test:sites`（4件）: 成功。
+
+final result: passed
