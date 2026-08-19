@@ -43,6 +43,13 @@ const navGroups = [
       [UsersRound, "自社の代行元一覧"],
     ],
   },
+  {
+    title: "サービス",
+    items: [
+      [ClipboardList, "労務安全"],
+      [HardHat, "入退場管理"],
+    ],
+  },
 ];
 const fields = Array.from({ length: 12 }, (_, i) => ({
   id: `D-${String(i + 1).padStart(4, "0")}`,
@@ -963,6 +970,622 @@ function AgencyPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
   );
 }
 
+const greenMenus = [
+  "書類状況一覧",
+  "新規入場時等教育実施報告書",
+  "【元請会社】新規入場者調査票",
+  "その他の安全書類",
+  "元請帳票の確認",
+  "配下協力会社検索",
+  "配下作業員検索（送り出し教育）",
+  "是正依頼内容の確認・返信",
+  "書類一括出力",
+];
+
+function GfFilter({ worker = false, onClose, onSearch }) {
+  return (
+    <div className="gf-filter">
+      <div className="gf-filter-head">
+        <b>{worker ? "作業員検索" : "協力会社検索"}</b>
+        <button onClick={onClose}>
+          <X />
+        </button>
+      </div>
+      <div className="gf-form-grid">
+        <label>
+          一次協力会社
+          <select>
+            <option>すべて</option>
+            <option>サンプル建設株式会社</option>
+          </select>
+        </label>
+        <label>
+          {worker ? "作業員氏名" : "会社名（部分一致）"}
+          <input placeholder="入力してください" />
+        </label>
+        {worker && (
+          <>
+            <label>
+              所属会社
+              <input placeholder="会社名を入力" />
+            </label>
+            <label>
+              職種
+              <select>
+                <option>すべて</option>
+                <option>土工</option>
+              </select>
+            </label>
+          </>
+        )}
+      </div>
+      <div className="gf-checks">
+        {!worker && (
+          <>
+            <b>会社種別</b>
+            <label>
+              <input type="checkbox" /> 一人親方
+            </label>
+            <label>
+              <input type="checkbox" /> 個人事業主
+            </label>
+            <label>
+              <input type="checkbox" /> 法人
+            </label>
+          </>
+        )}
+        {worker && (
+          <>
+            <b>保険・健康情報</b>
+            <label>
+              <input type="checkbox" /> 社会保険未加入
+            </label>
+            <label>
+              <input type="checkbox" /> 健康診断期限超過
+            </label>
+            <label>
+              <input type="checkbox" /> 高血圧基準該当
+            </label>
+            <label>
+              <input type="checkbox" /> 年齢条件を指定
+            </label>
+          </>
+        )}
+        {!worker && (
+          <>
+            <b>提出状況</b>
+            {[
+              "未提出",
+              "提出済",
+              "差戻し",
+              "受領済",
+              "未読コメントのみ",
+              "未承認会社を非表示",
+            ].map((x) => (
+              <label key={x}>
+                <input type="checkbox" /> {x}
+              </label>
+            ))}
+          </>
+        )}
+      </div>
+      <div className="gf-filter-actions">
+        <button className="outline" onClick={onClose}>
+          キャンセル
+        </button>
+        <button className="primary" onClick={onSearch}>
+          <Search />
+          検索
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function GreenDocumentList({ title, setConfirm }) {
+  const [filter, setFilter] = useState(false);
+  const rows =
+    title === "元請帳票の確認"
+      ? []
+      : [
+          [
+            "サンプル協力会社A",
+            "サンプル建設株式会社",
+            "サンプル現場A",
+            "2026/04/01〜2027/03/31",
+            "2026/08/18",
+          ],
+        ];
+  return (
+    <section className="gf-page">
+      <h2>{title}</h2>
+      <p className="gf-lead">
+        自社で作成・提出した書類と、配下協力会社の提出状況を確認できます。
+      </p>
+      <div className="gf-toolbar">
+        <b>検索結果：{rows.length}件</b>
+        <button className="outline" onClick={() => setFilter((v) => !v)}>
+          検索で絞り込む
+        </button>
+        <button className="outline" disabled>
+          Excel出力
+        </button>
+      </div>
+      {filter && (
+        <GfFilter
+          onClose={() => setFilter(false)}
+          onSearch={() => setFilter(false)}
+        />
+      )}
+      <div className="gf-subhead">
+        <b>自社作成・提出書類</b>
+        <button
+          className="primary"
+          onClick={() =>
+            setConfirm({
+              title: "書類を新規作成",
+              message:
+                "入力画面を開きました。匿名サンプルとして登録操作を確認できます。",
+            })
+          }
+        >
+          新規作成
+        </button>
+      </div>
+      <div className="generic-table-wrap">
+        <table className="gf-table">
+          <thead>
+            <tr>
+              {[
+                "会社名",
+                "一次協力会社",
+                "工事名",
+                "工期",
+                "最終更新日",
+                "操作",
+              ].map((x) => (
+                <th key={x}>{x}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length ? (
+              rows.map((r, i) => (
+                <tr key={i}>
+                  {r.map((x) => (
+                    <td key={x}>{x}</td>
+                  ))}
+                  <td>
+                    <button
+                      className="text-button"
+                      onClick={() => setConfirm({ title: "書類詳細" })}
+                    >
+                      確認
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="gf-empty">
+                  該当する書類はありません
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function GreenfilePage({ setConfirm }) {
+  const [menu, setMenu] = useState("書類状況一覧");
+  const [filter, setFilter] = useState(false);
+  const [category, setCategory] = useState("一括提出書類");
+  const [comment, setComment] = useState(false);
+  const statusRows = [
+    ["1次", "サンプル建設株式会社", "受領済"],
+    ["2次", "サンプル協力会社A", "提出済"],
+    ["3次", "サンプル協力会社B", "未提出"],
+  ];
+  const docMenus = greenMenus.slice(1, 5);
+  let panel;
+  if (menu === "書類状況一覧")
+    panel = (
+      <section className="gf-page">
+        <h2>書類状況一覧</h2>
+        <p className="gf-lead">
+          協力会社から提出された安全書類の提出状況を一覧で確認します。
+        </p>
+        <div className="gf-alert">
+          未確認・差戻しの書類がある場合は、内容を確認して受領操作を行ってください。
+        </div>
+        <div className="gf-toolbar">
+          <b>検索結果：3件</b>
+          <button className="text-button">検索条件をクリア</button>
+          <button className="outline" onClick={() => setFilter((v) => !v)}>
+            検索で絞り込む
+          </button>
+          <button
+            className="outline"
+            onClick={() => setConfirm({ title: "この画面の使い方" })}
+          >
+            この画面の使い方
+          </button>
+        </div>
+        {filter && (
+          <GfFilter
+            onClose={() => setFilter(false)}
+            onSearch={() => setFilter(false)}
+          />
+        )}
+        <div className="gf-tabs">
+          {[
+            "一括提出書類",
+            "個別提出書類",
+            "許可情報",
+            "契約情報",
+            "保険加入証明書",
+            "主任技術者",
+          ].map((x) => (
+            <button
+              key={x}
+              className={category === x ? "active" : ""}
+              onClick={() => setCategory(x)}
+            >
+              {x}
+            </button>
+          ))}
+        </div>
+        <div className="gf-matrix-wrap">
+          <table className="gf-table gf-matrix">
+            <thead>
+              <tr>
+                {[
+                  "提出状況",
+                  "次数",
+                  "会社名",
+                  "コメント",
+                  "提出操作",
+                  "施工体制台帳",
+                  "再下請負通知書",
+                  "作業員名簿",
+                ].map((x) => (
+                  <th key={x}>{x}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {statusRows.map((r, i) => (
+                <tr key={r[1]}>
+                  <td>
+                    <span className={`gf-status s${i}`}>{r[2]}</span>
+                  </td>
+                  <td>{r[0]}</td>
+                  <td>{r[1]}</td>
+                  <td>
+                    <button
+                      className="text-button"
+                      onClick={() => setComment(true)}
+                    >
+                      確認{i === 1 && "（1）"}
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="outline"
+                      onClick={() =>
+                        setConfirm({
+                          title: i === 2 ? "書類提出" : "提出書類の取下げ確認",
+                        })
+                      }
+                    >
+                      {i === 2 ? "提出" : "取下げ"}
+                    </button>
+                  </td>
+                  {[0, 1, 2].map((n) => (
+                    <td key={n}>{i === 2 ? "—" : "確認済"}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {comment && (
+          <aside className="gf-comment">
+            <div>
+              <b>コメント</b>
+              <button onClick={() => setComment(false)}>
+                <X />
+              </button>
+            </div>
+            <p>提出書類についての確認コメントを表示します。</p>
+            <textarea placeholder="返信を入力" />
+            <button
+              className="primary"
+              onClick={() => {
+                setComment(false);
+                setConfirm({ title: "コメントを送信しました" });
+              }}
+            >
+              返信
+            </button>
+          </aside>
+        )}
+      </section>
+    );
+  else if (docMenus.includes(menu))
+    panel = <GreenDocumentList title={menu} setConfirm={setConfirm} />;
+  else if (menu.includes("協力会社検索"))
+    panel = <SearchServicePage worker={false} setConfirm={setConfirm} />;
+  else if (menu.includes("作業員検索"))
+    panel = <SearchServicePage worker setConfirm={setConfirm} />;
+  else if (menu.includes("是正依頼"))
+    panel = (
+      <section className="gf-page">
+        <h2>是正依頼内容の確認・返信</h2>
+        <p className="gf-lead">
+          元請会社からの是正依頼と返信状況を確認できます。
+        </p>
+        <div className="gf-toolbar">
+          <b>検索結果：1件</b>
+          <button className="outline">検索で絞り込む</button>
+        </div>
+        <table className="gf-table">
+          <thead>
+            <tr>
+              <th>受付日</th>
+              <th>対象書類</th>
+              <th>依頼内容</th>
+              <th>ステータス</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026/08/18</td>
+              <td>作業員名簿</td>
+              <td>記載内容をご確認ください</td>
+              <td>未返信</td>
+              <td>
+                <button
+                  className="primary"
+                  onClick={() => setConfirm({ title: "是正依頼への返信" })}
+                >
+                  確認・返信
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    );
+  else panel = <BatchOutput setConfirm={setConfirm} />;
+  return (
+    <div className="service-shell">
+      <aside className="service-menu">
+        <b>労務安全</b>
+        {greenMenus.map((x, i) => (
+          <button
+            key={x}
+            className={menu === x ? "active" : ""}
+            onClick={() => setMenu(x)}
+          >
+            {i > 0 && i < 4 ? <span>└</span> : null}
+            {x}
+          </button>
+        ))}
+      </aside>
+      <div className="service-main">{panel}</div>
+    </div>
+  );
+}
+
+function SearchServicePage({ worker, setConfirm }) {
+  const [filter, setFilter] = useState(true);
+  const cols = worker
+    ? [
+        "氏名",
+        "次数",
+        "所属会社",
+        "作業内容",
+        "職種",
+        "役割",
+        "生年月日",
+        "年齢",
+        "健康診断日",
+        "血圧",
+        "入場日",
+        "教育実施日",
+      ]
+    : ["会社名", "一次協力会社", "作業内容", "工期", "操作"];
+  return (
+    <section className="gf-page">
+      <h2>{worker ? "配下作業員検索（送り出し教育）" : "配下協力会社検索"}</h2>
+      <p className="gf-lead">
+        {worker
+          ? "現場に登録された作業員情報と送り出し教育の状況を検索します。"
+          : "現場に登録された配下協力会社を検索します。"}
+      </p>
+      <div className="gf-toolbar">
+        <b>検索結果：{worker ? 2 : 3}件</b>
+        <button className="outline" onClick={() => setFilter((v) => !v)}>
+          検索条件
+        </button>
+        {worker && (
+          <button
+            className="primary"
+            onClick={() =>
+              setConfirm({
+                title: "作業員の送り出し",
+                message: "選択した作業員の送り出し教育画面を開きました。",
+              })
+            }
+          >
+            作業員の送り出し
+          </button>
+        )}
+      </div>
+      {filter && (
+        <GfFilter
+          worker={worker}
+          onClose={() => setFilter(false)}
+          onSearch={() => setFilter(false)}
+        />
+      )}
+      <div className="gf-matrix-wrap">
+        <table className="gf-table">
+          <thead>
+            <tr>
+              {cols.map((x) => (
+                <th key={x}>{x}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 1].map((i) => (
+              <tr key={i}>
+                {worker ? (
+                  <>
+                    <td>サンプル作業員 {i + 1}</td>
+                    <td>{i + 1}次</td>
+                    <td>サンプル協力会社{String.fromCharCode(65 + i)}</td>
+                    <td>躯体工事</td>
+                    <td>土工</td>
+                    <td>{i ? "作業員" : "職長"}</td>
+                    <td>1985/01/01</td>
+                    <td>41</td>
+                    <td>2026/04/01</td>
+                    <td>120/75</td>
+                    <td>2026/04/10</td>
+                    <td>2026/04/05</td>
+                  </>
+                ) : (
+                  <>
+                    <td>サンプル協力会社{String.fromCharCode(65 + i)}</td>
+                    <td>サンプル建設株式会社</td>
+                    <td>躯体工事</td>
+                    <td>2026/04/01〜2027/03/31</td>
+                    <td>
+                      <button
+                        className="text-button"
+                        onClick={() => setConfirm({ title: "協力会社詳細" })}
+                      >
+                        確認
+                      </button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function BatchOutput({ setConfirm }) {
+  const [only, setOnly] = useState(false);
+  return (
+    <section className="gf-page">
+      <h2>書類一括出力</h2>
+      <p className="gf-lead">
+        協力会社が提出した書類を会社単位でまとめて出力できます。
+      </p>
+      <div className="gf-filter static">
+        <div className="gf-form-grid">
+          <label>
+            次数
+            <select>
+              <option>すべて</option>
+            </select>
+          </label>
+          <label>
+            会社名
+            <input placeholder="会社名を入力" />
+          </label>
+        </div>
+        <div className="gf-checks">
+          <label>
+            <input
+              type="checkbox"
+              checked={only}
+              onChange={(e) => setOnly(e.target.checked)}
+            />{" "}
+            出力可能な会社のみ
+          </label>
+          <label>
+            <input type="checkbox" /> 前回出力後に更新された会社のみ
+          </label>
+          <button className="primary">
+            <Search />
+            検索
+          </button>
+        </div>
+      </div>
+      <div className="gf-alert">
+        出力予約後、処理が完了するとダウンロードできます。
+      </div>
+      <div className="gf-toolbar">
+        <b>検索結果：3件</b>
+        <button
+          className="primary"
+          onClick={() =>
+            setConfirm({
+              title: "一括出力予約",
+              message: "対象の書類を一括出力予約しました。",
+            })
+          }
+        >
+          一括出力予約
+        </button>
+      </div>
+      <table className="gf-table">
+        <thead>
+          <tr>
+            <th>会社名</th>
+            <th>作業内容</th>
+            <th>工期</th>
+            <th>出力状況</th>
+            <th>予約日時／予約者</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>サンプル協力会社A</td>
+            <td>躯体工事</td>
+            <td>2026/04/01〜2027/03/31</td>
+            <td>
+              <b className="gf-unoutput">未出力あり</b>
+            </td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
+function GatekeeperPermissionPage({ navigate }) {
+  return (
+    <div className="permission-page">
+      <div className="permission-icon">!</div>
+      <h2>指定されたページを表示できません</h2>
+      <p>現在使用中の権限では指定されたページを開くことができません。</p>
+      <div>
+        <button className="outline" onClick={() => history.back()}>
+          戻る
+        </button>
+        <button className="primary" onClick={() => navigate("現場一覧")}>
+          現場一覧へ
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function App() {
   const [page, setPage] = useState("現場一覧"),
     [collapsed, setCollapsed] = useState(false),
@@ -1008,6 +1631,10 @@ export function App() {
     );
   else if (page === "車両・機械情報一覧")
     body = <VehiclePage {...{ query, setQuery, setDetailOpen }} />;
+  else if (page === "労務安全")
+    body = <GreenfilePage setConfirm={setConfirm} />;
+  else if (page === "入退場管理")
+    body = <GatekeeperPermissionPage navigate={navigate} />;
   else
     body = (
       <AgencyPage

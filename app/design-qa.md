@@ -1,5 +1,15 @@
 # Design QA
 
+## 2026-08-19 — Greenfile / Gatekeeper deep E2E
+
+- PASS: Greenfile reference was inspected while authenticated; private company/worker values were not transferred. The implementation uses anonymous fixtures only.
+- PASS: All nine service routes were opened in the browser: document status, three safety-document flows, contractor reports, contractor search, worker search/sending education, correction replies, and batch export.
+- PASS: Search drawer open/close/search, six document-category tabs, comment panel/reply, document action dialogs, and batch-export reservation were exercised.
+- PASS: Dense worker-search columns and health/insurance filters remain horizontally accessible at desktop and narrow widths.
+- PASS: Gatekeeper source currently returns the exact Buildee permission error. The accessible error state and both navigation actions are represented; protected dashboard contents were not invented.
+- Evidence: `deep-greenfile-dashboard.jpg`, `deep-greenfile-worker-search.jpg`, `gatekeeper-permission.jpg`.
+- Build: `npm run build` passed.
+
 - Source visual truth: `../reference/buildee-fields-desktop.png`（ローカル参照のみ、Git対象外）
 - Implementation screenshot: `implementation-desktop-final.png`
 - Mobile implementation screenshot: `implementation-mobile-final.png`
