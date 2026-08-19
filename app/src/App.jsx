@@ -3,18 +3,22 @@ import {
   Bell,
   Building2,
   BusFront,
+  CalendarDays,
+  Camera,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
   ClipboardList,
   Copy,
+  DoorOpen,
+  FileText,
   HardHat,
   LayoutGrid,
+  MapPinned,
   Network,
   Search,
   Settings,
   ShieldCheck,
-  Trees,
   UserRound,
   UsersRound,
   X,
@@ -287,31 +291,14 @@ function FieldList({
                   <td>{r.end}</td>
                   <td></td>
                   <td>
-                    <div className="service-icons">
+                    <div className="service-strip">
+                      <img src="/buildee-service-icons.png" alt="" />
+                      <a href="?page=labor" aria-label="労務安全を開く" />
                       <a
-                        className="service-app orange"
-                        aria-label="労務安全を開く"
-                        href="?page=labor"
-                      >
-                        <ShieldCheck />
-                      </a>
-                      <a
-                        className="service-app red"
-                        aria-label="入退場管理を開く"
                         href="?page=gatekeeper"
-                      >
-                        <HardHat />
-                      </a>
-                      <button
-                        className="service-app green"
-                        aria-label="環境管理を開く"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelected(r.id);
-                        }}
-                      >
-                        <Trees />
-                      </button>
+                        aria-label="入退場管理を開く"
+                      />
+                      <a href="?page=conference" aria-label="調整会議を開く" />
                     </div>
                   </td>
                 </tr>
@@ -1592,21 +1579,396 @@ function BatchOutput({ setConfirm }) {
   );
 }
 
-function GatekeeperPermissionPage({ navigate }) {
+const gateMenus = [
+  "ダッシュボード",
+  "入退場実績",
+  "作業員設定状況一覧",
+  "現場掲示板",
+];
+const conferenceMenus = [
+  "ダッシュボード",
+  "作業予定一覧",
+  "他社予定確認",
+  "作業実績一覧",
+  "入場人数との差異",
+  "ゲート予定",
+  "揚重機予定",
+  "機材予定",
+  "現場配置計画",
+  "巡回記録/各種連絡",
+  "帳票印刷",
+  "現場掲示板",
+];
+
+function ServiceFrame({ brand, menus, active, setActive, children, notice }) {
   return (
-    <div className="permission-page">
-      <div className="permission-icon">!</div>
-      <h2>指定されたページを表示できません</h2>
-      <p>現在使用中の権限では指定されたページを開くことができません。</p>
-      <div>
-        <button className="outline" onClick={() => history.back()}>
-          戻る
-        </button>
-        <button className="primary" onClick={() => navigate("現場一覧")}>
-          現場一覧へ
-        </button>
+    <div className="service-product">
+      <div className="product-top">
+        <b>{brand}</b>
+        <span>サンプル現場 A</span>
+        <button className="help">？ ヘルプ</button>
+      </div>
+      {notice && (
+        <div className="product-notice">
+          あなたへの重要なお知らせが1件あります
+        </div>
+      )}
+      <div className="product-body">
+        <aside className="product-menu">
+          <h2>機能一覧</h2>
+          {menus.map((m, i) => (
+            <button
+              key={m}
+              className={active === m ? "active" : ""}
+              onClick={() => setActive(m)}
+            >
+              {i === menus.length - 1 && <small>共通メニュー</small>}
+              <span>{m}</span>
+            </button>
+          ))}
+        </aside>
+        <main className="product-main">{children}</main>
       </div>
     </div>
+  );
+}
+
+function ServiceDashboard({ gate }) {
+  return (
+    <>
+      <h1>ダッシュボード</h1>
+      <div className="dashboard-cols">
+        <section>
+          <h3>現場詳細</h3>
+          <dl className="detail-list">
+            <dt>現場名</dt>
+            <dd>サンプル現場 A</dd>
+            <dt>{gate ? "着工 - 竣工予定日" : "現場住所"}</dt>
+            <dd>
+              {gate
+                ? "2026/04/20(月) - 2027/03/31(水)"
+                : "東京都中央区 サンプル1-1"}
+            </dd>
+            <dt>{gate ? "現場所在地" : "着工 - 竣工予定日"}</dt>
+            <dd>
+              {gate
+                ? "東京都中央区 サンプル1-1"
+                : "2026/04/20(月) - 2027/03/31(水)"}
+            </dd>
+          </dl>
+        </section>
+        <section>
+          <h3>{gate ? "入退場実績" : "人工（人）"}</h3>
+          {gate ? (
+            <table className="service-table">
+              <tbody>
+                <tr>
+                  <td>08/18(火)</td>
+                  <td>入場者数</td>
+                  <td>0人</td>
+                </tr>
+                <tr>
+                  <td>08/19(水)</td>
+                  <td>入場者数</td>
+                  <td>0人</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>退場者数</td>
+                  <td>0人</td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <div className="labor-count">
+              <span>
+                予定<b>--</b>
+              </span>
+              <span>
+                実績<b>--</b>
+              </span>
+            </div>
+          )}
+        </section>
+      </div>
+    </>
+  );
+}
+
+function GatekeeperPage({ setConfirm }) {
+  const [active, setActive] = useState("ダッシュボード");
+  const [face, setFace] = useState(false);
+  let content;
+  if (active === "ダッシュボード") content = <ServiceDashboard gate />;
+  else if (active === "入退場実績")
+    content = (
+      <ServiceList
+        title={active}
+        columns={[
+          "日付",
+          "所属会社",
+          "氏名",
+          "入場時刻",
+          "退場時刻",
+          "滞在時間",
+        ]}
+      />
+    );
+  else if (active === "作業員設定状況一覧")
+    content = (
+      <>
+        <h1>作業員設定状況一覧</h1>
+        <div className="product-actions">
+          <label>
+            <input
+              type="checkbox"
+              checked={face}
+              onChange={(e) => setFace(e.target.checked)}
+            />{" "}
+            一覧に顔写真を表示する
+          </label>
+          <button className="outline">CSV出力</button>
+        </div>
+        <div className="service-filter">
+          <b>検索条件（検索結果5件）</b>
+          <input placeholder="作業員名を入力" />
+          <label>
+            <input type="checkbox" /> 稼働中
+          </label>
+          <label>
+            <input type="checkbox" /> 登録あり
+          </label>
+          <button className="primary">検索</button>
+        </div>
+        <table className="service-table">
+          <thead>
+            <tr>
+              {[
+                "所属会社",
+                "一次協力会社",
+                "氏名",
+                "ステータス",
+                "顔写真",
+                "顔写真送信",
+                "送信対象外理由",
+                "エラー状況",
+                "詳細",
+              ].map((x) => (
+                <th key={x}>{x}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[1, 2, 3, 4, 5].map((x, i) => (
+              <tr key={x}>
+                <td>サンプル協力会社</td>
+                <td>サンプル協力会社</td>
+                <td>
+                  {face && (
+                    <span className="face-placeholder">
+                      <Camera />
+                    </span>
+                  )}
+                  サンプル作業員 {x}
+                </td>
+                <td>稼働中</td>
+                <td>{i === 4 ? "登録なし" : "登録あり"}</td>
+                <td>{i === 4 ? "送信対象外" : "送信済み"}</td>
+                <td>{i === 4 ? "顔写真がありません。" : "—"}</td>
+                <td>—</td>
+                <td>
+                  <button
+                    className="outline"
+                    onClick={() => setConfirm({ title: "作業員設定詳細" })}
+                  >
+                    確認
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    );
+  else content = <BulletinBoard setConfirm={setConfirm} />;
+  return (
+    <ServiceFrame
+      brand="入退場管理"
+      menus={gateMenus}
+      active={active}
+      setActive={setActive}
+      notice
+    >
+      {content}
+    </ServiceFrame>
+  );
+}
+
+function ServiceList({ title, columns }) {
+  const [query, setQuery] = useState("");
+  return (
+    <>
+      <h1>{title}</h1>
+      <div className="service-filter">
+        <b>検索条件</b>
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="キーワードを入力"
+        />
+        <input type="date" />
+        <button className="primary">検索</button>
+        <button className="text" onClick={() => setQuery("")}>
+          検索条件クリア
+        </button>
+      </div>
+      <table className="service-table">
+        <thead>
+          <tr>
+            {columns.map((x) => (
+              <th key={x}>{x}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[1, 2, 3].map((i) => (
+            <tr key={i}>
+              {columns.map((x, j) => (
+                <td key={x}>
+                  {j === 0
+                    ? `2026/08/${18 + i}`
+                    : j === 1
+                      ? "サンプル協力会社"
+                      : j === 2
+                        ? `サンプル ${i}`
+                        : "—"}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function BulletinBoard({ setConfirm }) {
+  return (
+    <>
+      <h1>現場掲示板</h1>
+      <div className="product-actions">
+        <p>現場内で共有するお知らせを確認できます。</p>
+        <button
+          className="primary"
+          onClick={() => setConfirm({ title: "掲示板へ新規投稿" })}
+        >
+          新規投稿
+        </button>
+      </div>
+      <table className="service-table">
+        <thead>
+          <tr>
+            <th>掲載期間</th>
+            <th>タイトル</th>
+            <th>投稿者</th>
+            <th>添付</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026/08/19〜08/31</td>
+            <td>サンプルのお知らせ</td>
+            <td>現場管理者</td>
+            <td>—</td>
+            <td>
+              <button
+                className="outline"
+                onClick={() => setConfirm({ title: "掲示内容" })}
+              >
+                確認
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function ConferencePage({ setConfirm }) {
+  const [active, setActive] = useState("ダッシュボード");
+  const configs = {
+    作業予定一覧: [
+      "日付",
+      "会社名",
+      "作業内容",
+      "作業場所",
+      "人数",
+      "安全指示",
+      "承認",
+    ],
+    他社予定確認: [
+      "会社名",
+      "作業内容",
+      "作業場所",
+      "人数",
+      "重機・機材",
+      "確認",
+    ],
+    作業実績一覧: [
+      "日付",
+      "会社名",
+      "作業内容",
+      "予定人数",
+      "実績人数",
+      "操作",
+    ],
+    入場人数との差異: ["会社名", "予定人数", "入場人数", "差異", "確認"],
+    ゲート予定: ["時間", "ゲート", "搬入会社", "車両", "搬入物", "誘導員"],
+    揚重機予定: ["時間", "揚重機", "使用会社", "作業内容", "場所", "状態"],
+    機材予定: ["時間", "機材", "使用会社", "用途", "場所", "状態"],
+    "巡回記録/各種連絡": ["種別", "日時", "件名", "登録者", "状態", "確認"],
+    帳票印刷: ["帳票名", "対象日", "更新日時", "作成者", "出力"],
+  };
+  let content;
+  if (active === "ダッシュボード") content = <ServiceDashboard />;
+  else if (active === "現場配置計画")
+    content = (
+      <>
+        <h1>現場配置計画</h1>
+        <div className="plan-canvas">
+          <MapPinned />
+          <b>配置計画図</b>
+          <p>図面上で重機・資材・立入禁止区域を配置できます。</p>
+          <button
+            className="primary"
+            onClick={() => setConfirm({ title: "配置計画を編集" })}
+          >
+            編集
+          </button>
+        </div>
+      </>
+    );
+  else if (active === "現場掲示板")
+    content = <BulletinBoard setConfirm={setConfirm} />;
+  else
+    content = (
+      <ServiceList
+        title={active}
+        columns={configs[active] || ["項目", "内容", "状態", "操作"]}
+      />
+    );
+  return (
+    <ServiceFrame
+      brand="調整会議"
+      menus={conferenceMenus}
+      active={active}
+      setActive={setActive}
+      notice
+    >
+      {content}
+    </ServiceFrame>
   );
 }
 
@@ -1615,6 +1977,7 @@ export function App() {
       const target = new URLSearchParams(location.search).get("page");
       if (target === "labor") return "労務安全";
       if (target === "gatekeeper") return "入退場管理";
+      if (target === "conference") return "調整会議";
       return "現場一覧";
     }),
     [collapsed, setCollapsed] = useState(false),
@@ -1664,7 +2027,9 @@ export function App() {
   else if (page === "労務安全")
     body = <GreenfilePage setConfirm={setConfirm} />;
   else if (page === "入退場管理")
-    body = <GatekeeperPermissionPage navigate={navigate} />;
+    body = <GatekeeperPage setConfirm={setConfirm} />;
+  else if (page === "調整会議")
+    body = <ConferencePage setConfirm={setConfirm} />;
   else
     body = (
       <AgencyPage
@@ -1721,10 +2086,12 @@ export function App() {
         </div>
       </aside>
       <main className="content">
-        <Header
-          title={page === "現場一覧" ? "現場確認" : page}
-          onHelp={() => setHelpOpen(true)}
-        />
+        {!["労務安全", "入退場管理", "調整会議"].includes(page) && (
+          <Header
+            title={page === "現場一覧" ? "現場確認" : page}
+            onHelp={() => setHelpOpen(true)}
+          />
+        )}
         {body}
       </main>
       {detailOpen && (

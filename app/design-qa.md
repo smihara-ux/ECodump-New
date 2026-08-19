@@ -1,5 +1,37 @@
 # Design QA
 
+## 2026-08-19 — Three service buttons and product screens
+
+- Source icon truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_Tx0H85/スクリーンショット 2026-08-19 17.16.04.png` (280×108 px).
+- Source product truth: authenticated Buildee captures `/tmp/gatekeeper-dashboard-source.png` and `/tmp/conference-dashboard-source.png` at 1280×720.
+- Implementation evidence: `field-service-icons.png`, `gatekeeper-dashboard.png`, and `conference-dashboard.png`, all 1280×720.
+- State: anonymous sample field, service dashboard default state.
+- Full-view comparison: `/tmp/gatekeeper-comparison.png`, source and implementation at equal 1280×720 density.
+- Focused comparison: the supplied three-icon strip is used directly at its measured display size, with three independent accessible link hit areas.
+
+**Comparison history**
+
+- P1: red service previously ended at a permission placeholder. Fixed after authenticated source access became available; implemented dashboard, attendance records, worker-device status, and bulletin board.
+- P1: green service had no destination. Fixed by implementing all twelve source-discovered Conference menu destinations.
+- P2: generated/library service glyphs did not match the supplied visual. Fixed by using the exact user-supplied raster strip instead of approximating its artwork.
+- P2: service pages retained the master-page header. Fixed with product-specific 40px toolbar, yellow announcement strip, 210px feature rail, and source-matched content grid.
+- Expected difference: customer names, worker names, addresses, telephone numbers, and construction records are intentionally anonymous. Layout, controls, labels, status patterns, and navigation are retained.
+
+**E2E evidence**
+
+- PASS: all three row icons navigate to 労務安全, 入退場管理, and 調整会議.
+- PASS: all four Gatekeeper menu pages opened and showed their matching heading.
+- PASS: all twelve Conference menu pages opened and showed their matching heading.
+- PASS: worker face-photo toggle, worker detail modal, service search controls, and site-plan edit modal.
+- PASS: existing nine Greenfile/Labor Safety destinations remain available.
+- PASS: browser console contained no warnings or errors; `npm run build` passed.
+
+**Findings**
+
+- No remaining actionable P0/P1/P2 mismatch in the captured default service dashboards. Private production content is intentionally excluded.
+
+final result: passed
+
 ## 2026-08-19 — Field list screenshot fidelity pass
 
 - Source visual truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_omV6gb/スクリーンショット 2026-08-19 17.12.09.png` (3024×1964 px, macOS/Chrome frame included).
