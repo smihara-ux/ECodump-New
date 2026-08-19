@@ -112,6 +112,7 @@ function SearchBar({
   extra,
   onDetail,
   onClear,
+  onSearch,
 }) {
   return (
     <section className="search-panel">
@@ -128,7 +129,7 @@ function SearchBar({
         {extra}
       </div>
       <div className="search-actions">
-        <button className="primary">
+        <button className="primary" onClick={onSearch}>
           <Search />
           検索
         </button>
@@ -293,6 +294,11 @@ function FieldList({
   );
 }
 function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
+  const [appliedQuery, setAppliedQuery] = useState("");
+  const [branch, setBranch] = useState("すべて");
+  const [kind, setKind] = useState("すべて");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [created, setCreated] = useState([]);
   let config = {};
   if (type === "ユーザー一覧")
     config = {
@@ -313,7 +319,7 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
         "更新日",
         "",
       ],
-      data: people.map((x) => [
+      data: [...people, ...created].map((x) => [
         x.branch,
         <span>
           <small>{x.sub}</small>
@@ -361,9 +367,33 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
         "__confirm",
       ]),
     };
-  const filtered = config.data.filter((r) =>
-    String(r.map((x) => (typeof x === "string" ? x : ""))).includes(query),
-  );
+  const filtered = config.data.filter((r) => {
+    const text = String(r.map((x) => (typeof x === "string" ? x : "")));
+    return (
+      text.includes(appliedQuery) &&
+      (branch === "すべて" || text.includes(branch)) &&
+      (kind === "すべて" || text.includes(kind))
+    );
+  });
+  const clearFilters = () => {
+    setQuery("");
+    setAppliedQuery("");
+    setBranch("すべて");
+    setKind("すべて");
+  };
+  const action = (label) => {
+    if (label === "新規作成") setCreateOpen(true);
+    else if (label === "表示データをCSV出力")
+      setConfirm({
+        title: "CSV出力完了",
+        message: `${filtered.length}件の匿名データを出力しました。`,
+      });
+    else
+      setConfirm({
+        title: label,
+        message: "対象を選択して操作内容を確認してください。",
+      });
+  };
   return (
     <>
       <SearchBar
@@ -375,37 +405,174 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
           <>
             <label>
               支店{" "}
-              <select>
-                <option>支店を選択</option>
+              <select
+                value={branch}
+                onChange={(e) => setBranch(e.target.value)}
+              >
+                <option>すべて</option>
+                <option>本社</option>
+                <option>支店 1</option>
               </select>
             </label>
             <label>
               種別{" "}
-              <select>
+              <select value={kind} onChange={(e) => setKind(e.target.value)}>
                 <option>すべて</option>
+                <option>協力会社管理者</option>
+                <option>職長</option>
               </select>
             </label>
           </>
         }
         onDetail={() => setDetailOpen(true)}
-        onClear={() => setQuery("")}
+        onSearch={() => setAppliedQuery(query)}
+        onClear={clearFilters}
       />
       <div className="action-strip">
         {config.actions.map((a, i) => (
-          <button className={i === 0 ? "primary" : "outline"} key={a}>
+          <button
+            className={i === 0 ? "primary" : "outline"}
+            key={a}
+            onClick={() => action(a)}
+          >
             {a}
           </button>
         ))}
       </div>
       <GridTable
         headers={config.headers}
-        rows={filtered.length ? filtered : query ? [] : config.data}
+        rows={filtered}
         onConfirm={(i) =>
           setConfirm({ title: `${type.slice(0, -2)}詳細`, index: i })
         }
       />
       <Pager />
+      {createOpen && (
+        <CreateRecordModal
+          type={type}
+          onClose={() => setCreateOpen(false)}
+          onSave={(record) => {
+            if (type === "ユーザー一覧") setCreated((v) => [...v, record]);
+            setCreateOpen(false);
+            setConfirm({
+              title: "登録完了",
+              message: `${type.slice(0, -2)}を匿名サンプルとして追加しました。`,
+            });
+          }}
+        />
+      )}
     </>
+  );
+}
+
+function CreateRecordModal({ type, onClose, onSave }) {
+  const [form, setForm] = useState({
+    branch: "本社",
+    last: "",
+    first: "",
+    kanaLast: "",
+    kanaFirst: "",
+    account: "",
+    type: type === "ユーザー一覧" ? "協力会社管理者" : "作業員",
+  });
+  const update = (key) => (e) =>
+    setForm((v) => ({ ...v, [key]: e.target.value }));
+  const valid =
+    form.last && form.first && (type !== "ユーザー一覧" || form.account);
+  return (
+    <div className="overlay">
+      <section
+        className="modal form-modal"
+        role="dialog"
+        aria-label={`${type.slice(0, -2)}新規作成`}
+      >
+        <h2>{type.slice(0, -2)}新規作成</h2>
+        <div className="form-grid">
+          <label>
+            支店
+            <select value={form.branch} onChange={update("branch")}>
+              <option>本社</option>
+              <option>支店 1</option>
+            </select>
+          </label>
+          <label>
+            種別
+            <select value={form.type} onChange={update("type")}>
+              <option>協力会社管理者</option>
+              <option>職長</option>
+              <option>作業員</option>
+            </select>
+          </label>
+          <label>
+            姓
+            <input
+              value={form.last}
+              onChange={update("last")}
+              placeholder="姓を入力"
+            />
+          </label>
+          <label>
+            名
+            <input
+              value={form.first}
+              onChange={update("first")}
+              placeholder="名を入力"
+            />
+          </label>
+          <label>
+            せい
+            <input
+              value={form.kanaLast}
+              onChange={update("kanaLast")}
+              placeholder="せいを入力"
+            />
+          </label>
+          <label>
+            めい
+            <input
+              value={form.kanaFirst}
+              onChange={update("kanaFirst")}
+              placeholder="めいを入力"
+            />
+          </label>
+          {type === "ユーザー一覧" && (
+            <label className="wide">
+              ユーザーID（メールアドレス）
+              <input
+                value={form.account}
+                onChange={update("account")}
+                placeholder="example@example.test"
+              />
+            </label>
+          )}
+          <label className="wide check">
+            <input type="checkbox" /> 職長パスワードリセット通知先に設定
+          </label>
+        </div>
+        <div className="modal-actions">
+          <button className="outline" onClick={onClose}>
+            閉じる
+          </button>
+          <button
+            className="primary"
+            disabled={!valid}
+            onClick={() =>
+              onSave({
+                branch: form.branch,
+                name: `${form.last} ${form.first}`,
+                sub: `${form.kanaLast} ${form.kanaFirst}`,
+                account: form.account,
+                type: form.type,
+                created: "2026/08/19",
+                updated: "2026/08/19",
+              })
+            }
+          >
+            登録
+          </button>
+        </div>
+      </section>
+    </div>
   );
 }
 function VehiclePage({ query, setQuery, setDetailOpen }) {
@@ -463,8 +630,79 @@ function VehiclePage({ query, setQuery, setDetailOpen }) {
     </>
   );
 }
-function CompanyPage() {
-  const [tab, setTab] = useState("本社情報");
+function CompanyPage({ setConfirm }) {
+  const [tab, setTab] = useState("本社情報"),
+    [editing, setEditing] = useState(false);
+  const infoRows = [
+    ["種別", "法人"],
+    ["会社名", "サンプル株式会社"],
+    ["会社名（ふりがな）", "さんぷるかぶしきがいしゃ"],
+    ["法人番号", "0000000000000"],
+    ["郵便番号", "000-0000"],
+    ["都道府県", "東京都"],
+    ["市区町村", "サンプル区"],
+    ["丁目・番地", "サンプル1-1-1"],
+    ["電話番号", "00-0000-0000"],
+    ["共通化状態", "〇"],
+    ["更新ユーザー", "サンプル管理者"],
+    ["更新日時", "2026/08/19 10:00:00"],
+  ];
+  const safetySections = [
+    [
+      "代表者情報",
+      [
+        ["代表者名", "サンプル 太郎"],
+        ["代表者フリガナ", "サンプル タロウ"],
+        ["代表者役職", "代表取締役"],
+      ],
+    ],
+    [
+      "建設業許可情報",
+      [
+        ["建設業許可有無", "有"],
+        ["許可番号", "東京都知事許可（特定-1）第00000号"],
+        ["有効期限", "2029/03/31"],
+      ],
+    ],
+    [
+      "健康保険情報",
+      [
+        ["加入状況", "有"],
+        ["保険種類", "協会けんぽ"],
+        ["保険者名称", "全国健康保険協会 サンプル支部"],
+      ],
+    ],
+    [
+      "年金保険情報",
+      [
+        ["加入状況", "有"],
+        ["保険種類", "厚生年金"],
+      ],
+    ],
+    [
+      "雇用保険情報",
+      [
+        ["加入状況", "有"],
+        ["労働保険番号", "00000000000000"],
+      ],
+    ],
+    [
+      "労災上乗せ保険情報",
+      [
+        ["加入状況", "有"],
+        ["保険期間", "2026/05/01〜2027/05/01"],
+        ["保険会社名", "サンプル損害保険"],
+      ],
+    ],
+    [
+      "退職金共済情報",
+      [
+        ["建退共制度加入状況", "有"],
+        ["契約者番号", "00-00000"],
+      ],
+    ],
+    ["外国人就労者情報", [["外国人就労者受入有無", "受入なし"]]],
+  ];
   return (
     <>
       <div className="company-tabs">
@@ -478,35 +716,129 @@ function CompanyPage() {
           </button>
         ))}
       </div>
-      <div className="company-actions">
-        <button className="primary">編集</button>
-        <span>
-          更新した情報を労務安全書類に反映するには書類の更新が必要です。
-        </span>
-      </div>
-      <section className="company-card">
-        <h2>{tab}</h2>
-        <h3>基本情報</h3>
-        {[
-          ["種別", "法人"],
-          ["会社名", "サンプル株式会社"],
-          ["会社名（ふりがな）", "さんぷるかぶしきがいしゃ"],
-          ["法人番号", "0000000000000"],
-          ["郵便番号", "000-0000"],
-          ["都道府県", "東京都"],
-          ["市区町村", "サンプル区"],
-          ["丁目・番地", "サンプル1-1-1"],
-          ["電話番号", "00-0000-0000"],
-          ["共通化状態", "〇"],
-          ["更新ユーザー", "サンプル管理者"],
-          ["更新日時", "2026/08/19 10:00:00"],
-        ].map(([a, b]) => (
-          <div className="info-row" key={a}>
-            <b>{a}</b>
-            <span>{b}</span>
+      {tab !== "CCUS連携情報" && tab !== "支店情報" && (
+        <div className="company-actions">
+          <button className="primary" onClick={() => setEditing((v) => !v)}>
+            {editing ? "保存" : "編集"}
+          </button>
+          <span>
+            更新した情報を労務安全書類に反映するには書類の更新が必要です。
+          </span>
+        </div>
+      )}
+      {tab === "本社情報" && (
+        <section className="company-card">
+          <h3>基本情報</h3>
+          {infoRows.map(([a, b]) => (
+            <div className="info-row" key={a}>
+              <b>{a}</b>
+              <span>{editing ? <input defaultValue={b} /> : b}</span>
+            </div>
+          ))}
+        </section>
+      )}
+      {tab === "CCUS連携情報" && (
+        <section className="company-card ccus-page">
+          <h3>CCUS（建設キャリアアップシステム）と連携するには</h3>
+          <p>
+            連携にはCCUSの「事業者ID」「管理者ID」「パスワード（またはセキュリティコード）」が必要です。
+          </p>
+          <h3>CCUS基本情報</h3>
+          <div className="info-row">
+            <b>CCUS事業者ID</b>
+            <span>00000000000000</span>
           </div>
-        ))}
-      </section>
+          <div className="info-row">
+            <b>CCUS管理者ID</b>
+            <span>00000000000000</span>
+          </div>
+          <div className="sub-actions">
+            <button
+              key="ccus-admin-edit"
+              className="outline"
+              onClick={() => setConfirm({ title: "CCUS基本情報を編集" })}
+            >
+              基本情報を編集
+            </button>
+            <button
+              className="outline"
+              onClick={() => setConfirm({ title: "連携ユーザーを編集" })}
+            >
+              連携ユーザーを編集
+            </button>
+          </div>
+          <h3>連携ユーザー</h3>
+          <GridTable
+            headers={["会社名", "支店", "ユーザー名", "ID"]}
+            rows={[
+              [
+                "サンプル株式会社",
+                "本社",
+                "サンプル管理者",
+                "sample@example.test",
+              ],
+            ]}
+          />
+          <h3>その他の管理者情報</h3>
+          <GridTable
+            headers={["CCUS管理者ID", "表示名", "連携ユーザー数", ""]}
+            rows={[
+              [
+                "00000000000000",
+                "サンプル管理者",
+                "未登録",
+                <button
+                  key="ccus-row-edit"
+                  className="outline"
+                  onClick={() => setConfirm({ title: "管理者情報を編集" })}
+                >
+                  編集
+                </button>,
+              ],
+            ]}
+          />
+          <button
+            className="primary"
+            onClick={() => setConfirm({ title: "CCUS管理者ID追加" })}
+          >
+            CCUS管理者ID追加
+          </button>
+        </section>
+      )}
+      {tab === "労務安全項目" && (
+        <section className="company-card safety-page">
+          {safetySections.map(([title, rows]) => (
+            <div key={title}>
+              <h3>{title}</h3>
+              {rows.map(([a, b]) => (
+                <div className="info-row" key={a}>
+                  <b>{a}</b>
+                  <span>{editing ? <input defaultValue={b} /> : b}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </section>
+      )}
+      {tab === "支店情報" && (
+        <section className="company-card branch-empty">
+          <h3>支店情報</h3>
+          <p>支店の登録がありません。</p>
+          <p>支店の新規作成・編集・停止は企業管理者が行えます。</p>
+          <p>企業管理者の権限を持つユーザーが設定されていません。</p>
+          <button
+            className="primary"
+            onClick={() =>
+              setConfirm({
+                title: "企業管理者申請",
+                message: "企業管理者申請フォームを開きました。",
+              })
+            }
+          >
+            企業管理者申請
+          </button>
+        </section>
+      )}
     </>
   );
 }
@@ -666,7 +998,7 @@ export function App() {
       />
     );
   else if (page === "現場体制（施工体系図）") body = <OrganizationPage />;
-  else if (page === "会社情報") body = <CompanyPage />;
+  else if (page === "会社情報") body = <CompanyPage setConfirm={setConfirm} />;
   else if (page === "ユーザー一覧" || page === "作業員一覧")
     body = (
       <ListPage
@@ -815,7 +1147,8 @@ export function App() {
             <h2>{confirm?.title || "ヘルプセンター"}</h2>
             <p>
               {confirm
-                ? "匿名サンプルデータの詳細画面です。情報を確認して操作できます。"
+                ? confirm.message ||
+                  "匿名サンプルデータの詳細画面です。情報を確認して操作できます。"
                 : "操作方法やよくある質問を確認できます。"}
             </p>
             <button

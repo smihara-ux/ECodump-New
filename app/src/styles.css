@@ -680,6 +680,65 @@ tbody tr.selected {
   background: #fff8dc;
   border-bottom: 1px solid #e0cf91;
 }
+.form-modal {
+  width: min(720px, calc(100vw - 28px));
+  padding: 20px;
+}
+.form-modal h2 {
+  margin: 0 -20px 20px;
+  padding: 0 20px 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.form-grid .wide {
+  grid-column: 1/-1;
+}
+.form-grid .check {
+  flex-direction: row;
+  align-items: center;
+}
+.form-grid input,
+.form-grid select {
+  width: 100%;
+}
+.form-grid .check input {
+  width: 18px;
+}
+.form-modal .modal-actions {
+  margin-top: 24px;
+}
+.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.sub-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 0;
+}
+.ccus-page .generic-table-wrap {
+  flex: none;
+}
+.safety-page {
+  max-height: calc(100vh - 150px);
+}
+.branch-empty {
+  text-align: center;
+  padding: 50px 20px;
+}
+.branch-empty .primary {
+  margin-top: 16px;
+}
 @media (max-width: 700px) {
   .app-shell {
     --side: 210px;

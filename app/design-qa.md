@@ -65,3 +65,17 @@ Browser console was rechecked after fixing duplicate table-header keys: no error
 Intentional differences: all identifying source data and source trademarks are replaced by anonymous ECODUMP content; irreversible or external write actions are represented as safe local confirmation flows.
 
 final result: passed
+
+## Deep interaction pass
+
+- Company tabs now have separate content models rather than a shared placeholder:
+  - Headquarters: editable company fields and save state.
+  - CCUS: basic IDs, linked-user table, administrator table, and edit/add dialogs.
+  - Labor safety: representative, construction-license, health/pension/employment insurance, workers-compensation, retirement mutual-aid, and foreign-worker sections.
+  - Branches: permission-dependent empty state and administrator-application dialog.
+- User management now supports draft filters, explicit search execution, branch/type selection, reset, a validated new-user form, local registration, detail view, CSV feedback, administrator application, and password-reset workflow dialog.
+- Evidence: `deep-company-ccus.jpg` and `deep-user-create.jpg`.
+- E2E checks: company edit/save, all four company tabs, CCUS edit dialog, labor-safety edit/save, branch application, user creation/validation/registration, search result update, and CSV action all passed.
+- Fresh-browser console check: no errors or warnings.
+
+final result: passed
