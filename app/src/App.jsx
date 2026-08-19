@@ -15,6 +15,7 @@ import {
   HardHat,
   LayoutGrid,
   MapPinned,
+  Menu,
   Network,
   Search,
   Settings,
@@ -2107,7 +2108,9 @@ export function App() {
       if (target === "conference") return "調整会議";
       return "現場一覧";
     }),
-    [collapsed, setCollapsed] = useState(false),
+    [collapsed, setCollapsed] = useState(
+      () => window.matchMedia("(max-width: 1100px)").matches,
+    ),
     [query, setQuery] = useState(""),
     [detailOpen, setDetailOpen] = useState(false),
     [helpOpen, setHelpOpen] = useState(false),
@@ -2118,6 +2121,7 @@ export function App() {
     setPage(p);
     setQuery("");
     setDetailOpen(false);
+    if (window.matchMedia("(max-width: 1100px)").matches) setCollapsed(true);
   };
   const copyId = async (id) => {
     await navigator.clipboard?.writeText(id);
@@ -2166,6 +2170,21 @@ export function App() {
     );
   return (
     <div className={`app-shell ${collapsed ? "is-collapsed" : ""}`}>
+      <button
+        className="mobile-menu"
+        onClick={() => setCollapsed((v) => !v)}
+        aria-label={collapsed ? "メニューを開く" : "メニューを閉じる"}
+        aria-expanded={!collapsed}
+      >
+        <Menu />
+      </button>
+      {!collapsed && (
+        <button
+          className="sidebar-backdrop"
+          onClick={() => setCollapsed(true)}
+          aria-label="メニューを閉じる"
+        />
+      )}
       <aside className="sidebar">
         <div className="brand-row">
           <div className="brand-mark">ED</div>

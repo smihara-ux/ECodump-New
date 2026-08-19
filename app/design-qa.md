@@ -1,5 +1,24 @@
 # Design QA
 
+## 2026-08-19 — Mobile and tablet responsive pass
+
+- Scope: master pages plus 労務安全, 入退場管理, and 調整会議 service screens.
+- Breakpoint: compact drawer/tablet layout through 1100px; desktop rail above 1100px.
+- iPhone 390×844: full-width content, single-column filters and field cards, off-canvas navigation.
+- Android 412×915: horizontally scrollable service tabs and data tables with readable headers.
+- iPad portrait 768×1024: full-width service dashboard, drawer navigation, touch-sized actions.
+- Tablet landscape 1024×768: drawer navigation prevents the fixed rail and data grid from overflowing the viewport.
+
+**E2E evidence**
+
+- PASS: document width equals viewport width at 390, 412, 768, and 1024 CSS pixels.
+- PASS: mobile navigation opens, exposes the complete menu, navigates to 会社情報, and closes afterward.
+- PASS: search input uses the full available width at 390px; field rows reflow into labeled cards.
+- PASS: service navigation remains reachable by horizontal swipe and wide data tables have contained horizontal scrolling.
+- PASS: `npm run build` and `npm run test:sites` passed.
+
+final result: passed
+
 ## 2026-08-19 — Labor Safety table and document-type correction
 
 - Issue evidence: `スクリーンショット 2026-08-19 17.40.16.png` and `17.40.25.png`; white table headings, overlapping columns, and indistinguishable document pages.

@@ -273,6 +273,9 @@ button {
 .mobile-menu {
   display: none;
 }
+.sidebar-backdrop {
+  display: none;
+}
 .search-panel {
   min-height: 45px;
   height: 45px;
@@ -1424,47 +1427,130 @@ tbody tr.selected {
   gap: 10px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1100px) {
+  body {
+    overflow: hidden;
+  }
   .app-shell {
-    --side: 210px;
-    min-width: 390px;
+    --side: 0px;
+    display: block;
+    min-width: 0;
   }
   .app-shell.is-collapsed {
     --side: 0px;
   }
-  .is-collapsed .sidebar {
+  .app-shell.is-collapsed .sidebar {
     transform: translateX(-100%);
   }
   .sidebar {
-    position: relative;
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(82vw, 290px);
+    transform: translateX(0);
     transition: transform 0.18s ease;
+    box-shadow: 8px 0 24px #0004;
+    z-index: 40;
+  }
+  .mobile-menu {
+    position: fixed;
+    top: 7px;
+    left: 8px;
+    z-index: 45;
+    display: grid;
+    width: 34px;
+    height: 30px;
+    place-items: center;
+    border: 1px solid #aeb4bc;
+    border-radius: 4px;
+    background: #fff;
+    color: #222;
+  }
+  .mobile-menu svg {
+    width: 20px;
+    height: 20px;
+  }
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    display: block;
+    border: 0;
+    background: #0006;
   }
   .page-header {
-    padding-left: 8px;
+    min-height: 44px;
+    height: auto;
+    padding: 6px 6px 6px 52px;
   }
   .page-header h1 {
-    font-size: 18px;
+    max-width: calc(100vw - 155px);
+    font-size: 17px;
+    line-height: 1.2;
   }
   .header-actions {
-    gap: 8px;
+    gap: 5px;
   }
   .guide {
     display: none !important;
   }
-  .search-panel {
-    padding-left: 12px;
+  .header-actions .help {
+    padding-right: 7px;
+  }
+  .header-actions .close {
+    width: 32px;
+    padding: 2px;
+    overflow: hidden;
+    font-size: 0;
+  }
+  .content {
+    width: 100vw;
+    height: 100dvh;
     overflow: hidden;
   }
+  .search-panel {
+    height: auto;
+    min-height: 0;
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 9px;
+    overflow: visible;
+  }
   .search-line {
-    width: 900px;
-    gap: 12px;
+    width: auto;
+    gap: 9px 12px;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+  .search-line > b {
+    width: 100%;
+  }
+  .search-line label {
+    min-width: min(100%, 250px);
+    flex: 1;
+    justify-content: space-between;
+  }
+  .search-line input,
+  .search-line select {
+    width: min(65vw, 240px);
   }
   .search-actions {
-    width: 400px;
+    width: auto;
+    min-height: 38px;
+    gap: 18px;
+  }
+  .search-actions .primary,
+  .action-strip button,
+  .product-actions button,
+  .gf-toolbar button,
+  .gf-filter-actions button,
+  .org-toolbar button {
+    min-height: 40px;
   }
   .table-tools {
-    padding: 8px 12px;
-    height: 78px;
+    padding: 10px 12px;
+    height: auto;
+    min-height: 88px;
     align-items: flex-start;
     flex-direction: column;
     gap: 7px;
@@ -1474,7 +1560,7 @@ tbody tr.selected {
     font-size: 12px;
   }
   .detail-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   .detail-modal {
     padding-inline: 20px;
@@ -1485,43 +1571,349 @@ tbody tr.selected {
   .help-modal {
     width: calc(100vw - 30px);
   }
-  .action-strip {
-    min-width: 760px;
+  .action-strip,
+  .company-actions,
+  .org-toolbar,
+  .product-actions {
+    min-width: 0;
+    height: auto;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+  }
+  .action-strip p,
+  .company-actions span,
+  .product-actions p {
+    width: 100%;
+    margin: 0;
   }
   .generic-table-wrap {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .generic-table {
+    min-width: 760px;
   }
   .company-card {
-    min-width: 700px;
+    min-width: 0;
+    margin: 12px;
+    padding: 14px;
+  }
+  .info-row {
+    grid-template-columns: minmax(115px, 36%) 1fr;
   }
   .org-canvas {
-    min-width: 800px;
+    min-width: 0;
+    align-items: flex-start;
+    padding: 28px 18px;
+  }
+  .org-card {
+    width: 180px;
+  }
+  .org-level {
+    gap: 20px;
+  }
+  .org-level:before {
+    left: 90px;
+    right: 90px;
   }
   .page-tabs,
   .company-tabs {
-    min-width: 650px;
+    min-width: 0;
+    overflow-x: auto;
+    padding-left: 8px;
+    align-items: end;
+    -webkit-overflow-scrolling: touch;
   }
-  .content {
-    overflow: hidden;
+  .page-tabs button,
+  .company-tabs button {
+    flex: 0 0 auto;
+    min-height: 42px;
   }
   .service-shell {
-    grid-template-columns: 180px minmax(0, 1fr);
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
   }
   .service-menu {
-    min-width: 180px;
+    display: flex;
+    min-width: 0;
+    min-height: 58px;
+    flex: 0 0 auto;
+    padding: 0;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid #d9d9d9;
+    -webkit-overflow-scrolling: touch;
+  }
+  .service-menu > b {
+    display: grid;
+    min-width: 92px;
+    place-items: center;
+    padding: 8px 12px;
+    background: #f2f2f2;
+  }
+  .service-menu button {
+    min-width: 155px;
+    min-height: 52px;
+    border-left: 0;
+    border-bottom: 4px solid transparent;
+    padding: 8px 12px;
+  }
+  .service-menu button.active {
+    border-left: 0;
+    border-bottom-color: #13a99c;
   }
   .service-main {
-    padding: 10px;
-    min-width: 760px;
+    min-width: 0;
+    padding: 8px;
+    -webkit-overflow-scrolling: touch;
   }
   .gf-page {
-    min-width: 720px;
+    min-width: 0;
+    padding: 14px;
+    overflow-x: auto;
+  }
+  .gf-page h2 {
+    font-size: 20px;
+  }
+  .gf-toolbar,
+  .gf-subhead,
+  .gf-purpose,
+  .gf-download-list {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .gf-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .gf-page .gf-table {
+    min-width: 680px;
+  }
+  .gf-inner-tabs {
+    overflow-x: auto;
+  }
+  .gf-inner-tabs button {
+    flex: 0 0 auto;
   }
   .gf-comment {
     position: fixed;
-    right: 0;
-    top: 44px;
-    height: calc(100vh - 44px);
+    inset: 44px 0 0 auto;
+    width: min(92vw, 360px);
+    height: calc(100dvh - 44px);
+  }
+  .service-product {
+    min-width: 0;
+  }
+  .product-top {
+    padding-left: 52px;
+    gap: 10px;
+  }
+  .product-top b {
+    font-size: 15px;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  .product-top span {
+    max-width: 34vw;
+  }
+  .product-notice {
+    height: auto;
+    min-height: 36px;
+    padding: 7px 12px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .product-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+  .product-menu {
+    display: flex;
+    min-height: 52px;
+    flex: 0 0 auto;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid #ccc;
+    -webkit-overflow-scrolling: touch;
+  }
+  .product-menu h2,
+  .product-menu h3 {
+    display: none;
+  }
+  .product-menu button {
+    min-width: 145px;
+    min-height: 48px;
+    place-items: center start;
+    border-bottom: 4px solid transparent;
+    padding: 8px 12px;
+  }
+  .product-menu button.active {
+    border-left: 0;
+    border-bottom-color: #2681ff;
+  }
+  .product-main {
+    min-width: 0;
+    padding: 0 12px 24px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .product-main > h1 {
+    margin: 0 -12px 18px;
+    padding: 12px;
+    font-size: 20px;
+  }
+  .dashboard-cols {
+    grid-template-columns: 1fr;
+  }
+  .service-table {
+    min-width: 720px;
+  }
+  .plan-canvas {
+    min-width: 0;
+    height: min(480px, 58vh);
+    padding: 20px;
+    text-align: center;
+  }
+  .form-modal {
+    max-height: calc(100dvh - 24px);
+    overflow: auto;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-grid .wide {
+    grid-column: auto;
+  }
+  .overlay {
+    padding: 12px;
+  }
+  .help-modal {
+    max-height: calc(100dvh - 24px);
+    overflow: auto;
+  }
+  .table-scroll table {
+    min-width: 0;
+    height: auto !important;
+  }
+  .table-scroll thead {
+    display: none;
+  }
+  .table-scroll tbody {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+  }
+  .table-scroll tbody tr {
+    display: grid;
+    min-width: 0;
+    height: auto;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #ccd1d8;
+    border-radius: 6px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .table-scroll tbody td {
+    height: auto;
+    min-height: 58px;
+    padding: 8px 10px;
+    border: 0;
+    border-bottom: 1px solid #e1e4e8;
+    overflow-wrap: anywhere;
+  }
+  .table-scroll tbody td:nth-child(3),
+  .table-scroll tbody td:nth-child(4),
+  .table-scroll tbody td:nth-child(8) {
+    grid-column: 1 / -1;
+  }
+  .table-scroll tbody td::before {
+    display: block;
+    margin-bottom: 4px;
+    color: #737b85;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .table-scroll tbody td:nth-child(1)::before {
+    content: "元請名";
+  }
+  .table-scroll tbody td:nth-child(2)::before {
+    content: "支店名";
+  }
+  .table-scroll tbody td:nth-child(3)::before {
+    content: "現場名";
+  }
+  .table-scroll tbody td:nth-child(4)::before {
+    content: "住所";
+  }
+  .table-scroll tbody td:nth-child(5)::before {
+    content: "着工日";
+  }
+  .table-scroll tbody td:nth-child(6)::before {
+    content: "竣工日";
+  }
+  .table-scroll tbody td:nth-child(7)::before {
+    content: "ステータス";
+  }
+  .table-scroll tbody td:nth-child(8)::before {
+    content: "利用中のサービス";
+  }
+  .service-strip {
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 430px) {
+  .search-line {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .search-line label {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    min-width: 0;
+  }
+  .search-line input,
+  .search-line select {
+    width: 100%;
+    min-width: 0;
+  }
+  .search-line .check {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  .search-line .check input {
+    width: 22px;
+  }
+  .product-top span {
+    display: none;
+  }
+  .product-top .help {
+    flex: 0 0 auto;
+  }
+  .page-header h1 {
+    max-width: calc(100vw - 140px);
+    font-size: 16px;
+  }
+  .header-actions .help {
+    width: 32px;
+    padding: 3px;
+    overflow: hidden;
+    font-size: 0;
+  }
+  .search-line label {
+    width: 100%;
+  }
+  .table-scroll tbody tr {
+    grid-template-columns: 1fr;
+  }
+  .table-scroll tbody td {
+    grid-column: 1 / -1;
+  }
+  .detail-list {
+    grid-template-columns: 112px 1fr;
   }
 }
