@@ -1351,7 +1351,11 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
 }
 
 function FieldDetailPage({ field, navigate, setConfirm }) {
-  const [tab, setTab] = useState("概要");
+  const [tab, setTab] = useState(() =>
+    new URLSearchParams(location.search).get("section") === "contractors"
+      ? "協力会社"
+      : "概要",
+  );
   const [expandedContractor, setExpandedContractor] = useState("SC-02-01");
   const fieldPlans = transportPlans.filter(
     (plan) => plan.departure === field.field && plan.day === "当日",
