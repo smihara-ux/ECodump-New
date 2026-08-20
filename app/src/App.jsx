@@ -9,19 +9,23 @@ import {
   ChevronRight,
   CircleHelp,
   ClipboardList,
+  Clock3,
   Copy,
   DoorOpen,
   FileText,
   HardHat,
   LayoutGrid,
+  MapPin,
   MapPinned,
   Menu,
+  Navigation,
   Network,
   Search,
   Settings,
   ShieldCheck,
   UserRound,
   UsersRound,
+  Truck,
   X,
 } from "lucide-react";
 
@@ -32,6 +36,10 @@ const navGroups = [
       [Building2, "現場一覧"],
       [LayoutGrid, "現場体制（施工体系図）"],
     ],
+  },
+  {
+    title: "配車・受入管理",
+    items: [[Truck, "搬出・受入スケジュール"]],
   },
   {
     title: "自社情報",
@@ -655,6 +663,216 @@ function VehiclePage({ query, setQuery, setDetailOpen }) {
       />
       <Pager />
     </>
+  );
+}
+
+const transportPlans = [
+  {
+    id: "TR-20260820-01",
+    departure: "サンプル解体現場 A",
+    destination: "湾岸リサイクルセンター",
+    material: "コンクリートがら",
+    vehicle: "品川 100 あ 12-34",
+    driver: "サンプル 運転者1",
+    departAt: "08:30",
+    travelMinutes: 45,
+    arriveAt: "09:15",
+    workMinutes: 35,
+    finishAt: "09:50",
+    status: "空きあり",
+    note: "受付後、東側ヤードへ移動",
+  },
+  {
+    id: "TR-20260820-02",
+    departure: "サンプル新築現場 B",
+    destination: "中央中間処理施設",
+    material: "混合廃棄物",
+    vehicle: "足立 100 か 56-78",
+    driver: "サンプル 運転者2",
+    departAt: "09:10",
+    travelMinutes: 55,
+    arriveAt: "10:05",
+    workMinutes: 45,
+    finishAt: "10:50",
+    status: "混雑",
+    note: "10時台は受付集中。到着前連絡を推奨",
+  },
+  {
+    id: "TR-20260820-03",
+    departure: "サンプル改修現場 C",
+    destination: "北部資源化センター",
+    material: "木くず",
+    vehicle: "練馬 100 き 90-12",
+    driver: "サンプル 運転者3",
+    departAt: "11:20",
+    travelMinutes: 35,
+    arriveAt: "11:55",
+    workMinutes: 30,
+    finishAt: "12:25",
+    status: "やや混雑",
+    note: "正午前後は計量待ちの可能性あり",
+  },
+  {
+    id: "TR-20260820-04",
+    departure: "サンプル造成現場 D",
+    destination: "湾岸リサイクルセンター",
+    material: "廃プラスチック類",
+    vehicle: "品川 100 く 34-56",
+    driver: "サンプル 運転者4",
+    departAt: "13:30",
+    travelMinutes: 50,
+    arriveAt: "14:20",
+    workMinutes: 40,
+    finishAt: "15:00",
+    status: "空きあり",
+    note: "予約枠内で受入予定",
+  },
+];
+
+function TransportSchedulePage({ setConfirm }) {
+  const [status, setStatus] = useState("すべて");
+  const [keyword, setKeyword] = useState("");
+  const visiblePlans = transportPlans.filter(
+    (plan) =>
+      (status === "すべて" || plan.status === status) &&
+      (!keyword ||
+        `${plan.departure}${plan.destination}${plan.vehicle}${plan.driver}`.includes(
+          keyword,
+        )),
+  );
+  return (
+    <section className="transport-page">
+      <div className="transport-toolbar">
+        <div>
+          <b>運行日</b>
+          <input type="date" defaultValue="2026-08-20" />
+        </div>
+        <label>
+          混雑状況
+          <select
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+          >
+            <option>すべて</option>
+            <option>空きあり</option>
+            <option>やや混雑</option>
+            <option>混雑</option>
+          </select>
+        </label>
+        <label className="transport-keyword">
+          現場・受入場所・車両
+          <input
+            value={keyword}
+            onChange={(event) => setKeyword(event.target.value)}
+            placeholder="キーワードを入力"
+          />
+        </label>
+        <button
+          className="primary"
+          onClick={() => setConfirm({ title: "運行予定を追加" })}
+        >
+          予定を追加
+        </button>
+      </div>
+
+      <div className="transport-summary" aria-label="受入予定の集計">
+        <div>
+          <span>本日の予定</span>
+          <b>{transportPlans.length}件</b>
+        </div>
+        <div>
+          <span>空きあり</span>
+          <b>
+            {transportPlans.filter((x) => x.status === "空きあり").length}件
+          </b>
+        </div>
+        <div>
+          <span>混雑注意</span>
+          <b>
+            {transportPlans.filter((x) => x.status !== "空きあり").length}件
+          </b>
+        </div>
+        <div>
+          <span>運行予定時間</span>
+          <b>08:30–15:00</b>
+        </div>
+      </div>
+
+      <div className="transport-list-head">
+        <div>
+          <h2>搬出・受入スケジュール</h2>
+          <p>移動時間と現地作業時間を含めた完了予定まで確認できます。</p>
+        </div>
+        <b>検索結果：{visiblePlans.length}件</b>
+      </div>
+
+      <div className="transport-list">
+        {visiblePlans.map((plan) => (
+          <article className="transport-card" key={plan.id}>
+            <div className="transport-card-head">
+              <div>
+                <b>{plan.id}</b>
+                <span>{plan.material}</span>
+              </div>
+              <span
+                className={`traffic-status ${plan.status === "混雑" ? "busy" : plan.status === "やや混雑" ? "medium" : "open"}`}
+              >
+                {plan.status}
+              </span>
+            </div>
+            <div className="transport-route">
+              <div className="route-point">
+                <MapPin />
+                <span>出発現場</span>
+                <b>{plan.departure}</b>
+                <strong>{plan.departAt} 出発予定</strong>
+              </div>
+              <div className="route-duration">
+                <Navigation />
+                <b>所要時間 {plan.travelMinutes}分</b>
+                <span>道路状況を含む予定</span>
+              </div>
+              <div className="route-point destination">
+                <MapPinned />
+                <span>受入場所情報</span>
+                <b>{plan.destination}</b>
+                <strong>{plan.arriveAt} 到着予定</strong>
+              </div>
+              <div className="route-duration work">
+                <Clock3 />
+                <b>現地作業 {plan.workMinutes}分</b>
+                <span>{plan.finishAt} 完了予定</span>
+              </div>
+            </div>
+            <div className="transport-meta">
+              <span>
+                <b>車両</b>
+                {plan.vehicle}
+              </span>
+              <span>
+                <b>運転者</b>
+                {plan.driver}
+              </span>
+              <span>
+                <b>受入先メモ</b>
+                {plan.note}
+              </span>
+              <button
+                className="outline"
+                onClick={() => setConfirm({ title: `${plan.id}の予定詳細` })}
+              >
+                詳細
+              </button>
+            </div>
+          </article>
+        ))}
+        {!visiblePlans.length && (
+          <div className="transport-empty">
+            条件に一致する運行予定はありません。
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 function CompanyPage({ setConfirm }) {
@@ -2106,6 +2324,7 @@ export function App() {
       if (target === "labor") return "労務安全";
       if (target === "gatekeeper") return "入退場管理";
       if (target === "conference") return "調整会議";
+      if (target === "transport") return "搬出・受入スケジュール";
       return "現場一覧";
     }),
     [collapsed, setCollapsed] = useState(
@@ -2155,6 +2374,8 @@ export function App() {
     );
   else if (page === "車両・機械情報一覧")
     body = <VehiclePage {...{ query, setQuery, setDetailOpen }} />;
+  else if (page === "搬出・受入スケジュール")
+    body = <TransportSchedulePage setConfirm={setConfirm} />;
   else if (page === "労務安全")
     body = <GreenfilePage setConfirm={setConfirm} />;
   else if (page === "入退場管理")
