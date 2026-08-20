@@ -32,10 +32,7 @@ import {
 const navGroups = [
   {
     title: "現場情報",
-    items: [
-      [Building2, "現場一覧"],
-      [LayoutGrid, "現場体制（施工体系図）"],
-    ],
+    items: [[Building2, "現場一覧"]],
   },
   {
     title: "配車・受入管理",
@@ -46,8 +43,7 @@ const navGroups = [
     items: [
       [Building2, "会社情報"],
       [UserRound, "ユーザー一覧"],
-      [HardHat, "作業員一覧"],
-      [BusFront, "車両・機械情報一覧"],
+      [BusFront, "車両一覧"],
     ],
   },
   {
@@ -85,6 +81,52 @@ const workers = Array.from({ length: 12 }, (_, i) => ({
   ccus: i % 4 ? "連携済み" : "未設定",
   status: "在籍",
 }));
+const vehicles = [
+  {
+    name: "10t ダンプ 01",
+    number: "品川 100 あ 12-34",
+    kind: "大型ダンプ",
+    capacity: "10t",
+    status: "稼働中",
+  },
+  {
+    name: "4t ダンプ 02",
+    number: "足立 100 か 56-78",
+    kind: "中型ダンプ",
+    capacity: "4t",
+    status: "稼働中",
+  },
+  {
+    name: "アームロール 03",
+    number: "練馬 100 き 90-12",
+    kind: "脱着装置付コンテナ車",
+    capacity: "8t",
+    status: "点検予定",
+  },
+];
+const drivers = [
+  {
+    name: "サンプル 運転者1",
+    phone: "090-0000-0001",
+    license: "大型・けん引",
+    expires: "2028/03/31",
+    status: "配車可能",
+  },
+  {
+    name: "サンプル 運転者2",
+    phone: "090-0000-0002",
+    license: "大型",
+    expires: "2027/11/30",
+    status: "運行中",
+  },
+  {
+    name: "サンプル 運転者3",
+    phone: "090-0000-0003",
+    license: "中型",
+    expires: "2029/06/30",
+    status: "配車可能",
+  },
+];
 
 function Header({ title, onHelp }) {
   return (
@@ -274,7 +316,17 @@ function FieldList({
                   <td>{r.company}</td>
                   <td>{r.branch}</td>
                   <td>
-                    <strong>{r.field}</strong>
+                    <button
+                      className="field-access"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelected(r.id);
+                        navigate("現場詳細", r.id);
+                      }}
+                    >
+                      {r.field}
+                      <ChevronRight />
+                    </button>
                     <div className="field-meta">
                       ID：{r.id}
                       <button
@@ -302,12 +354,33 @@ function FieldList({
                   <td>
                     <div className="service-strip">
                       <img src="/buildee-service-icons.png" alt="" />
-                      <a href="?page=labor" aria-label="労務安全を開く" />
+                      <a
+                        href="?page=labor"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelected(r.id);
+                          navigate("労務安全");
+                        }}
+                        aria-label="労務安全を開く"
+                      />
                       <a
                         href="?page=gatekeeper"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelected(r.id);
+                          navigate("入退場管理");
+                        }}
                         aria-label="入退場管理を開く"
                       />
-                      <a href="?page=conference" aria-label="調整会議を開く" />
+                      <a
+                        href="?page=conference"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelected(r.id);
+                          navigate("調整会議");
+                        }}
+                        aria-label="調整会議を開く"
+                      />
                     </div>
                   </td>
                 </tr>
@@ -610,27 +683,70 @@ function CreateRecordModal({ type, onClose, onSave }) {
     </div>
   );
 }
-function VehiclePage({ query, setQuery, setDetailOpen }) {
-  const [tab, setTab] = useState(0);
+function VehiclePage({ query, setQuery, setDetailOpen, setConfirm }) {
+  const [tab, setTab] = useState("車両情報");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [vehicleRows, setVehicleRows] = useState(vehicles);
+  const [driverRows, setDriverRows] = useState(drivers);
+  const source = tab === "車両情報" ? vehicleRows : driverRows;
+  const visible = source.filter((item) =>
+    Object.values(item).join(" ").toLowerCase().includes(query.toLowerCase()),
+  );
+  const addRecord = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    if (tab === "車両情報")
+      setVehicleRows((rows) => [
+        ...rows,
+        {
+          name: form.get("name"),
+          number: form.get("number"),
+          kind: form.get("kind"),
+          capacity: form.get("capacity"),
+          status: "稼働中",
+        },
+      ]);
+    else
+      setDriverRows((rows) => [
+        ...rows,
+        {
+          name: form.get("name"),
+          phone: form.get("phone"),
+          license: form.get("license"),
+          expires: form.get("expires"),
+          status: "配車可能",
+        },
+      ]);
+    setCreateOpen(false);
+    setConfirm({ title: `${tab}を登録しました` });
+  };
   return (
     <>
       <div className="page-tabs">
-        <button className={tab === 0 ? "active" : ""} onClick={() => setTab(0)}>
-          工事・通勤用車両
+        <button
+          className={tab === "車両情報" ? "active" : ""}
+          onClick={() => setTab("車両情報")}
+        >
+          車両情報
         </button>
-        <button className={tab === 1 ? "active" : ""} onClick={() => setTab(1)}>
-          移動式クレーン・車両系建設機械
+        <button
+          className={tab === "運転手情報" ? "active" : ""}
+          onClick={() => setTab("運転手情報")}
+        >
+          運転手情報
         </button>
       </div>
       <SearchBar
-        count={0}
+        count={visible.length}
         query={query}
         setQuery={setQuery}
-        placeholder="車両名を入力"
+        placeholder={
+          tab === "車両情報" ? "車両名・車両番号を入力" : "運転手名を入力"
+        }
         extra={
           <>
             <label>
-              種別{" "}
+              状態{" "}
               <select>
                 <option>すべて</option>
               </select>
@@ -645,23 +761,120 @@ function VehiclePage({ query, setQuery, setDetailOpen }) {
         onClear={() => setQuery("")}
       />
       <div className="action-strip">
-        <button className="primary">新規作成</button>
-        <p>ECODUMP労務安全で使用届の作成に利用できます。</p>
+        <button className="primary" onClick={() => setCreateOpen(true)}>
+          {tab}を登録
+        </button>
+        <p>
+          配車時に使用する{tab === "車両情報" ? "車両" : "運転手と免許期限"}
+          を管理します。
+        </p>
       </div>
       <GridTable
-        headers={[
-          "",
-          "支店名",
-          "種別",
-          "車両名（ECODUMP表示名）",
-          "車両番号",
-          "利用状況",
-          "",
-        ]}
-        rows={[]}
-        empty
+        headers={
+          tab === "車両情報"
+            ? ["車両名", "車両番号", "種別", "最大積載量", "利用状況", "操作"]
+            : [
+                "運転手名",
+                "電話番号",
+                "免許区分",
+                "免許期限",
+                "配車状況",
+                "操作",
+              ]
+        }
+        rows={visible.map((item) =>
+          tab === "車両情報"
+            ? [
+                item.name,
+                item.number,
+                item.kind,
+                item.capacity,
+                item.status,
+                "__confirm",
+              ]
+            : [
+                item.name,
+                item.phone,
+                item.license,
+                item.expires,
+                item.status,
+                "__confirm",
+              ],
+        )}
+        onConfirm={(index) =>
+          setConfirm({
+            title: `${tab}詳細`,
+            message: Object.values(visible[index]).join(" / "),
+          })
+        }
       />
       <Pager />
+      {createOpen && (
+        <div className="overlay" onMouseDown={() => setCreateOpen(false)}>
+          <form
+            className="modal form-modal"
+            onSubmit={addRecord}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <h2>{tab}を登録</h2>
+            <div className="form-grid">
+              <label>
+                {tab === "車両情報" ? "車両名" : "運転手名"}
+                <input name="name" required />
+              </label>
+              {tab === "車両情報" ? (
+                <>
+                  <label>
+                    車両番号
+                    <input name="number" required />
+                  </label>
+                  <label>
+                    種別
+                    <select name="kind">
+                      <option>大型ダンプ</option>
+                      <option>中型ダンプ</option>
+                      <option>アームロール</option>
+                    </select>
+                  </label>
+                  <label>
+                    最大積載量
+                    <input name="capacity" placeholder="10t" required />
+                  </label>
+                </>
+              ) : (
+                <>
+                  <label>
+                    電話番号
+                    <input name="phone" inputMode="tel" required />
+                  </label>
+                  <label>
+                    免許区分
+                    <select name="license">
+                      <option>大型</option>
+                      <option>中型</option>
+                      <option>大型・けん引</option>
+                    </select>
+                  </label>
+                  <label>
+                    免許期限
+                    <input name="expires" type="date" required />
+                  </label>
+                </>
+              )}
+            </div>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="outline"
+                onClick={() => setCreateOpen(false)}
+              >
+                閉じる
+              </button>
+              <button className="primary">登録</button>
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 }
@@ -669,7 +882,8 @@ function VehiclePage({ query, setQuery, setDetailOpen }) {
 const transportPlans = [
   {
     id: "TR-20260820-01",
-    departure: "サンプル解体現場 A",
+    day: "当日",
+    departure: "（仮称）サンプル現場 A",
     destination: "湾岸リサイクルセンター",
     material: "コンクリートがら",
     vehicle: "品川 100 あ 12-34",
@@ -684,7 +898,8 @@ const transportPlans = [
   },
   {
     id: "TR-20260820-02",
-    departure: "サンプル新築現場 B",
+    day: "当日",
+    departure: "サンプル現場 B",
     destination: "中央中間処理施設",
     material: "混合廃棄物",
     vehicle: "足立 100 か 56-78",
@@ -699,7 +914,8 @@ const transportPlans = [
   },
   {
     id: "TR-20260820-03",
-    departure: "サンプル改修現場 C",
+    day: "当日",
+    departure: "サンプル現場 C",
     destination: "北部資源化センター",
     material: "木くず",
     vehicle: "練馬 100 き 90-12",
@@ -714,7 +930,8 @@ const transportPlans = [
   },
   {
     id: "TR-20260820-04",
-    departure: "サンプル造成現場 D",
+    day: "当日",
+    departure: "（仮称）サンプル現場 D",
     destination: "湾岸リサイクルセンター",
     material: "廃プラスチック類",
     vehicle: "品川 100 く 34-56",
@@ -727,26 +944,113 @@ const transportPlans = [
     status: "空きあり",
     note: "予約枠内で受入予定",
   },
+  {
+    id: "TR-20260821-01",
+    day: "翌日",
+    departure: "（仮称）サンプル現場 A",
+    destination: "中央中間処理施設",
+    material: "混合廃棄物",
+    vehicle: "足立 100 か 56-78",
+    driver: "サンプル 運転者2",
+    departAt: "08:45",
+    travelMinutes: 50,
+    arriveAt: "09:35",
+    workMinutes: 40,
+    finishAt: "10:15",
+    status: "やや混雑",
+    note: "午前予約枠、受付番号を提示",
+  },
+  {
+    id: "TR-20260821-02",
+    day: "翌日",
+    departure: "サンプル現場 B",
+    destination: "湾岸リサイクルセンター",
+    material: "コンクリートがら",
+    vehicle: "品川 100 あ 12-34",
+    driver: "サンプル 運転者1",
+    departAt: "13:00",
+    travelMinutes: 45,
+    arriveAt: "13:45",
+    workMinutes: 35,
+    finishAt: "14:20",
+    status: "空きあり",
+    note: "午後の受入枠に空きあり",
+  },
 ];
 
-function TransportSchedulePage({ setConfirm }) {
+function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
   const [status, setStatus] = useState("すべて");
   const [keyword, setKeyword] = useState("");
+  const [day, setDay] = useState("当日");
+  const [view, setView] = useState("現場別");
+  const [field, setField] = useState(initialField);
   const visiblePlans = transportPlans.filter(
     (plan) =>
+      plan.day === day &&
+      (field === "すべて" || plan.departure === field) &&
       (status === "すべて" || plan.status === status) &&
       (!keyword ||
         `${plan.departure}${plan.destination}${plan.vehicle}${plan.driver}`.includes(
           keyword,
         )),
   );
+  const destinationTotals = Object.values(
+    visiblePlans.reduce((totals, plan) => {
+      totals[plan.destination] ||= {
+        destination: plan.destination,
+        count: 0,
+        status: plan.status,
+        times: [],
+      };
+      totals[plan.destination].count += 1;
+      totals[plan.destination].times.push(plan.arriveAt);
+      if (plan.status === "混雑") totals[plan.destination].status = "混雑";
+      return totals;
+    }, {}),
+  );
   return (
     <section className="transport-page">
-      <div className="transport-toolbar">
-        <div>
-          <b>運行日</b>
-          <input type="date" defaultValue="2026-08-20" />
+      <div className="schedule-switches" aria-label="予定表示の切り替え">
+        <div className="segmented-control">
+          {[
+            ["当日", "2026/08/20"],
+            ["翌日", "2026/08/21"],
+          ].map(([label, date]) => (
+            <button
+              className={day === label ? "active" : ""}
+              onClick={() => setDay(label)}
+              key={label}
+            >
+              <b>{label}</b>
+              <span>{date}</span>
+            </button>
+          ))}
         </div>
+        <div className="view-switch">
+          {["現場別", "受入場所別"].map((label) => (
+            <button
+              className={view === label ? "active" : ""}
+              onClick={() => setView(label)}
+              key={label}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="transport-toolbar">
+        <label>
+          現場
+          <select
+            value={field}
+            onChange={(event) => setField(event.target.value)}
+          >
+            <option>すべて</option>
+            {fields.slice(0, 8).map((item) => (
+              <option key={item.id}>{item.field}</option>
+            ))}
+          </select>
+        </label>
         <label>
           混雑状況
           <select
@@ -778,23 +1082,33 @@ function TransportSchedulePage({ setConfirm }) {
       <div className="transport-summary" aria-label="受入予定の集計">
         <div>
           <span>本日の予定</span>
-          <b>{transportPlans.length}件</b>
+          <b>{transportPlans.filter((x) => x.day === day).length}件</b>
         </div>
         <div>
           <span>空きあり</span>
           <b>
-            {transportPlans.filter((x) => x.status === "空きあり").length}件
+            {
+              transportPlans.filter(
+                (x) => x.day === day && x.status === "空きあり",
+              ).length
+            }
+            件
           </b>
         </div>
         <div>
           <span>混雑注意</span>
           <b>
-            {transportPlans.filter((x) => x.status !== "空きあり").length}件
+            {
+              transportPlans.filter(
+                (x) => x.day === day && x.status !== "空きあり",
+              ).length
+            }
+            件
           </b>
         </div>
         <div>
           <span>運行予定時間</span>
-          <b>08:30–15:00</b>
+          <b>{day === "当日" ? "08:30–15:00" : "08:45–14:20"}</b>
         </div>
       </div>
 
@@ -807,71 +1121,249 @@ function TransportSchedulePage({ setConfirm }) {
       </div>
 
       <div className="transport-list">
-        {visiblePlans.map((plan) => (
-          <article className="transport-card" key={plan.id}>
-            <div className="transport-card-head">
+        {view === "受入場所別" &&
+          destinationTotals.map((item) => (
+            <article
+              className="destination-summary-card"
+              key={item.destination}
+            >
+              <MapPinned />
               <div>
-                <b>{plan.id}</b>
-                <span>{plan.material}</span>
+                <span>受入場所情報</span>
+                <h3>{item.destination}</h3>
+                <p>到着予定：{item.times.sort().join("、")}</p>
+              </div>
+              <div className="destination-count">
+                <b>{item.count}台</b>
+                <span>予定延べ台数</span>
               </div>
               <span
-                className={`traffic-status ${plan.status === "混雑" ? "busy" : plan.status === "やや混雑" ? "medium" : "open"}`}
+                className={`traffic-status ${item.status === "混雑" ? "busy" : item.status === "やや混雑" ? "medium" : "open"}`}
               >
-                {plan.status}
+                {item.status}
               </span>
-            </div>
-            <div className="transport-route">
-              <div className="route-point">
-                <MapPin />
-                <span>出発現場</span>
-                <b>{plan.departure}</b>
-                <strong>{plan.departAt} 出発予定</strong>
+            </article>
+          ))}
+        {view === "現場別" &&
+          visiblePlans.map((plan) => (
+            <article className="transport-card" key={plan.id}>
+              <div className="transport-card-head">
+                <div>
+                  <b>{plan.id}</b>
+                  <span>{plan.material}</span>
+                </div>
+                <span
+                  className={`traffic-status ${plan.status === "混雑" ? "busy" : plan.status === "やや混雑" ? "medium" : "open"}`}
+                >
+                  {plan.status}
+                </span>
               </div>
-              <div className="route-duration">
-                <Navigation />
-                <b>所要時間 {plan.travelMinutes}分</b>
-                <span>道路状況を含む予定</span>
+              <div className="transport-route">
+                <div className="route-point">
+                  <MapPin />
+                  <span>出発現場</span>
+                  <b>{plan.departure}</b>
+                  <strong>{plan.departAt} 出発予定</strong>
+                </div>
+                <div className="route-duration">
+                  <Navigation />
+                  <b>所要時間 {plan.travelMinutes}分</b>
+                  <span>道路状況を含む予定</span>
+                </div>
+                <div className="route-point destination">
+                  <MapPinned />
+                  <span>受入場所情報</span>
+                  <b>{plan.destination}</b>
+                  <strong>{plan.arriveAt} 到着予定</strong>
+                </div>
+                <div className="route-duration work">
+                  <Clock3 />
+                  <b>現地作業 {plan.workMinutes}分</b>
+                  <span>{plan.finishAt} 完了予定</span>
+                </div>
               </div>
-              <div className="route-point destination">
-                <MapPinned />
-                <span>受入場所情報</span>
-                <b>{plan.destination}</b>
-                <strong>{plan.arriveAt} 到着予定</strong>
+              <div className="transport-meta">
+                <span>
+                  <b>車両</b>
+                  {plan.vehicle}
+                </span>
+                <span>
+                  <b>運転者</b>
+                  {plan.driver}
+                </span>
+                <span>
+                  <b>受入先メモ</b>
+                  {plan.note}
+                </span>
+                <button
+                  className="outline"
+                  onClick={() => setConfirm({ title: `${plan.id}の予定詳細` })}
+                >
+                  詳細
+                </button>
               </div>
-              <div className="route-duration work">
-                <Clock3 />
-                <b>現地作業 {plan.workMinutes}分</b>
-                <span>{plan.finishAt} 完了予定</span>
-              </div>
-            </div>
-            <div className="transport-meta">
-              <span>
-                <b>車両</b>
-                {plan.vehicle}
-              </span>
-              <span>
-                <b>運転者</b>
-                {plan.driver}
-              </span>
-              <span>
-                <b>受入先メモ</b>
-                {plan.note}
-              </span>
-              <button
-                className="outline"
-                onClick={() => setConfirm({ title: `${plan.id}の予定詳細` })}
-              >
-                詳細
-              </button>
-            </div>
-          </article>
-        ))}
+            </article>
+          ))}
         {!visiblePlans.length && (
           <div className="transport-empty">
             条件に一致する運行予定はありません。
           </div>
         )}
       </div>
+    </section>
+  );
+}
+
+function FieldDetailPage({ field, navigate, setConfirm }) {
+  const [tab, setTab] = useState("概要");
+  const fieldPlans = transportPlans.filter(
+    (plan) => plan.departure === field.field && plan.day === "当日",
+  );
+  const tabs = ["概要", "入退場", "搬出・受入", "車両・運転手"];
+  return (
+    <section className="field-detail-page">
+      <div className="field-detail-hero">
+        <button
+          className="text back-to-fields"
+          onClick={() => navigate("現場一覧")}
+        >
+          <ChevronLeft />
+          現場一覧へ戻る
+        </button>
+        <div>
+          <span>現場ID：{field.id}</span>
+          <h2>{field.field}</h2>
+          <p>
+            {field.address}　／　{field.start}〜{field.end}
+          </p>
+        </div>
+      </div>
+      <nav className="field-subnav" aria-label="現場内メニュー">
+        {tabs.map((label) => (
+          <button
+            className={tab === label ? "active" : ""}
+            onClick={() => setTab(label)}
+            key={label}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+      {tab === "概要" && (
+        <div className="field-dashboard">
+          <div className="field-kpis">
+            <div>
+              <span>本日の入場者</span>
+              <b>18名</b>
+            </div>
+            <div>
+              <span>本日の車両</span>
+              <b>{Math.max(fieldPlans.length, 2)}台</b>
+            </div>
+            <div>
+              <span>搬出・受入予定</span>
+              <b>{fieldPlans.length}件</b>
+            </div>
+            <div>
+              <span>未確認のお知らせ</span>
+              <b>2件</b>
+            </div>
+          </div>
+          <div className="field-action-grid">
+            <button onClick={() => setTab("入退場")}>
+              <DoorOpen />
+              <span>
+                <b>入退場</b>
+                <small>作業員・車両の入退場状況</small>
+              </span>
+              <ChevronRight />
+            </button>
+            <button onClick={() => setTab("搬出・受入")}>
+              <Truck />
+              <span>
+                <b>搬出・受入</b>
+                <small>当日・翌日の運行予定</small>
+              </span>
+              <ChevronRight />
+            </button>
+            <button onClick={() => setTab("車両・運転手")}>
+              <BusFront />
+              <span>
+                <b>車両・運転手</b>
+                <small>配車情報と担当者</small>
+              </span>
+              <ChevronRight />
+            </button>
+            <button onClick={() => navigate("調整会議")}>
+              <CalendarDays />
+              <span>
+                <b>現場掲示板</b>
+                <small>予定・連絡事項を確認</small>
+              </span>
+              <ChevronRight />
+            </button>
+          </div>
+        </div>
+      )}
+      {tab === "入退場" && (
+        <div className="field-section">
+          <div className="section-heading">
+            <div>
+              <h2>本日の入退場</h2>
+              <p>この現場に入場している作業員と車両を確認できます。</p>
+            </div>
+            <button className="primary" onClick={() => navigate("入退場管理")}>
+              入退場管理を開く
+            </button>
+          </div>
+          <GridTable
+            headers={["区分", "氏名／車両", "入場時刻", "退場時刻", "状態"]}
+            rows={[
+              ["作業員", "サンプル 作業員1", "07:48", "—", "入場中"],
+              ["車両", "10t ダンプ 01", "08:22", "09:58", "退場済み"],
+              ["作業員", "サンプル 作業員2", "08:05", "—", "入場中"],
+            ]}
+          />
+        </div>
+      )}
+      {tab === "搬出・受入" && (
+        <TransportSchedulePage
+          setConfirm={setConfirm}
+          initialField={field.field}
+        />
+      )}
+      {tab === "車両・運転手" && (
+        <div className="field-section">
+          <div className="section-heading">
+            <div>
+              <h2>本日の配車</h2>
+              <p>この現場に割り当てられた車両と運転手です。</p>
+            </div>
+            <button className="primary" onClick={() => navigate("車両一覧")}>
+              車両一覧を開く
+            </button>
+          </div>
+          <GridTable
+            headers={["車両", "車両番号", "運転手", "出発予定", "配車状況"]}
+            rows={[
+              [
+                vehicles[0].name,
+                vehicles[0].number,
+                drivers[0].name,
+                "08:30",
+                "配車確定",
+              ],
+              [
+                vehicles[1].name,
+                vehicles[1].number,
+                drivers[1].name,
+                "13:00",
+                "配車確定",
+              ],
+            ]}
+          />
+        </div>
+      )}
     </section>
   );
 }
@@ -2325,6 +2817,8 @@ export function App() {
       if (target === "gatekeeper") return "入退場管理";
       if (target === "conference") return "調整会議";
       if (target === "transport") return "搬出・受入スケジュール";
+      if (target === "vehicles") return "車両一覧";
+      if (target === "field") return "現場詳細";
       return "現場一覧";
     }),
     [collapsed, setCollapsed] = useState(
@@ -2334,12 +2828,33 @@ export function App() {
     [detailOpen, setDetailOpen] = useState(false),
     [helpOpen, setHelpOpen] = useState(false),
     [confirm, setConfirm] = useState(null),
-    [selected, setSelected] = useState(null),
+    [selected, setSelected] = useState(
+      () => new URLSearchParams(location.search).get("fieldId") || null,
+    ),
     [copied, setCopied] = useState(null);
-  const navigate = (p) => {
+  const navigate = (p, fieldId) => {
     setPage(p);
     setQuery("");
     setDetailOpen(false);
+    const routeKeys = {
+      現場一覧: "fields",
+      現場詳細: "field",
+      "搬出・受入スケジュール": "transport",
+      車両一覧: "vehicles",
+      労務安全: "labor",
+      入退場管理: "gatekeeper",
+      調整会議: "conference",
+    };
+    const params = new URLSearchParams();
+    if (routeKeys[p] && routeKeys[p] !== "fields")
+      params.set("page", routeKeys[p]);
+    if (p === "現場詳細" && (fieldId || selected))
+      params.set("fieldId", fieldId || selected);
+    history.replaceState(
+      null,
+      "",
+      `${location.pathname}${params.size ? `?${params}` : ""}`,
+    );
     if (window.matchMedia("(max-width: 1100px)").matches) setCollapsed(true);
   };
   const copyId = async (id) => {
@@ -2363,17 +2878,23 @@ export function App() {
         }}
       />
     );
-  else if (page === "現場体制（施工体系図）") body = <OrganizationPage />;
+  else if (page === "現場詳細")
+    body = (
+      <FieldDetailPage
+        field={fields.find((item) => item.id === selected) || fields[0]}
+        {...{ navigate, setConfirm }}
+      />
+    );
   else if (page === "会社情報") body = <CompanyPage setConfirm={setConfirm} />;
-  else if (page === "ユーザー一覧" || page === "作業員一覧")
+  else if (page === "ユーザー一覧")
     body = (
       <ListPage
         type={page}
         {...{ query, setQuery, setDetailOpen, setConfirm }}
       />
     );
-  else if (page === "車両・機械情報一覧")
-    body = <VehiclePage {...{ query, setQuery, setDetailOpen }} />;
+  else if (page === "車両一覧")
+    body = <VehiclePage {...{ query, setQuery, setDetailOpen, setConfirm }} />;
   else if (page === "搬出・受入スケジュール")
     body = <TransportSchedulePage setConfirm={setConfirm} />;
   else if (page === "労務安全")
@@ -2455,7 +2976,13 @@ export function App() {
       <main className="content">
         {!["労務安全", "入退場管理", "調整会議"].includes(page) && (
           <Header
-            title={page === "現場一覧" ? "現場確認" : page}
+            title={
+              page === "現場一覧"
+                ? "現場確認"
+                : page === "現場詳細"
+                  ? "現場詳細"
+                  : page
+            }
             onHelp={() => setHelpOpen(true)}
           />
         )}

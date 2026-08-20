@@ -451,6 +451,25 @@ tbody tr.selected {
   align-items: center;
   gap: 6px;
 }
+.field-access {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #176fd1;
+  font-weight: 700;
+  text-align: left;
+}
+.field-access:hover {
+  text-decoration: underline;
+}
+.field-access svg {
+  width: 16px;
+  min-width: 16px;
+}
 .field-meta button {
   border: 0;
   background: none;
@@ -1434,6 +1453,47 @@ tbody tr.selected {
   background: #f5f6f8;
   padding: 18px 20px 40px;
 }
+.schedule-switches {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.segmented-control,
+.view-switch {
+  display: flex;
+  border: 1px solid #c9cfd7;
+  background: #fff;
+}
+.segmented-control button,
+.view-switch button {
+  min-width: 124px;
+  padding: 8px 18px;
+  border: 0;
+  border-right: 1px solid #d7dce2;
+  background: #fff;
+}
+.segmented-control button:last-child,
+.view-switch button:last-child {
+  border-right: 0;
+}
+.segmented-control button {
+  display: grid;
+  gap: 2px;
+}
+.segmented-control span {
+  color: #68717d;
+  font-size: 11px;
+}
+.segmented-control button.active,
+.view-switch button.active {
+  background: #2681ff;
+  color: #fff;
+}
+.segmented-control button.active span {
+  color: #fff;
+}
 .transport-toolbar {
   display: flex;
   align-items: flex-end;
@@ -1643,6 +1703,168 @@ tbody tr.selected {
   background: #fff;
   color: #6a7380;
   text-align: center;
+}
+.destination-summary-card {
+  display: grid;
+  grid-template-columns: 40px minmax(240px, 1fr) 150px 90px;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #d3d8df;
+  background: #fff;
+}
+.destination-summary-card > svg {
+  width: 28px;
+  color: #2681ff;
+}
+.destination-summary-card h3,
+.destination-summary-card p {
+  margin: 0;
+}
+.destination-summary-card h3 {
+  margin: 3px 0 5px;
+  font-size: 18px;
+}
+.destination-summary-card span,
+.destination-summary-card p {
+  color: #68717d;
+  font-size: 12px;
+}
+.destination-count {
+  display: grid;
+  gap: 2px;
+  text-align: center;
+}
+.destination-count b {
+  font-size: 26px;
+}
+.field-detail-page {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: #f5f6f8;
+  padding-bottom: 40px;
+}
+.field-detail-hero {
+  display: grid;
+  gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #d6dbe1;
+  background: #fff;
+}
+.field-detail-hero .back-to-fields {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 0;
+}
+.field-detail-hero .back-to-fields svg {
+  width: 18px;
+}
+.field-detail-hero h2,
+.field-detail-hero p {
+  margin: 0;
+}
+.field-detail-hero h2 {
+  margin: 4px 0 5px;
+  font-size: 24px;
+}
+.field-detail-hero span,
+.field-detail-hero p {
+  color: #626b76;
+  font-size: 13px;
+}
+.field-subnav {
+  display: flex;
+  padding: 0 22px;
+  border-bottom: 1px solid #ccd2da;
+  background: #fff;
+  overflow-x: auto;
+}
+.field-subnav button {
+  min-width: 130px;
+  padding: 13px 18px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  white-space: nowrap;
+}
+.field-subnav button.active {
+  border-bottom-color: #2681ff;
+  color: #176fd1;
+  font-weight: 700;
+}
+.field-dashboard,
+.field-section {
+  padding: 18px 22px;
+}
+.field-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.field-kpis > div {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-left: 4px solid #2681ff;
+  background: #fff;
+}
+.field-kpis span {
+  color: #68717d;
+  font-size: 12px;
+}
+.field-kpis b {
+  font-size: 24px;
+}
+.field-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.field-action-grid button {
+  display: grid;
+  grid-template-columns: 36px 1fr 22px;
+  align-items: center;
+  gap: 12px;
+  min-height: 100px;
+  padding: 18px;
+  border: 1px solid #d2d8df;
+  background: #fff;
+  text-align: left;
+}
+.field-action-grid button:hover {
+  border-color: #2681ff;
+  background: #f5f9ff;
+}
+.field-action-grid button > svg:first-child {
+  width: 30px;
+  color: #2681ff;
+}
+.field-action-grid span {
+  display: grid;
+  gap: 6px;
+}
+.field-action-grid b {
+  font-size: 17px;
+}
+.field-action-grid small {
+  color: #68717d;
+}
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section-heading h2,
+.section-heading p {
+  margin: 0;
+}
+.section-heading p {
+  margin-top: 5px;
+  color: #68717d;
 }
 
 @media (max-width: 1100px) {
@@ -2083,6 +2305,15 @@ tbody tr.selected {
   .transport-page {
     padding: 12px;
   }
+  .schedule-switches {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .segmented-control button,
+  .view-switch button {
+    min-width: 0;
+    flex: 1;
+  }
   .transport-toolbar {
     align-items: stretch;
     flex-wrap: wrap;
@@ -2128,6 +2359,12 @@ tbody tr.selected {
     width: 100%;
     flex-basis: 100%;
   }
+  .destination-summary-card {
+    grid-template-columns: 32px minmax(0, 1fr) 110px 86px;
+  }
+  .field-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 430px) {
@@ -2147,6 +2384,39 @@ tbody tr.selected {
   .transport-meta span {
     width: 100%;
     flex-wrap: wrap;
+  }
+  .destination-summary-card {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+  .destination-count,
+  .destination-summary-card > .traffic-status {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+  .field-detail-hero,
+  .field-dashboard,
+  .field-section {
+    padding: 14px 12px;
+  }
+  .field-detail-hero h2 {
+    font-size: 20px;
+  }
+  .field-subnav {
+    padding-inline: 6px;
+  }
+  .field-subnav button {
+    min-width: 106px;
+    padding-inline: 12px;
+  }
+  .field-kpis,
+  .field-action-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
   }
   .search-line {
     display: grid;
