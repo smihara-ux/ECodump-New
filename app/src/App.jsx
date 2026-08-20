@@ -127,6 +127,47 @@ const drivers = [
     status: "配車可能",
   },
 ];
+const subcontractorHierarchy = [
+  {
+    id: "SC-02-01",
+    name: "サンプル設備工業株式会社",
+    trade: "給排水設備工事",
+    workers: 8,
+    status: "登録済み",
+    children: [
+      {
+        id: "SC-03-01",
+        name: "サンプル配管株式会社",
+        trade: "配管工事",
+        workers: 4,
+        status: "登録済み",
+      },
+      {
+        id: "SC-03-02",
+        name: "サンプル保温工業",
+        trade: "保温工事",
+        workers: 2,
+        status: "確認待ち",
+      },
+    ],
+  },
+  {
+    id: "SC-02-02",
+    name: "サンプル電設株式会社",
+    trade: "電気設備工事",
+    workers: 6,
+    status: "登録済み",
+    children: [
+      {
+        id: "SC-03-03",
+        name: "サンプル通信工事株式会社",
+        trade: "弱電・通信工事",
+        workers: 3,
+        status: "登録済み",
+      },
+    ],
+  },
+];
 
 function Header({ title, onHelp }) {
   return (
@@ -1311,10 +1352,11 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
 
 function FieldDetailPage({ field, navigate, setConfirm }) {
   const [tab, setTab] = useState("概要");
+  const [expandedContractor, setExpandedContractor] = useState("SC-02-01");
   const fieldPlans = transportPlans.filter(
     (plan) => plan.departure === field.field && plan.day === "当日",
   );
-  const tabs = ["概要", "入退場", "搬出・受入", "車両・運転手"];
+  const tabs = ["概要", "協力会社", "入退場", "搬出・受入", "車両・運転手"];
   return (
     <section className="field-detail-page">
       <div className="field-detail-hero">
@@ -1365,6 +1407,14 @@ function FieldDetailPage({ field, navigate, setConfirm }) {
             </div>
           </div>
           <div className="field-action-grid">
+            <button onClick={() => setTab("協力会社")}>
+              <Network />
+              <span>
+                <b>協力会社</b>
+                <small>二次・三次の登録階層を確認</small>
+              </span>
+              <ChevronRight />
+            </button>
             <button onClick={() => setTab("入退場")}>
               <DoorOpen />
               <span>
@@ -1397,6 +1447,112 @@ function FieldDetailPage({ field, navigate, setConfirm }) {
               </span>
               <ChevronRight />
             </button>
+          </div>
+        </div>
+      )}
+      {tab === "協力会社" && (
+        <div className="field-section contractor-section">
+          <div className="section-heading">
+            <div>
+              <h2>協力会社の登録状況</h2>
+              <p>
+                二次協力会社を展開すると、配下の三次協力会社を確認できます。
+              </p>
+            </div>
+            <div className="contractor-summary">
+              <span>
+                二次 <b>{subcontractorHierarchy.length}社</b>
+              </span>
+              <span>
+                三次{" "}
+                <b>
+                  {subcontractorHierarchy.reduce(
+                    (sum, item) => sum + item.children.length,
+                    0,
+                  )}
+                  社
+                </b>
+              </span>
+            </div>
+          </div>
+          <div
+            className="contractor-list"
+            role="tree"
+            aria-label="協力会社階層"
+          >
+            {subcontractorHierarchy.map((secondary) => {
+              const expanded = expandedContractor === secondary.id;
+              return (
+                <article
+                  className="contractor-group"
+                  key={secondary.id}
+                  role="treeitem"
+                  aria-expanded={expanded}
+                >
+                  <button
+                    className="contractor-row secondary"
+                    onClick={() =>
+                      setExpandedContractor(expanded ? null : secondary.id)
+                    }
+                  >
+                    <ChevronRight className={expanded ? "expanded" : ""} />
+                    <span className="tier-badge secondary">二次</span>
+                    <span className="contractor-name">
+                      <b>{secondary.name}</b>
+                      <small>{secondary.trade}</small>
+                    </span>
+                    <span>
+                      作業員 <b>{secondary.workers}名</b>
+                    </span>
+                    <span
+                      className={`registration-status ${secondary.status === "登録済み" ? "complete" : "pending"}`}
+                    >
+                      {secondary.status}
+                    </span>
+                    <span className="children-count">
+                      三次 {secondary.children.length}社
+                    </span>
+                  </button>
+                  {expanded && (
+                    <div className="tertiary-list" role="group">
+                      {secondary.children.map((tertiary) => (
+                        <div
+                          className="contractor-row tertiary"
+                          key={tertiary.id}
+                          role="treeitem"
+                        >
+                          <span className="hierarchy-line" aria-hidden="true" />
+                          <span className="tier-badge tertiary">三次</span>
+                          <span className="contractor-name">
+                            <b>{tertiary.name}</b>
+                            <small>{tertiary.trade}</small>
+                          </span>
+                          <span>
+                            作業員 <b>{tertiary.workers}名</b>
+                          </span>
+                          <span
+                            className={`registration-status ${tertiary.status === "登録済み" ? "complete" : "pending"}`}
+                          >
+                            {tertiary.status}
+                          </span>
+                          <button
+                            className="outline"
+                            onClick={() =>
+                              setConfirm({
+                                title: `${tertiary.name}の登録詳細`,
+                                message: `三次協力会社／${tertiary.trade}／${tertiary.status}`,
+                              })
+                            }
+                          >
+                            詳細
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </div>
       )}
