@@ -945,6 +945,38 @@ const transportPlans = [
     note: "予約枠内で受入予定",
   },
   {
+    id: "TR-20260820-05",
+    day: "当日",
+    departure: "（仮称）サンプル現場 A",
+    destination: "湾岸リサイクルセンター",
+    material: "コンクリートがら",
+    vehicle: "品川 100 あ 12-34",
+    driver: "サンプル 運転者1",
+    departAt: "10:40",
+    travelMinutes: 45,
+    arriveAt: "11:25",
+    workMinutes: 35,
+    finishAt: "12:00",
+    status: "やや混雑",
+    note: "同一車両の2便目",
+  },
+  {
+    id: "TR-20260820-06",
+    day: "当日",
+    departure: "サンプル現場 B",
+    destination: "中央中間処理施設",
+    material: "混合廃棄物",
+    vehicle: "足立 100 か 56-78",
+    driver: "サンプル 運転者2",
+    departAt: "12:15",
+    travelMinutes: 55,
+    arriveAt: "13:10",
+    workMinutes: 45,
+    finishAt: "13:55",
+    status: "空きあり",
+    note: "同一車両の2便目",
+  },
+  {
     id: "TR-20260821-01",
     day: "翌日",
     departure: "（仮称）サンプル現場 A",
@@ -984,6 +1016,7 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
   const [day, setDay] = useState("当日");
   const [view, setView] = useState("現場別");
   const [field, setField] = useState(initialField);
+  const [expandedField, setExpandedField] = useState(null);
   const visiblePlans = transportPlans.filter(
     (plan) =>
       plan.day === day &&
@@ -1005,6 +1038,26 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
       totals[plan.destination].count += 1;
       totals[plan.destination].times.push(plan.arriveAt);
       if (plan.status === "混雑") totals[plan.destination].status = "混雑";
+      return totals;
+    }, {}),
+  );
+  const fieldTotals = Object.values(
+    visiblePlans.reduce((totals, plan) => {
+      totals[plan.departure] ||= {
+        field: plan.departure,
+        trips: [],
+        vehicles: new Set(),
+        destinations: new Set(),
+        first: plan.departAt,
+        last: plan.finishAt,
+      };
+      totals[plan.departure].trips.push(plan);
+      totals[plan.departure].vehicles.add(plan.vehicle);
+      totals[plan.departure].destinations.add(plan.destination);
+      if (plan.departAt < totals[plan.departure].first)
+        totals[plan.departure].first = plan.departAt;
+      if (plan.finishAt > totals[plan.departure].last)
+        totals[plan.departure].last = plan.finishAt;
       return totals;
     }, {}),
   );
@@ -1081,30 +1134,16 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
 
       <div className="transport-summary" aria-label="受入予定の集計">
         <div>
-          <span>本日の予定</span>
-          <b>{transportPlans.filter((x) => x.day === day).length}件</b>
+          <span>{day}の現場延べ台数</span>
+          <b>{visiblePlans.length}台</b>
         </div>
         <div>
           <span>空きあり</span>
-          <b>
-            {
-              transportPlans.filter(
-                (x) => x.day === day && x.status === "空きあり",
-              ).length
-            }
-            件
-          </b>
+          <b>{visiblePlans.filter((x) => x.status === "空きあり").length}台</b>
         </div>
         <div>
           <span>混雑注意</span>
-          <b>
-            {
-              transportPlans.filter(
-                (x) => x.day === day && x.status !== "空きあり",
-              ).length
-            }
-            件
-          </b>
+          <b>{visiblePlans.filter((x) => x.status !== "空きあり").length}台</b>
         </div>
         <div>
           <span>運行予定時間</span>
@@ -1115,9 +1154,15 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
       <div className="transport-list-head">
         <div>
           <h2>搬出・受入スケジュール</h2>
-          <p>移動時間と現地作業時間を含めた完了予定まで確認できます。</p>
+          <p>
+            同じ車両の複数便も1便1台として、現場ごとの予定延べ台数を集計します。
+          </p>
         </div>
-        <b>検索結果：{visiblePlans.length}件</b>
+        <b>
+          {view === "現場別"
+            ? `対象：${fieldTotals.length}現場／延べ${visiblePlans.length}台`
+            : `対象：${destinationTotals.length}受入場所／延べ${visiblePlans.length}台`}
+        </b>
       </div>
 
       <div className="transport-list">
@@ -1145,6 +1190,56 @@ function TransportSchedulePage({ setConfirm, initialField = "すべて" }) {
             </article>
           ))}
         {view === "現場別" &&
+          fieldTotals.map((total) => (
+            <article className="field-total-card" key={total.field}>
+              <div className="field-total-main">
+                <Building2 />
+                <div>
+                  <span>出発現場</span>
+                  <h3>{total.field}</h3>
+                  <p>
+                    運行予定 {total.first}〜{total.last}　／　受入先{" "}
+                    {total.destinations.size}か所
+                  </p>
+                </div>
+                <div className="field-total-count">
+                  <b>{total.trips.length}台</b>
+                  <span>予定延べ台数</span>
+                </div>
+                <div className="field-total-vehicles">
+                  <b>{total.vehicles.size}台</b>
+                  <span>実車両数</span>
+                </div>
+                <button
+                  className="outline"
+                  aria-expanded={expandedField === total.field}
+                  onClick={() =>
+                    setExpandedField((current) =>
+                      current === total.field ? null : total.field,
+                    )
+                  }
+                >
+                  {expandedField === total.field
+                    ? "内訳を閉じる"
+                    : "内訳を表示"}
+                </button>
+              </div>
+              {expandedField === total.field && (
+                <div className="field-trip-breakdown">
+                  {total.trips.map((plan, index) => (
+                    <div key={plan.id}>
+                      <b>{index + 1}便目</b>
+                      <span>{plan.departAt} 出発</span>
+                      <span>{plan.destination}</span>
+                      <span>{plan.vehicle}</span>
+                      <span>{plan.finishAt} 完了予定</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </article>
+          ))}
+        {view === "運行詳細" &&
           visiblePlans.map((plan) => (
             <article className="transport-card" key={plan.id}>
               <div className="transport-card-head">
@@ -1261,8 +1356,8 @@ function FieldDetailPage({ field, navigate, setConfirm }) {
               <b>{Math.max(fieldPlans.length, 2)}台</b>
             </div>
             <div>
-              <span>搬出・受入予定</span>
-              <b>{fieldPlans.length}件</b>
+              <span>予定延べ台数</span>
+              <b>{fieldPlans.length}台</b>
             </div>
             <div>
               <span>未確認のお知らせ</span>

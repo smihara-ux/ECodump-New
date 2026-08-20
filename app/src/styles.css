@@ -1713,6 +1713,63 @@ tbody tr.selected {
   border: 1px solid #d3d8df;
   background: #fff;
 }
+.field-total-card {
+  border: 1px solid #d3d8df;
+  background: #fff;
+}
+.field-total-main {
+  display: grid;
+  grid-template-columns: 40px minmax(260px, 1fr) 140px 120px 110px;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+}
+.field-total-main > svg {
+  width: 28px;
+  color: #2681ff;
+}
+.field-total-main h3,
+.field-total-main p {
+  margin: 0;
+}
+.field-total-main h3 {
+  margin: 3px 0 5px;
+  font-size: 18px;
+}
+.field-total-main span,
+.field-total-main p {
+  color: #68717d;
+  font-size: 12px;
+}
+.field-total-count,
+.field-total-vehicles {
+  display: grid;
+  gap: 2px;
+  text-align: center;
+}
+.field-total-count b {
+  color: #176fd1;
+  font-size: 28px;
+}
+.field-total-vehicles b {
+  font-size: 20px;
+}
+.field-trip-breakdown {
+  display: grid;
+  border-top: 1px solid #e0e4e9;
+  background: #fafbfc;
+}
+.field-trip-breakdown > div {
+  display: grid;
+  grid-template-columns: 70px 90px minmax(180px, 1fr) minmax(160px, 1fr) 110px;
+  gap: 12px;
+  padding: 10px 18px;
+  border-bottom: 1px solid #e6e9ed;
+  font-size: 12px;
+}
+.field-trip-breakdown > div:last-child {
+  border-bottom: 0;
+}
 .destination-summary-card > svg {
   width: 28px;
   color: #2681ff;
@@ -2362,6 +2419,17 @@ tbody tr.selected {
   .destination-summary-card {
     grid-template-columns: 32px minmax(0, 1fr) 110px 86px;
   }
+  .field-total-main {
+    grid-template-columns: 32px minmax(0, 1fr) 110px 90px;
+  }
+  .field-total-main > button {
+    grid-column: 2 / -1;
+    justify-self: end;
+  }
+  .field-trip-breakdown > div {
+    grid-template-columns: 70px 80px minmax(160px, 1fr) minmax(150px, 1fr) 100px;
+    overflow-x: auto;
+  }
   .field-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2387,6 +2455,25 @@ tbody tr.selected {
   }
   .destination-summary-card {
     grid-template-columns: 30px minmax(0, 1fr);
+  }
+  .field-total-main {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+  .field-total-count,
+  .field-total-vehicles,
+  .field-total-main > button {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+  .field-trip-breakdown > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+  .field-trip-breakdown > div span:nth-of-type(2),
+  .field-trip-breakdown > div span:nth-of-type(3) {
+    width: 100%;
   }
   .destination-count,
   .destination-summary-card > .traffic-status {
