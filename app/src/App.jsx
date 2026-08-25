@@ -394,7 +394,6 @@ function FieldList({
                   <td></td>
                   <td>
                     <div className="service-strip">
-                      <img src="/buildee-service-icons.png" alt="" />
                       <a
                         href="?page=labor"
                         onClick={(e) => {
@@ -403,7 +402,10 @@ function FieldList({
                           navigate("労務安全");
                         }}
                         aria-label="労務安全を開く"
-                      />
+                      >
+                        <FileText />
+                        <span>書類</span>
+                      </a>
                       <a
                         href="?page=gatekeeper"
                         onClick={(e) => {
@@ -412,7 +414,10 @@ function FieldList({
                           navigate("入退場管理");
                         }}
                         aria-label="入退場管理を開く"
-                      />
+                      >
+                        <DoorOpen />
+                        <span>入退場</span>
+                      </a>
                       <a
                         href="?page=conference"
                         onClick={(e) => {
@@ -421,7 +426,10 @@ function FieldList({
                           navigate("調整会議");
                         }}
                         aria-label="調整会議を開く"
-                      />
+                      >
+                        <CalendarDays />
+                        <span>会議</span>
+                      </a>
                     </div>
                   </td>
                 </tr>
@@ -3184,7 +3192,11 @@ export function App() {
       )}
       <aside className="sidebar">
         <div className="brand-row">
-          <div className="brand-mark">ED</div>
+          <img
+            className="brand-mark"
+            src={`${import.meta.env.BASE_URL}ecodump-logo.png`}
+            alt="ECO DUMP"
+          />
           {!collapsed && <strong>サンプルグループ株式会社</strong>}
           <button
             className="collapse"

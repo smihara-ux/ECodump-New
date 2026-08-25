@@ -36,7 +36,7 @@
 
 .common-menu-grid button:hover,
 .common-menu-grid button:focus-visible {
-  border-color: #2681ff;
+  border-color: #168467;
   background: #f4f8ff;
   outline: none;
 }
@@ -44,7 +44,7 @@
 .common-menu-grid button > svg:first-child {
   width: 28px;
   height: 28px;
-  color: #2681ff;
+  color: #168467;
 }
 
 .common-menu-grid button > svg:last-child {
@@ -258,7 +258,7 @@ button {
   color: #1a1a1a;
 }
 .header-actions .guide {
-  background: #2681ff;
+  background: #168467;
   color: #fff;
 }
 .header-actions .help {
@@ -324,8 +324,8 @@ select {
   margin-top: 0;
 }
 .primary {
-  border: 1px solid #2681ff;
-  background: #2681ff;
+  border: 1px solid #168467;
+  background: #168467;
   color: #fff;
   border-radius: 4px;
   height: 24px;
@@ -341,7 +341,7 @@ select {
 }
 .text {
   border: 0;
-  color: #2681ff;
+  color: #168467;
   text-decoration: underline;
   background: none;
   padding: 0;
@@ -363,12 +363,12 @@ select {
   margin-left: auto;
 }
 .table-tools a {
-  color: #2681ff;
+  color: #168467;
 }
 .outline {
   height: 25px;
-  border: 1px solid #2681ff;
-  color: #2681ff;
+  border: 1px solid #168467;
+  color: #168467;
   background: white;
   border-radius: 4px;
   display: inline-flex;
@@ -459,7 +459,7 @@ tbody tr.selected {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #176fd1;
+  color: #116b58;
   font-weight: 700;
   text-align: left;
 }
@@ -494,39 +494,66 @@ tbody tr.selected {
   color: #17b77c;
 }
 .service-strip {
-  width: 126px;
-  height: 49px;
-  position: relative;
-  overflow: hidden;
+  display: grid;
+  width: 146px;
+  height: 48px;
+  grid-template-columns: repeat(3, 46px);
+  gap: 4px;
   margin-top: 1px;
 }
-.service-strip img {
-  position: absolute;
-  width: 126px;
-  height: auto;
-  left: 0;
-  top: 0;
-}
 .service-strip a {
+  position: relative;
+  display: grid;
+  width: 46px;
+  height: 48px;
+  place-items: center;
+  align-content: center;
+  gap: 1px;
+  border: 1px solid #d4ddd9;
+  border-radius: 5px;
+  background: #fff;
+  color: #0b5b49;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgb(6 47 43 / 8%);
+  transition:
+    border-color .15s ease,
+    background-color .15s ease,
+    box-shadow .15s ease,
+    transform .15s ease;
+}
+.service-strip a::after {
   position: absolute;
-  z-index: 3;
-  top: 6px;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: #9fc637;
+  content: "";
 }
-.service-strip a:nth-of-type(1) {
-  left: 8px;
+.service-strip a svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.8;
 }
-.service-strip a:nth-of-type(2) {
-  left: 46px;
+.service-strip a span {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 12px;
+  white-space: nowrap;
 }
-.service-strip a:nth-of-type(3) {
-  left: 84px;
+.service-strip a:hover {
+  border-color: #7daf52;
+  background: #f2f8e7;
+  box-shadow: 0 3px 8px rgb(6 47 43 / 13%);
+  transform: translateY(-1px);
 }
 .service-strip a:focus-visible {
-  outline: 3px solid #2681ff;
+  outline: 3px solid rgb(159 198 55 / 48%);
   outline-offset: 2px;
+}
+.service-strip a:active {
+  transform: translateY(0);
 }
 
 .service-product {
@@ -611,7 +638,7 @@ tbody tr.selected {
 }
 .product-menu button.active {
   background: #ddd;
-  border-left: 5px solid #2681ff;
+  border-left: 5px solid #168467;
   color: #333;
   font-weight: 700;
 }
@@ -784,7 +811,7 @@ tbody tr.selected {
   width: 16px;
 }
 .pagination .current {
-  background: #2681ff;
+  background: #168467;
   color: white;
 }
 .pagination button:disabled {
@@ -834,7 +861,7 @@ tbody tr.selected {
   margin: 18px 0 12px auto;
   border: 0;
   background: none;
-  color: #2681ff;
+  color: #168467;
   text-decoration: underline;
 }
 .modal-actions {
@@ -945,7 +972,7 @@ tbody tr.selected {
 .company-tabs button.active {
   background: #fff;
   border-bottom-color: #fff;
-  color: #2681ff;
+  color: #168467;
 }
 .company-card {
   margin: 20px;
@@ -1000,7 +1027,7 @@ tbody tr.selected {
   width: 230px;
   background: #fff;
   border: 1px solid #999;
-  border-top: 5px solid #2681ff;
+  border-top: 5px solid #168467;
   border-radius: 4px;
   padding: 14px;
   box-shadow: 0 2px 4px #0002;
@@ -1488,7 +1515,7 @@ tbody tr.selected {
 }
 .segmented-control button.active,
 .view-switch button.active {
-  background: #2681ff;
+  background: #168467;
   color: #fff;
 }
 .segmented-control button.active span {
@@ -1538,7 +1565,7 @@ tbody tr.selected {
   gap: 6px;
   min-height: 76px;
   padding: 13px 16px;
-  border-left: 4px solid #2681ff;
+  border-left: 4px solid #168467;
   background: #fff;
   box-shadow: 0 1px 3px #00000012;
 }
@@ -1635,7 +1662,7 @@ tbody tr.selected {
   top: 16px;
   left: 13px;
   width: 24px;
-  color: #2681ff;
+  color: #168467;
 }
 .route-point > span,
 .route-duration > span {
@@ -1646,7 +1673,7 @@ tbody tr.selected {
   font-size: 16px;
 }
 .route-point > strong {
-  color: #2681ff;
+  color: #168467;
   font-size: 13px;
 }
 .route-duration {
@@ -1726,7 +1753,7 @@ tbody tr.selected {
 }
 .field-total-main > svg {
   width: 28px;
-  color: #2681ff;
+  color: #168467;
 }
 .field-total-main h3,
 .field-total-main p {
@@ -1748,7 +1775,7 @@ tbody tr.selected {
   text-align: center;
 }
 .field-total-count b {
-  color: #176fd1;
+  color: #116b58;
   font-size: 28px;
 }
 .field-total-vehicles b {
@@ -1772,7 +1799,7 @@ tbody tr.selected {
 }
 .destination-summary-card > svg {
   width: 28px;
-  color: #2681ff;
+  color: #168467;
 }
 .destination-summary-card h3,
 .destination-summary-card p {
@@ -1847,8 +1874,8 @@ tbody tr.selected {
   white-space: nowrap;
 }
 .field-subnav button.active {
-  border-bottom-color: #2681ff;
-  color: #176fd1;
+  border-bottom-color: #168467;
+  color: #116b58;
   font-weight: 700;
 }
 .field-dashboard,
@@ -1864,7 +1891,7 @@ tbody tr.selected {
   display: grid;
   gap: 6px;
   padding: 16px;
-  border-left: 4px solid #2681ff;
+  border-left: 4px solid #168467;
   background: #fff;
 }
 .field-kpis span {
@@ -1892,12 +1919,12 @@ tbody tr.selected {
   text-align: left;
 }
 .field-action-grid button:hover {
-  border-color: #2681ff;
-  background: #f5f9ff;
+  border-color: #168467;
+  background: #edf6f2;
 }
 .field-action-grid button > svg:first-child {
   width: 30px;
-  color: #2681ff;
+  color: #168467;
 }
 .field-action-grid span {
   display: grid;
@@ -1930,7 +1957,7 @@ tbody tr.selected {
 .contractor-summary span {
   min-width: 90px;
   padding: 10px 14px;
-  border-left: 3px solid #2681ff;
+  border-left: 3px solid #168467;
   background: #fff;
   color: #68717d;
   font-size: 12px;
@@ -1962,7 +1989,7 @@ tbody tr.selected {
   text-align: left;
 }
 button.contractor-row:hover {
-  background: #f5f9ff;
+  background: #edf6f2;
 }
 .contractor-row > svg {
   width: 18px;
@@ -1984,7 +2011,7 @@ button.contractor-row:hover {
 }
 .tier-badge.secondary {
   background: #e5f0ff;
-  color: #176fd1;
+  color: #116b58;
 }
 .tier-badge.tertiary {
   background: #eee9ff;
@@ -2360,7 +2387,7 @@ button.contractor-row:hover {
   }
   .product-menu button.active {
     border-left: 0;
-    border-bottom-color: #2681ff;
+    border-bottom-color: #168467;
   }
   .product-main {
     min-width: 0;
@@ -2694,5 +2721,348 @@ button.contractor-row:hover {
   }
   .detail-list {
     grid-template-columns: 112px 1fr;
+  }
+}
+
+/* ECODUMP restrained visual refresh — preserves the existing UX and layout. */
+:root {
+  --eco-950: #062f2b;
+  --eco-900: #083d36;
+  --eco-800: #0b5146;
+  --eco-700: #116b58;
+  --eco-600: #168467;
+  --eco-lime: #c7d82e;
+  --eco-lime-soft: #f2f6d8;
+  --eco-amber: #d89116;
+  --eco-canvas: #f3f6f4;
+  --eco-line: #d2dcd7;
+  --eco-ink: #16201d;
+  --eco-muted: #63706b;
+  color: var(--eco-ink);
+}
+
+body {
+  background: var(--eco-canvas);
+}
+
+button,
+input,
+select,
+textarea {
+  border-radius: 5px;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgb(199 216 46 / 42%);
+  outline-offset: 2px;
+}
+
+.app-shell {
+  background: var(--eco-canvas);
+}
+
+.sidebar {
+  background: var(--eco-950);
+  box-shadow: 3px 0 14px rgb(6 47 43 / 14%);
+}
+
+.brand-row {
+  min-height: 58px;
+  height: 58px;
+  padding: 6px 9px;
+  border-bottom-color: rgb(255 255 255 / 14%);
+  background: #032824;
+}
+
+.brand-row strong {
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: .01em;
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 26%);
+}
+
+.collapse {
+  color: #d9e3df;
+}
+
+.tenant {
+  color: #a9bbb5;
+}
+
+.nav-group {
+  border-bottom-color: rgb(255 255 255 / 12%);
+  padding-block: 8px 11px;
+}
+
+.nav-group h2 {
+  color: #dce8e3;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .015em;
+}
+
+.nav-group button,
+.sidebar-footer button {
+  min-height: 38px;
+  border-radius: 5px;
+  color: #edf4f1;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.nav-group button svg,
+.sidebar-footer svg {
+  color: #9fb8af;
+  fill: none;
+}
+
+.nav-group button:hover,
+.sidebar-footer button:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+.nav-group button.active {
+  background: var(--eco-lime-soft);
+  color: var(--eco-950);
+  box-shadow: inset 4px 0 0 var(--eco-lime);
+}
+
+.nav-group button.active svg {
+  color: var(--eco-700);
+}
+
+.sidebar-footer {
+  border-top-color: rgb(255 255 255 / 14%);
+}
+
+.sidebar-footer small,
+.sidebar-footer b {
+  color: #a9bbb5;
+}
+
+.content {
+  background: var(--eco-canvas);
+}
+
+.page-header {
+  min-height: 52px;
+  height: 52px;
+  padding-inline: 18px 12px;
+  border-bottom-color: var(--eco-line);
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(6 47 43 / 7%);
+}
+
+.page-header h1 {
+  color: var(--eco-950);
+  letter-spacing: .01em;
+}
+
+.header-actions .guide,
+.header-actions .help {
+  color: var(--eco-700);
+  background: #edf6f2;
+}
+
+.header-actions .close {
+  border-color: #b8c6c0;
+  color: #35423e;
+  background: #fff;
+}
+
+.search-panel,
+.table-tools,
+.action-strip,
+.company-actions,
+.org-toolbar,
+.transport-toolbar,
+.schedule-switches,
+.field-detail-hero,
+.field-section,
+.company-card,
+.generic-table-wrap,
+.gf-filter,
+.gf-comment,
+.dashboard-cols > section {
+  border-color: var(--eco-line);
+  background: #fff;
+}
+
+.search-panel {
+  box-shadow: 0 1px 3px rgb(6 47 43 / 5%);
+}
+
+.search-line input,
+.search-line select,
+.form-grid input,
+.form-grid select,
+.detail-grid input,
+.detail-grid select,
+.transport-toolbar input,
+.transport-toolbar select,
+.gf-form-grid input,
+.gf-form-grid select,
+.gf-comment textarea {
+  border-color: #b9c7c1;
+  background: #fff;
+}
+
+.search-line input:focus,
+.search-line select:focus,
+.form-grid input:focus,
+.form-grid select:focus,
+.detail-grid input:focus,
+.detail-grid select:focus,
+.transport-toolbar input:focus,
+.transport-toolbar select:focus,
+.gf-form-grid input:focus,
+.gf-form-grid select:focus,
+.gf-comment textarea:focus {
+  border-color: var(--eco-600);
+}
+
+.primary,
+.pagination .current,
+.page-tabs button.active,
+.company-tabs button.active,
+.gf-tabs button.active,
+.gf-inner-tabs button.active,
+.segmented-control button.active,
+.view-switch button.active {
+  border-color: var(--eco-700);
+  background: var(--eco-700);
+  color: #fff;
+}
+
+.primary:hover {
+  background: var(--eco-800);
+}
+
+.outline {
+  border-color: var(--eco-600);
+  color: var(--eco-700);
+  background: #fff;
+}
+
+.outline:hover {
+  background: #edf6f2;
+}
+
+.text,
+.table-tools a,
+.field-access,
+.text-button {
+  color: var(--eco-700);
+}
+
+.table-scroll thead,
+.generic-head,
+.service-table th,
+.gf-page .gf-table th {
+  background: #e7eeea;
+  color: #19372f;
+}
+
+.table-scroll th,
+.table-scroll td,
+.generic-tr > div,
+.service-table th,
+.service-table td,
+.gf-page .gf-table th,
+.gf-page .gf-table td {
+  border-color: var(--eco-line);
+}
+
+.table-scroll tbody tr:hover,
+.generic-tr:not(.generic-head):hover,
+.gf-page .gf-table tbody tr:hover {
+  background: #f1f7f4;
+}
+
+.status,
+.gf-status.s1 {
+  border-color: #acd8c4;
+  background: #e5f5ed;
+  color: #116448;
+}
+
+.gf-status.s2,
+.notice {
+  border-color: #ead49c;
+  background: #fff8df;
+  color: #7b5410;
+}
+
+.common-menu-grid button:hover,
+.common-menu-grid button:focus-visible {
+  border-color: var(--eco-600);
+  background: #f1f7f4;
+}
+
+.common-menu-grid button > svg:first-child {
+  color: var(--eco-700);
+}
+
+.product-top {
+  background: var(--eco-950);
+}
+
+.product-menu button.active,
+.service-menu button.active {
+  border-color: var(--eco-600);
+  background: #e8f3ee;
+  color: var(--eco-800);
+}
+
+.field-subnav button.active {
+  border-color: var(--eco-lime);
+  color: var(--eco-950);
+  background: var(--eco-lime-soft);
+}
+
+.org-card.root,
+.contractor-row.secondary {
+  border-color: var(--eco-600);
+}
+
+.org-line,
+.org-level::before {
+  background: #8eb5a6;
+}
+
+.toast {
+  border-color: var(--eco-600);
+  background: var(--eco-950);
+}
+
+@media (max-width: 760px) {
+  .brand-row {
+    min-height: 52px;
+    height: 52px;
+  }
+
+  .page-header {
+    min-height: 48px;
+    height: 48px;
+  }
+
+  .table-scroll tbody tr {
+    border-color: var(--eco-line);
+    box-shadow: 0 2px 8px rgb(6 47 43 / 7%);
+  }
+
+  .product-menu button.active {
+    border-bottom-color: var(--eco-lime);
   }
 }
