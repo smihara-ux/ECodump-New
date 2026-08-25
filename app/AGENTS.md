@@ -15,3 +15,4 @@ The prototype must include working, separately rendered screens for every primar
 - Preserve every existing UX flow, route, control, label, table field, modal, search/filter behavior, and responsive interaction unless the user explicitly requests a UX change.
 - Keep the overall layout and information density close to the current prototype; visual changes should feel like a restrained refresh rather than a new product.
 - Use the supplied ECO DUMP logo consistently. Base the visual system on deep petroleum green, white, lime accents, and amber for warnings, with high-contrast readable tables.
+- Sidebar visual target selected on 2026-08-25: compact operations navigation with framed outline icons, lime section headings and a pale-lime active row. Keep route destinations and interactions unchanged while using the display groups 現場業務・運行業務・基本台帳・関係会社 and the concise item labels shown in the selected mock.

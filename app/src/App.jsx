@@ -31,27 +31,27 @@ import {
 
 const navGroups = [
   {
-    title: "現場情報",
-    items: [[Building2, "現場一覧"]],
+    title: "現場業務",
+    items: [[Building2, "現場一覧", "現場一覧"]],
   },
   {
-    title: "配車・受入管理",
-    items: [[Truck, "搬出・受入スケジュール"]],
+    title: "運行業務",
+    items: [[Truck, "搬出・受入管理", "搬出・受入スケジュール"]],
   },
   {
-    title: "自社情報",
+    title: "基本台帳",
     items: [
-      [Building2, "会社情報"],
-      [UserRound, "ユーザー一覧"],
-      [BusFront, "車両一覧"],
+      [Building2, "会社情報", "会社情報"],
+      [UserRound, "ユーザー", "ユーザー一覧"],
+      [BusFront, "車両・運転手", "車両一覧"],
     ],
   },
   {
-    title: "協力会社情報",
+    title: "関係会社",
     items: [
-      [Network, "代行先一覧"],
-      [ClipboardList, "代行登録申請"],
-      [UsersRound, "自社の代行元一覧"],
+      [Network, "協力会社", "代行先一覧"],
+      [ClipboardList, "登録申請", "代行登録申請"],
+      [UsersRound, "元請会社", "自社の代行元一覧"],
     ],
   },
 ];
@@ -3210,14 +3210,16 @@ export function App() {
           {navGroups.map((g) => (
             <section className="nav-group" key={g.title}>
               {!collapsed && <h2>{g.title}</h2>}
-              {g.items.map(([Icon, label]) => (
+              {g.items.map(([Icon, displayLabel, routeLabel]) => (
                 <button
-                  className={page === label ? "active" : ""}
-                  onClick={() => navigate(label)}
-                  key={label}
+                  className={page === routeLabel ? "active" : ""}
+                  onClick={() => navigate(routeLabel)}
+                  key={routeLabel}
+                  aria-label={displayLabel}
+                  title={collapsed ? displayLabel : undefined}
                 >
-                  <Icon />
-                  <span>{label}</span>
+                  <span className="nav-icon"><Icon /></span>
+                  <span>{displayLabel}</span>
                 </button>
               ))}
             </section>
@@ -3225,12 +3227,12 @@ export function App() {
         </nav>
         <div className="sidebar-footer">
           <button>
-            <Bell />
-            <span>通知一覧</span>
+            <span className="nav-icon"><Bell /></span>
+            <span>通知</span>
           </button>
           <button onClick={() => setHelpOpen(true)}>
-            <CircleHelp />
-            <span>ヘルプセンター</span>
+            <span className="nav-icon"><CircleHelp /></span>
+            <span>ヘルプ</span>
           </button>
           {!collapsed && (
             <>
