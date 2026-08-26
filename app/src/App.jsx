@@ -180,10 +180,16 @@ const subcontractorHierarchy = [
   },
 ];
 
-function Header({ title, onHelp, onClose }) {
+function Header({ title, onHelp, onClose, onMenu }) {
   return (
     <header className="page-header">
-      <h1>{title}</h1>
+      <div className="page-title-group">
+        <button className="page-menu-trigger" onClick={onMenu}>
+          <LayoutGrid />
+          機能メニュー
+        </button>
+        <h1>{title}</h1>
+      </div>
       <div className="header-actions">
         <button className="guide" onClick={onHelp}>
           <CircleHelp />
@@ -3592,6 +3598,15 @@ const controlTrips = [
 ];
 
 function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
+  const projects = [
+    ["首都圏サンプルプロジェクト", "稼働中 8現場"],
+    ["湾岸再開発プロジェクト", "稼働中 4現場"],
+    ["北関東造成プロジェクト", "準備中 3現場"],
+  ];
+  const [projectOpen, setProjectOpen] = useState(false);
+  const [project, setProject] = useState(projects[0][0]);
+  const dates = ["2026-08-25（火）", "2026-08-26（水）", "2026-08-27（木）"];
+  const [dateIndex, setDateIndex] = useState(1);
   return (
     <>
       <header className="control-topbar">
@@ -3609,16 +3624,55 @@ function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
             <small>建設循環物流オペレーション</small>
           </span>
         </button>
-        <button className="control-project">
+        <button
+          className="control-project"
+          onClick={() => setProjectOpen((value) => !value)}
+          aria-expanded={projectOpen}
+        >
           <Building2 />
-          <span>首都圏サンプルプロジェクト</span>
+          <span>{project}</span>
           <ChevronDown />
         </button>
+        {projectOpen && (
+          <div className="project-dropdown" role="menu">
+            <div>
+              <b>プロジェクトを選択</b>
+              <small>表示する現場と運行情報が切り替わります</small>
+            </div>
+            {projects.map(([name, meta]) => (
+              <button
+                className={project === name ? "active" : ""}
+                key={name}
+                onClick={() => {
+                  setProject(name);
+                  setProjectOpen(false);
+                }}
+              >
+                <Building2 />
+                <span>
+                  <b>{name}</b>
+                  <small>{meta}</small>
+                </span>
+                {project === name && <ShieldCheck />}
+              </button>
+            ))}
+          </div>
+        )}
         <button className="control-date">
           <CalendarDays />
-          <span>2026-08-26（水）</span>
-          <ChevronLeft />
-          <ChevronRight />
+          <span>{dates[dateIndex]}</span>
+          <ChevronLeft
+            onClick={(event) => {
+              event.stopPropagation();
+              setDateIndex((value) => Math.max(0, value - 1));
+            }}
+          />
+          <ChevronRight
+            onClick={(event) => {
+              event.stopPropagation();
+              setDateIndex((value) => Math.min(dates.length - 1, value + 1));
+            }}
+          />
         </button>
         <label className="control-search">
           <Search />
@@ -3637,15 +3691,6 @@ function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
           aria-label="ヘルプ"
         >
           <CircleHelp />
-        </button>
-        <button
-          className={`control-menu-trigger ${menuOpen ? "active" : ""}`}
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-expanded={menuOpen}
-          aria-label="機能メニュー"
-        >
-          <LayoutGrid />
-          <span>機能メニュー</span>
         </button>
         <div className="control-user">
           <UserCircle2 />
@@ -3824,15 +3869,24 @@ function ControlOperationModal({ mode, onClose, onSave }) {
   );
 }
 
-function ControlTowerPage({ navigate, setConfirm }) {
+function ControlTowerPage({ navigate, setConfirm, menuOpen, setMenuOpen }) {
   const [tripFilter, setTripFilter] = useState("すべてのステータス");
+  const [siteFilter, setSiteFilter] = useState("すべての現場");
+  const [cargoFilter, setCargoFilter] = useState("すべての荷種");
   const [selectedTrip, setSelectedTrip] = useState("D-103");
   const [trips, setTrips] = useState(controlTrips);
   const [operationMode, setOperationMode] = useState(null);
   const [mapZoom, setMapZoom] = useState(1);
   const visibleTrips = trips.filter(
-    (trip) => tripFilter === "すべてのステータス" || trip.status === tripFilter,
+    (trip) =>
+      (tripFilter === "すべてのステータス" || trip.status === tripFilter) &&
+      (siteFilter === "すべての現場" || trip.from.includes(siteFilter)) &&
+      (cargoFilter === "すべての荷種" || cargoFilter === "建設発生土"),
   );
+  const hasActiveFilters =
+    tripFilter !== "すべてのステータス" ||
+    siteFilter !== "すべての現場" ||
+    cargoFilter !== "すべての荷種";
   const summaries = [
     [ClipboardList, "予定総便数", "68", "便"],
     [Truck, "配車済み", "53", "便"],
@@ -3844,6 +3898,14 @@ function ControlTowerPage({ navigate, setConfirm }) {
   return (
     <div className="control-tower-page">
       <section className="control-toolbar">
+        <button
+          className={`toolbar-menu-trigger ${menuOpen ? "active" : ""}`}
+          onClick={() => setMenuOpen((value) => !value)}
+          aria-expanded={menuOpen}
+        >
+          <LayoutGrid />
+          <span>機能メニュー</span>
+        </button>
         <button
           className="dispatch-primary"
           onClick={() => setOperationMode("dispatch")}
@@ -3858,7 +3920,10 @@ function ControlTowerPage({ navigate, setConfirm }) {
         </button>
         <label>
           現場
-          <select>
+          <select
+            value={siteFilter}
+            onChange={(event) => setSiteFilter(event.target.value)}
+          >
             <option>すべての現場</option>
             <option>サンプル現場A</option>
             <option>サンプル現場B</option>
@@ -3866,7 +3931,10 @@ function ControlTowerPage({ navigate, setConfirm }) {
         </label>
         <label>
           荷種
-          <select>
+          <select
+            value={cargoFilter}
+            onChange={(event) => setCargoFilter(event.target.value)}
+          >
             <option>すべての荷種</option>
             <option>建設発生土</option>
             <option>コンクリートがら</option>
@@ -3886,9 +3954,16 @@ function ControlTowerPage({ navigate, setConfirm }) {
             <option>待機中</option>
           </select>
         </label>
-        <button className="toolbar-filter">
+        <button
+          className={`toolbar-filter ${hasActiveFilters ? "active" : ""}`}
+          onClick={() => {
+            setTripFilter("すべてのステータス");
+            setSiteFilter("すべての現場");
+            setCargoFilter("すべての荷種");
+          }}
+        >
           <Filter />
-          フィルター
+          {hasActiveFilters ? "絞込解除" : "フィルター"}
         </button>
       </section>
       <section className="control-workspace">
@@ -4022,6 +4097,21 @@ function ControlTowerPage({ navigate, setConfirm }) {
                 <small>{trip.eta}</small>
               </button>
             ))}
+            {visibleTrips.length === 0 && (
+              <div className="timeline-empty">
+                <Search />
+                <b>条件に一致する運行はありません</b>
+                <button
+                  onClick={() => {
+                    setTripFilter("すべてのステータス");
+                    setSiteFilter("すべての現場");
+                    setCargoFilter("すべての荷種");
+                  }}
+                >
+                  絞り込みを解除
+                </button>
+              </div>
+            )}
           </div>
           <button
             className="all-trips"
@@ -4163,7 +4253,9 @@ export function App() {
   };
   let body;
   if (page === "運行管制")
-    body = <ControlTowerPage {...{ navigate, setConfirm }} />;
+    body = (
+      <ControlTowerPage {...{ navigate, setConfirm, menuOpen, setMenuOpen }} />
+    );
   else if (page === "現場一覧")
     body = (
       <FieldList
@@ -4294,6 +4386,16 @@ export function App() {
         </div>
       </aside>
       <main className="content">
+        {["労務安全", "入退場管理", "調整会議"].includes(page) && (
+          <button
+            className="module-menu-trigger"
+            onClick={() => setMenuOpen((value) => !value)}
+            aria-expanded={menuOpen}
+          >
+            <LayoutGrid />
+            機能メニュー
+          </button>
+        )}
         {!["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) && (
           <Header
             title={
@@ -4305,6 +4407,7 @@ export function App() {
             }
             onHelp={() => setHelpOpen(true)}
             onClose={() => navigate("運行管制")}
+            onMenu={() => setMenuOpen((value) => !value)}
           />
         )}
         {["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) ? (

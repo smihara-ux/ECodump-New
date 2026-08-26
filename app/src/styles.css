@@ -4498,8 +4498,60 @@ a:focus-visible {
   white-space: nowrap;
 }
 .control-project {
+  position: relative;
   min-width: 238px;
   justify-content: space-between;
+}
+.project-dropdown {
+  position: absolute;
+  top: 66px;
+  left: 360px;
+  z-index: 95;
+  display: grid;
+  width: 360px;
+  gap: 7px;
+  padding: 14px;
+  border: 1px solid #46665f;
+  border-radius: 7px;
+  background: #062925;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 42%);
+}
+.project-dropdown > div {
+  display: grid;
+  gap: 3px;
+  padding: 3px 4px 9px;
+  border-bottom: 1px solid #34534d;
+}
+.project-dropdown > div small {
+  color: #9fb5ae;
+}
+.project-dropdown > button {
+  display: grid;
+  min-height: 62px;
+  grid-template-columns: 28px 1fr 20px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid #365851;
+  border-radius: 5px;
+  background: #0b3631;
+  color: #eef7f4;
+  text-align: left;
+}
+.project-dropdown > button.active {
+  border-color: #c4d82e;
+  background: #123f38;
+}
+.project-dropdown > button > svg {
+  width: 20px;
+  color: #c4d82e;
+}
+.project-dropdown > button span {
+  display: grid;
+  gap: 3px;
+}
+.project-dropdown > button small {
+  color: #a8bdb6;
 }
 .control-project svg:first-child,
 .control-date svg:first-child {
@@ -4597,13 +4649,13 @@ a:focus-visible {
 }
 .function-launcher {
   position: fixed;
-  top: 68px;
+  top: 142px;
   bottom: 18px;
   left: 18px;
   z-index: 90;
   display: block;
   width: min(390px, calc(100vw - 36px));
-  max-height: calc(100vh - 86px);
+  max-height: calc(100vh - 160px);
   gap: 8px;
   padding: 14px;
   overflow-y: auto;
@@ -4712,6 +4764,63 @@ a:focus-visible {
   min-height: 58px;
   align-items: center;
   gap: 12px;
+}
+.control-toolbar .toolbar-menu-trigger {
+  min-width: 154px;
+  border-color: #6e851b;
+  background: #102f2b;
+  color: #dce94f;
+  font-weight: 800;
+}
+.control-toolbar .toolbar-menu-trigger.active {
+  background: #c4d82e;
+  color: #062a27;
+}
+.page-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.page-menu-trigger,
+.module-menu-trigger {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid #71851c;
+  border-radius: 5px;
+  background: #102f2b;
+  color: #dce94f;
+  font-weight: 800;
+}
+.page-menu-trigger svg,
+.module-menu-trigger svg {
+  width: 18px;
+}
+.module-menu-trigger {
+  position: fixed;
+  top: 86px;
+  left: 18px;
+  z-index: 65;
+}
+.timeline-empty {
+  display: grid;
+  min-height: 210px;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  color: #a8bdb6;
+}
+.timeline-empty svg {
+  width: 28px;
+  color: #c4d82e;
+}
+.timeline-empty button {
+  padding: 7px 12px;
+  border: 1px solid #75891f;
+  background: transparent;
+  color: #dce94f;
 }
 .control-toolbar button,
 .control-toolbar label {
@@ -5174,7 +5283,7 @@ a:focus-visible {
     display: none;
   }
   .function-launcher {
-    inset: 58px 0 0;
+    inset: 116px 0 0;
     width: auto;
     max-height: none;
     border-radius: 0 8px 8px 0;
@@ -5199,6 +5308,26 @@ a:focus-visible {
   .control-toolbar .dispatch-primary {
     min-width: 176px;
     font-size: 15px;
+  }
+  .control-toolbar .toolbar-menu-trigger {
+    min-width: 150px;
+  }
+  .page-title-group {
+    min-width: 0;
+    gap: 8px;
+  }
+  .page-menu-trigger {
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+  .module-menu-trigger {
+    top: 68px;
+    left: 10px;
+    min-height: 38px;
+    font-size: 0;
   }
   .control-toolbar .toolbar-filter {
     margin-left: 0;

@@ -43,6 +43,19 @@ No actionable P0, P1, or P2 mismatches remain. The refresh intentionally preserv
 
 final result: passed
 
+## Command placement and project switching — 2026-08-26
+
+- Removed the function-menu trigger from the top-right utility area.
+- Control tower: placed function menu immediately left of `配車を組む` in the primary command row below the logo.
+- Other management pages: placed the same function-menu trigger before each page title so navigation remains available everywhere.
+- Added an operational project dropdown with three project choices and visible project status; selection updates the top bar.
+- Date arrows now move between previous/current/next dates.
+- Site, cargo and status controls update the operation timeline; the filter action changes to `絞込解除`, and zero-result state includes a recovery action.
+- Browser verification confirmed menu placement/opening, project dropdown and selection, site filtering, and matching-page navigation access.
+- Build passed; Sites worker tests 4/4 passed.
+
+final result: passed
+
 ## Matching and readability iteration — 2026-08-26
 
 - Source issues: field-row metadata collision and white schedule cards with insufficient contrast in the two user-provided screenshots.
