@@ -3361,6 +3361,24 @@ function MatchingPage({ setConfirm }) {
                 <span>適合度</span>
               </div>
             </div>
+            <div className="matching-progress" aria-label="マッチング進行状況">
+              {["候補", "事前相談", "条件調整", "書類審査", "成立"].map(
+                (step, index) => {
+                  const currentStatus =
+                    workflow[selected.id] || selected.status;
+                  const activeIndex = currentStatus === "事前相談中" ? 1 : 0;
+                  return (
+                    <span
+                      className={index <= activeIndex ? "active" : ""}
+                      key={step}
+                    >
+                      <i>{index + 1}</i>
+                      {step}
+                    </span>
+                  );
+                },
+              )}
+            </div>
             <div className="match-route-preview">
               <MapPin />
               <span>
@@ -3597,7 +3615,14 @@ const controlTrips = [
   },
 ];
 
-function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
+function ControlTopBar({
+  page,
+  navigate,
+  menuOpen,
+  setMenuOpen,
+  setHelpOpen,
+  setConfirm,
+}) {
   const projects = [
     ["首都圏サンプルプロジェクト", "稼働中 8現場"],
     ["湾岸再開発プロジェクト", "稼働中 4現場"],
@@ -3607,6 +3632,15 @@ function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
   const [project, setProject] = useState(projects[0][0]);
   const dates = ["2026-08-25（火）", "2026-08-26（水）", "2026-08-27（木）"];
   const [dateIndex, setDateIndex] = useState(1);
+  const [globalQuery, setGlobalQuery] = useState("");
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [unread, setUnread] = useState(3);
+  const globalResults = [
+    [Building2, "サンプル現場A", "現場", "現場詳細", "32182"],
+    [Truck, "10t ダンプ 01", "車両", "車両一覧"],
+    [UserRound, "サンプル 運転者1", "運転手", "車両一覧"],
+    [Layers3, "湾岸第2受入ヤード", "受入候補", "UCRマッチング"],
+  ].filter(([, label, type]) => `${label}${type}`.includes(globalQuery));
   return (
     <>
       <header className="control-topbar">
@@ -3679,12 +3713,81 @@ function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
           <input
             aria-label="全体検索"
             placeholder="現場名・車両・運転手で検索"
+            value={globalQuery}
+            onChange={(event) => setGlobalQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setGlobalQuery("");
+            }}
           />
         </label>
-        <button className="control-icon-button" aria-label="通知">
+        {globalQuery && (
+          <div className="global-search-results" role="listbox">
+            <header>
+              <b>検索結果</b>
+              <small>{globalResults.length}件</small>
+            </header>
+            {globalResults.map(([Icon, label, type, route, fieldId]) => (
+              <button
+                key={`${type}-${label}`}
+                onClick={() => {
+                  navigate(route, fieldId);
+                  setGlobalQuery("");
+                }}
+              >
+                <Icon />
+                <span>
+                  <b>{label}</b>
+                  <small>{type}</small>
+                </span>
+                <ChevronRight />
+              </button>
+            ))}
+            {globalResults.length === 0 && (
+              <p>一致する現場・車両・運転手はありません</p>
+            )}
+          </div>
+        )}
+        <button
+          className="control-icon-button"
+          aria-label="通知"
+          aria-expanded={notificationOpen}
+          onClick={() => setNotificationOpen((value) => !value)}
+        >
           <Bell />
-          <i>3</i>
+          {unread > 0 && <i>{unread}</i>}
         </button>
+        {notificationOpen && (
+          <div className="notification-popover" role="dialog" aria-label="通知">
+            <header>
+              <div>
+                <b>通知</b>
+                <small>未読 {unread}件</small>
+              </div>
+              <button onClick={() => setUnread(0)}>すべて既読</button>
+            </header>
+            {[
+              ["D-103が25分遅延しています", "2分前", "warning"],
+              ["湾岸第2受入ヤードから回答が届きました", "18分前", "match"],
+              ["サンプル現場Bの受入枠が更新されました", "42分前", "info"],
+            ].map(([message, time, tone], index) => (
+              <button
+                className={tone}
+                key={message}
+                onClick={() => {
+                  setUnread((value) => Math.max(0, value - 1));
+                  setNotificationOpen(false);
+                  setConfirm({ title: "通知詳細", message });
+                }}
+              >
+                <i />
+                <span>
+                  <b>{message}</b>
+                  <small>{time}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
         <button
           className="control-icon-button"
           onClick={() => setHelpOpen(true)}
@@ -3887,6 +3990,8 @@ function ControlTowerPage({ navigate, setConfirm, menuOpen, setMenuOpen }) {
     tripFilter !== "すべてのステータス" ||
     siteFilter !== "すべての現場" ||
     cargoFilter !== "すべての荷種";
+  const selectedTripData =
+    trips.find((trip) => trip.id === selectedTrip) || trips[0];
   const summaries = [
     [ClipboardList, "予定総便数", "68", "便"],
     [Truck, "配車済み", "53", "便"],
@@ -4076,6 +4181,17 @@ function ControlTowerPage({ navigate, setConfirm, menuOpen, setMenuOpen }) {
                 <dd>22台</dd>
               </div>
             </dl>
+            <button
+              className="timeline-detail-action"
+              onClick={() =>
+                setConfirm({
+                  title: `${selectedTripData.id} 運行詳細`,
+                  message: `${selectedTripData.from} → ${selectedTripData.to}／状態：${selectedTripData.status}／到着・完了予定：${selectedTripData.eta}／車両：10t ダンプ 01／運転手：サンプル 運転者1`,
+                })
+              }
+            >
+              詳細 <ChevronRight />
+            </button>
           </header>
           <div className="timeline-list">
             {visibleTrips.map((trip) => (
@@ -4310,7 +4426,14 @@ export function App() {
       className={`app-shell control-app-shell ${collapsed ? "is-collapsed" : ""}`}
     >
       <ControlTopBar
-        {...{ page, navigate, menuOpen, setMenuOpen, setHelpOpen }}
+        {...{
+          page,
+          navigate,
+          menuOpen,
+          setMenuOpen,
+          setHelpOpen,
+          setConfirm,
+        }}
       />
       <button
         className="mobile-menu"

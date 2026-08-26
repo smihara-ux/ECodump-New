@@ -3774,6 +3774,56 @@ button.contractor-row:hover {
 .match-detail-head p {
   margin: 2px 0;
 }
+.matching-progress {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 15px 0 12px;
+}
+.matching-progress span {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  color: #829b93;
+  font-size: 9px;
+  text-align: center;
+}
+.matching-progress span::before {
+  position: absolute;
+  top: 11px;
+  right: 50%;
+  left: -50%;
+  height: 1px;
+  content: "";
+  background: #3b5a53;
+}
+.matching-progress span:first-child::before {
+  display: none;
+}
+.matching-progress i {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border: 1px solid #557068;
+  border-radius: 50%;
+  background: #082f2b;
+  font-style: normal;
+}
+.matching-progress span.active {
+  color: #e7f1ed;
+}
+.matching-progress span.active::before {
+  background: #c4d82e;
+}
+.matching-progress span.active i {
+  border-color: #c4d82e;
+  background: #c4d82e;
+  color: #062a27;
+  font-weight: 800;
+}
 .match-score.large {
   flex: 0 0 70px;
   width: 70px;
@@ -4595,6 +4645,101 @@ a:focus-visible {
 .control-search input::placeholder {
   color: #a6bbb4;
 }
+.global-search-results,
+.notification-popover {
+  position: absolute;
+  top: 66px;
+  z-index: 96;
+  display: grid;
+  overflow: hidden;
+  border: 1px solid #496a63;
+  border-radius: 7px;
+  background: #062925;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 46%);
+}
+.global-search-results {
+  right: 172px;
+  width: min(430px, calc(100vw - 36px));
+}
+.global-search-results header,
+.notification-popover header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #36574f;
+}
+.global-search-results header small,
+.notification-popover header small {
+  color: #a5bbb4;
+}
+.global-search-results > button,
+.notification-popover > button {
+  display: grid;
+  width: 100%;
+  min-height: 62px;
+  grid-template-columns: 28px 1fr 18px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 1px solid #274b44;
+  background: transparent;
+  color: #eef7f4;
+  text-align: left;
+}
+.global-search-results > button:hover,
+.notification-popover > button:hover {
+  background: #103e37;
+}
+.global-search-results > button > svg {
+  width: 19px;
+  color: #c4d82e;
+}
+.global-search-results > button span,
+.notification-popover > button span {
+  display: grid;
+  gap: 3px;
+}
+.global-search-results > button small,
+.notification-popover > button small {
+  color: #9fb5ae;
+}
+.global-search-results > p {
+  margin: 0;
+  padding: 24px 16px;
+  color: #adc0ba;
+  text-align: center;
+}
+.notification-popover {
+  right: 88px;
+  width: min(390px, calc(100vw - 36px));
+}
+.notification-popover header > div {
+  display: grid;
+  gap: 2px;
+}
+.notification-popover header > button {
+  border: 0;
+  background: transparent;
+  color: #dce94f;
+  font-size: 11px;
+}
+.notification-popover > button {
+  grid-template-columns: 10px 1fr;
+}
+.notification-popover > button > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #55b88c;
+}
+.notification-popover > button.warning > i {
+  background: #f39a2d;
+}
+.notification-popover > button.match > i {
+  background: #c4d82e;
+}
 .control-icon-button {
   position: relative;
   display: grid;
@@ -5055,6 +5200,20 @@ a:focus-visible {
   display: grid;
   text-align: center;
 }
+.timeline-detail-action {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px;
+  border: 1px solid #59736c;
+  background: #0b3631;
+  color: #dce94f;
+  font-size: 10px;
+}
+.timeline-detail-action svg {
+  width: 13px;
+}
 .timeline-panel dt {
   color: #91aaa2;
   font-size: 9px;
@@ -5273,6 +5432,11 @@ a:focus-visible {
     height: 40px;
     min-width: 0;
   }
+  .global-search-results,
+  .notification-popover {
+    inset: 58px 8px auto;
+    width: auto;
+  }
   .control-menu-trigger {
     min-width: 42px;
     width: 42px;
@@ -5373,6 +5537,13 @@ a:focus-visible {
   }
   .timeline-panel dl div:nth-child(n + 3) {
     display: none;
+  }
+  .timeline-detail-action {
+    width: 30px;
+    padding: 0;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 0;
   }
   .timeline-list > button {
     grid-template-columns: 40px 46px 55px minmax(0, 1fr);
