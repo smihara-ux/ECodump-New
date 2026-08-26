@@ -5,6 +5,7 @@ import {
   BusFront,
   CalendarDays,
   Camera,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
@@ -13,19 +14,25 @@ import {
   Copy,
   DoorOpen,
   FileText,
+  Filter,
   HardHat,
   LayoutGrid,
+  Layers3,
   MapPin,
   MapPinned,
   Menu,
   Navigation,
   Network,
+  Plus,
+  Route,
   Search,
   Settings,
   ShieldCheck,
   UserRound,
   UsersRound,
   Truck,
+  TriangleAlert,
+  UserCircle2,
   X,
 } from "lucide-react";
 
@@ -169,12 +176,12 @@ const subcontractorHierarchy = [
   },
 ];
 
-function Header({ title, onHelp }) {
+function Header({ title, onHelp, onClose }) {
   return (
     <header className="page-header">
       <h1>{title}</h1>
       <div className="header-actions">
-        <button className="guide">
+        <button className="guide" onClick={onHelp}>
           <CircleHelp />
           はじめてガイド
         </button>
@@ -182,8 +189,8 @@ function Header({ title, onHelp }) {
           <CircleHelp />
           ヘルプ
         </button>
-        <button className="close">
-          閉じる <X />
+        <button className="close" onClick={onClose}>
+          管制画面へ <X />
         </button>
       </div>
     </header>
@@ -1895,28 +1902,94 @@ function AgencyPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
           "詳細確認・編集",
           "代行関係解除",
         ];
-  let rows = isOrigin
+  let rows = isReq
     ? [
         [
-          "サンプル株式会社",
-          "サンプル住所",
-          "00-0000-0000",
+          "サンプル運輸株式会社",
+          "東京都中央区サンプル1-2-3",
+          "00-0000-1001",
           "法人",
+          "審査中",
           <button
             className="outline"
             onClick={() => setConfirm({ title: "申請履歴" })}
           >
-            申請履歴
+            履歴
           </button>,
+        ],
+        [
+          "サンプル土木株式会社",
+          "千葉県船橋市サンプル4-5-6",
+          "00-0000-1002",
+          "法人",
+          "承認済み",
           <button
-            className="danger"
-            onClick={() => setConfirm({ title: "代行関係解除" })}
+            className="outline"
+            onClick={() => setConfirm({ title: "申請履歴" })}
           >
-            代行関係を解除
+            履歴
           </button>,
         ],
       ]
-    : [];
+    : isOrigin
+      ? [
+          [
+            "サンプル株式会社",
+            "サンプル住所",
+            "00-0000-0000",
+            "法人",
+            <button
+              className="outline"
+              onClick={() => setConfirm({ title: "申請履歴" })}
+            >
+              申請履歴
+            </button>,
+            <button
+              className="danger"
+              onClick={() => setConfirm({ title: "代行関係解除" })}
+            >
+              代行関係を解除
+            </button>,
+          ],
+        ]
+      : [
+          [
+            "サンプル配車株式会社",
+            "東京都江東区サンプル2-3-4",
+            "00-0000-2001",
+            "2026/04/01",
+            <button
+              className="outline"
+              onClick={() => setConfirm({ title: "代行先会社詳細" })}
+            >
+              詳細・編集
+            </button>,
+            <button
+              className="danger"
+              onClick={() => setConfirm({ title: "代行関係解除" })}
+            >
+              解除
+            </button>,
+          ],
+          [
+            "サンプル環境株式会社",
+            "神奈川県川崎市サンプル5-6-7",
+            "00-0000-2002",
+            "2026/05/15",
+            <button
+              className="outline"
+              onClick={() => setConfirm({ title: "代行先会社詳細" })}
+            >
+              詳細・編集
+            </button>,
+            <button
+              className="danger"
+              onClick={() => setConfirm({ title: "代行関係解除" })}
+            >
+              解除
+            </button>,
+          ],
+        ];
   return (
     <>
       <SearchBar
@@ -3073,6 +3146,561 @@ function ConferencePage({ setConfirm }) {
   );
 }
 
+const controlTrips = [
+  {
+    time: "07:00",
+    id: "D-101",
+    status: "運行中",
+    from: "S-01 サンプル現場A",
+    to: "R-03 エコダンプ市川",
+    eta: "07:45",
+  },
+  {
+    time: "07:30",
+    id: "D-102",
+    status: "運行中",
+    from: "S-02 サンプル現場B",
+    to: "R-01 エコダンプ船橋",
+    eta: "08:00",
+  },
+  {
+    time: "08:05",
+    id: "D-103",
+    status: "遅延",
+    from: "S-01 サンプル現場A",
+    to: "R-01 エコダンプ船橋",
+    eta: "+25分",
+  },
+  {
+    time: "08:30",
+    id: "D-104",
+    status: "受入中",
+    from: "S-03 サンプル現場C",
+    to: "R-03 エコダンプ市川",
+    eta: "08:50",
+  },
+  {
+    time: "09:15",
+    id: "D-105",
+    status: "完了",
+    from: "S-02 サンプル現場B",
+    to: "R-02 エコダンプ横浜",
+    eta: "09:05",
+  },
+  {
+    time: "10:00",
+    id: "D-106",
+    status: "運行中",
+    from: "S-04 サンプル現場D",
+    to: "R-04 エコダンプ千葉",
+    eta: "10:50",
+  },
+  {
+    time: "10:30",
+    id: "D-107",
+    status: "待機中",
+    from: "S-05 サンプル現場E",
+    to: "R-01 エコダンプ船橋",
+    eta: "出発待ち",
+  },
+  {
+    time: "11:00",
+    id: "D-108",
+    status: "運行中",
+    from: "S-01 サンプル現場A",
+    to: "R-05 エコダンプ木更津",
+    eta: "11:40",
+  },
+  {
+    time: "11:45",
+    id: "D-109",
+    status: "遅延",
+    from: "S-03 サンプル現場C",
+    to: "R-02 エコダンプ横浜",
+    eta: "+15分",
+  },
+  {
+    time: "12:30",
+    id: "D-110",
+    status: "完了",
+    from: "S-04 サンプル現場D",
+    to: "R-03 エコダンプ市川",
+    eta: "12:20",
+  },
+];
+
+function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
+  return (
+    <>
+      <header className="control-topbar">
+        <button
+          className="control-brand"
+          onClick={() => navigate("運行管制")}
+          aria-label="運行管制へ戻る"
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}ecodump-logo.png`}
+            alt="ECO DUMP"
+          />
+          <span>
+            <b>TRANSPORT CONTROL TOWER</b>
+            <small>建設循環物流オペレーション</small>
+          </span>
+        </button>
+        <button className="control-project">
+          <Building2 />
+          <span>首都圏サンプルプロジェクト</span>
+          <ChevronDown />
+        </button>
+        <button className="control-date">
+          <CalendarDays />
+          <span>2026-08-26（水）</span>
+          <ChevronLeft />
+          <ChevronRight />
+        </button>
+        <label className="control-search">
+          <Search />
+          <input
+            aria-label="全体検索"
+            placeholder="現場名・車両・運転手で検索"
+          />
+        </label>
+        <button className="control-icon-button" aria-label="通知">
+          <Bell />
+          <i>3</i>
+        </button>
+        <button
+          className="control-icon-button"
+          onClick={() => setHelpOpen(true)}
+          aria-label="ヘルプ"
+        >
+          <CircleHelp />
+        </button>
+        <button
+          className={`control-menu-trigger ${menuOpen ? "active" : ""}`}
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-expanded={menuOpen}
+          aria-label="機能メニュー"
+        >
+          <LayoutGrid />
+          <span>機能メニュー</span>
+        </button>
+        <div className="control-user">
+          <UserCircle2 />
+          <span>
+            <b>管制 太郎</b>
+            <small>管制センター</small>
+          </span>
+        </div>
+      </header>
+      {menuOpen && (
+        <div
+          className="function-launcher"
+          role="dialog"
+          aria-label="機能メニュー"
+        >
+          <div className="launcher-heading">
+            <div>
+              <b>機能メニュー</b>
+              <small>既存機能はすべてこちらから利用できます</small>
+            </div>
+            <button onClick={() => setMenuOpen(false)} aria-label="閉じる">
+              <X />
+            </button>
+          </div>
+          <button
+            className={page === "運行管制" ? "active" : ""}
+            onClick={() => {
+              navigate("運行管制");
+              setMenuOpen(false);
+            }}
+          >
+            <Route />
+            <span>
+              <b>運行管制</b>
+              <small>本日の運行・遅延・受入状況</small>
+            </span>
+          </button>
+          {navGroups
+            .flatMap((group) => group.items)
+            .map(([Icon, displayLabel, routeLabel]) => (
+              <button
+                className={page === routeLabel ? "active" : ""}
+                key={routeLabel}
+                onClick={() => {
+                  navigate(routeLabel);
+                  setMenuOpen(false);
+                }}
+              >
+                <Icon />
+                <span>
+                  <b>{displayLabel}</b>
+                  <small>{routeLabel}</small>
+                </span>
+              </button>
+            ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+function ControlOperationModal({ mode, onClose, onSave }) {
+  const [form, setForm] = useState({
+    from: "S-01 サンプル現場A",
+    to: "R-03 エコダンプ市川",
+    vehicle: "10t ダンプ 01",
+    driver: "サンプル 運転者1",
+    time: "13:30",
+    status: mode === "dispatch" ? "運行中" : "待機中",
+  });
+  const update = (key) => (event) =>
+    setForm((current) => ({ ...current, [key]: event.target.value }));
+  return (
+    <div className="overlay" onMouseDown={onClose}>
+      <form
+        className="modal form-modal control-operation-modal"
+        aria-label={mode === "dispatch" ? "配車を組む" : "予定を追加"}
+        onMouseDown={(event) => event.stopPropagation()}
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSave(form);
+        }}
+      >
+        <div className="operation-modal-title">
+          <div>
+            <small>TRANSPORT OPERATION</small>
+            <h2>{mode === "dispatch" ? "配車を組む" : "運行予定を追加"}</h2>
+          </div>
+          <button type="button" aria-label="閉じる" onClick={onClose}>
+            <X />
+          </button>
+        </div>
+        <div className="form-grid">
+          <label>
+            出発現場
+            <select value={form.from} onChange={update("from")}>
+              <option>S-01 サンプル現場A</option>
+              <option>S-02 サンプル現場B</option>
+              <option>S-03 サンプル現場C</option>
+            </select>
+          </label>
+          <label>
+            受入場所
+            <select value={form.to} onChange={update("to")}>
+              <option>R-03 エコダンプ市川</option>
+              <option>R-01 エコダンプ船橋</option>
+              <option>R-02 エコダンプ横浜</option>
+            </select>
+          </label>
+          <label>
+            車両
+            <select value={form.vehicle} onChange={update("vehicle")}>
+              {vehicles.slice(0, 3).map((vehicle) => (
+                <option key={vehicle.number}>{vehicle.name}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            運転手
+            <select value={form.driver} onChange={update("driver")}>
+              {drivers.slice(0, 3).map((driver) => (
+                <option key={driver.phone}>{driver.name}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            出発予定時刻
+            <input type="time" value={form.time} onChange={update("time")} />
+          </label>
+          <label>
+            初期状態
+            <select value={form.status} onChange={update("status")}>
+              <option>待機中</option>
+              <option>運行中</option>
+              <option>受入中</option>
+            </select>
+          </label>
+        </div>
+        <div className="operation-preview">
+          <Truck />
+          <span>
+            <b>{form.vehicle}</b>
+            <small>{form.driver}</small>
+          </span>
+          <ChevronRight />
+          <span>
+            <b>{form.from}</b>
+            <small>{form.time} 出発予定</small>
+          </span>
+          <ChevronRight />
+          <span>
+            <b>{form.to}</b>
+            <small>所要時間 約45分</small>
+          </span>
+        </div>
+        <div className="modal-actions">
+          <button type="button" className="outline" onClick={onClose}>
+            キャンセル
+          </button>
+          <button type="submit" className="primary">
+            {mode === "dispatch" ? "配車を確定" : "予定を登録"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function ControlTowerPage({ navigate, setConfirm }) {
+  const [tripFilter, setTripFilter] = useState("すべてのステータス");
+  const [selectedTrip, setSelectedTrip] = useState("D-103");
+  const [trips, setTrips] = useState(controlTrips);
+  const [operationMode, setOperationMode] = useState(null);
+  const visibleTrips = trips.filter(
+    (trip) => tripFilter === "すべてのステータス" || trip.status === tripFilter,
+  );
+  const summaries = [
+    [ClipboardList, "予定総便数", "68", "便"],
+    [Truck, "配車済み", "53", "便"],
+    [Navigation, "運行中", "28", "便"],
+    [TriangleAlert, "遅延", "3", "便", "warning"],
+    [Clock3, "待機中", "6", "便"],
+    [ShieldCheck, "受入完了", "22", "便", "complete"],
+  ];
+  return (
+    <div className="control-tower-page">
+      <section className="control-toolbar">
+        <button
+          className="dispatch-primary"
+          onClick={() => setOperationMode("dispatch")}
+        >
+          <Truck />
+          <span>配車を組む</span>
+          <ChevronRight />
+        </button>
+        <button onClick={() => setOperationMode("schedule")}>
+          <CalendarDays />
+          予定を追加
+        </button>
+        <label>
+          現場
+          <select>
+            <option>すべての現場</option>
+            <option>サンプル現場A</option>
+            <option>サンプル現場B</option>
+          </select>
+        </label>
+        <label>
+          荷種
+          <select>
+            <option>すべての荷種</option>
+            <option>建設発生土</option>
+            <option>コンクリートがら</option>
+          </select>
+        </label>
+        <label>
+          状態
+          <select
+            value={tripFilter}
+            onChange={(event) => setTripFilter(event.target.value)}
+          >
+            <option>すべてのステータス</option>
+            <option>運行中</option>
+            <option>遅延</option>
+            <option>受入中</option>
+            <option>完了</option>
+            <option>待機中</option>
+          </select>
+        </label>
+        <button className="toolbar-filter">
+          <Filter />
+          フィルター
+        </button>
+      </section>
+      <section className="control-workspace">
+        <div className="operations-map">
+          <img
+            src={`${import.meta.env.BASE_URL}ecodump-control-map.png`}
+            alt="現場と受入場所を結ぶ運行マップ"
+          />
+          <div className="map-legend">
+            <b>現場・受入先マップ</b>
+            <span>
+              <i className="site-dot" />
+              搬出現場（8）
+            </span>
+            <span>
+              <i className="receive-dot" />
+              受入先（5）
+            </span>
+            <span>
+              <Navigation />
+              運行中
+            </span>
+            <span>
+              <TriangleAlert />
+              遅延・渋滞
+            </span>
+          </div>
+          <button
+            className="map-callout site-a"
+            onClick={() => navigate("現場詳細", "32182")}
+          >
+            <em>S-01</em>
+            <b>サンプル現場A</b>
+            <small>積込中　3台</small>
+          </button>
+          <button
+            className="map-callout site-b"
+            onClick={() => navigate("現場詳細", "32183")}
+          >
+            <em>S-02</em>
+            <b>サンプル現場B</b>
+            <small>積込中　2台</small>
+          </button>
+          <button
+            className="map-callout receive-a"
+            onClick={() =>
+              setConfirm({
+                title: "エコダンプ市川",
+                message: "受入中 3台／待機時間 約12分／本日の予定 18台",
+              })
+            }
+          >
+            <em>R-03</em>
+            <b>エコダンプ市川</b>
+            <small>受入中　3台</small>
+          </button>
+          <div className="map-tools">
+            <button aria-label="地図を拡大">＋</button>
+            <button aria-label="地図を縮小">−</button>
+            <button aria-label="現在地">
+              <MapPin />
+            </button>
+          </div>
+          <div className="map-updated">
+            <Truck />
+            交通情報　14:32更新
+          </div>
+        </div>
+        <div className="timeline-panel">
+          <header>
+            <div>
+              <b>本日の運行タイムライン</b>
+              <small>選択中：{selectedTrip}</small>
+            </div>
+            <dl>
+              <div>
+                <dt>計画</dt>
+                <dd>68台</dd>
+              </div>
+              <div>
+                <dt>運行中</dt>
+                <dd>28台</dd>
+              </div>
+              <div>
+                <dt>遅延</dt>
+                <dd>3台</dd>
+              </div>
+              <div>
+                <dt>完了</dt>
+                <dd>22台</dd>
+              </div>
+            </dl>
+          </header>
+          <div className="timeline-list">
+            {visibleTrips.map((trip) => (
+              <button
+                key={trip.id}
+                className={selectedTrip === trip.id ? "selected" : ""}
+                onClick={() => setSelectedTrip(trip.id)}
+              >
+                <time>{trip.time}</time>
+                <b>{trip.id}</b>
+                <span className={`trip-status status-${trip.status}`}>
+                  {trip.status}
+                </span>
+                <span className="trip-route">
+                  {trip.from}
+                  <ChevronRight />
+                  {trip.to}
+                </span>
+                <small>{trip.eta}</small>
+              </button>
+            ))}
+          </div>
+          <button
+            className="all-trips"
+            onClick={() => navigate("搬出・受入スケジュール")}
+          >
+            すべての運行（68台）を表示 <ChevronRight />
+          </button>
+        </div>
+      </section>
+      <section className="control-summary">
+        <div className="summary-title">
+          <b>本日の運行サマリー</b>
+          <small>最終更新 14:32</small>
+        </div>
+        {summaries.map(([Icon, label, value, unit, tone]) => (
+          <button
+            className={tone || ""}
+            key={label}
+            onClick={() =>
+              label === "予定総便数"
+                ? navigate("搬出・受入スケジュール")
+                : setTripFilter(
+                    label === "配車済み"
+                      ? "すべてのステータス"
+                      : label === "受入完了"
+                        ? "完了"
+                        : label,
+                  )
+            }
+          >
+            <Icon />
+            <span>
+              <small>{label}</small>
+              <b>
+                {value}
+                <i>{unit}</i>
+              </b>
+            </span>
+          </button>
+        ))}
+      </section>
+      {operationMode && (
+        <ControlOperationModal
+          mode={operationMode}
+          onClose={() => setOperationMode(null)}
+          onSave={(form) => {
+            const nextId = `D-${String(101 + trips.length).padStart(3, "0")}`;
+            setTrips((current) => [
+              ...current,
+              {
+                time: form.time,
+                id: nextId,
+                status: form.status,
+                from: form.from,
+                to: form.to,
+                eta: "約45分",
+              },
+            ]);
+            setSelectedTrip(nextId);
+            setTripFilter("すべてのステータス");
+            setOperationMode(null);
+            setConfirm({
+              title: operationMode === "dispatch" ? "配車確定" : "予定登録完了",
+              message: `${nextId} を本日の運行タイムラインへ追加しました。`,
+            });
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
 export function App() {
   const [page, setPage] = useState(() => {
       const target = new URLSearchParams(location.search).get("page");
@@ -3082,7 +3710,13 @@ export function App() {
       if (target === "transport") return "搬出・受入スケジュール";
       if (target === "vehicles") return "車両一覧";
       if (target === "field") return "現場詳細";
-      return "現場一覧";
+      if (target === "fields") return "現場一覧";
+      if (target === "company") return "会社情報";
+      if (target === "users") return "ユーザー一覧";
+      if (target === "agencies") return "代行先一覧";
+      if (target === "agency-request") return "代行登録申請";
+      if (target === "prime-contractors") return "自社の代行元一覧";
+      return "運行管制";
     }),
     [collapsed, setCollapsed] = useState(
       () => window.matchMedia("(max-width: 1100px)").matches,
@@ -3090,6 +3724,7 @@ export function App() {
     [query, setQuery] = useState(""),
     [detailOpen, setDetailOpen] = useState(false),
     [helpOpen, setHelpOpen] = useState(false),
+    [menuOpen, setMenuOpen] = useState(false),
     [confirm, setConfirm] = useState(null),
     [selected, setSelected] = useState(
       () => new URLSearchParams(location.search).get("fieldId") || null,
@@ -3100,6 +3735,7 @@ export function App() {
     setQuery("");
     setDetailOpen(false);
     const routeKeys = {
+      運行管制: "control",
       現場一覧: "fields",
       現場詳細: "field",
       "搬出・受入スケジュール": "transport",
@@ -3107,9 +3743,14 @@ export function App() {
       労務安全: "labor",
       入退場管理: "gatekeeper",
       調整会議: "conference",
+      会社情報: "company",
+      ユーザー一覧: "users",
+      代行先一覧: "agencies",
+      代行登録申請: "agency-request",
+      自社の代行元一覧: "prime-contractors",
     };
     const params = new URLSearchParams();
-    if (routeKeys[p] && routeKeys[p] !== "fields")
+    if (routeKeys[p] && routeKeys[p] !== "control")
       params.set("page", routeKeys[p]);
     if (p === "現場詳細" && (fieldId || selected))
       params.set("fieldId", fieldId || selected);
@@ -3126,7 +3767,9 @@ export function App() {
     setTimeout(() => setCopied(null), 1200);
   };
   let body;
-  if (page === "現場一覧")
+  if (page === "運行管制")
+    body = <ControlTowerPage {...{ navigate, setConfirm }} />;
+  else if (page === "現場一覧")
     body = (
       <FieldList
         {...{
@@ -3174,7 +3817,12 @@ export function App() {
       />
     );
   return (
-    <div className={`app-shell ${collapsed ? "is-collapsed" : ""}`}>
+    <div
+      className={`app-shell control-app-shell ${collapsed ? "is-collapsed" : ""}`}
+    >
+      <ControlTopBar
+        {...{ page, navigate, menuOpen, setMenuOpen, setHelpOpen }}
+      />
       <button
         className="mobile-menu"
         onClick={() => setCollapsed((v) => !v)}
@@ -3218,7 +3866,9 @@ export function App() {
                   aria-label={displayLabel}
                   title={collapsed ? displayLabel : undefined}
                 >
-                  <span className="nav-icon"><Icon /></span>
+                  <span className="nav-icon">
+                    <Icon />
+                  </span>
                   <span>{displayLabel}</span>
                 </button>
               ))}
@@ -3227,11 +3877,15 @@ export function App() {
         </nav>
         <div className="sidebar-footer">
           <button>
-            <span className="nav-icon"><Bell /></span>
+            <span className="nav-icon">
+              <Bell />
+            </span>
             <span>通知</span>
           </button>
           <button onClick={() => setHelpOpen(true)}>
-            <span className="nav-icon"><CircleHelp /></span>
+            <span className="nav-icon">
+              <CircleHelp />
+            </span>
             <span>ヘルプ</span>
           </button>
           {!collapsed && (
@@ -3243,7 +3897,7 @@ export function App() {
         </div>
       </aside>
       <main className="content">
-        {!["労務安全", "入退場管理", "調整会議"].includes(page) && (
+        {!["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) && (
           <Header
             title={
               page === "現場一覧"
@@ -3253,9 +3907,14 @@ export function App() {
                   : page
             }
             onHelp={() => setHelpOpen(true)}
+            onClose={() => navigate("運行管制")}
           />
         )}
-        {body}
+        {["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) ? (
+          body
+        ) : (
+          <div className="control-page-surface">{body}</div>
+        )}
       </main>
       {detailOpen && (
         <div className="overlay" onMouseDown={() => setDetailOpen(false)}>
