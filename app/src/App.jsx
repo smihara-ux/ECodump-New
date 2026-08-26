@@ -38,6 +38,10 @@ import {
 
 const navGroups = [
   {
+    title: "資源循環",
+    items: [[Layers3, "発生土マッチング", "UCRマッチング"]],
+  },
+  {
     title: "現場業務",
     items: [[Building2, "現場一覧", "現場一覧"]],
   },
@@ -337,7 +341,7 @@ function FieldList({
           </p>
         </div>
         <div className="table-scroll">
-          <table style={{ height: `${filtered.length * 61 + 24}px` }}>
+          <table className="field-list-table">
             <thead>
               <tr>
                 {[
@@ -3146,6 +3150,364 @@ function ConferencePage({ setConfirm }) {
   );
 }
 
+const matchingCandidates = [
+  {
+    id: "MT-2026-001",
+    destination: "湾岸第2受入ヤード",
+    area: "千葉県市川市",
+    score: 94,
+    distance: "18.4km",
+    travel: "約38分",
+    soil: "第2種建設発生土",
+    capacity: "残り 12,400m³",
+    daily: "120台/日",
+    period: "2026/09/01〜2027/03/31",
+    price: "受入 2,800円/m³",
+    status: "事前相談可能",
+    reasons: ["土質適合", "工期一致", "日量余裕あり", "必要書類4/5"],
+  },
+  {
+    id: "MT-2026-002",
+    destination: "北総ストックヤード",
+    area: "千葉県印西市",
+    score: 86,
+    distance: "31.2km",
+    travel: "約54分",
+    soil: "第2・第3種建設発生土",
+    capacity: "残り 28,000m³",
+    daily: "80台/日",
+    period: "2026/08/20〜2027/06/30",
+    price: "受入 2,300円/m³",
+    status: "条件確認中",
+    reasons: ["土質適合", "工期一致", "総量余裕あり", "距離注意"],
+  },
+  {
+    id: "MT-2026-003",
+    destination: "臨海造成受入地",
+    area: "神奈川県川崎市",
+    score: 72,
+    distance: "42.8km",
+    travel: "約71分",
+    soil: "第1・第2種建設発生土",
+    capacity: "残り 8,600m³",
+    daily: "45台/日",
+    period: "2026/10/01〜2027/02/28",
+    price: "受入 3,100円/m³",
+    status: "追加試験必要",
+    reasons: ["土質条件付き", "工期一部一致", "日量上限あり", "溶出試験必要"],
+  },
+];
+
+function MatchingPage({ setConfirm }) {
+  const [mode, setMode] = useState("搬出案件から探す");
+  const [selected, setSelected] = useState(matchingCandidates[0]);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("適合度順");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [workflow, setWorkflow] = useState({});
+  const candidates = matchingCandidates
+    .filter((item) =>
+      `${item.destination}${item.area}${item.soil}`.includes(query),
+    )
+    .sort((a, b) =>
+      sort === "距離順"
+        ? Number.parseFloat(a.distance) - Number.parseFloat(b.distance)
+        : b.score - a.score,
+    );
+  const beginConsultation = (candidate) => {
+    setWorkflow((current) => ({
+      ...current,
+      [candidate.id]: "事前相談中",
+    }));
+    setConfirm({
+      title: "事前相談を開始しました",
+      message: `${candidate.destination}との条件調整案件を作成しました。`,
+    });
+  };
+  return (
+    <section className="matching-page">
+      <div className="matching-hero">
+        <div>
+          <span>SOIL CIRCULATION MATCHING</span>
+          <h2>建設発生土マッチング</h2>
+          <p>
+            搬出時期・土量・土質・距離・受入条件を照合し、調整可能な受入候補を提示します。
+          </p>
+        </div>
+        <button className="primary" onClick={() => setCreateOpen(true)}>
+          <Plus /> 新しい案件を登録
+        </button>
+      </div>
+      <div className="matching-kpis">
+        <article>
+          <span>公開中の搬出案件</span>
+          <b>18件</b>
+          <small>総量 48,600m³</small>
+        </article>
+        <article>
+          <span>受入可能案件</span>
+          <b>12件</b>
+          <small>総余力 92,400m³</small>
+        </article>
+        <article>
+          <span>条件調整中</span>
+          <b>5件</b>
+          <small>今週 +2件</small>
+        </article>
+        <article>
+          <span>成立済み</span>
+          <b>9件</b>
+          <small>再利用率 68%</small>
+        </article>
+      </div>
+      <div className="matching-toolbar">
+        <div className="matching-mode">
+          {["搬出案件から探す", "受入案件から探す"].map((item) => (
+            <button
+              className={mode === item ? "active" : ""}
+              key={item}
+              onClick={() => setMode(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+        <label>
+          キーワード
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="受入地・地域・土質"
+          />
+        </label>
+        <label>
+          並び順
+          <select
+            value={sort}
+            onChange={(event) => setSort(event.target.value)}
+          >
+            <option>適合度順</option>
+            <option>距離順</option>
+          </select>
+        </label>
+        <button
+          className="outline"
+          onClick={() =>
+            setConfirm({
+              title: "詳細条件",
+              message:
+                "期間、総量、日量、土質区分、試験結果、対象地域、車両条件で絞り込みます。",
+            })
+          }
+        >
+          <Filter /> 詳細条件
+        </button>
+      </div>
+      <div className="matching-workspace">
+        <div className="matching-list">
+          <div className="matching-list-title">
+            <div>
+              <b>マッチング候補</b>
+              <small>{candidates.length}件を適合条件から算出</small>
+            </div>
+            <span>対象案件：サンプル現場A／搬出 6,400m³</span>
+          </div>
+          {candidates.map((candidate) => (
+            <button
+              className={`match-card ${selected?.id === candidate.id ? "selected" : ""}`}
+              key={candidate.id}
+              onClick={() => setSelected(candidate)}
+            >
+              <div className="match-score">
+                <b>{candidate.score}</b>
+                <span>適合度</span>
+              </div>
+              <div className="match-main">
+                <small>{candidate.id}</small>
+                <h3>{candidate.destination}</h3>
+                <p>{candidate.area}</p>
+                <div>
+                  <span>{candidate.soil}</span>
+                  <span>{candidate.period}</span>
+                </div>
+              </div>
+              <div className="match-distance">
+                <Navigation />
+                <b>{candidate.distance}</b>
+                <span>{candidate.travel}</span>
+              </div>
+              <span className="match-status">
+                {workflow[candidate.id] || candidate.status}
+              </span>
+            </button>
+          ))}
+        </div>
+        {selected && (
+          <aside className="match-detail">
+            <div className="match-detail-head">
+              <div>
+                <small>{selected.id}</small>
+                <h3>{selected.destination}</h3>
+                <p>{selected.area}</p>
+              </div>
+              <div className="match-score large">
+                <b>{selected.score}</b>
+                <span>適合度</span>
+              </div>
+            </div>
+            <div className="match-route-preview">
+              <MapPin />
+              <span>
+                <small>搬出元</small>
+                <b>サンプル現場A</b>
+              </span>
+              <ChevronRight />
+              <span>
+                <small>運搬</small>
+                <b>{selected.distance}</b>
+                <em>{selected.travel}</em>
+              </span>
+              <ChevronRight />
+              <MapPinned />
+              <span>
+                <small>受入先</small>
+                <b>{selected.destination}</b>
+              </span>
+            </div>
+            <dl className="match-properties">
+              <div>
+                <dt>受入可能土質</dt>
+                <dd>{selected.soil}</dd>
+              </div>
+              <div>
+                <dt>受入可能量</dt>
+                <dd>{selected.capacity}</dd>
+              </div>
+              <div>
+                <dt>日別上限</dt>
+                <dd>{selected.daily}</dd>
+              </div>
+              <div>
+                <dt>受入期間</dt>
+                <dd>{selected.period}</dd>
+              </div>
+              <div>
+                <dt>参考単価</dt>
+                <dd>{selected.price}</dd>
+              </div>
+            </dl>
+            <div className="matching-reasons">
+              <b>判定内容</b>
+              <div>
+                {selected.reasons.map((reason) => (
+                  <span key={reason}>
+                    <ShieldCheck /> {reason}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="match-actions">
+              <button
+                className="outline"
+                onClick={() =>
+                  setConfirm({
+                    title: "必要書類",
+                    message:
+                      "土質試験結果、位置図、搬出計画、車両一覧、搬入申請書を確認します。",
+                  })
+                }
+              >
+                必要書類を確認
+              </button>
+              <button
+                className="primary"
+                onClick={() => beginConsultation(selected)}
+              >
+                事前相談を開始
+              </button>
+            </div>
+          </aside>
+        )}
+      </div>
+      {createOpen && (
+        <div className="overlay" onMouseDown={() => setCreateOpen(false)}>
+          <form
+            className="modal form-modal matching-create-modal"
+            aria-label="マッチング案件登録"
+            onMouseDown={(event) => event.stopPropagation()}
+            onSubmit={(event) => {
+              event.preventDefault();
+              setCreateOpen(false);
+              setConfirm({
+                title: "案件を登録しました",
+                message: "条件を保存し、マッチング候補の計算を開始しました。",
+              });
+            }}
+          >
+            <h2>マッチング案件登録</h2>
+            <div className="form-grid">
+              <label>
+                案件区分
+                <select>
+                  <option>建設発生土を搬出したい</option>
+                  <option>受け入れたい</option>
+                </select>
+              </label>
+              <label>
+                現場
+                <select>
+                  <option>サンプル現場A</option>
+                  <option>サンプル現場B</option>
+                </select>
+              </label>
+              <label>
+                土質区分
+                <select>
+                  <option>第2種建設発生土</option>
+                  <option>第3種建設発生土</option>
+                  <option>第4種建設発生土</option>
+                </select>
+              </label>
+              <label>
+                総土量（m³）
+                <input type="number" min="1" defaultValue="6400" required />
+              </label>
+              <label>
+                開始日
+                <input type="date" defaultValue="2026-09-01" required />
+              </label>
+              <label>
+                終了日
+                <input type="date" defaultValue="2027-01-31" required />
+              </label>
+              <label>
+                1日の予定台数
+                <input type="number" min="1" defaultValue="24" required />
+              </label>
+              <label>
+                最大運搬距離（km）
+                <input type="number" min="1" defaultValue="50" required />
+              </label>
+            </div>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="outline"
+                onClick={() => setCreateOpen(false)}
+              >
+                キャンセル
+              </button>
+              <button type="submit" className="primary">
+                登録して候補を計算
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </section>
+  );
+}
+
 const controlTrips = [
   {
     time: "07:00",
@@ -3294,52 +3656,62 @@ function ControlTopBar({ page, navigate, menuOpen, setMenuOpen, setHelpOpen }) {
         </div>
       </header>
       {menuOpen && (
-        <div
-          className="function-launcher"
-          role="dialog"
-          aria-label="機能メニュー"
-        >
-          <div className="launcher-heading">
-            <div>
-              <b>機能メニュー</b>
-              <small>既存機能はすべてこちらから利用できます</small>
-            </div>
-            <button onClick={() => setMenuOpen(false)} aria-label="閉じる">
-              <X />
-            </button>
-          </div>
+        <>
           <button
-            className={page === "運行管制" ? "active" : ""}
-            onClick={() => {
-              navigate("運行管制");
-              setMenuOpen(false);
-            }}
+            className="function-launcher-backdrop"
+            onClick={() => setMenuOpen(false)}
+            aria-label="機能メニューを閉じる"
+          />
+          <div
+            className="function-launcher"
+            role="dialog"
+            aria-label="機能メニュー"
           >
-            <Route />
-            <span>
-              <b>運行管制</b>
-              <small>本日の運行・遅延・受入状況</small>
-            </span>
-          </button>
-          {navGroups
-            .flatMap((group) => group.items)
-            .map(([Icon, displayLabel, routeLabel]) => (
-              <button
-                className={page === routeLabel ? "active" : ""}
-                key={routeLabel}
-                onClick={() => {
-                  navigate(routeLabel);
-                  setMenuOpen(false);
-                }}
-              >
-                <Icon />
-                <span>
-                  <b>{displayLabel}</b>
-                  <small>{routeLabel}</small>
-                </span>
+            <div className="launcher-heading">
+              <div>
+                <b>機能メニュー</b>
+                <small>既存機能はすべてこちらから利用できます</small>
+              </div>
+              <button onClick={() => setMenuOpen(false)} aria-label="閉じる">
+                <X />
               </button>
+            </div>
+            <button
+              className={page === "運行管制" ? "active" : ""}
+              onClick={() => {
+                navigate("運行管制");
+                setMenuOpen(false);
+              }}
+            >
+              <Route />
+              <span>
+                <b>運行管制</b>
+                <small>本日の運行・遅延・受入状況</small>
+              </span>
+            </button>
+            {navGroups.map((group) => (
+              <section className="launcher-group" key={group.title}>
+                <h3>{group.title}</h3>
+                {group.items.map(([Icon, displayLabel, routeLabel]) => (
+                  <button
+                    className={page === routeLabel ? "active" : ""}
+                    key={routeLabel}
+                    onClick={() => {
+                      navigate(routeLabel);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <Icon />
+                    <span>
+                      <b>{displayLabel}</b>
+                      <small>{routeLabel}</small>
+                    </span>
+                  </button>
+                ))}
+              </section>
             ))}
-        </div>
+          </div>
+        </>
       )}
     </>
   );
@@ -3457,6 +3829,7 @@ function ControlTowerPage({ navigate, setConfirm }) {
   const [selectedTrip, setSelectedTrip] = useState("D-103");
   const [trips, setTrips] = useState(controlTrips);
   const [operationMode, setOperationMode] = useState(null);
+  const [mapZoom, setMapZoom] = useState(1);
   const visibleTrips = trips.filter(
     (trip) => tripFilter === "すべてのステータス" || trip.status === tripFilter,
   );
@@ -3523,6 +3896,7 @@ function ControlTowerPage({ navigate, setConfirm }) {
           <img
             src={`${import.meta.env.BASE_URL}ecodump-control-map.png`}
             alt="現場と受入場所を結ぶ運行マップ"
+            style={{ transform: `scale(${mapZoom})` }}
           />
           <div className="map-legend">
             <b>現場・受入先マップ</b>
@@ -3573,9 +3947,28 @@ function ControlTowerPage({ navigate, setConfirm }) {
             <small>受入中　3台</small>
           </button>
           <div className="map-tools">
-            <button aria-label="地図を拡大">＋</button>
-            <button aria-label="地図を縮小">−</button>
-            <button aria-label="現在地">
+            <button
+              aria-label="地図を拡大"
+              onClick={() => setMapZoom((value) => Math.min(1.5, value + 0.1))}
+            >
+              ＋
+            </button>
+            <button
+              aria-label="地図を縮小"
+              onClick={() => setMapZoom((value) => Math.max(1, value - 0.1))}
+            >
+              −
+            </button>
+            <button
+              aria-label="現在地"
+              onClick={() =>
+                setConfirm({
+                  title: "現在地を中心に表示",
+                  message:
+                    "位置情報の利用許可後、管制担当者の現在地を中心に表示します。",
+                })
+              }
+            >
               <MapPin />
             </button>
           </div>
@@ -3716,6 +4109,7 @@ export function App() {
       if (target === "agencies") return "代行先一覧";
       if (target === "agency-request") return "代行登録申請";
       if (target === "prime-contractors") return "自社の代行元一覧";
+      if (target === "matching") return "UCRマッチング";
       return "運行管制";
     }),
     [collapsed, setCollapsed] = useState(
@@ -3748,6 +4142,7 @@ export function App() {
       代行先一覧: "agencies",
       代行登録申請: "agency-request",
       自社の代行元一覧: "prime-contractors",
+      UCRマッチング: "matching",
     };
     const params = new URLSearchParams();
     if (routeKeys[p] && routeKeys[p] !== "control")
@@ -3803,6 +4198,8 @@ export function App() {
     body = <VehiclePage {...{ query, setQuery, setDetailOpen, setConfirm }} />;
   else if (page === "搬出・受入スケジュール")
     body = <TransportSchedulePage setConfirm={setConfirm} />;
+  else if (page === "UCRマッチング")
+    body = <MatchingPage setConfirm={setConfirm} />;
   else if (page === "労務安全")
     body = <GreenfilePage setConfirm={setConfirm} />;
   else if (page === "入退場管理")

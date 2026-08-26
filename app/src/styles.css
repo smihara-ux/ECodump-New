@@ -487,6 +487,48 @@
   }
 }
 
+/* Final scoped contrast fixes must win over the legacy light theme. */
+.control-page-surface .table-scroll .field-list-table tbody tr:hover,
+.control-page-surface .table-scroll .field-list-table tbody tr.selected {
+  background: #16463f !important;
+}
+.control-page-surface .table-scroll .field-list-table td {
+  color: #eef7f4 !important;
+}
+.control-page-surface .field-list-table .field-access {
+  max-height: none;
+  color: #fff !important;
+}
+.control-page-surface .field-list-table .field-meta {
+  color: #a9bdb6 !important;
+}
+.control-page-surface .transport-summary > div,
+.control-page-surface .field-total-card,
+.control-page-surface .field-total-main,
+.control-page-surface .destination-summary-card,
+.control-page-surface .field-trip-breakdown,
+.control-page-surface .field-trip-breakdown > div {
+  border-color: rgb(164 199 188 / 28%) !important;
+  background: #0b3934 !important;
+  color: #edf7f3 !important;
+}
+.control-page-surface .transport-summary span,
+.control-page-surface .field-total-main span,
+.control-page-surface .field-total-main p,
+.control-page-surface .destination-summary-card span,
+.control-page-surface .field-trip-breakdown span {
+  color: #b8cac4 !important;
+}
+.control-page-surface .transport-summary b,
+.control-page-surface .field-total-main h3,
+.control-page-surface .field-total-vehicles b,
+.control-page-surface .destination-summary-card b {
+  color: #f4faf7 !important;
+}
+.control-page-surface .field-total-count b {
+  color: #c4d82e !important;
+}
+
 @media (max-width: 760px) {
   .control-app-shell .page-header {
     min-height: 56px;
@@ -3456,6 +3498,409 @@ button.contractor-row:hover {
   }
 }
 
+/* Product QA: readable data grids and schedule cards */
+.control-page-surface .field-list-table {
+  width: 100%;
+  height: auto;
+  table-layout: fixed;
+}
+.control-page-surface .field-list-table th,
+.control-page-surface .field-list-table td {
+  height: auto;
+  padding: 13px 12px;
+  line-height: 1.45;
+  vertical-align: middle;
+}
+.control-page-surface .field-list-table tbody tr {
+  height: 76px;
+}
+.control-page-surface .field-access {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  line-height: 1.35;
+  text-align: left;
+}
+.control-page-surface .field-meta {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+  line-height: 1.35;
+}
+.control-page-surface .transport-summary > div,
+.control-page-surface .field-total-card,
+.control-page-surface .field-total-main,
+.control-page-surface .destination-summary-card,
+.control-page-surface .field-trip-breakdown,
+.control-page-surface .field-trip-breakdown > div {
+  border-color: rgb(164 199 188 / 28%) !important;
+  background: #0b3934 !important;
+  color: #edf7f3 !important;
+}
+.control-page-surface .transport-summary span,
+.control-page-surface .field-total-main span,
+.control-page-surface .field-total-main p,
+.control-page-surface .destination-summary-card span,
+.control-page-surface .field-trip-breakdown span {
+  color: #b8cac4 !important;
+}
+.control-page-surface .transport-summary b,
+.control-page-surface .field-total-main h3,
+.control-page-surface .field-total-vehicles b,
+.control-page-surface .destination-summary-card b {
+  color: #f4faf7 !important;
+}
+.control-page-surface .field-total-count b {
+  color: #c4d82e !important;
+}
+
+/* Construction soil circulation matching */
+.matching-page {
+  min-height: 100%;
+  padding: 22px;
+  overflow: auto;
+  background: #032724;
+  color: #edf7f3;
+}
+.matching-hero,
+.matching-toolbar,
+.matching-list,
+.match-detail,
+.matching-kpis article {
+  border: 1px solid rgb(166 204 192 / 24%);
+  background: #082f2b;
+}
+.matching-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 26px;
+  border-left: 5px solid #c4d82e;
+}
+.matching-hero h2,
+.matching-hero p {
+  margin: 0;
+}
+.matching-hero h2 {
+  margin: 5px 0 7px;
+  font-size: 28px;
+}
+.matching-hero > div > span {
+  color: #c4d82e;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.matching-hero p {
+  color: #afc2bc;
+}
+.matching-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 12px 0;
+}
+.matching-kpis article {
+  display: grid;
+  gap: 4px;
+  padding: 15px 18px;
+}
+.matching-kpis span,
+.matching-kpis small {
+  color: #9eb6ae;
+}
+.matching-kpis b {
+  color: #dbe957;
+  font-size: 26px;
+}
+.matching-toolbar {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  padding: 13px;
+}
+.matching-toolbar label {
+  display: grid;
+  min-width: 180px;
+  gap: 5px;
+  color: #a9beb7;
+  font-size: 11px;
+}
+.matching-toolbar input,
+.matching-toolbar select {
+  height: 38px;
+  border-color: #41635d;
+  background: #062824;
+  color: #fff;
+}
+.matching-mode {
+  display: flex;
+  align-self: stretch;
+}
+.matching-mode button {
+  border: 1px solid #42635d;
+  background: #062824;
+  color: #bed0ca;
+  padding: 0 15px;
+}
+.matching-mode button.active {
+  border-color: #c4d82e;
+  background: #c4d82e;
+  color: #072c28;
+  font-weight: 800;
+}
+.matching-workspace {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.3fr) minmax(390px, 0.8fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+.matching-list,
+.match-detail {
+  min-width: 0;
+  overflow: hidden;
+}
+.matching-list-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 17px;
+  border-bottom: 1px solid #31534d;
+}
+.matching-list-title > div {
+  display: grid;
+  gap: 3px;
+}
+.matching-list-title small,
+.matching-list-title > span {
+  color: #9db3ac;
+  font-size: 11px;
+}
+.match-card {
+  display: grid;
+  width: 100%;
+  min-height: 108px;
+  grid-template-columns: 76px minmax(0, 1fr) 100px 96px;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 0;
+  border-bottom: 1px solid #2b4e48;
+  background: transparent;
+  color: #edf7f3;
+  text-align: left;
+}
+.match-card:hover,
+.match-card.selected {
+  background: #0d4039;
+}
+.match-card.selected {
+  box-shadow: inset 4px 0 #c4d82e;
+}
+.match-score {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-content: center;
+  border: 1px solid #678079;
+  border-radius: 50%;
+  text-align: center;
+}
+.match-score b {
+  color: #dce94e;
+  font-size: 22px;
+  line-height: 1;
+}
+.match-score span {
+  color: #9fb7b0;
+  font-size: 9px;
+}
+.match-main h3,
+.match-main p {
+  margin: 0;
+}
+.match-main h3 {
+  margin: 3px 0;
+  font-size: 16px;
+}
+.match-main small,
+.match-main p,
+.match-main span {
+  color: #a9bdb7;
+  font-size: 11px;
+}
+.match-main > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 7px;
+}
+.match-distance {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: #b9cbc5;
+}
+.match-distance svg {
+  width: 18px;
+  color: #c4d82e;
+}
+.match-status {
+  padding: 6px 8px;
+  border: 1px solid #688117;
+  border-radius: 4px;
+  color: #dce94e;
+  font-size: 11px;
+  text-align: center;
+}
+.match-detail {
+  align-self: start;
+  padding: 18px;
+  position: sticky;
+  top: 0;
+}
+.match-detail-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #31534d;
+}
+.match-detail-head h3,
+.match-detail-head p {
+  margin: 2px 0;
+}
+.match-score.large {
+  flex: 0 0 70px;
+  width: 70px;
+  height: 70px;
+}
+.match-route-preview {
+  display: grid;
+  grid-template-columns: 24px 1fr 18px 1fr 18px 24px 1fr;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 0;
+  border-bottom: 1px solid #31534d;
+}
+.match-route-preview > svg {
+  color: #c4d82e;
+}
+.match-route-preview span {
+  display: grid;
+  gap: 2px;
+}
+.match-route-preview small,
+.match-route-preview em {
+  color: #9db3ac;
+  font-size: 9px;
+  font-style: normal;
+}
+.match-route-preview b {
+  font-size: 11px;
+}
+.match-properties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin: 14px 0;
+  background: #31534d;
+}
+.match-properties div {
+  padding: 11px;
+  background: #092f2b;
+}
+.match-properties dt {
+  color: #91aaa2;
+  font-size: 10px;
+}
+.match-properties dd {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+.matching-reasons > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 9px;
+}
+.matching-reasons span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 7px;
+  background: #123f38;
+  color: #cfe0da;
+  font-size: 10px;
+}
+.matching-reasons svg {
+  width: 13px;
+  color: #c4d82e;
+}
+.match-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+@media (max-width: 1050px) {
+  .matching-workspace {
+    grid-template-columns: 1fr;
+  }
+  .match-detail {
+    position: static;
+  }
+  .matching-toolbar {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 620px) {
+  .matching-page {
+    padding: 10px;
+  }
+  .matching-hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .matching-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+  .matching-mode,
+  .matching-toolbar label,
+  .matching-toolbar > button {
+    width: 100%;
+  }
+  .matching-mode button {
+    flex: 1;
+    min-height: 42px;
+  }
+  .match-card {
+    grid-template-columns: 60px minmax(0, 1fr);
+  }
+  .match-distance,
+  .match-status {
+    grid-column: 2;
+    justify-items: start;
+  }
+  .match-route-preview {
+    grid-template-columns: 22px 1fr;
+  }
+  .match-route-preview > svg:not(:first-child),
+  .match-route-preview > span:nth-of-type(2) {
+    display: none;
+  }
+  .match-properties {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ECODUMP restrained visual refresh — preserves the existing UX and layout. */
 :root {
   --eco-950: #062f2b;
@@ -4153,12 +4598,12 @@ a:focus-visible {
 .function-launcher {
   position: fixed;
   top: 68px;
-  right: 18px;
+  bottom: 18px;
+  left: 18px;
   z-index: 90;
-  display: grid;
-  width: 560px;
-  max-height: calc(100vh - 88px);
-  grid-template-columns: 1fr 1fr;
+  display: block;
+  width: min(390px, calc(100vw - 36px));
+  max-height: calc(100vh - 86px);
   gap: 8px;
   padding: 14px;
   overflow-y: auto;
@@ -4166,6 +4611,14 @@ a:focus-visible {
   border-radius: 8px;
   background: #062a27;
   box-shadow: 0 18px 55px rgb(0 0 0 / 40%);
+}
+.function-launcher-backdrop {
+  position: fixed;
+  inset: 58px 0 0;
+  z-index: 89;
+  border: 0;
+  background: rgb(0 12 11 / 58%);
+  backdrop-filter: blur(2px);
 }
 .launcher-heading {
   display: flex;
@@ -4194,8 +4647,10 @@ a:focus-visible {
   background: transparent;
   color: #fff;
 }
-.function-launcher > button:not(.launcher-heading button) {
+.function-launcher > button,
+.launcher-group > button {
   display: flex;
+  width: 100%;
   min-height: 66px;
   align-items: center;
   gap: 12px;
@@ -4206,21 +4661,38 @@ a:focus-visible {
   color: #f2f8f5;
   text-align: left;
 }
-.function-launcher > button.active {
+.function-launcher > button.active,
+.launcher-group > button.active {
   border-color: #c4d82e;
   background: #123f38;
 }
-.function-launcher > button > svg {
+.function-launcher > button > svg,
+.launcher-group > button > svg {
   width: 24px;
   color: #c4d82e;
 }
-.function-launcher > button span {
+.function-launcher > button span,
+.launcher-group > button span {
   display: grid;
   gap: 3px;
 }
-.function-launcher > button small {
+.function-launcher > button small,
+.launcher-group > button small {
   color: #9fb8b0;
   font-size: 11px;
+}
+.launcher-group {
+  display: grid;
+  gap: 7px;
+  margin-top: 13px;
+}
+.launcher-group h3 {
+  margin: 0;
+  padding: 0 4px 5px;
+  border-bottom: 1px solid rgb(196 216 46 / 26%);
+  color: #c4d82e;
+  font-size: 12px;
+  letter-spacing: 0.08em;
 }
 
 .control-tower-page {
@@ -4312,6 +4784,8 @@ a:focus-visible {
   height: 100%;
   object-fit: cover;
   opacity: 0.92;
+  transform-origin: center;
+  transition: transform 180ms ease;
 }
 .map-legend {
   position: absolute;
@@ -4700,10 +5174,10 @@ a:focus-visible {
     display: none;
   }
   .function-launcher {
-    inset: 58px 8px auto;
+    inset: 58px 0 0;
     width: auto;
-    max-height: calc(100vh - 70px);
-    grid-template-columns: 1fr;
+    max-height: none;
+    border-radius: 0 8px 8px 0;
   }
   .control-app-shell > .content {
     height: calc(100dvh - 58px);
@@ -4792,4 +5266,46 @@ a:focus-visible {
   .control-summary > button {
     min-height: 76px;
   }
+}
+
+/* Final scoped contrast fixes (kept last to override legacy light rules). */
+.control-page-surface .table-scroll .field-list-table tbody tr:hover,
+.control-page-surface .table-scroll .field-list-table tbody tr.selected {
+  background: #16463f !important;
+}
+.control-page-surface .table-scroll .field-list-table td {
+  color: #eef7f4 !important;
+}
+.control-page-surface .field-list-table .field-access {
+  max-height: none;
+  color: #fff !important;
+}
+.control-page-surface .field-list-table .field-meta {
+  color: #a9bdb6 !important;
+}
+.control-page-surface .transport-summary > div,
+.control-page-surface .field-total-card,
+.control-page-surface .field-total-main,
+.control-page-surface .destination-summary-card,
+.control-page-surface .field-trip-breakdown,
+.control-page-surface .field-trip-breakdown > div {
+  border-color: rgb(164 199 188 / 28%) !important;
+  background: #0b3934 !important;
+  color: #edf7f3 !important;
+}
+.control-page-surface .transport-summary span,
+.control-page-surface .field-total-main span,
+.control-page-surface .field-total-main p,
+.control-page-surface .destination-summary-card span,
+.control-page-surface .field-trip-breakdown span {
+  color: #b8cac4 !important;
+}
+.control-page-surface .transport-summary b,
+.control-page-surface .field-total-main h3,
+.control-page-surface .field-total-vehicles b,
+.control-page-surface .destination-summary-card b {
+  color: #f4faf7 !important;
+}
+.control-page-surface .field-total-count b {
+  color: #c4d82e !important;
 }

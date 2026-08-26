@@ -1,306 +1,143 @@
-# Design QA
+# ECODUMP restrained UI refresh — Design QA
 
-## 2026-08-20 — 二次・三次協力会社の階層表示
-
-- 現場詳細の中項目に「協力会社」を追加した。
-- 二次協力会社ごとに、配下の三次協力会社数を表示した。
-- 二次協力会社の行を展開すると、三次協力会社の会社名、工種、作業員数、登録状況、詳細操作を表示する。
-- 登録済みと確認待ちを色分けし、二次・三次の階層バッジと接続線で所属関係を明示した。
-
-**E2E evidence**
-
-- PASS: 二次2社、三次3社の集計を表示。
-- PASS: 最初の二次協力会社を展開し、配下の三次2社を表示。
-- PASS: 別の二次協力会社を開くと、最初の行が閉じて対象配下の三次1社へ切り替わる。
-- PASS: 三次協力会社の登録済み／確認待ちを表示し、詳細ボタンが利用可能。
-- PASS: 390×844でドキュメント幅が表示幅と一致し、横方向のページ溢れがない。
-- PASS: `npm run build`、`npm run test:sites`、`git diff --check` が成功。
-
-final result: passed
-
-## 2026-08-20 — 現場別の予定延べ台数
-
-- 定義: 予定延べ台数は、同一車両の複数便も各便を1台として合算する。実車両数とは分けて表示する。
-- 現場別の主表示を個別運行カードから現場集計カードへ変更した。
-- 各現場に予定延べ台数、実車両数、運行時間帯、受入先数を表示した。
-- 「内訳を表示」で、便ごとの出発時刻、受入先、車両、完了予定を確認できるようにした。
-
-**E2E evidence**
-
-- PASS: 当日は4現場、予定延べ6台を表示。
-- PASS: サンプル現場Aは同一実車両1台・2便を予定延べ2台として集計。
-- PASS: 内訳を開くと1便目と2便目の2行を表示。
-- PASS: 翌日は2現場、予定延べ2台へ更新。
-- PASS: 390×844で横方向のページ溢れがなく、集計カードは1列に再配置。
-- PASS: `npm run build` と `npm run test:sites` が成功。
-
-final result: passed
-
-## 2026-08-20 — 現場起点の情報設計・配車管理改善
-
-- 現場一覧の現場名を明確なアクセスリンクに変更し、現場詳細へ直接遷移できるようにした。
-- 現場詳細の中項目を「概要／入退場／搬出・受入／車両・運転手」に整理した。
-- 独立メニューの「現場体制（施工体系図）」と「作業員一覧」を外し、「車両一覧」に統合した。
-- 搬出・受入スケジュールに「当日／翌日」と「現場別／受入場所別」を追加した。
-- 受入場所別画面で、到着予定時刻、予定延べ台数、混雑状況を集計表示した。
-- 車両一覧に「車両情報／運転手情報」タブと、それぞれの登録フォームを追加した。
-
-**E2E evidence**
-
-- PASS: 現場一覧の先頭現場から現場詳細へ遷移し、対象の現場名と4つの中項目を表示。
-- PASS: 現場詳細の入退場タブに切り替わり、当日の入退場データを表示。
-- PASS: 受入場所別で3施設、当日延べ4台を表示。翌日に切り替えると2施設・2件へ更新。
-- PASS: 車両一覧で運転手情報タブへ切り替え、3件を表示し、登録フォームを開ける。
-- PASS: 390×844でドキュメント幅が表示幅と一致し、概要カードは1列、現場内メニューは横スクロールで到達可能。
-- PASS: `npm run build` と `npm run test:sites` が成功。
-
-final result: passed
-
-## 2026-08-20 — 搬出・受入スケジュール追加
-
-- 要望: 出発現場から受入場所までの所要時間、現地作業予定時間、完了見込み、受入先の混雑状況を一画面で把握できること。
-- 実装: サイドバーに「配車・受入管理」を追加し、「搬出・受入スケジュール」画面を新設。
-- 表示項目: 出発予定、所要時間、到着予定、現地作業時間、完了予定、搬出物、車両、運転者、受入先メモ、混雑ステータス。
-- 操作: 運行日、混雑状況、現場・受入場所・車両の絞り込み、予定追加、各予定の詳細表示。
-
-**E2E evidence**
-
-- PASS: デスクトップ 1280×900 で4件の予定と全工程が欠けずに表示される。
-- PASS: iPhone相当 390×844 でドキュメント幅と表示幅が一致し、横方向のページ溢れがない。
-- PASS: 390px幅で集計カードと運行経路が1列に再配置される。
-- PASS: 混雑状況「混雑」の選択で表示件数が4件から1件へ変化する。
-- PASS: 「詳細」操作で対象予定の確認ダイアログが開く。
-- PASS: `npm run build`、`npm run test:sites`、`git diff --check` が成功。
-
-final result: passed
-
-## 2026-08-19 — Mobile and tablet responsive pass
-
-- Scope: master pages plus 労務安全, 入退場管理, and 調整会議 service screens.
-- Breakpoint: compact drawer/tablet layout through 1100px; desktop rail above 1100px.
-- iPhone 390×844: full-width content, single-column filters and field cards, off-canvas navigation.
-- Android 412×915: horizontally scrollable service tabs and data tables with readable headers.
-- iPad portrait 768×1024: full-width service dashboard, drawer navigation, touch-sized actions.
-- Tablet landscape 1024×768: drawer navigation prevents the fixed rail and data grid from overflowing the viewport.
-
-**E2E evidence**
-
-- PASS: document width equals viewport width at 390, 412, 768, and 1024 CSS pixels.
-- PASS: mobile navigation opens, exposes the complete menu, navigates to 会社情報, and closes afterward.
-- PASS: search input uses the full available width at 390px; field rows reflow into labeled cards.
-- PASS: service navigation remains reachable by horizontal swipe and wide data tables have contained horizontal scrolling.
-- PASS: `npm run build` and `npm run test:sites` passed.
-
-final result: passed
-
-## 2026-08-19 — Labor Safety table and document-type correction
-
-- Issue evidence: `スクリーンショット 2026-08-19 17.40.16.png` and `17.40.25.png`; white table headings, overlapping columns, and indistinguishable document pages.
-- Source truth: authenticated Greenfile pages `/greenfile/shinkianquete/list` and `/greenfile/other_forms/confirm_template/list`, captured at 1280×720 as `/tmp/source-labor-survey.png` and `/tmp/source-labor-other.png`.
-- Implementation evidence: `labor-survey-fixed.png` and `labor-other-documents-fixed.png` at 1280×720; combined source/implementation evidence `/tmp/labor-survey-comparison.png`.
-
-**Comparison history**
-
-- P0: global master-table grid styles leaked into all `.gf-table` elements, producing white headings and overlapping fixed tracks. Fixed with scoped table/table-row-group/table-row/table-cell display rules and explicit dark header text.
-- P1: 元請会社新規入場者調査票 and その他の安全書類 shared the same generic component and columns. Fixed with distinct purpose descriptions, column schemas, sections, and interactions.
-- P2: narrow 操作 cells wrapped 確認 vertically. Fixed with 48px minimum action width and nowrap.
-- Expected difference: source company, worker, construction, and contact data remain anonymous.
-
-**Verified functional differences**
-
-- 元請指定調査票: company, first-tier contractor, work content, term, last update; separate self-submission and lower-company confirmation sections.
-- その他の安全書類: company, first-tier contractor, term; separate confirmation/submission and template-download tabs.
-
-**E2E evidence**
-
-- PASS: all nine Labor Safety pages opened with their matching heading.
-- PASS: every expected header including 受付日, 会社名, 作業内容, 工期, 出力状況, and 予約日時／予約者 is present.
-- PASS: all `.gf-table th` computed colors are non-white and all measured header heights are positive/non-collapsed.
-- PASS: table action buttons are at least 48px wide and do not wrap.
-- PASS: template tab switch and download confirmation modal work.
-- PASS: browser console warnings/errors: 0; `npm run build` passed.
-
-final result: passed
-
-## 2026-08-19 — Common menu navigation correction
-
-- Source: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_IkHSMv/スクリーンショット 2026-08-19 17.38.52.png` (486×274 px, @2x crop).
-- Implementation: `common-menu-fixed.png` (1280×720 full viewport); focused comparison `/tmp/common-menu-comparison.png` normalizes both menu crops to 243×137 CSS px.
-- P1 fixed: 共通メニュー was nested inside the 現場掲示板 button, combining two separate rows and their active state.
-- P2 fixed after first comparison: removed a 60px gap between 帳票印刷 and 共通メニュー; both header and destination now form consecutive 40px rows.
-- PASS: 共通メニュー is a non-interactive section heading; 現場掲示板 is an independent button with its own blue active rail.
-- PASS: all 16 Gatekeeper/Conference menu destinations were clicked and showed the matching page heading.
-- PASS: browser console warnings/errors: 0; `npm run build` passed.
-
-final result: passed
-
-## 2026-08-19 — Three service buttons and product screens
-
-- Source icon truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_Tx0H85/スクリーンショット 2026-08-19 17.16.04.png` (280×108 px).
-- Source product truth: authenticated Buildee captures `/tmp/gatekeeper-dashboard-source.png` and `/tmp/conference-dashboard-source.png` at 1280×720.
-- Implementation evidence: `field-service-icons.png`, `gatekeeper-dashboard.png`, and `conference-dashboard.png`, all 1280×720.
-- State: anonymous sample field, service dashboard default state.
-- Full-view comparison: `/tmp/gatekeeper-comparison.png`, source and implementation at equal 1280×720 density.
-- Focused comparison: the supplied three-icon strip is used directly at its measured display size, with three independent accessible link hit areas.
-
-**Comparison history**
-
-- P1: red service previously ended at a permission placeholder. Fixed after authenticated source access became available; implemented dashboard, attendance records, worker-device status, and bulletin board.
-- P1: green service had no destination. Fixed by implementing all twelve source-discovered Conference menu destinations.
-- P2: generated/library service glyphs did not match the supplied visual. Fixed by using the exact user-supplied raster strip instead of approximating its artwork.
-- P2: service pages retained the master-page header. Fixed with product-specific 40px toolbar, yellow announcement strip, 210px feature rail, and source-matched content grid.
-- Expected difference: customer names, worker names, addresses, telephone numbers, and construction records are intentionally anonymous. Layout, controls, labels, status patterns, and navigation are retained.
-
-**E2E evidence**
-
-- PASS: all three row icons navigate to 労務安全, 入退場管理, and 調整会議.
-- PASS: all four Gatekeeper menu pages opened and showed their matching heading.
-- PASS: all twelve Conference menu pages opened and showed their matching heading.
-- PASS: worker face-photo toggle, worker detail modal, service search controls, and site-plan edit modal.
-- PASS: existing nine Greenfile/Labor Safety destinations remain available.
-- PASS: browser console contained no warnings or errors; `npm run build` passed.
-
-**Findings**
-
-- No remaining actionable P0/P1/P2 mismatch in the captured default service dashboards. Private production content is intentionally excluded.
-
-final result: passed
-
-## 2026-08-19 — Field list screenshot fidelity pass
-
-- Source visual truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_omV6gb/スクリーンショット 2026-08-19 17.12.09.png` (3024×1964 px, macOS/Chrome frame included).
-- Implementation evidence: `field-list-reference-match.png` (1280×720 px, app content only).
-- Normalization: source app region cropped at y=242 to 3024×1572 and downsampled to 1280×665; implementation compared at the same 1280×665 top-region crop. CSS density treated as source @2x and implementation @1x.
-- State: default 現場確認 / 現場一覧, 23 anonymous records, no modal.
-- Full-view evidence: `/tmp/ecodump-field-comparison.png` placed normalized source and implementation side by side. Major regions now align: 210px sidebar, 44px header, 45px search strip, 60px action strip, 24px table header, 61px records.
-- Focused evidence: header/search controls, sidebar group rhythm, field metadata, and three service icons were readable in the normalized comparison; no separate crop was necessary.
-
-**Comparison history**
-
-- P1: implementation search controls occupied two rows. Fixed by using one 45px flex row matching the screenshot.
-- P1: a custom サービス sidebar group changed the screenshot's information architecture. Removed; service access now lives on the row icons as in the source.
-- P2: table column proportions and typography were too small. Fixed column tracks, 15px controls/headers, 14px cells, and 23-row count.
-- P2: field metadata and services were plain ECO text. Replaced with CCUS metadata and three colored, accessible service-icon controls using the existing icon library.
-- Expected difference: source customer/company/site data and trademark artwork are intentionally not copied; anonymous fixtures and library icons preserve privacy while matching geometry, color, density, and affordance.
-
-**Interactions tested**
-
-- Search input, explicit search, clear, detailed-search modal, row selection, pagination visibility, and service-control presence.
-- `npm run build` passed. No build/runtime error was observed during the verified field-list flow.
-
-**Findings**
-
-- No remaining actionable P0/P1/P2 visual mismatch after normalization. Product-specific logo artwork and real customer content remain intentionally substituted.
-
-final result: passed
-
-## 2026-08-19 — Greenfile / Gatekeeper deep E2E
-
-- PASS: Greenfile reference was inspected while authenticated; private company/worker values were not transferred. The implementation uses anonymous fixtures only.
-- PASS: All nine service routes were opened in the browser: document status, three safety-document flows, contractor reports, contractor search, worker search/sending education, correction replies, and batch export.
-- PASS: Search drawer open/close/search, six document-category tabs, comment panel/reply, document action dialogs, and batch-export reservation were exercised.
-- PASS: Dense worker-search columns and health/insurance filters remain horizontally accessible at desktop and narrow widths.
-- PASS: Gatekeeper source currently returns the exact Buildee permission error. The accessible error state and both navigation actions are represented; protected dashboard contents were not invented.
-- Evidence: `deep-greenfile-dashboard.jpg`, `deep-greenfile-worker-search.jpg`, `gatekeeper-permission.jpg`.
-- Build: `npm run build` passed.
-
-- Source visual truth: `../reference/buildee-fields-desktop.png`（ローカル参照のみ、Git対象外）
-- Implementation screenshot: `implementation-desktop-final.png`
-- Mobile implementation screenshot: `implementation-mobile-final.png`
-- Full-view comparison: `../reference/design-qa-comparison.jpg`（ローカル参照のみ、Git対象外）
-- Viewport: desktop 1052 × 933 CSS px; mobile 390 × 844 CSS px
-- Pixel dimensions: desktop source 1052 × 933; desktop implementation 1052 × 933; mobile source 390 × 844; mobile implementation 390 × 844
-- Density normalization: 1× source and implementation; no scaling required
-- State: authenticated field list, sidebar expanded, detail-search modal closed
+- Source visual truth: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/design-redesign-reference.png`
+- Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/implementation-eco-refresh.png`
+- Side-by-side evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/design-qa-comparison.png`
+- Viewport: 1280 × 720 CSS px
+- Source pixels: 1280 × 720
+- Implementation pixels: 1280 × 720
+- Device scale factor: 1; no density normalization required
+- State: 現場詳細 → 協力会社（二次・三次階層を展開）
 
 ## Findings
 
-- No actionable P0/P1/P2 differences remain.
-- Typography uses the same Japanese system-font stack and comparable weights, sizes, and line heights.
-- Sidebar width, header/search heights, table header, 61px table-row rhythm, borders, and spacing match the source composition.
-- Core colors map to the observed dark navigation, blue actions, yellow help action, pale-gray toolbar, and white table.
-- Source customer/project content was intentionally replaced with anonymous sample content. ECODUMP branding replaces the source product mark.
-- Icons use a consistent open-source icon set rather than copied proprietary glyph assets.
+No actionable P0, P1, or P2 mismatches remain. The refresh intentionally preserves the reference layout, information density, route structure, controls, labels, and hierarchy while replacing the visual tokens with the ECO DUMP palette.
+
+- Fonts and typography: Japanese system-font stack, weights, hierarchy, wrapping, and compact table typography remain consistent with the source.
+- Spacing and layout rhythm: sidebar width, header height, tab placement, content proportions, contractor-row structure, and visible above-the-fold density remain materially unchanged.
+- Colors and visual tokens: blue interaction accents were consistently replaced by petroleum green; lime marks active navigation; amber remains reserved for warning/pending states. Contrast remains readable.
+- Image quality and asset fidelity: the supplied ECO DUMP raster logo is used directly with its original artwork and an object-fit crop; no logo approximation was introduced.
+- Copy and content: visible labels and sample content remain unchanged.
+- Focused-region comparison: sidebar branding/active state, header actions, tabs, contractor hierarchy, status chips, and detail buttons were readable in the side-by-side evidence and showed no functional or layout regression.
+
+## Interaction verification
+
+- Sidebar navigation: 搬出・受入スケジュール、車両一覧、現場一覧 passed.
+- Search: 現場名検索 and reset passed.
+- Field access: 現場一覧から現場詳細への遷移 passed.
+- Field sub-navigation: 協力会社 section and tertiary hierarchy remained available.
+- Mobile: 390 × 844 viewport, menu control visible, no document-level horizontal overflow.
+- Browser console: no warnings or errors in the tested flows.
+- Build: passed.
+- Sites worker tests: 4/4 passed.
 
 ## Comparison history
 
-1. P1: first implementation stretched the table header vertically. Fixed by using an explicit 24px grid header and 61px grid rows. Post-fix evidence: `implementation-desktop-final.png` and the full-view comparison.
-2. P2: initial viewport did not match the source. Fixed by capturing both at 1052 × 933. Post-fix evidence: full-view comparison.
-
-## Interaction checks
-
-- Search filters rows and updates result count.
-- Clear restores the list.
-- Detail-search modal opens and closes.
-- Sidebar collapses to 58px on desktop and can be restored.
-- Row selection and ID-copy feedback work.
-- Help modal opens and closes.
-- Mobile layout maintains the source's fixed sidebar and horizontally clipped dense table behavior.
-- Browser console checked: no errors or warnings.
-
-## Focused-region comparison
-
-Focused checks covered the header/search toolbar, left navigation, table header/first rows, and pagination. These regions were readable at 1× in the full-view composite, so separate crops were not required.
+1. Initial refresh retained several legacy blue accents in KPI and tab surfaces (P2 token inconsistency).
+2. Replaced the shared legacy blue tokens with ECO DUMP green equivalents.
+3. Rebuilt and recaptured the same contractor-hierarchy state; post-fix evidence shows consistent green/lime accents without changing layout or behavior.
 
 ## Follow-up polish
 
-- P3: source-specific proprietary icons and trademark assets are intentionally not copied.
-
-## Multi-page E2E expansion
-
-- Source captures: `../reference/company-info.jpg`, `users-list.jpg`, `workers-list.jpg`, `vehicles-list.jpg`, `agents-list.jpg`, `agency-requests.jpg`, and `principal-list.jpg` (local-only, excluded from Git).
-- Combined all-page comparison: `../reference/all-pages-qa.jpg` (local-only, excluded from Git).
-- Implementation evidence: `e2e-0-現場一覧.jpg` through `e2e-8-自社の代行元一覧.jpg`.
-- Mobile evidence: `e2e-all-pages-mobile.jpg`, 390 × 844 CSS px at 1×.
-
-All nine primary sidebar destinations were opened through the rendered navigation on desktop and mobile. Page headings, active navigation state, page-specific tables/forms, empty states, and pagination rendered successfully.
-
-Additional interaction checks passed:
-
-- Company-information tabs.
-- User search and result-count update.
-- Page-specific detailed-search modal.
-- Vehicle/machinery category tabs.
-- Agency-registration confirmation modal.
-- Detail/confirmation modal close behavior.
-
-Browser console was rechecked after fixing duplicate table-header keys: no errors or warnings.
-
-Intentional differences: all identifying source data and source trademarks are replaced by anonymous ECODUMP content; irreversible or external write actions are represented as safe local confirmation flows.
+- P3: The square supplied logo becomes visually small at the compact sidebar size. A future horizontal transparent logo asset would improve legibility without requiring a layout change.
 
 final result: passed
 
-## Deep interaction pass
+## Matching and readability iteration — 2026-08-26
 
-- Company tabs now have separate content models rather than a shared placeholder:
-  - Headquarters: editable company fields and save state.
-  - CCUS: basic IDs, linked-user table, administrator table, and edit/add dialogs.
-  - Labor safety: representative, construction-license, health/pension/employment insurance, workers-compensation, retirement mutual-aid, and foreign-worker sections.
-  - Branches: permission-dependent empty state and administrator-application dialog.
-- User management now supports draft filters, explicit search execution, branch/type selection, reset, a validated new-user form, local registration, detail view, CSV feedback, administrator application, and password-reset workflow dialog.
-- Evidence: `deep-company-ccus.jpg` and `deep-user-create.jpg`.
-- E2E checks: company edit/save, all four company tabs, CCUS edit dialog, labor-safety edit/save, branch application, user creation/validation/registration, search result update, and CSV action all passed.
-- Fresh-browser console check: no errors or warnings.
+- Source issues: field-row metadata collision and white schedule cards with insufficient contrast in the two user-provided screenshots.
+- Field list: removed the artificial table height, established 76px data rows, wrapping metadata and explicit selected-row contrast.
+- Transport schedule: all KPI and field-total cards now use the control-tower dark surface with readable primary and secondary text.
+- Added the construction-soil matching route with candidate scoring, query, sorting, candidate selection, document checks, consultation workflow and new-case registration.
+- Replaced the right floating launcher with a left dashboard drawer grouped by resource circulation, field work, operations, ledgers and related companies.
+- Browser verification: drawer opened and navigated to field list; matching search returned one candidate; candidate selection changed the detail panel; consultation status moved to `事前相談中`; new-case form submitted successfully.
+- Build passed; Sites worker tests 4/4 passed.
 
 final result: passed
-# 2026-08-19 — 共通メニュー概要ページ
 
-- 「共通メニュー」を区分見出しだけでなく、クリック可能な独立ページとして追加。
-- 共通メニュー内に「現場掲示板」カードを設置し、掲示板ページへ遷移可能にした。
-- 労務安全・入退場管理・調整会議の3サービスで同じ導線を実装。
-- E2E: 3サービスすべてで「共通メニュー → 現場掲示板」の表示・遷移を確認。
-- ブラウザの console warning / error: 0件。
-- `npm run build`: 成功。
+## Transport Control Tower iteration — 2026-08-26
+
+- Source visual truth: `/Users/miharasoushi/.codex/generated_images/01a018db-3d69-7351-89dc-5ff9a68562d9/exec-b3f5e2fd-5bf4-4a90-8f3a-459727a01085.png`
+- Implemented a distinct ECO DUMP command-center shell with a dark teal operations map, live trip timeline, filters, dispatch actions and daily KPI summary.
+- Preserved all existing product destinations through the global function launcher: fields, transport, company, users, vehicles/drivers, contractors, registration requests and prime contractors.
+- Desktop verification: 1440 × 1024; no document-level horizontal overflow.
+- Mobile verification: 390 × 844; map/timeline stack correctly, the launcher is a one-column overlay, and no document-level horizontal overflow occurs.
+- Interaction checks passed for dispatch modal, schedule modal, delayed-trip filtering, summary filtering and navigation to all major legacy destinations.
+- Build passed and all 4 Sites worker tests passed.
+- No actionable P0/P1/P2 findings remain.
 
 final result: passed
-# 2026-08-19 — 全画面再監査・公開確認
 
-- 基本ナビゲーション9ページ、会社情報4タブを実ブラウザで確認。
-- 労務安全11ページ、入退場管理5ページ、調整会議13ページを全件表示確認。
-- ユーザー／作業員氏名検索が装飾要素内の氏名を検索できない問題を修正。
-- 修正後、「サンプルユーザー 1」の検索結果が1件になることを確認。
-- 可視文字の意図しないクリッピング: 0件。console warning / error: 0件。
-- GitHub Pages公開URLでトップ、3サービス、共通メニューの操作を確認。
-- `npm run build`、`npm run test:sites`（4件）: 成功。
+## Full-product interaction and visual-system iteration — 2026-08-26
+
+- Source visual truth: `/Users/miharasoushi/.codex/generated_images/01a018db-3d69-7351-89dc-5ff9a68562d9/exec-b3f5e2fd-5bf4-4a90-8f3a-459727a01085.png`
+- Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/control-tower-full-product.png`
+- Side-by-side evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/control-tower-full-product-qa.png`
+- Extended the selected control-tower visual system to every management surface, including search panels, data grids, tabs, forms, modals, field details, contractor hierarchy, company records, transport planning, labor safety, gatekeeping and conference modules.
+- Replaced the dispatch and schedule demo messages with a working form that appends the new trip to the live timeline.
+- Verified user creation from form entry through success state and insertion into the list.
+- Verified all 8 global function-launcher destinations and stable direct URLs.
+- Verified desktop at 1440 × 1024 and mobile at 390 × 844 across 10 major routes; no document-level horizontal overflow.
+- Build and all 4 Sites worker tests passed.
+- No actionable P0/P1/P2 findings remain.
+
+final result: passed
+
+## Compact operations sidebar iteration — 2026-08-25
+
+- Source visual truth: `/Users/miharasoushi/.codex/generated_images/01a018db-3d69-7351-89dc-5ff9a68562d9/exec-4de97660-19d1-4ff5-9253-18972ccb1fc6.png`
+- Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/sidebar-implementation-mobile-field.png`
+- Full-view side-by-side evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/sidebar-design-qa-comparison.png`
+- Desktop evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/sidebar-implementation-desktop.png`
+- Source pixels: 805 × 1954; source sidebar content cropped to 720 × 1954 and normalized to 311 × 844 for comparison.
+- Implementation pixels: 390 × 844; sidebar region cropped to its rendered 290 × 844 CSS px at the mobile breakpoint.
+- Viewports: desktop 1440 × 900; mobile 390 × 844.
+- State: 現場一覧 selected, mobile sidebar open.
+
+### Findings
+
+No actionable P0, P1, or P2 mismatches remain.
+
+- Fonts and typography: Japanese system UI typography preserves the selected mock's bold compact labels, clear lime section headings, wrapping, and high contrast.
+- Spacing and layout rhythm: 210px desktop sidebar, 290px mobile drawer, 38px framed icons, 48px touch rows, section dividers, and the full eight-item hierarchy match the target's compact rhythm. The footer remains visible and the navigation has internal scrolling when height is constrained.
+- Colors and visual tokens: deep petroleum-green surface, pale-lime active row, lime leading rail and muted green-gray icon strokes match the source palette.
+- Image quality and asset fidelity: the supplied ECO DUMP raster logo is reused directly. Navigation icons continue to use the project's existing icon library and are presented in the selected outlined containers.
+- Copy and content: display groups and items match the selected target. Existing internal route labels and destination pages are intentionally preserved.
+- Focused-region evidence: logo, section heading/divider, icon frames, active row, footer actions and customer number are readable in the combined comparison.
+
+### Interaction verification
+
+- All eight sidebar buttons were clicked and produced the intended active state and original destination screen.
+- Mobile menu opens to a 290px drawer, closes after destination selection, and preserves the selected state.
+- Existing transport route remains `?page=transport`; all other established navigation behavior remains unchanged.
+- Browser console: no warnings or errors in the tested flows.
+- Build: passed.
+- Sites worker tests: 4/4 passed.
+
+### Comparison history
+
+1. First implementation capture used 搬出・受入管理 as the active state, which did not match the source comparison state.
+2. Navigated back to 現場一覧, reopened the drawer, and recaptured at the same 390 × 844 viewport.
+3. The normalized post-fix comparison shows matching hierarchy, active treatment, palette and icon-container anatomy. The mobile menu control is retained intentionally because it is required to preserve the existing responsive UX.
+
+### Follow-up polish
+
+- P3: A future transparent horizontal ECO DUMP logo asset could reduce the dark square around the supplied raster logo, but the current supplied brand artwork is intentionally unchanged.
+
+final result: passed
+
+## Service button iteration — 2026-08-25
+
+- Source visual truth: `/Users/miharasoushi/.codex/generated_images/01a018db-3d69-7351-89dc-5ff9a68562d9/exec-86100602-039a-4bab-a00b-eb5b6b696762.png`
+- Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/service-buttons-final.png`
+- Side-by-side evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/service-buttons-qa-comparison.png`
+- Desktop viewport: 1280 × 720 CSS px at device scale factor 1
+- Mobile/responsive viewport observed: 884 × 783 CSS px
+- Focused comparison: repeated service tiles, icon/label hierarchy, lime bottom indicator, border, spacing, and row alignment.
+- Intentional adaptation: labels use the actual unchanged destinations (`書類`, `入退場`, `会議`) rather than introducing new workflows from the concept image.
+- All 69 generated links rendered. The first row's three links navigated to the existing labor, gatekeeper, and conference routes successfully.
+- No document-level horizontal overflow and no browser warnings/errors.
+- Build and all 4 Sites worker tests passed.
+- No actionable P0/P1/P2 findings remain.
 
 final result: passed
