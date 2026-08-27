@@ -46,6 +46,14 @@ const navGroups = [
     items: [[Building2, "現場一覧", "現場一覧"]],
   },
   {
+    title: "現場サービス",
+    items: [
+      [FileText, "労務安全", "労務安全"],
+      [DoorOpen, "入退場管理", "入退場管理"],
+      [CalendarDays, "調整会議", "調整会議"],
+    ],
+  },
+  {
     title: "運行業務",
     items: [[Truck, "搬出・受入管理", "搬出・受入スケジュール"]],
   },
@@ -186,7 +194,7 @@ function Header({ title, onHelp, onClose, onMenu }) {
       <div className="page-title-group">
         <button className="page-menu-trigger" onClick={onMenu}>
           <LayoutGrid />
-          機能メニュー
+          メニュー
         </button>
         <h1>{title}</h1>
       </div>
@@ -301,6 +309,7 @@ function FieldList({
   copied,
   copyId,
   navigate,
+  onOperatorSelect,
 }) {
   const filtered = useMemo(
     () =>
@@ -337,7 +346,7 @@ function FieldList({
       />
       <section className="table-area">
         <div className="table-tools">
-          <button className="outline">
+          <button className="outline" onClick={onOperatorSelect}>
             <Settings />
             操作ユーザー選択
           </button>
@@ -3972,7 +3981,7 @@ function ControlOperationModal({ mode, onClose, onSave }) {
   );
 }
 
-function ControlTowerPage({ navigate, setConfirm, menuOpen, setMenuOpen }) {
+function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
   const [tripFilter, setTripFilter] = useState("すべてのステータス");
   const [siteFilter, setSiteFilter] = useState("すべての現場");
   const [cargoFilter, setCargoFilter] = useState("すべての荷種");
@@ -4004,12 +4013,12 @@ function ControlTowerPage({ navigate, setConfirm, menuOpen, setMenuOpen }) {
     <div className="control-tower-page">
       <section className="control-toolbar">
         <button
-          className={`toolbar-menu-trigger ${menuOpen ? "active" : ""}`}
-          onClick={() => setMenuOpen((value) => !value)}
-          aria-expanded={menuOpen}
+          className={`toolbar-menu-trigger ${!collapsed ? "active" : ""}`}
+          onClick={() => setCollapsed((value) => !value)}
+          aria-expanded={!collapsed}
         >
           <LayoutGrid />
-          <span>機能メニュー</span>
+          <span>メニュー</span>
         </button>
         <button
           className="dispatch-primary"
@@ -4319,12 +4328,15 @@ export function App() {
       return "運行管制";
     }),
     [collapsed, setCollapsed] = useState(
-      () => window.matchMedia("(max-width: 1100px)").matches,
+      () => window.matchMedia("(max-width: 760px)").matches,
     ),
     [query, setQuery] = useState(""),
     [detailOpen, setDetailOpen] = useState(false),
     [helpOpen, setHelpOpen] = useState(false),
     [menuOpen, setMenuOpen] = useState(false),
+    [operatorOpen, setOperatorOpen] = useState(false),
+    [activeOperator, setActiveOperator] =
+      useState("ECO DUMP株式会社 管制 太郎"),
     [confirm, setConfirm] = useState(null),
     [selected, setSelected] = useState(
       () => new URLSearchParams(location.search).get("fieldId") || null,
@@ -4360,7 +4372,7 @@ export function App() {
       "",
       `${location.pathname}${params.size ? `?${params}` : ""}`,
     );
-    if (window.matchMedia("(max-width: 1100px)").matches) setCollapsed(true);
+    if (window.matchMedia("(max-width: 760px)").matches) setCollapsed(true);
   };
   const copyId = async (id) => {
     await navigator.clipboard?.writeText(id);
@@ -4370,7 +4382,9 @@ export function App() {
   let body;
   if (page === "運行管制")
     body = (
-      <ControlTowerPage {...{ navigate, setConfirm, menuOpen, setMenuOpen }} />
+      <ControlTowerPage
+        {...{ navigate, setConfirm, collapsed, setCollapsed }}
+      />
     );
   else if (page === "現場一覧")
     body = (
@@ -4384,6 +4398,7 @@ export function App() {
           copied,
           copyId,
           navigate,
+          onOperatorSelect: () => setOperatorOpen(true),
         }}
       />
     );
@@ -4467,6 +4482,19 @@ export function App() {
           </button>
         </div>
         <nav>
+          <section className="nav-group nav-group-primary">
+            {!collapsed && <h2>運行管制</h2>}
+            <button
+              className={page === "運行管制" ? "active" : ""}
+              onClick={() => navigate("運行管制")}
+              aria-label="運行管制"
+            >
+              <span className="nav-icon">
+                <Route />
+              </span>
+              <span>運行ダッシュボード</span>
+            </button>
+          </section>
           {navGroups.map((g) => (
             <section className="nav-group" key={g.title}>
               {!collapsed && <h2>{g.title}</h2>}
@@ -4512,11 +4540,11 @@ export function App() {
         {["労務安全", "入退場管理", "調整会議"].includes(page) && (
           <button
             className="module-menu-trigger"
-            onClick={() => setMenuOpen((value) => !value)}
-            aria-expanded={menuOpen}
+            onClick={() => setCollapsed((value) => !value)}
+            aria-expanded={!collapsed}
           >
             <LayoutGrid />
-            機能メニュー
+            メニュー
           </button>
         )}
         {!["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) && (
@@ -4530,7 +4558,7 @@ export function App() {
             }
             onHelp={() => setHelpOpen(true)}
             onClose={() => navigate("運行管制")}
-            onMenu={() => setMenuOpen((value) => !value)}
+            onMenu={() => setCollapsed((value) => !value)}
           />
         )}
         {["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) ? (
@@ -4539,6 +4567,71 @@ export function App() {
           <div className="control-page-surface">{body}</div>
         )}
       </main>
+      {operatorOpen && (
+        <div className="overlay" onMouseDown={() => setOperatorOpen(false)}>
+          <section
+            className="modal operator-modal"
+            role="dialog"
+            aria-label="操作ユーザー選択"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <header>
+              <div>
+                <h2>操作ユーザー選択</h2>
+                <p>この画面で操作する会社・ユーザーを選択してください。</p>
+              </div>
+              <button
+                onClick={() => setOperatorOpen(false)}
+                aria-label="閉じる"
+              >
+                <X />
+              </button>
+            </header>
+            <div className="operator-list">
+              {[
+                ["自社", "ECO DUMP株式会社", "管制管理者", "管制 太郎"],
+                ["協力", "サンプル運送株式会社", "協力会社管理者", "運送 花子"],
+                ["協力", "湾岸土木株式会社", "現場責任者", "湾岸 一郎"],
+                ["協力", "北総建設株式会社", "配車担当者", "北総 次郎"],
+              ].map(([badge, company, role, name]) => {
+                const operator = `${company} ${name}`;
+                return (
+                  <article
+                    className={activeOperator === operator ? "active" : ""}
+                    key={operator}
+                  >
+                    <b className="operator-badge">{badge}</b>
+                    <span>
+                      <small>所属会社</small>
+                      <strong>{company}</strong>
+                    </span>
+                    <span>
+                      <small>ユーザー種別</small>
+                      <strong>{role}</strong>
+                    </span>
+                    <span>
+                      <small>氏名</small>
+                      <strong>{name}</strong>
+                    </span>
+                    <button
+                      onClick={() => {
+                        setActiveOperator(operator);
+                        setOperatorOpen(false);
+                        setConfirm({
+                          title: "操作ユーザーを切り替えました",
+                          message: `${operator}として表示・操作します。`,
+                        });
+                      }}
+                    >
+                      {activeOperator === operator ? "選択中" : "選択"}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+      )}
       {detailOpen && (
         <div className="overlay" onMouseDown={() => setDetailOpen(false)}>
           <section

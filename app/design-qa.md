@@ -43,6 +43,31 @@ No actionable P0, P1, or P2 mismatches remain. The refresh intentionally preserv
 
 final result: passed
 
+## Persistent sidebar and operator selection — 2026-08-27
+
+- Sidebar reference: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_ZisTN3/スクリーンショット 2026-08-27 8.56.32.png`
+- Operator modal reference: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_U5klCd/スクリーンショット 2026-08-27 8.56.13.png`
+- Implementation captures: `sidebar-persistent-qa/sidebar-final.png`, `sidebar-persistent-qa/operator-modal.png`
+- Combined comparisons: `sidebar-persistent-qa/sidebar-comparison.png`, `sidebar-persistent-qa/operator-comparison.png`
+- Desktop viewport: 1280 × 720 CSS px.
+
+### Findings
+
+- The former dimmed function-launcher overlay is no longer used. Desktop navigation is a persistent left sidebar with grouped destinations, selected state, fixed footer, and an icon-only collapsed state.
+- The product's established ECO DUMP dark green/lime visual system is preserved while adopting the requested persistent navigation anatomy.
+- The page content offsets correctly for both expanded and collapsed sidebar widths. Mobile retains a conventional drawer and backdrop below 760px.
+- The operator-selection dialog now overlays the complete viewport, includes company, user type, name, selected state, and four realistic selectable users.
+- No actionable P0, P1, or P2 visual mismatches remain. Differences from the supplied Buildee references are intentional ECO DUMP brand adaptations.
+
+### Interaction verification
+
+- `操作ユーザー選択` opens the dialog; selecting another user closes it and shows the successful switch confirmation.
+- `発生土マッチング` in the sidebar navigates to `?page=matching` and exposes the UCR matching screen.
+- Desktop duplicate function-menu triggers are hidden; sidebar collapse remains available from the sidebar control.
+- Build passed, Sites worker tests passed 4/4, and `git diff --check` passed.
+
+final result: passed
+
 ## Command placement and project switching — 2026-08-26
 
 - Removed the function-menu trigger from the top-right utility area.

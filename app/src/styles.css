@@ -529,6 +529,265 @@
   color: #c4d82e !important;
 }
 
+/* Persistent desktop navigation — matches the selected left-sidebar reference. */
+@media (min-width: 761px) {
+  .control-app-shell > .sidebar {
+    position: fixed;
+    top: 74px;
+    bottom: 0;
+    left: 0;
+    z-index: 68;
+    display: flex;
+    width: 286px;
+    height: calc(100vh - 74px);
+    border-right: 1px solid rgb(184 215 205 / 24%);
+    background: #061f1d;
+    box-shadow: 6px 0 22px rgb(0 0 0 / 20%);
+    transition: width 180ms ease;
+  }
+  .control-app-shell.is-collapsed > .sidebar {
+    width: 72px;
+  }
+  .control-app-shell > .content {
+    width: calc(100% - 286px);
+    margin-left: 286px;
+    transition:
+      width 180ms ease,
+      margin-left 180ms ease;
+  }
+  .control-app-shell.is-collapsed > .content {
+    width: calc(100% - 72px);
+    margin-left: 72px;
+  }
+  .control-app-shell > .sidebar-backdrop,
+  .control-app-shell > .mobile-menu {
+    display: none;
+  }
+  .control-app-shell .brand-row {
+    min-height: 66px;
+    height: 66px;
+    padding: 8px 12px;
+  }
+  .control-app-shell .brand-mark {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+  .control-app-shell .brand-row strong {
+    font-size: 14px;
+  }
+  .control-app-shell .sidebar nav {
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #49645d transparent;
+  }
+  .control-app-shell .nav-group {
+    margin: 0;
+    padding: 11px 12px 13px;
+  }
+  .control-app-shell .nav-group h2 {
+    margin: 0 0 7px 4px;
+    color: #c4d82e;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .control-app-shell .nav-group button {
+    min-height: 46px;
+    padding: 7px 10px;
+    font-size: 14px;
+  }
+  .control-app-shell .nav-group button.active {
+    border: 1px solid #c4d82e;
+    background: #123e38;
+    color: #fff;
+    box-shadow: inset 4px 0 #c4d82e;
+  }
+  .control-app-shell .nav-group button.active .nav-icon {
+    border: 0;
+    background: transparent;
+  }
+  .control-app-shell .nav-group button.active svg {
+    color: #dce94f;
+  }
+  .control-app-shell .sidebar-footer {
+    flex: 0 0 auto;
+  }
+  .control-app-shell.is-collapsed .brand-row strong,
+  .control-app-shell.is-collapsed .nav-group h2,
+  .control-app-shell.is-collapsed .nav-group button > span:last-child,
+  .control-app-shell.is-collapsed .sidebar-footer span,
+  .control-app-shell.is-collapsed .sidebar-footer b,
+  .control-app-shell.is-collapsed .sidebar-footer small {
+    display: none;
+  }
+  .control-app-shell.is-collapsed .brand-row {
+    justify-content: center;
+    padding: 8px;
+  }
+  .control-app-shell.is-collapsed .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+  .control-app-shell.is-collapsed .collapse {
+    position: absolute;
+    right: -12px;
+    top: 20px;
+    border: 1px solid #526d66;
+    border-radius: 50%;
+    background: #082f2b;
+  }
+  .control-app-shell.is-collapsed .nav-group {
+    padding: 7px 9px;
+  }
+  .control-app-shell.is-collapsed .nav-group button,
+  .control-app-shell.is-collapsed .sidebar-footer button {
+    justify-content: center;
+    padding: 7px;
+  }
+  .function-launcher,
+  .function-launcher-backdrop {
+    display: none !important;
+  }
+}
+
+.operator-modal {
+  width: min(1120px, calc(100vw - 40px));
+  max-height: min(760px, calc(100dvh - 40px));
+  padding: 0;
+  overflow: hidden;
+}
+.operator-modal > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 28px 18px;
+  border-bottom: 1px solid #3a5a53;
+}
+.operator-modal h2,
+.operator-modal p {
+  margin: 0;
+}
+.operator-modal p {
+  margin-top: 6px;
+  color: #a8bdb6;
+}
+.operator-modal > header > button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+.operator-list {
+  display: grid;
+  gap: 12px;
+  padding: 22px 28px 28px;
+  overflow-y: auto;
+}
+.operator-list article {
+  display: grid;
+  min-height: 92px;
+  grid-template-columns:
+    66px minmax(220px, 1.5fr) minmax(170px, 1fr) minmax(150px, 0.8fr)
+    82px;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px;
+  border: 1px solid #47665f;
+  border-radius: 7px;
+  background: #0b3631;
+}
+.operator-list article.active {
+  border-color: #c4d82e;
+  box-shadow: inset 4px 0 #c4d82e;
+}
+.operator-badge {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 5px;
+  background: #168467;
+  color: #fff;
+}
+.operator-list article > span {
+  display: grid;
+  gap: 6px;
+}
+.operator-list article small {
+  color: #9eb4ad;
+}
+.operator-list article > button {
+  min-height: 38px;
+  border: 1px solid #c4d82e;
+  background: #c4d82e;
+  color: #062a27;
+  font-weight: 800;
+}
+.operator-list article.active > button {
+  background: transparent;
+  color: #dce94f;
+}
+
+@media (max-width: 760px) {
+  .control-app-shell > .sidebar {
+    position: fixed;
+    top: 58px;
+    bottom: 0;
+    left: 0;
+    z-index: 92;
+    display: flex;
+    width: min(310px, calc(100vw - 46px));
+    height: calc(100dvh - 58px);
+    transform: translateX(0);
+    transition: transform 180ms ease;
+  }
+  .control-app-shell.is-collapsed > .sidebar {
+    transform: translateX(-105%);
+  }
+  .control-app-shell > .mobile-menu {
+    position: fixed;
+    top: 66px;
+    left: 10px;
+    z-index: 94;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid #6e851b;
+    background: #082f2b;
+    color: #dce94f;
+  }
+  .control-app-shell:not(.is-collapsed) > .mobile-menu {
+    left: min(258px, calc(100vw - 92px));
+  }
+  .control-app-shell:not(.is-collapsed) > .sidebar-backdrop {
+    position: fixed;
+    inset: 58px 0 0;
+    z-index: 91;
+    display: block;
+    border: 0;
+    background: rgb(0 12 11 / 62%);
+  }
+  .control-app-shell > .content {
+    width: 100%;
+    margin-left: 0;
+  }
+  .operator-list article {
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .operator-list article > span,
+  .operator-list article > button {
+    grid-column: 2;
+  }
+}
+
 @media (max-width: 760px) {
   .control-app-shell .page-header {
     min-height: 56px;
@@ -1595,7 +1854,7 @@ tbody tr.selected {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.25);
-  z-index: 50;
+  z-index: 500;
   display: grid;
   place-items: center;
 }
@@ -5608,4 +5867,163 @@ a:focus-visible {
 }
 .control-page-surface .field-total-count b {
   color: #c4d82e !important;
+}
+
+/* Persistent navigation final cascade override. */
+@media (min-width: 761px) {
+  .page-menu-trigger,
+  .module-menu-trigger,
+  .control-toolbar .toolbar-menu-trigger {
+    display: none !important;
+  }
+
+  .control-app-shell > .sidebar {
+    position: fixed;
+    top: 74px;
+    bottom: 0;
+    left: 0;
+    z-index: 68;
+    display: flex;
+    width: 286px;
+    height: calc(100vh - 74px);
+    border-right: 1px solid rgb(184 215 205 / 24%);
+    background: #061f1d;
+    box-shadow: 6px 0 22px rgb(0 0 0 / 20%);
+    transition: width 180ms ease;
+  }
+  .control-app-shell.is-collapsed > .sidebar {
+    width: 72px;
+  }
+  .control-app-shell > .content {
+    width: calc(100% - 286px);
+    margin-left: 286px;
+    transition:
+      width 180ms ease,
+      margin-left 180ms ease;
+  }
+  .control-app-shell.is-collapsed > .content {
+    width: calc(100% - 72px);
+    margin-left: 72px;
+  }
+  .control-app-shell > .mobile-menu,
+  .control-app-shell > .sidebar-backdrop,
+  .function-launcher,
+  .function-launcher-backdrop {
+    display: none !important;
+  }
+  .control-app-shell .sidebar nav {
+    min-height: 0;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #49645d transparent;
+  }
+  .control-app-shell .brand-row {
+    min-height: 66px;
+    height: 66px;
+    padding: 8px 12px;
+  }
+  .control-app-shell .nav-group {
+    margin: 0;
+    padding: 10px 12px 12px;
+  }
+  .control-app-shell .nav-group h2 {
+    margin: 0 0 6px 4px;
+    color: #c4d82e;
+    font-size: 13px;
+  }
+  .control-app-shell .nav-group button {
+    min-height: 44px;
+    padding: 7px 10px;
+  }
+  .control-app-shell .nav-group button.active {
+    border: 1px solid #c4d82e;
+    background: #123e38;
+    color: #fff;
+    box-shadow: inset 4px 0 #c4d82e;
+  }
+  .control-app-shell .nav-group button.active .nav-icon {
+    border: 0;
+    background: transparent;
+  }
+  .control-app-shell .nav-group button.active svg {
+    color: #dce94f;
+  }
+  .control-app-shell.is-collapsed .brand-row strong,
+  .control-app-shell.is-collapsed .nav-group h2,
+  .control-app-shell.is-collapsed .nav-group button > span:last-child,
+  .control-app-shell.is-collapsed .sidebar-footer span,
+  .control-app-shell.is-collapsed .sidebar-footer b,
+  .control-app-shell.is-collapsed .sidebar-footer small {
+    display: none;
+  }
+  .control-app-shell.is-collapsed .nav-group .nav-icon,
+  .control-app-shell.is-collapsed .sidebar-footer .nav-icon {
+    display: grid;
+  }
+  .control-app-shell.is-collapsed .nav-group button,
+  .control-app-shell.is-collapsed .sidebar-footer button {
+    justify-content: center;
+    padding-inline: 6px;
+  }
+  .control-app-shell.is-collapsed .brand-row {
+    justify-content: center;
+    padding: 8px;
+  }
+  .control-app-shell.is-collapsed .brand-mark {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+  .control-app-shell.is-collapsed .collapse {
+    position: absolute;
+    top: 20px;
+    right: -12px;
+    border: 1px solid #526d66;
+    border-radius: 50%;
+    background: #082f2b;
+  }
+}
+
+@media (max-width: 760px) {
+  .control-app-shell > .sidebar {
+    position: fixed;
+    top: 58px;
+    bottom: 0;
+    left: 0;
+    z-index: 92;
+    display: flex;
+    width: min(310px, calc(100vw - 46px));
+    height: calc(100dvh - 58px);
+    transform: translateX(0);
+    transition: transform 180ms ease;
+  }
+  .control-app-shell.is-collapsed > .sidebar {
+    transform: translateX(-105%);
+  }
+  .control-app-shell > .mobile-menu {
+    position: fixed;
+    top: 66px;
+    left: 10px;
+    z-index: 94;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid #6e851b;
+    background: #082f2b;
+    color: #dce94f;
+  }
+  .control-app-shell:not(.is-collapsed) > .sidebar-backdrop {
+    position: fixed;
+    inset: 58px 0 0;
+    z-index: 91;
+    display: block;
+    border: 0;
+    background: rgb(0 12 11 / 62%);
+  }
+  .control-app-shell > .content {
+    width: 100%;
+    margin-left: 0;
+  }
 }
