@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bell,
   Building2,
@@ -4328,7 +4328,7 @@ export function App() {
       return "運行管制";
     }),
     [collapsed, setCollapsed] = useState(
-      () => window.matchMedia("(max-width: 760px)").matches,
+      () => window.matchMedia("(max-width: 1024px)").matches,
     ),
     [query, setQuery] = useState(""),
     [detailOpen, setDetailOpen] = useState(false),
@@ -4342,6 +4342,12 @@ export function App() {
       () => new URLSearchParams(location.search).get("fieldId") || null,
     ),
     [copied, setCopied] = useState(null);
+  useEffect(() => {
+    const tabletQuery = window.matchMedia("(max-width: 1024px)");
+    const syncNavigation = (event) => setCollapsed(event.matches);
+    tabletQuery.addEventListener("change", syncNavigation);
+    return () => tabletQuery.removeEventListener("change", syncNavigation);
+  }, []);
   const navigate = (p, fieldId) => {
     setPage(p);
     setQuery("");
@@ -4372,7 +4378,7 @@ export function App() {
       "",
       `${location.pathname}${params.size ? `?${params}` : ""}`,
     );
-    if (window.matchMedia("(max-width: 760px)").matches) setCollapsed(true);
+    if (window.matchMedia("(max-width: 1024px)").matches) setCollapsed(true);
   };
   const copyId = async (id) => {
     await navigator.clipboard?.writeText(id);

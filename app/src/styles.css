@@ -544,6 +544,7 @@
     background: #061f1d;
     box-shadow: 6px 0 22px rgb(0 0 0 / 20%);
     transition: width 180ms ease;
+    transform: none !important;
   }
   .control-app-shell.is-collapsed > .sidebar {
     width: 72px;
@@ -5890,6 +5891,7 @@ a:focus-visible {
     background: #061f1d;
     box-shadow: 6px 0 22px rgb(0 0 0 / 20%);
     transition: width 180ms ease;
+    transform: none !important;
   }
   .control-app-shell.is-collapsed > .sidebar {
     width: 72px;
@@ -6025,5 +6027,59 @@ a:focus-visible {
   .control-app-shell > .content {
     width: 100%;
     margin-left: 0;
+  }
+
+  .control-page-surface .table-scroll tbody tr,
+  .control-page-surface .table-scroll tbody tr:hover,
+  .control-page-surface .table-scroll tbody tr.selected {
+    border-color: rgb(164 199 188 / 32%) !important;
+    background: #0d3531 !important;
+    box-shadow: 0 3px 12px rgb(0 0 0 / 16%);
+  }
+  .control-page-surface .table-scroll tbody td {
+    border-bottom-color: rgb(164 199 188 / 18%) !important;
+    background: transparent !important;
+    color: #eef7f4 !important;
+  }
+  .control-page-surface .table-scroll tbody td::before {
+    color: #9fb8b0 !important;
+  }
+  .control-page-surface .table-scroll tbody td:last-child {
+    border-bottom: 0;
+  }
+  .control-page-surface .table-scroll table,
+  .control-page-surface .field-list-table {
+    width: 100%;
+    min-width: 0 !important;
+  }
+  .control-page-surface .field-list-table tbody tr {
+    height: auto;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1024px) {
+  .control-project {
+    display: none;
+  }
+  .control-brand {
+    min-width: 64px;
+    width: 64px;
+  }
+  .control-date {
+    min-width: 196px;
+  }
+  .control-search {
+    min-width: 190px;
+  }
+  .matching-page,
+  .control-page-surface {
+    min-width: 0;
+  }
+  .matching-hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .matching-hero > button {
+    width: 100%;
   }
 }
