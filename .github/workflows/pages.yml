@@ -19,7 +19,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    # Build and deployment run on the DGX Linux runner pool. GitHub-hosted
+    # runners are intentionally not used for this repository workflow.
+    runs-on: [self-hosted, linux, x64, dgx]
     defaults:
       run:
         working-directory: app
