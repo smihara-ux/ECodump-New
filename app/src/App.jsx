@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import {
   Bell,
   Building2,
@@ -3624,6 +3626,280 @@ const controlTrips = [
   },
 ];
 
+const controlMapLocations = {
+  "S-01": {
+    name: "サンプル現場A",
+    type: "site",
+    position: [35.6764, 139.7668],
+    detail: "積込中 3台",
+    fieldId: "32182",
+  },
+  "S-02": {
+    name: "サンプル現場B",
+    type: "site",
+    position: [35.6074, 139.6854],
+    detail: "積込中 2台",
+    fieldId: "32183",
+  },
+  "S-03": {
+    name: "サンプル現場C",
+    type: "site",
+    position: [35.5323, 139.6967],
+    detail: "積込準備 1台",
+    fieldId: "32184",
+  },
+  "S-04": {
+    name: "サンプル現場D",
+    type: "site",
+    position: [35.4437, 139.638],
+    detail: "積込中 2台",
+    fieldId: "32185",
+  },
+  "S-05": {
+    name: "サンプル現場E",
+    type: "site",
+    position: [35.695, 139.982],
+    detail: "待機中 1台",
+    fieldId: "32186",
+  },
+  "R-01": {
+    name: "エコダンプ船橋",
+    type: "receive",
+    position: [35.6947, 139.9955],
+    detail: "受入待ち 2台",
+  },
+  "R-02": {
+    name: "エコダンプ横浜",
+    type: "receive",
+    position: [35.4662, 139.6227],
+    detail: "受入待ち 1台",
+  },
+  "R-03": {
+    name: "エコダンプ市川",
+    type: "receive",
+    position: [35.6662, 139.9236],
+    detail: "受入中 3台",
+  },
+  "R-04": {
+    name: "エコダンプ千葉",
+    type: "receive",
+    position: [35.6073, 140.1063],
+    detail: "受入中 2台",
+  },
+  "R-05": {
+    name: "エコダンプ木更津",
+    type: "receive",
+    position: [35.3812, 139.9249],
+    detail: "受入中 1台",
+  },
+};
+
+function mapLocationCode(label) {
+  return label.split(" ")[0];
+}
+
+function OperationsMap({
+  visibleTrips,
+  selectedTripData,
+  navigate,
+  setConfirm,
+}) {
+  const elementRef = useRef(null);
+  const mapRef = useRef(null);
+  const routeLayerRef = useRef(null);
+  const locationLayerRef = useRef(null);
+  const callbacksRef = useRef({ navigate, setConfirm });
+  callbacksRef.current = { navigate, setConfirm };
+
+  useEffect(() => {
+    if (!elementRef.current || mapRef.current) return undefined;
+    const points = Object.values(controlMapLocations).map(
+      (location) => location.position,
+    );
+    const map = L.map(elementRef.current, {
+      center: [35.61, 139.82],
+      zoom: 10,
+      minZoom: 8,
+      maxZoom: 18,
+      zoomControl: false,
+    });
+    mapRef.current = map;
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
+    }).addTo(map);
+    Object.entries(controlMapLocations).forEach(([code, location]) => {
+      const isSite = location.type === "site";
+      const marker = L.circleMarker(location.position, {
+        radius: 9,
+        color: "#f7fbef",
+        weight: 3,
+        fillColor: isSite ? "#c4d82e" : "#f39a2d",
+        fillOpacity: 1,
+      }).addTo(map);
+      marker.bindTooltip(
+        `<strong>${code}</strong><span>${location.name}</span><small>${location.detail}</small>`,
+        { direction: "top", className: `ecodump-map-label ${location.type}` },
+      );
+      marker.on("click", () => {
+        if (location.fieldId) {
+          callbacksRef.current.navigate("現場詳細", location.fieldId);
+        } else {
+          callbacksRef.current.setConfirm({
+            title: `${code} ${location.name}`,
+            message: `${location.detail}／本日の受入予定を確認できます。`,
+          });
+        }
+      });
+    });
+    map.fitBounds(points, { padding: [42, 42] });
+    map.on("locationfound", (event) => {
+      if (locationLayerRef.current) locationLayerRef.current.remove();
+      locationLayerRef.current = L.layerGroup([
+        L.circle(event.latlng, {
+          radius: event.accuracy,
+          color: "#61d6c5",
+          fillColor: "#61d6c5",
+          fillOpacity: 0.08,
+          weight: 1,
+        }),
+        L.circleMarker(event.latlng, {
+          radius: 7,
+          color: "#fff",
+          fillColor: "#21b9a8",
+          fillOpacity: 1,
+          weight: 3,
+        }).bindTooltip("現在地", { permanent: true, direction: "top" }),
+      ]).addTo(map);
+    });
+    map.on("locationerror", () =>
+      callbacksRef.current.setConfirm({
+        title: "現在地を取得できませんでした",
+        message: "ブラウザの位置情報を許可してから、もう一度お試しください。",
+      }),
+    );
+    const resize = new ResizeObserver(() => map.invalidateSize());
+    resize.observe(elementRef.current);
+    return () => {
+      resize.disconnect();
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (routeLayerRef.current) routeLayerRef.current.remove();
+    const layers = visibleTrips
+      .map((trip) => {
+        const from = controlMapLocations[mapLocationCode(trip.from)];
+        const to = controlMapLocations[mapLocationCode(trip.to)];
+        if (!from || !to) return null;
+        const selected = trip.id === selectedTripData?.id;
+        return L.polyline([from.position, to.position], {
+          color:
+            trip.status === "遅延"
+              ? "#f39a2d"
+              : selected
+                ? "#d7e82f"
+                : "#63c9b2",
+          weight: selected ? 6 : 3,
+          opacity: selected ? 0.95 : 0.42,
+          dashArray: trip.status === "遅延" ? "8 7" : undefined,
+        }).bindTooltip(`${trip.id} ${trip.from} → ${trip.to}`);
+      })
+      .filter(Boolean);
+    routeLayerRef.current = L.layerGroup(layers).addTo(map);
+  }, [visibleTrips, selectedTripData]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !selectedTripData) return;
+    const from = controlMapLocations[mapLocationCode(selectedTripData.from)];
+    const to = controlMapLocations[mapLocationCode(selectedTripData.to)];
+    if (from && to) {
+      map.flyToBounds([from.position, to.position], {
+        padding: [78, 78],
+        maxZoom: 12,
+        duration: 0.55,
+      });
+    }
+  }, [selectedTripData]);
+
+  const fitAll = () =>
+    mapRef.current?.fitBounds(
+      Object.values(controlMapLocations).map((location) => location.position),
+      { padding: [42, 42] },
+    );
+
+  return (
+    <div className="operations-map" aria-label="インタラクティブ運行マップ">
+      <div className="leaflet-map" ref={elementRef} />
+      <div className="map-legend">
+        <b>現場・受入先マップ</b>
+        <span>
+          <i className="site-dot" />
+          搬出現場（5）
+        </span>
+        <span>
+          <i className="receive-dot" />
+          受入先（5）
+        </span>
+        <span>
+          <Navigation />
+          選択運行ルート
+        </span>
+        <span>
+          <TriangleAlert />
+          遅延・渋滞
+        </span>
+      </div>
+      <div className="map-selection" aria-live="polite">
+        <small>選択中の運行</small>
+        <b>{selectedTripData?.id}</b>
+        <span>
+          {selectedTripData?.from} → {selectedTripData?.to}
+        </span>
+      </div>
+      <div className="map-tools">
+        <button
+          aria-label="地図を拡大"
+          onClick={() => mapRef.current?.zoomIn()}
+        >
+          ＋
+        </button>
+        <button
+          aria-label="地図を縮小"
+          onClick={() => mapRef.current?.zoomOut()}
+        >
+          −
+        </button>
+        <button aria-label="全地点を表示" onClick={fitAll}>
+          <MapPinned />
+        </button>
+        <button
+          aria-label="現在地"
+          onClick={() =>
+            mapRef.current?.locate({
+              setView: true,
+              maxZoom: 15,
+              enableHighAccuracy: true,
+            })
+          }
+        >
+          <MapPin />
+        </button>
+      </div>
+      <div className="map-updated">
+        <Truck />
+        交通情報　14:32更新
+      </div>
+    </div>
+  );
+}
+
 function ControlTopBar({
   page,
   navigate,
@@ -3988,7 +4264,6 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
   const [selectedTrip, setSelectedTrip] = useState("D-103");
   const [trips, setTrips] = useState(controlTrips);
   const [operationMode, setOperationMode] = useState(null);
-  const [mapZoom, setMapZoom] = useState(1);
   const visibleTrips = trips.filter(
     (trip) =>
       (tripFilter === "すべてのステータス" || trip.status === tripFilter) &&
@@ -4081,91 +4356,12 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
         </button>
       </section>
       <section className="control-workspace">
-        <div className="operations-map">
-          <img
-            src={`${import.meta.env.BASE_URL}ecodump-control-map.png`}
-            alt="現場と受入場所を結ぶ運行マップ"
-            style={{ transform: `scale(${mapZoom})` }}
-          />
-          <div className="map-legend">
-            <b>現場・受入先マップ</b>
-            <span>
-              <i className="site-dot" />
-              搬出現場（8）
-            </span>
-            <span>
-              <i className="receive-dot" />
-              受入先（5）
-            </span>
-            <span>
-              <Navigation />
-              運行中
-            </span>
-            <span>
-              <TriangleAlert />
-              遅延・渋滞
-            </span>
-          </div>
-          <button
-            className="map-callout site-a"
-            onClick={() => navigate("現場詳細", "32182")}
-          >
-            <em>S-01</em>
-            <b>サンプル現場A</b>
-            <small>積込中　3台</small>
-          </button>
-          <button
-            className="map-callout site-b"
-            onClick={() => navigate("現場詳細", "32183")}
-          >
-            <em>S-02</em>
-            <b>サンプル現場B</b>
-            <small>積込中　2台</small>
-          </button>
-          <button
-            className="map-callout receive-a"
-            onClick={() =>
-              setConfirm({
-                title: "エコダンプ市川",
-                message: "受入中 3台／待機時間 約12分／本日の予定 18台",
-              })
-            }
-          >
-            <em>R-03</em>
-            <b>エコダンプ市川</b>
-            <small>受入中　3台</small>
-          </button>
-          <div className="map-tools">
-            <button
-              aria-label="地図を拡大"
-              onClick={() => setMapZoom((value) => Math.min(1.5, value + 0.1))}
-            >
-              ＋
-            </button>
-            <button
-              aria-label="地図を縮小"
-              onClick={() => setMapZoom((value) => Math.max(1, value - 0.1))}
-            >
-              −
-            </button>
-            <button
-              aria-label="現在地"
-              onClick={() =>
-                setConfirm({
-                  title: "現在地を中心に表示",
-                  message:
-                    "位置情報の利用許可後、管制担当者の現在地を中心に表示します。",
-                })
-              }
-            >
-              <MapPin />
-            </button>
-          </div>
-          <div className="map-updated">
-            <Truck />
-            交通情報　14:32更新
-          </div>
-        </div>
+        <OperationsMap
+          visibleTrips={visibleTrips}
+          selectedTripData={selectedTripData}
+          navigate={navigate}
+          setConfirm={setConfirm}
+        />
         <div className="timeline-panel">
           <header>
             <div>

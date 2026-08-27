@@ -5239,11 +5239,21 @@ a:focus-visible {
   background: #082f2b;
   color: #eef7f3;
 }
+.control-toolbar > button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.control-toolbar > label {
+  min-width: 0;
+  flex: 1 1 140px;
+  padding-right: 6px;
+  padding-left: 10px;
+}
 .control-toolbar button svg {
   width: 20px;
 }
 .control-toolbar .dispatch-primary {
-  min-width: 226px;
+  min-width: 190px;
   justify-content: space-between;
   border-color: #c4d82e;
   background: #c4d82e;
@@ -5264,7 +5274,8 @@ a:focus-visible {
   font-size: 11px;
 }
 .control-toolbar select {
-  min-width: 148px;
+  min-width: 0;
+  width: 100%;
   border: 0;
   outline: 0;
   background: transparent;
@@ -5292,17 +5303,63 @@ a:focus-visible {
   min-height: 0;
   overflow: hidden;
   border-right: 1px solid rgb(168 203 192 / 26%);
+  background: #082724 url("/ecodump-control-map.png") center/cover;
 }
-.operations-map > img {
+.leaflet-map {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  opacity: 0.92;
-  transform-origin: center;
-  transition: transform 180ms ease;
+  min-height: 430px;
+  background: transparent;
+  cursor: grab;
+}
+.leaflet-map:active {
+  cursor: grabbing;
+}
+.leaflet-map .leaflet-tile-pane {
+  filter: sepia(0.25) saturate(0.62) hue-rotate(110deg) brightness(0.48)
+    contrast(1.22);
+}
+.leaflet-map .leaflet-control-attribution {
+  border-radius: 4px 0 0;
+  background: rgb(3 28 26 / 82%);
+  color: #a9c0b9;
+  font-size: 9px;
+}
+.leaflet-map .leaflet-control-attribution a {
+  color: #d7e82f;
+}
+.leaflet-map .leaflet-tooltip.ecodump-map-label {
+  display: grid;
+  min-width: 112px;
+  gap: 2px;
+  padding: 7px 9px;
+  border: 1px solid rgb(211 230 224 / 50%);
+  border-radius: 6px;
+  background: rgb(4 35 32 / 94%);
+  color: #fff;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 32%);
+}
+.leaflet-map .leaflet-tooltip.ecodump-map-label::before {
+  border-top-color: rgb(4 35 32 / 94%);
+}
+.leaflet-map .ecodump-map-label strong {
+  color: #d7e82f;
+  font-size: 11px;
+}
+.leaflet-map .ecodump-map-label.receive strong {
+  color: #f5a63b;
+}
+.leaflet-map .ecodump-map-label span {
+  font-size: 11px;
+  font-weight: 800;
+}
+.leaflet-map .ecodump-map-label small {
+  color: #abc3bb;
+  font-size: 9px;
 }
 .map-legend {
   position: absolute;
+  z-index: 500;
   top: 14px;
   left: 14px;
   display: grid;
@@ -5387,6 +5444,7 @@ a:focus-visible {
 }
 .map-tools {
   position: absolute;
+  z-index: 500;
   bottom: 42px;
   left: 14px;
   display: grid;
@@ -5396,8 +5454,8 @@ a:focus-visible {
 }
 .map-tools button {
   display: grid;
-  width: 38px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   border: 0;
   border-bottom: 1px solid #66857c;
@@ -5413,6 +5471,7 @@ a:focus-visible {
 }
 .map-updated {
   position: absolute;
+  z-index: 500;
   bottom: 13px;
   left: 62px;
   display: flex;
@@ -5426,6 +5485,37 @@ a:focus-visible {
 }
 .map-updated svg {
   width: 16px;
+}
+.map-selection {
+  position: absolute;
+  z-index: 500;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  max-width: min(310px, 43%);
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid rgb(215 232 47 / 48%);
+  border-radius: 6px;
+  background: rgb(3 28 26 / 92%);
+  color: #fff;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 24%);
+  pointer-events: none;
+}
+.map-selection small {
+  color: #a9c0b9;
+  font-size: 9px;
+}
+.map-selection b {
+  color: #d7e82f;
+  font-size: 13px;
+}
+.map-selection span {
+  overflow: hidden;
+  color: #d6e3df;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .timeline-panel {
   display: flex;
