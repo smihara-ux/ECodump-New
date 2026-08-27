@@ -1,5 +1,41 @@
 # ECODUMP restrained UI refresh — Design QA
 
+## Operation timeline grid correction — 2026-08-27
+
+- Source visual truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/TemporaryItems/NSIRD_screencaptureui_NrJ4tA/スクリーンショット 2026-08-27 12.36.40.png`
+- Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/timeline-grid-implementation-panel.png`
+- Combined comparison: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/timeline-grid-comparison.png`
+- Browser viewport: 1280 × 800 CSS px; implementation panel: 430 × 516 CSS px; device scale factor 1.
+- Source pixels: 644 × 676. The source was normalized to 492 × 516 and the implementation was padded to the same comparison-cell size; no browser chrome was compared.
+- State: 運行ダッシュボード、D-103 selected, unfiltered timeline.
+
+### Findings
+
+No actionable P0, P1, or P2 findings remain.
+
+- Fonts and typography: trip IDs are now a single non-wrapping 14px token; time, ID and ETA use tabular numerals; title and KPI values no longer wrap or collide.
+- Spacing and layout rhythm: each row uses five stable tracks for time, ID, status, route and ETA. Row height is 53px with consistent 6px gutters and a fixed 42px footer action.
+- Colors and visual tokens: existing petroleum-green surfaces, lime selection rail and semantic status colors are unchanged.
+- Image quality and assets: this dense data-grid region contains no raster imagery; existing SVG icon components remain sharp and aligned.
+- Copy and content: all trip data, statuses, route names, times and actions remain unchanged. Route endpoints truncate independently only when the panel is narrow, with full values retained in title attributes.
+- Focused comparison was required because the defect was confined to the dense timeline grid. The combined evidence shows the earlier two-line IDs and uneven columns replaced by aligned single-line IDs and stable column tracks.
+
+### Interaction and runtime verification
+
+- Selecting D-103 remains functional and retains the highlighted row state.
+- `すべての運行（68台）を表示` remains visible and outside the scrollable list.
+- Browser console: no warnings or errors.
+- Build passed; Sites worker tests passed 4/4.
+
+### Comparison history
+
+1. Initial evidence showed IDs breaking after `D-`, inconsistent horizontal alignment and cramped route/ETA tracks (P1 readability issue).
+2. Introduced explicit grid tracks, non-wrapping tabular ID/time fields and independently truncated route endpoints.
+3. The first revision exposed KPI unit wrapping at the narrow 430px panel width (P2).
+4. Reduced header track spacing, applied non-wrapping KPI values and recaptured the same state. Final evidence shows all KPIs and trip IDs on one line with no collision.
+
+final result: passed
+
 - Source visual truth: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/design-redesign-reference.png`
 - Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/implementation-eco-refresh.png`
 - Side-by-side evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/design-qa-comparison.png`

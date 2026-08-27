@@ -4725,9 +4725,9 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
                   {trip.status}
                 </span>
                 <span className="trip-route">
-                  {trip.from}
+                  <span title={trip.from}>{trip.from}</span>
                   <ChevronRight />
-                  {trip.to}
+                  <span title={trip.to}>{trip.to}</span>
                 </span>
                 <small>{trip.eta}</small>
               </button>

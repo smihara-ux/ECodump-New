@@ -5524,27 +5524,36 @@ a:focus-visible {
   flex-direction: column;
 }
 .timeline-panel > header {
-  display: flex;
+  display: grid;
   min-height: 66px;
+  grid-template-columns: minmax(145px, 1fr) auto 48px;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   padding: 10px 14px;
   border-bottom: 1px solid rgb(168 203 192 / 25%);
 }
 .timeline-panel > header > div:first-child {
   display: grid;
+  min-width: 0;
   gap: 3px;
 }
 .timeline-panel > header b {
-  font-size: 16px;
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .timeline-panel > header small {
+  overflow: hidden;
   color: #9eb4ad;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .timeline-panel dl {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 40px);
   margin: 0;
-  gap: 17px;
+  gap: 4px;
 }
 .timeline-panel dl div {
   display: grid;
@@ -5560,6 +5569,7 @@ a:focus-visible {
   background: #0b3631;
   color: #dce94f;
   font-size: 10px;
+  white-space: nowrap;
 }
 .timeline-detail-action svg {
   width: 13px;
@@ -5570,8 +5580,9 @@ a:focus-visible {
 }
 .timeline-panel dd {
   margin: 0;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
+  white-space: nowrap;
 }
 .timeline-list {
   min-height: 0;
@@ -5581,11 +5592,11 @@ a:focus-visible {
 .timeline-list > button {
   display: grid;
   width: 100%;
-  min-height: 47px;
-  grid-template-columns: 45px 50px 58px minmax(0, 1fr) 54px;
+  min-height: 53px;
+  grid-template-columns: 46px 58px 58px minmax(150px, 1fr) 48px;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  column-gap: 6px;
+  padding: 6px 11px;
   border: 0;
   border-bottom: 1px solid rgb(176 207 197 / 14%);
   background: transparent;
@@ -5599,8 +5610,18 @@ a:focus-visible {
 }
 .timeline-list time {
   color: #b6c9c3;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.timeline-list > button > b {
+  overflow: hidden;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .trip-status {
+  min-width: 0;
   padding: 4px 5px;
   border: 1px solid #86ad35;
   border-radius: 3px;
@@ -5626,26 +5647,34 @@ a:focus-visible {
   color: #aebfba;
 }
 .trip-route {
-  display: flex;
+  display: grid;
   min-width: 0;
+  grid-template-columns: minmax(0, 1fr) 12px minmax(0, 1fr);
   align-items: center;
-  gap: 5px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  gap: 4px;
   font-size: 11px;
 }
+.trip-route > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trip-route > span:last-child {
+  text-align: left;
+}
 .trip-route svg {
-  width: 13px;
-  flex: 0 0 13px;
+  width: 12px;
 }
 .timeline-list button > small {
   color: #b2c6c0;
+  font-variant-numeric: tabular-nums;
   text-align: right;
+  white-space: nowrap;
 }
 .all-trips {
   display: flex;
   min-height: 42px;
+  flex: 0 0 42px;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -5883,6 +5912,7 @@ a:focus-visible {
     overflow: hidden;
   }
   .timeline-panel dl {
+    grid-template-columns: repeat(2, 43px);
     gap: 7px;
   }
   .timeline-panel dl div:nth-child(n + 3) {
@@ -5896,7 +5926,9 @@ a:focus-visible {
     font-size: 0;
   }
   .timeline-list > button {
-    grid-template-columns: 40px 46px 55px minmax(0, 1fr);
+    grid-template-columns: 40px 48px 54px minmax(0, 1fr);
+    column-gap: 6px;
+    padding-inline: 9px;
   }
   .timeline-list button > small {
     display: none;
