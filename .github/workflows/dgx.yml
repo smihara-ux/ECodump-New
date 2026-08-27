@@ -1,0 +1,64 @@
+name: Validate prototype on DGX Linux
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dgx-prototype-validation
+  cancel-in-progress: false
+
+jobs:
+  validate-on-dgx:
+    name: Build and test on DGX
+    runs-on: [self-hosted, linux, x64, dgx]
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Report DGX environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          uname -a
+          if command -v nvidia-smi >/dev/null 2>&1; then
+            nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
+          else
+            echo "nvidia-smi is not available"
+          fi
+          if command -v tailscale >/dev/null 2>&1; then
+            tailscale status --self=true || true
+          else
+            echo "tailscale CLI is not available"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build prototype
+        run: npm run build
+
+      - name: Run hosting tests
+        run: npm run test:sites
+
+      - name: Upload browser build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecodump-dgx-browser-build
+          path: app/dist/client
+          if-no-files-found: error
+          retention-days: 7
+
