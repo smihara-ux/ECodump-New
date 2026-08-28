@@ -4181,7 +4181,13 @@ function OperationsMap({
     : null;
 
   return (
-    <div className="operations-map" aria-label="インタラクティブ運行マップ">
+    <div
+      className="operations-map"
+      aria-label="インタラクティブ運行マップ"
+      style={{
+        "--control-map-image": `url("${import.meta.env.BASE_URL}ecodump-control-map.png")`,
+      }}
+    >
       <div className="leaflet-map" ref={elementRef} />
       <div className="map-legend">
         <b>現場・受入先マップ</b>

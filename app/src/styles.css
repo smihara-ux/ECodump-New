@@ -5303,7 +5303,7 @@ a:focus-visible {
   min-height: 0;
   overflow: hidden;
   border-right: 1px solid rgb(168 203 192 / 26%);
-  background: #082724 url("/ecodump-control-map.png") center/cover;
+  background: #082724 var(--control-map-image) center/cover;
 }
 .leaflet-map {
   width: 100%;
