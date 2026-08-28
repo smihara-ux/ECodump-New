@@ -3665,30 +3665,35 @@ const controlMapLocations = {
   "R-01": {
     name: "エコダンプ船橋",
     type: "receive",
+    destinationKind: "中間処分場",
     position: [35.6947, 139.9955],
     detail: "受入待ち 2台",
   },
   "R-02": {
     name: "エコダンプ横浜",
     type: "receive",
+    destinationKind: "最終処分場",
     position: [35.4662, 139.6227],
     detail: "受入待ち 1台",
   },
   "R-03": {
     name: "エコダンプ市川",
     type: "receive",
+    destinationKind: "中間処分場",
     position: [35.6662, 139.9236],
     detail: "受入中 3台",
   },
   "R-04": {
     name: "エコダンプ千葉",
     type: "receive",
+    destinationKind: "中間処分場",
     position: [35.6073, 140.1063],
     detail: "受入中 2台",
   },
   "R-05": {
     name: "エコダンプ木更津",
     type: "receive",
+    destinationKind: "最終処分場",
     position: [35.3812, 139.9249],
     detail: "受入中 1台",
   },
@@ -3991,6 +3996,14 @@ function mapLocationCode(label) {
   return label.split(" ")[0];
 }
 
+function tripRouteProgress(status) {
+  if (status === "完了") return 1;
+  if (status === "受入中") return 0.94;
+  if (status === "待機中") return 0;
+  if (status === "遅延") return 0.56;
+  return 0.68;
+}
+
 function OperationsMap({
   visibleTrips,
   selectedTripData,
@@ -4086,16 +4099,17 @@ function OperationsMap({
     if (!map) return;
     if (routeLayerRef.current) routeLayerRef.current.remove();
     const layers = visibleTrips
-      .map((trip) => {
+      .flatMap((trip) => {
         const from = controlMapLocations[mapLocationCode(trip.from)];
         const to = controlMapLocations[mapLocationCode(trip.to)];
-        if (!from || !to) return null;
+        if (!from || !to) return [];
         const roadRoute =
           controlRoadRoutes[
             `${mapLocationCode(trip.from)}:${mapLocationCode(trip.to)}`
           ];
         const selected = trip.id === selectedTripData?.id;
-        return L.polyline(roadRoute?.points || [from.position, to.position], {
+        const routePoints = roadRoute?.points || [from.position, to.position];
+        const routeLine = L.polyline(routePoints, {
           color:
             trip.status === "遅延"
               ? "#f39a2d"
@@ -4104,10 +4118,28 @@ function OperationsMap({
                 : "#63c9b2",
           weight: selected ? 6 : 3,
           opacity: selected ? 0.95 : 0.42,
-          dashArray: trip.status === "遅延" ? "8 7" : undefined,
+          lineCap: "round",
+          lineJoin: "round",
         }).bindTooltip(
-          `${trip.id} ${trip.from} → ${trip.to}${roadRoute ? `／${roadRoute.distance}・${roadRoute.duration}` : ""}`,
+          `${trip.id} ${trip.from} → ${to.destinationKind || "受入場所"} ${trip.to}${roadRoute ? `／${roadRoute.distance}・${roadRoute.duration}` : ""}`,
         );
+        if (!selected) return [routeLine];
+        const progressIndex = Math.min(
+          routePoints.length - 1,
+          Math.round((routePoints.length - 1) * tripRouteProgress(trip.status)),
+        );
+        const vehicleMarker = L.circleMarker(routePoints[progressIndex], {
+          radius: 8,
+          color: "#ffffff",
+          weight: 3,
+          fillColor: trip.status === "遅延" ? "#f39a2d" : "#d7e82f",
+          fillOpacity: 1,
+        }).bindTooltip(`${trip.id}・${trip.status}`, {
+          permanent: true,
+          direction: "top",
+          className: "ecodump-vehicle-label",
+        });
+        return [routeLine, vehicleMarker];
       })
       .filter(Boolean);
     routeLayerRef.current = L.layerGroup(layers).addTo(map);
@@ -4141,6 +4173,12 @@ function OperationsMap({
         `${mapLocationCode(selectedTripData.from)}:${mapLocationCode(selectedTripData.to)}`
       ]
     : null;
+  const selectedFrom = selectedTripData
+    ? controlMapLocations[mapLocationCode(selectedTripData.from)]
+    : null;
+  const selectedTo = selectedTripData
+    ? controlMapLocations[mapLocationCode(selectedTripData.to)]
+    : null;
 
   return (
     <div className="operations-map" aria-label="インタラクティブ運行マップ">
@@ -4167,8 +4205,21 @@ function OperationsMap({
       <div className="map-selection" aria-live="polite">
         <small>選択中の運行</small>
         <b>{selectedTripData?.id}</b>
-        <span>
-          {selectedTripData?.from} → {selectedTripData?.to}
+        <div className="map-route-stages">
+          <span>
+            <Building2 />
+            <small>搬出現場</small>
+            <strong>{selectedFrom?.name}</strong>
+          </span>
+          <ChevronRight />
+          <span>
+            <Layers3 />
+            <small>{selectedTo?.destinationKind || "受入場所"}</small>
+            <strong>{selectedTo?.name}</strong>
+          </span>
+        </div>
+        <span className="map-tracking-status">
+          現在位置：{selectedTripData?.status}／車両を追跡中
         </span>
         {selectedRoadRoute && (
           <small>

@@ -5357,6 +5357,19 @@ a:focus-visible {
   color: #abc3bb;
   font-size: 9px;
 }
+.leaflet-map .leaflet-tooltip.ecodump-vehicle-label {
+  padding: 4px 7px;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 4px;
+  background: #072c28;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  box-shadow: 0 5px 14px rgb(0 0 0 / 28%);
+}
+.leaflet-map .leaflet-tooltip.ecodump-vehicle-label::before {
+  border-top-color: #072c28;
+}
 .map-legend {
   position: absolute;
   z-index: 500;
@@ -5516,6 +5529,51 @@ a:focus-visible {
   font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.map-route-stages {
+  display: grid;
+  min-width: 260px;
+  grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+.map-route-stages > svg {
+  width: 15px;
+  color: #d7e82f;
+}
+.map-route-stages > span {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 17px minmax(0, 1fr);
+  gap: 1px 5px;
+}
+.map-route-stages > span > svg {
+  width: 16px;
+  grid-row: 1 / 3;
+  align-self: center;
+  color: #d7e82f;
+}
+.map-route-stages > span:last-child > svg {
+  color: #f5a63b;
+}
+.map-route-stages small {
+  overflow: hidden;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-route-stages strong {
+  overflow: hidden;
+  color: #f5faf8;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-selection .map-tracking-status {
+  color: #d7e82f;
+  font-size: 9px;
+  font-weight: 800;
 }
 .timeline-panel {
   display: flex;
