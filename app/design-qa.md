@@ -36,6 +36,84 @@ No actionable P0, P1, or P2 findings remain.
 
 final result: passed
 
+## Full-route dual-theme E2E iteration — 2026-08-28
+
+- Source visual truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/codex-clipboard-d256cbf7-f1fc-4284-ba7a-973f08179108.png`
+- Final implementation evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/e2e-ui-ux-audit-2026-08-28/15-control-light-after.png`
+- Full audit: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/E2E_UI_UX_AUDIT_2026-08-28.md`
+- Compared the approved industrial control-tower hierarchy, compact density, framed controls, lime primary actions, map/timeline split and persistent navigation against the rendered implementation.
+- Corrected legacy destination styles that bypassed theme tokens: labor tabs, company records, gatekeeper/conference menus and work surfaces, status badges, search counts and supporting links.
+- Verified all 14 routes in light/dark modes, all route dropdowns, desktop 1440×900 and mobile 390×844 without document-level horizontal overflow.
+- Executed the nested destination tabs for field details, company, labor safety, gatekeeper and conference, plus the primary create/selection dialogs.
+- Build passed and Sites worker tests 4/4 passed.
+- Immutable public v3 was verified route-by-route at desktop and phone widths; project selection and operator selection were operated on the public URL.
+- No actionable P0/P1/P2 visual mismatches remain.
+
+final result: passed
+
+## Cross-platform button system and dual theme — 2026-08-28
+
+- Source visual truth: `/var/folders/zx/z6w4l3357x141fgmt90whs5h0000gn/T/codex-clipboard-d256cbf7-f1fc-4284-ba7a-973f08179108.png`
+- Source pixels: 1672 × 941
+- Desktop implementation: `implementation-approved-dark-1440x810.png`
+- Desktop implementation pixels/CSS viewport: 1440 × 810 at device scale factor 1
+- Mobile implementation: `implementation-fields-light-mobile-final.png`
+- Mobile implementation pixels/CSS viewport: 390 × 844 at device scale factor 1
+- Tablet implementation: `implementation-theme-dark-tablet.png`
+- Tablet implementation pixels/CSS viewport: 820 × 1180 at device scale factor 1
+- Normalization: source and desktop implementation were aspect-fit to 720 × 405 each and combined in `design-qa-comparison-2026-08-28.png`.
+- State: transport dashboard, dark theme, D-103 selected; additional light-theme, field-list, mobile menu, and responsive states tested.
+
+### Full-view comparison evidence
+
+`design-qa-comparison-2026-08-28.png` places the approved target on the left and the rendered implementation on the right. The implementation preserves the approved persistent operations navigation, command toolbar, lime dispatch CTA, map-and-timeline split, framed utility controls, and bottom KPI rail. Existing ECO DUMP routes and information density remain intact.
+
+### Focused region comparison evidence
+
+- Primary action: `配車を組む` uses the approved lime fill, dark label/icon, 48px target, 7px radius, and hover/pressed/focus states.
+- Utility controls: theme, notification, help, map zoom, fit, and current-location actions use a consistent 44px framed square.
+- Dense grid: the timeline and field list use stable non-overlapping columns on desktop and labeled card rows on mobile.
+- Responsive navigation: desktop is persistent, tablet is a 72px icon rail, and phone is an off-canvas drawer above the map.
+- Theme states: `implementation-theme-dark-desktop.png` and `implementation-theme-light-desktop-final.png` show equivalent information hierarchy.
+
+### Required fidelity surfaces
+
+- Fonts and typography: passed. Japanese system fonts support Windows/macOS; headings, labels, numeric KPIs, truncation, wrapping, and table line heights are legible.
+- Spacing and layout rhythm: passed. Toolbar controls use 44–48px targets, consistent 7px radii, aligned one-pixel borders, and stable panel spacing.
+- Colors and tokens: passed. Petroleum green, white, lime primary, amber warning, and green completion states match the selected direction. Light mode uses bright work surfaces without changing semantics.
+- Image quality and assets: passed. The supplied ECO DUMP raster logo and Leaflet/OpenStreetMap assets remain intact; standard UI icons use the existing Lucide library.
+- Copy and content: passed. Existing Japanese labels, routes, fields, actions, and sample data were preserved.
+
+### Interaction and responsive verification
+
+- Theme toggle switches dark/light and persists after reload.
+- `配車を組む` opens the working dispatch modal; Cancel closes it.
+- Project selector, search, notifications, filters, timeline selection, map controls, navigation, and route handlers remain available.
+- Field list renders 23 records on desktop and responsive card rows on phone.
+- Tested at 1440 × 810, 1440 × 1000, 820 × 1180, and 390 × 844.
+- No document-level horizontal overflow at 820px or 390px.
+- Browser console errors/warnings: none.
+
+### Comparison history
+
+1. Initial pass — blocked
+   - P1: light-mode timeline and KPI labels inherited hard-coded light text and lost contrast.
+   - P1: Leaflet panes appeared above the mobile navigation drawer.
+   - P2: fixed mobile menu and page-level menu trigger overlapped.
+2. Fixes applied
+   - Routed timeline, summary, input, table, and panel colors through shared theme tokens.
+   - Raised the mobile drawer/backdrop above Leaflet panes.
+   - Removed the duplicate phone trigger and reserved header space for the fixed menu button.
+3. Final pass
+   - `implementation-theme-light-desktop-final.png`, `implementation-theme-dark-mobile-menu-final.png`, and `implementation-fields-light-mobile-final.png` confirm the fixes.
+   - No actionable P0/P1/P2 mismatch remains.
+
+### Follow-up polish
+
+- P3: on very narrow phones, the command toolbar intentionally scrolls horizontally so every existing control remains available without shrinking touch targets.
+
+final result: passed
+
 - Source visual truth: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/design-redesign-reference.png`
 - Implementation screenshot: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/implementation-eco-refresh.png`
 - Side-by-side evidence: `/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/design-qa-comparison.png`
@@ -215,3 +293,20 @@ final result: passed
 - No actionable P0/P1/P2 findings remain.
 
 final result: passed
+# 2026-08-28 労務安全テーマ再監査
+
+- Source: ユーザー提供のダークモード画像2点
+- Scope: 労務安全11画面、ライト／ダーク、主要操作、390×844
+- Result: Passed
+- Evidence: `labor-theme-audit-2026-08-28/05-dark-report-after.png`, `06-dark-status-after.png`, `07-light-status-after.png`, `08-light-report-after.png`, `09-mobile-dark-status-after.png`
+- Detailed report: `LABOR_SAFETY_THEME_AUDIT_2026-08-28.md`
+# 2026-08-31 現場管理ファースト／現場別運行マップ
+
+- Source: ユーザー提供の現場一覧デスクトップ画像、現場名列の拡大画像
+- Target: ルートURLで現場管理を表示し、現場名から現場別運行マップへ遷移
+- Desktop evidence: `field-map-qa-2026-08-31/field-map-desktop.png`
+- Mobile evidence: `field-map-qa-2026-08-31/field-map-mobile.png`
+- Functional checks: 初期表示、現場名クリック、運行便切替、道路ルート更新、搬出・受入タブ遷移、ロゴから現場管理へ復帰
+- Responsive checks: 390×844でページ横幅390px、運行マップ初期選択、横方向のページはみ出しなし
+- Console: error 0 / warning 0
+- Final result: passed

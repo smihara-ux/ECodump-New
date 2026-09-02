@@ -3758,6 +3758,110 @@ button.contractor-row:hover {
   }
 }
 
+/* 2026-08-31 — field list contrast at compact/tablet widths.
+   The legacy responsive table turns rows into white cards; keep those cards
+   aligned with the active ECO DUMP theme so field names never disappear. */
+.control-page-surface .search-line .check input[type="checkbox"] {
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #c4d82e;
+}
+
+@media (max-width: 760px) {
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    tr,
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    tr:hover,
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    tr.selected {
+    border-color: rgb(164 199 188 / 38%) !important;
+    background: #0d3531 !important;
+  }
+
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    td {
+    border-bottom-color: rgb(164 199 188 / 20%) !important;
+    background: transparent !important;
+    color: #eef7f4 !important;
+  }
+
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .field-list-table
+    .field-access {
+    color: #ffffff !important;
+    font-weight: 800;
+  }
+
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .field-list-table
+    .field-meta,
+  .control-app-shell:not(.theme-light)
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    td::before {
+    color: #a9bdb6 !important;
+  }
+
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    tr,
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    tr:hover,
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    tr.selected,
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    .field-list-table
+    tbody
+    td {
+    border-color: #d0dbd6 !important;
+    background: #ffffff !important;
+    color: #14231f !important;
+  }
+
+  .control-app-shell.theme-light
+    .control-page-surface
+    .field-list-table
+    .field-access {
+    color: #123d32 !important;
+    font-weight: 800;
+  }
+}
+
 /* Product QA: readable data grids and schedule cards */
 .control-page-surface .field-list-table {
   width: 100%;
@@ -6261,5 +6365,1874 @@ a:focus-visible {
   }
   .matching-hero > button {
     width: 100%;
+  }
+}
+
+/* 2026-08-28 — approved cross-platform button system and dual theme. */
+.control-app-shell {
+  --ui-bg: #032724;
+  --ui-bg-soft: #062f2b;
+  --ui-panel: #0a3430;
+  --ui-panel-raised: #0d3a35;
+  --ui-text: #f4faf7;
+  --ui-muted: #a9bdb6;
+  --ui-line: rgb(177 211 201 / 28%);
+  --ui-input: #062723;
+  --ui-shadow: 0 12px 30px rgb(0 0 0 / 18%);
+  --ui-primary: #c7dc2f;
+  --ui-primary-hover: #d8eb43;
+  --ui-primary-pressed: #aebe22;
+  --ui-primary-text: #062622;
+  --ui-focus: #e4f35b;
+  --ui-danger: #e85b3c;
+  --ui-warning: #f39a2d;
+  --ui-success: #70c797;
+  color-scheme: dark;
+}
+
+.control-app-shell.theme-light {
+  --ui-bg: #edf2ef;
+  --ui-bg-soft: #f6f8f7;
+  --ui-panel: #ffffff;
+  --ui-panel-raised: #ffffff;
+  --ui-text: #14231f;
+  --ui-muted: #60736c;
+  --ui-line: #c9d5d0;
+  --ui-input: #ffffff;
+  --ui-shadow: 0 10px 28px rgb(20 58 48 / 10%);
+  --ui-primary: #bfd92b;
+  --ui-primary-hover: #cfe83c;
+  --ui-primary-pressed: #a9c11f;
+  --ui-primary-text: #092a25;
+  --ui-focus: #6d8212;
+  --ui-danger: #bd3f2b;
+  --ui-warning: #a76300;
+  --ui-success: #19724f;
+  color-scheme: light;
+}
+
+.control-app-shell button,
+.control-app-shell input,
+.control-app-shell select,
+.control-app-shell textarea {
+  font: inherit;
+}
+
+.control-app-shell button {
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.control-app-shell button:focus-visible,
+.control-app-shell input:focus-visible,
+.control-app-shell select:focus-visible,
+.control-app-shell textarea:focus-visible,
+.control-app-shell a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ui-focus) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.control-app-shell button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.control-app-shell button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+/* Primary actions selected from the approved component board. */
+.control-app-shell button.primary,
+.control-app-shell .control-toolbar .dispatch-primary,
+.control-app-shell .matching-hero > button,
+.control-app-shell .matching-toolbar > button.primary {
+  min-height: 48px;
+  border: 1px solid var(--ui-primary);
+  border-radius: 7px;
+  background: var(--ui-primary);
+  color: var(--ui-primary-text);
+  box-shadow: 0 5px 14px rgb(93 112 11 / 18%);
+  font-weight: 800;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 100ms ease;
+}
+
+.control-app-shell button.primary:hover:not(:disabled),
+.control-app-shell .control-toolbar .dispatch-primary:hover:not(:disabled),
+.control-app-shell .matching-hero > button:hover:not(:disabled) {
+  border-color: var(--ui-primary-hover);
+  background: var(--ui-primary-hover);
+  filter: none;
+  transform: translateY(-1px);
+}
+
+.control-app-shell button.primary:active:not(:disabled),
+.control-app-shell .control-toolbar .dispatch-primary:active:not(:disabled) {
+  border-color: var(--ui-primary-pressed);
+  background: var(--ui-primary-pressed);
+  box-shadow: none;
+  transform: translateY(1px);
+}
+
+.control-app-shell .control-toolbar .dispatch-primary {
+  clip-path: none;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Secondary and utility actions use the approved framed controls. */
+.control-app-shell button.outline,
+.control-app-shell .control-toolbar > button:not(.dispatch-primary),
+.control-app-shell .timeline-detail-action,
+.control-app-shell .all-trips {
+  border: 1px solid var(--ui-line);
+  border-radius: 7px;
+  background: var(--ui-panel);
+  color: var(--ui-text);
+}
+
+.control-app-shell button.outline:hover:not(:disabled),
+.control-app-shell
+  .control-toolbar
+  > button:not(.dispatch-primary):hover:not(:disabled),
+.control-app-shell .timeline-detail-action:hover:not(:disabled),
+.control-app-shell .all-trips:hover:not(:disabled) {
+  border-color: var(--ui-primary);
+  background: color-mix(in srgb, var(--ui-primary) 10%, var(--ui-panel));
+  color: var(--ui-text);
+  filter: none;
+}
+
+.control-app-shell .control-icon-button,
+.control-app-shell .map-tools button,
+.control-app-shell .collapse,
+.control-app-shell .mobile-menu {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--ui-line);
+  border-radius: 7px;
+  background: var(--ui-panel);
+  color: var(--ui-text);
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.control-app-shell .control-icon-button:hover,
+.control-app-shell .map-tools button:hover,
+.control-app-shell .collapse:hover,
+.control-app-shell .mobile-menu:hover {
+  border-color: var(--ui-primary);
+  background: color-mix(in srgb, var(--ui-primary) 12%, var(--ui-panel));
+  color: var(--ui-primary);
+}
+
+.control-app-shell .theme-toggle {
+  color: var(--ui-primary);
+}
+
+.control-app-shell .control-icon-button i {
+  border: 2px solid var(--ui-bg-soft);
+  background: var(--ui-primary);
+  color: var(--ui-primary-text);
+}
+
+/* Shared surfaces and data grids. */
+.control-app-shell > .content,
+.control-app-shell .control-tower-page,
+.control-app-shell .control-page-surface {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+.control-app-shell .control-page-surface {
+  --panel: var(--ui-panel);
+  --panel-2: var(--ui-panel-raised);
+  --line: var(--ui-line);
+  --muted: var(--ui-muted);
+  background-image: none;
+}
+
+.control-app-shell .control-page-surface .search-panel,
+.control-app-shell .control-page-surface .action-strip,
+.control-app-shell .control-page-surface .company-actions,
+.control-app-shell .control-page-surface .table-area,
+.control-app-shell .control-page-surface .generic-table-wrap,
+.control-app-shell .control-page-surface .company-card,
+.control-app-shell .control-page-surface .field-section,
+.control-app-shell .control-page-surface .field-dashboard,
+.control-app-shell .timeline-panel,
+.control-app-shell .control-summary {
+  border-color: var(--ui-line);
+  background: var(--ui-panel);
+  color: var(--ui-text);
+  box-shadow: var(--ui-shadow);
+}
+
+.control-app-shell .control-page-surface input,
+.control-app-shell .control-page-surface select,
+.control-app-shell .control-page-surface textarea,
+.control-app-shell .control-toolbar label,
+.control-app-shell .control-search,
+.control-app-shell .control-project,
+.control-app-shell .control-date {
+  border-color: var(--ui-line);
+  background: var(--ui-input);
+  color: var(--ui-text);
+}
+
+.control-app-shell .control-page-surface input,
+.control-app-shell .control-page-surface select,
+.control-app-shell .control-page-surface textarea,
+.control-app-shell .control-toolbar select {
+  color: var(--ui-text);
+}
+
+.control-app-shell .control-page-surface input::placeholder,
+.control-app-shell .control-search input::placeholder {
+  color: var(--ui-muted);
+}
+
+.control-app-shell .control-page-surface table,
+.control-app-shell .control-page-surface .generic-table {
+  table-layout: fixed;
+  color: var(--ui-text);
+}
+
+.control-app-shell .control-page-surface thead,
+.control-app-shell .control-page-surface .generic-head {
+  background: color-mix(in srgb, var(--ui-panel) 82%, var(--ui-muted));
+  color: var(--ui-muted);
+}
+
+.control-app-shell .control-page-surface th,
+.control-app-shell .control-page-surface td,
+.control-app-shell .control-page-surface .generic-head > div,
+.control-app-shell .control-page-surface .generic-tr > div {
+  overflow-wrap: anywhere;
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+  line-height: 1.45;
+}
+
+.control-app-shell .control-page-surface th,
+.control-app-shell .control-page-surface .generic-head > div {
+  color: var(--ui-muted);
+  font-weight: 700;
+}
+
+.control-app-shell .control-page-surface tbody tr:hover,
+.control-app-shell .control-page-surface .generic-tr:not(.generic-head):hover {
+  background: color-mix(in srgb, var(--ui-primary) 7%, var(--ui-panel));
+}
+
+.control-app-shell .timeline-panel > header,
+.control-app-shell .timeline-list > button,
+.control-app-shell .all-trips,
+.control-app-shell .control-summary > button {
+  border-color: var(--ui-line);
+  color: var(--ui-text);
+}
+
+.control-app-shell .timeline-panel > header small,
+.control-app-shell .timeline-panel dt,
+.control-app-shell .timeline-list time,
+.control-app-shell .timeline-list button > small,
+.control-app-shell .control-summary > button small,
+.control-app-shell .summary-title small {
+  color: var(--ui-muted);
+}
+
+.control-app-shell .timeline-list > button:hover,
+.control-app-shell .timeline-list > button.selected,
+.control-app-shell .control-summary > button:hover {
+  background: color-mix(in srgb, var(--ui-primary) 9%, var(--ui-panel));
+}
+
+.control-app-shell .all-trips {
+  background: var(--ui-panel);
+}
+
+.control-app-shell .control-summary > button > svg {
+  color: var(--ui-muted);
+}
+
+/* Light mode keeps the brand header and navigation recognizable while making work surfaces bright. */
+.control-app-shell.theme-light .control-topbar {
+  border-bottom-color: #c8d5d0;
+  background: #ffffff;
+  color: #14231f;
+  box-shadow: 0 2px 10px rgb(20 58 48 / 9%);
+}
+
+.control-app-shell.theme-light .control-brand small,
+.control-app-shell.theme-light .nav-group h2 {
+  color: #6e7f0f;
+}
+
+.control-app-shell.theme-light > .sidebar {
+  border-right-color: #c7d4cf;
+  background: #f7faf8;
+  color: #14231f;
+  box-shadow: 5px 0 20px rgb(20 58 48 / 9%);
+}
+
+.control-app-shell.theme-light .brand-row,
+.control-app-shell.theme-light .sidebar-footer {
+  background: #eef4f1;
+}
+
+.control-app-shell.theme-light .nav-group button,
+.control-app-shell.theme-light .sidebar-footer button,
+.control-app-shell.theme-light .sidebar-footer b,
+.control-app-shell.theme-light .sidebar-footer small {
+  color: #243630;
+}
+
+.control-app-shell.theme-light .nav-icon,
+.control-app-shell.theme-light .nav-group button svg,
+.control-app-shell.theme-light .sidebar-footer button svg {
+  border-color: #c6d3ce;
+  color: #48665c;
+}
+
+.control-app-shell.theme-light .nav-group button:hover,
+.control-app-shell.theme-light .sidebar-footer button:hover {
+  background: #e8f0ec;
+}
+
+.control-app-shell.theme-light .nav-group button.active {
+  border-color: #a7c11f;
+  background: #eef5c9;
+  color: #102d26;
+}
+
+.control-app-shell.theme-light .control-page-surface .field-list-table td,
+.control-app-shell.theme-light
+  .control-page-surface
+  .field-list-table
+  .field-access,
+.control-app-shell.theme-light .control-page-surface .transport-summary b,
+.control-app-shell.theme-light .control-page-surface .field-total-main h3,
+.control-app-shell.theme-light .control-page-surface .field-total-vehicles b,
+.control-app-shell.theme-light
+  .control-page-surface
+  .destination-summary-card
+  b {
+  color: #14231f !important;
+}
+
+.control-app-shell.theme-light
+  .control-page-surface
+  .field-list-table
+  .field-meta,
+.control-app-shell.theme-light .control-page-surface .transport-summary span,
+.control-app-shell.theme-light .control-page-surface .field-total-main span,
+.control-app-shell.theme-light .control-page-surface .field-total-main p,
+.control-app-shell.theme-light
+  .control-page-surface
+  .destination-summary-card
+  span,
+.control-app-shell.theme-light
+  .control-page-surface
+  .field-trip-breakdown
+  span {
+  color: #60736c !important;
+}
+
+.control-app-shell.theme-light
+  .control-page-surface
+  .table-scroll
+  .field-list-table
+  tbody
+  tr:hover,
+.control-app-shell.theme-light
+  .control-page-surface
+  .table-scroll
+  .field-list-table
+  tbody
+  tr.selected,
+.control-app-shell.theme-light .control-page-surface .transport-summary > div,
+.control-app-shell.theme-light .control-page-surface .field-total-card,
+.control-app-shell.theme-light .control-page-surface .field-total-main,
+.control-app-shell.theme-light .control-page-surface .destination-summary-card,
+.control-app-shell.theme-light .control-page-surface .field-trip-breakdown,
+.control-app-shell.theme-light
+  .control-page-surface
+  .field-trip-breakdown
+  > div {
+  border-color: #c9d5d0 !important;
+  background: #ffffff !important;
+  color: #14231f !important;
+}
+
+@media (max-width: 1180px) {
+  .control-topbar {
+    gap: 8px;
+    padding-inline: 12px;
+  }
+
+  .control-brand {
+    min-width: 58px;
+  }
+
+  .control-toolbar {
+    scrollbar-width: thin;
+  }
+}
+
+@media (max-width: 760px) {
+  .control-topbar {
+    z-index: 1300;
+  }
+
+  .control-app-shell > .sidebar {
+    z-index: 1200;
+  }
+
+  .control-app-shell:not(.is-collapsed) > .sidebar-backdrop {
+    z-index: 1190;
+  }
+
+  .control-app-shell > .mobile-menu {
+    z-index: 1202;
+  }
+
+  .control-app-shell .page-menu-trigger,
+  .control-app-shell .module-menu-trigger {
+    display: none !important;
+  }
+
+  .control-app-shell .page-header {
+    min-height: 58px;
+    padding: 8px 8px 8px 62px;
+  }
+
+  .control-app-shell .page-header h1 {
+    max-width: calc(100vw - 128px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .control-app-shell .header-actions .close {
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  .control-app-shell .theme-toggle {
+    display: grid;
+  }
+
+  .control-topbar .theme-toggle {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    flex-basis: 40px;
+  }
+
+  .control-app-shell > .mobile-menu {
+    border-color: var(--ui-line);
+    background: var(--ui-panel);
+    color: var(--ui-primary);
+  }
+
+  .control-toolbar {
+    padding-bottom: 4px;
+    scroll-snap-type: x proximity;
+  }
+
+  .control-toolbar > button,
+  .control-toolbar > label {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  .control-app-shell .control-page-surface {
+    padding: 10px 10px 20px;
+  }
+
+  .control-page-surface .search-panel,
+  .control-page-surface .action-strip,
+  .control-page-surface .company-actions {
+    align-items: stretch;
+  }
+
+  .control-page-surface .search-actions button,
+  .control-page-surface .action-strip button,
+  .control-page-surface .company-actions button,
+  .control-page-surface .modal-actions button {
+    min-height: 48px;
+  }
+
+  .control-page-surface .table-scroll tbody tr,
+  .control-page-surface .generic-tr:not(.generic-head) {
+    border-radius: 8px;
+  }
+
+  .control-app-shell.theme-light .control-page-surface .table-scroll tbody tr,
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    tbody
+    tr:hover,
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    tbody
+    tr.selected,
+  .control-app-shell.theme-light .control-page-surface .table-scroll tbody td {
+    border-color: #d0dbd6 !important;
+    background: #ffffff !important;
+    color: #14231f !important;
+  }
+
+  .control-app-shell.theme-light
+    .control-page-surface
+    .table-scroll
+    tbody
+    td::before {
+    color: #60736c !important;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1024px) {
+  .control-toolbar > label {
+    min-width: 154px;
+    flex: 0 0 154px;
+  }
+
+  .control-toolbar > label select {
+    min-width: 128px;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 430px) {
+  .control-topbar {
+    padding-inline: 7px;
+  }
+
+  .control-brand,
+  .control-brand img {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .control-search {
+    padding-inline: 9px;
+  }
+
+  .control-search input {
+    font-size: 13px;
+  }
+
+  .control-toolbar .dispatch-primary {
+    min-width: 164px;
+  }
+
+  .timeline-list > button {
+    grid-template-columns: 38px 44px 52px minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control-app-shell *,
+  .control-app-shell *::before,
+  .control-app-shell *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 2026-08-28 E2E audit — keep every legacy destination readable in both themes. */
+.control-app-shell .control-page-surface .gf-tabs button,
+.control-app-shell .control-page-surface .gf-inner-tabs button {
+  border-color: var(--ui-line);
+  background: var(--ui-panel);
+  color: var(--ui-text);
+}
+
+.control-app-shell .control-page-surface .gf-tabs button:hover,
+.control-app-shell .control-page-surface .gf-inner-tabs button:hover {
+  border-color: var(--ui-primary);
+  background: color-mix(in srgb, var(--ui-primary) 10%, var(--ui-panel));
+}
+
+.control-app-shell .control-page-surface .gf-tabs button.active,
+.control-app-shell .control-page-surface .gf-inner-tabs button.active {
+  border-color: var(--ui-primary);
+  background: var(--ui-primary);
+  color: var(--ui-primary-text);
+}
+
+.control-app-shell.theme-light .control-page-surface .search-panel > b,
+.control-app-shell.theme-light .control-page-surface .labor-count b,
+.control-app-shell.theme-light .control-page-surface .transport-summary b,
+.control-app-shell.theme-light .control-page-surface .search-panel b {
+  color: #14231f !important;
+}
+
+.control-app-shell.theme-light .control-page-surface button.text,
+.control-app-shell.theme-light .control-page-surface .text-button,
+.control-app-shell.theme-light .control-page-surface .table-tools a {
+  color: #40590a !important;
+}
+
+.control-app-shell.theme-light .control-page-surface .table-tools a {
+  color: #d7ea49 !important;
+}
+
+.control-app-shell.theme-light .control-page-surface .page-tabs button,
+.control-app-shell.theme-light .control-page-surface .company-tabs button,
+.control-app-shell.theme-light .control-page-surface .field-subnav button {
+  border-color: #c9d5d0;
+  background: #ffffff;
+  color: #30443d;
+}
+
+.control-app-shell.theme-light .control-page-surface .page-tabs button.active,
+.control-app-shell.theme-light
+  .control-page-surface
+  .company-tabs
+  button.active,
+.control-app-shell.theme-light
+  .control-page-surface
+  .field-subnav
+  button.active {
+  border-color: #9bb516;
+  background: #eaf3b6;
+  color: #17362e;
+}
+
+.control-app-shell.theme-light .control-page-surface .company-card,
+.control-app-shell.theme-light .control-page-surface .company-card h2,
+.control-app-shell.theme-light .control-page-surface .company-card h3,
+.control-app-shell.theme-light .control-page-surface .company-card b,
+.control-app-shell.theme-light .control-page-surface .company-card span,
+.control-app-shell.theme-light .control-page-surface .company-card p,
+.control-app-shell.theme-light .control-page-surface .company-card dt,
+.control-app-shell.theme-light .control-page-surface .company-card dd {
+  color: #14231f !important;
+}
+
+.control-app-shell.theme-light .control-page-surface .company-card h3,
+.control-app-shell.theme-light .control-page-surface .info-row {
+  border-color: #c9d5d0;
+}
+
+.control-app-shell.theme-light .control-page-surface .info-row b {
+  background: #edf3f0;
+}
+
+.control-app-shell.theme-light .service-product,
+.control-app-shell.theme-light .service-shell,
+.control-app-shell.theme-light .product-body {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+.control-app-shell.theme-light .product-top {
+  border-color: #c9d5d0;
+  background: #ffffff;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .product-notice {
+  border-color: #d4b86b;
+  background: #fff6dc;
+  color: #6b4b00;
+}
+
+.control-app-shell.theme-light .product-menu,
+.control-app-shell.theme-light .service-menu {
+  border-color: #c9d5d0;
+  background: #f7faf8;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .product-menu h2,
+.control-app-shell.theme-light .product-menu h3,
+.control-app-shell.theme-light .service-menu h2,
+.control-app-shell.theme-light .service-menu h3,
+.control-app-shell.theme-light .product-menu > b,
+.control-app-shell.theme-light .service-menu > b {
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .product-menu button,
+.control-app-shell.theme-light .service-menu button {
+  background: transparent;
+  color: #40534c;
+}
+
+.control-app-shell.theme-light .product-menu button:hover,
+.control-app-shell.theme-light .service-menu button:hover {
+  background: #e8f0ec;
+}
+
+.control-app-shell.theme-light .product-menu button.active,
+.control-app-shell.theme-light .service-menu button.active {
+  border-left-color: #9bb516;
+  background: #eaf3b6;
+  color: #17362e;
+}
+
+.control-app-shell.theme-light .product-main,
+.control-app-shell.theme-light .service-main {
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+.control-app-shell.theme-light .gf-page,
+.control-app-shell.theme-light .org-page,
+.control-app-shell.theme-light .plan-canvas,
+.control-app-shell.theme-light .dashboard-cols > section,
+.control-app-shell.theme-light .gf-table,
+.control-app-shell.theme-light .service-table,
+.control-app-shell.theme-light .gf-filter,
+.control-app-shell.theme-light .gf-comment,
+.control-app-shell.theme-light .gf-download-list,
+.control-app-shell.theme-light .org-card {
+  border-color: #c9d5d0;
+  background: #ffffff;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .gf-page h1,
+.control-app-shell.theme-light .gf-page h2,
+.control-app-shell.theme-light .gf-page h3,
+.control-app-shell.theme-light .gf-page b,
+.control-app-shell.theme-light .org-page h2,
+.control-app-shell.theme-light .dashboard-cols h3,
+.control-app-shell.theme-light .detail-list dt,
+.control-app-shell.theme-light .detail-list dd,
+.control-app-shell.theme-light .labor-count span {
+  border-color: #c9d5d0;
+  background: transparent;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .labor-count span {
+  background: #f3f7f5;
+}
+
+.control-app-shell.theme-light .gf-lead,
+.control-app-shell.theme-light .gf-purpose,
+.control-app-shell.theme-light .gf-comment,
+.control-app-shell.theme-light .org-page p {
+  color: #60736c;
+}
+
+.control-app-shell.theme-light .gf-toolbar,
+.control-app-shell.theme-light .gf-subhead,
+.control-app-shell.theme-light .product-actions,
+.control-app-shell.theme-light .service-filter,
+.control-app-shell.theme-light .org-toolbar {
+  border-color: #c9d5d0;
+  background: #f3f7f5;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .gf-table th,
+.control-app-shell.theme-light .service-table th {
+  border-color: #c9d5d0;
+  background: #e9f0ed;
+  color: #40534c;
+}
+
+.control-app-shell.theme-light .gf-table td,
+.control-app-shell.theme-light .service-table td {
+  border-color: #d5dfdb;
+  background: #ffffff;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .trip-status.status-運行中 {
+  border-color: #68820a;
+  background: #edf5c5;
+  color: #405300;
+}
+
+.control-app-shell.theme-light .trip-status.status-遅延,
+.control-app-shell.theme-light .trip-status.status-受入中 {
+  border-color: #b56b00;
+  background: #fff0d2;
+  color: #704100;
+}
+
+.control-app-shell.theme-light .trip-status.status-完了 {
+  border-color: #2b7b59;
+  background: #e2f3eb;
+  color: #15543c;
+}
+
+/* 2026-08-28 labor-safety theme audit — one readable system for all 11 pages. */
+.control-app-shell .service-shell {
+  --labor-surface: #0b3531;
+  --labor-surface-raised: #123f3a;
+  --labor-surface-soft: #184842;
+  --labor-text: #f4faf7;
+  --labor-muted: #b9ccc5;
+  --labor-line: #54766d;
+  --labor-accent: #c7df25;
+  --labor-accent-text: #10231d;
+  --labor-notice-bg: #153f3a;
+  --labor-notice-text: #eef7f3;
+  --labor-field-bg: #061f1d;
+  --labor-disabled-bg: #35534d;
+  --labor-disabled-text: #c0cec9;
+}
+
+.control-app-shell.theme-light .service-shell {
+  --labor-surface: #ffffff;
+  --labor-surface-raised: #f2f6f4;
+  --labor-surface-soft: #e4eeea;
+  --labor-text: #13231e;
+  --labor-muted: #526860;
+  --labor-line: #9fb3ab;
+  --labor-accent: #d5e84d;
+  --labor-accent-text: #173329;
+  --labor-notice-bg: #e7f1ed;
+  --labor-notice-text: #1d3a31;
+  --labor-field-bg: #ffffff;
+  --labor-disabled-bg: #dbe4e0;
+  --labor-disabled-text: #536a62;
+}
+
+.control-app-shell .service-shell .service-main,
+.control-app-shell .service-shell .gf-page {
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell .gf-page {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-surface) !important;
+}
+
+.control-app-shell .service-shell .gf-page h1,
+.control-app-shell .service-shell .gf-page h2,
+.control-app-shell .service-shell .gf-page h3,
+.control-app-shell .service-shell .gf-page b,
+.control-app-shell .service-shell .gf-page label,
+.control-app-shell .service-shell .gf-page p,
+.control-app-shell .service-shell .gf-page span,
+.control-app-shell .service-shell .gf-page td {
+  color: inherit;
+}
+
+.control-app-shell .service-shell .gf-lead,
+.control-app-shell .service-shell .gf-purpose span,
+.control-app-shell .service-shell .gf-comment p,
+.control-app-shell .service-shell .common-menu-grid small {
+  color: var(--labor-muted) !important;
+}
+
+.control-app-shell .service-shell .gf-alert,
+.control-app-shell .service-shell .gf-purpose {
+  border-color: var(--labor-accent) !important;
+  background: var(--labor-notice-bg) !important;
+  color: var(--labor-notice-text) !important;
+}
+
+.control-app-shell .service-shell .gf-toolbar,
+.control-app-shell .service-shell .gf-subhead,
+.control-app-shell .service-shell .gf-filter,
+.control-app-shell .service-shell .gf-comment,
+.control-app-shell .service-shell .gf-download-list {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-surface-raised) !important;
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell .gf-tabs,
+.control-app-shell .service-shell .gf-inner-tabs {
+  border-color: var(--labor-line) !important;
+  background: transparent !important;
+}
+
+.control-app-shell .service-shell .gf-tabs button,
+.control-app-shell .service-shell .gf-inner-tabs button {
+  border: 1px solid var(--labor-line) !important;
+  border-bottom-width: 3px !important;
+  background: var(--labor-surface-raised) !important;
+  color: var(--labor-text) !important;
+  opacity: 1 !important;
+}
+
+.control-app-shell .service-shell .gf-tabs button:hover,
+.control-app-shell .service-shell .gf-inner-tabs button:hover {
+  border-color: var(--labor-accent) !important;
+  background: var(--labor-surface-soft) !important;
+}
+
+.control-app-shell .service-shell .gf-tabs button.active,
+.control-app-shell .service-shell .gf-inner-tabs button.active {
+  border-color: var(--labor-accent) !important;
+  background: var(--labor-accent) !important;
+  color: var(--labor-accent-text) !important;
+}
+
+.control-app-shell .service-shell .gf-table {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-surface) !important;
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell .gf-page .gf-table th {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-surface-soft) !important;
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell .gf-page .gf-table td {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-surface) !important;
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell .gf-page .gf-table tbody tr:hover td {
+  background: var(--labor-surface-raised) !important;
+}
+
+.control-app-shell .service-shell .gf-form-grid input,
+.control-app-shell .service-shell .gf-form-grid select,
+.control-app-shell .service-shell .gf-comment textarea {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-field-bg) !important;
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell .gf-form-grid input::placeholder,
+.control-app-shell .service-shell .gf-comment textarea::placeholder {
+  color: var(--labor-muted) !important;
+  opacity: 1;
+}
+
+.control-app-shell .service-shell button.outline,
+.control-app-shell .service-shell button.text-button {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-surface-raised) !important;
+  color: var(--labor-text) !important;
+}
+
+.control-app-shell .service-shell button.outline:hover,
+.control-app-shell .service-shell button.text-button:hover {
+  border-color: var(--labor-accent) !important;
+  background: var(--labor-surface-soft) !important;
+}
+
+.control-app-shell .service-shell button.primary {
+  border-color: var(--labor-accent) !important;
+  background: var(--labor-accent) !important;
+  color: var(--labor-accent-text) !important;
+}
+
+.control-app-shell .service-shell button:disabled {
+  border-color: var(--labor-line) !important;
+  background: var(--labor-disabled-bg) !important;
+  color: var(--labor-disabled-text) !important;
+  opacity: 1 !important;
+  cursor: not-allowed;
+}
+
+.control-app-shell .service-shell .gf-empty,
+.control-app-shell .service-shell .gf-unoutput {
+  color: var(--labor-muted) !important;
+}
+
+.control-app-shell .service-shell .gf-status.s0,
+.control-app-shell .service-shell .gf-status.s1 {
+  border-color: #83c7aa !important;
+  background: #dff3ed !important;
+  color: #145a43 !important;
+}
+
+.control-app-shell .service-shell .gf-status.s2 {
+  border-color: #d8b34d !important;
+  background: #fff4d2 !important;
+  color: #704900 !important;
+}
+
+@media (max-width: 760px) {
+  .control-app-shell .service-shell .gf-tabs button,
+  .control-app-shell .service-shell .gf-inner-tabs button {
+    min-height: 44px;
+    padding: 10px 13px;
+  }
+}
+
+.control-app-shell.theme-light .trip-status.status-待機中 {
+  border-color: #687670;
+  background: #edf1ef;
+  color: #3f4c47;
+}
+
+.control-app-shell.theme-light .matching-kpis b {
+  color: #e6f35a !important;
+}
+
+.control-app-shell.theme-light .field-total-count b {
+  color: #40590a !important;
+}
+
+.control-app-shell.theme-light .field-detail-hero .field-meta,
+.control-app-shell.theme-light .field-overview-card span,
+.control-app-shell.theme-light .field-quick-card small {
+  color: #c2d2cc !important;
+}
+
+.control-app-shell.theme-light .control-topbar .control-user small {
+  color: #586b64;
+}
+
+@media (max-width: 760px) {
+  .control-app-shell .timeline-detail-action {
+    min-width: 44px;
+  }
+
+  .control-app-shell .page-header .close {
+    min-width: 44px;
+  }
+
+  .control-app-shell .product-menu,
+  .control-app-shell .service-menu {
+    max-height: 220px;
+  }
+}
+
+/* 2026-08-31 field-first navigation and field-specific operations map. */
+.field-operations-dashboard {
+  display: grid;
+  gap: 14px;
+  padding: 18px 22px 24px;
+}
+
+.field-operations-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 17px;
+  border: 1px solid rgb(168 203 192 / 30%);
+  border-radius: 7px;
+  background: #0b3531;
+  color: #f4faf7;
+}
+
+.field-operations-heading h2,
+.field-operations-heading p {
+  margin: 0;
+}
+
+.field-operations-heading h2 {
+  margin: 3px 0 5px;
+  font-size: 20px;
+}
+
+.field-operations-heading > div > span,
+.field-operations-heading p {
+  color: #b9ccc5;
+  font-size: 12px;
+}
+
+.field-operations-heading > div > span {
+  color: #d7e82f;
+  font-weight: 800;
+}
+
+.field-operations-heading dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(78px, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.field-operations-heading dl div {
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px;
+  border-left: 2px solid #d7e82f;
+  background: rgb(255 255 255 / 4%);
+}
+
+.field-operations-heading dt {
+  color: #a9beb7;
+  font-size: 10px;
+}
+
+.field-operations-heading dd {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.field-control-workspace {
+  min-height: 610px;
+}
+
+.field-control-workspace .timeline-list > button {
+  min-height: 58px;
+}
+
+.control-app-shell.theme-light .field-operations-heading {
+  border-color: #b9c9c3;
+  background: #ffffff;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .field-operations-heading > div > span {
+  color: #607800;
+}
+
+.control-app-shell.theme-light .field-operations-heading p,
+.control-app-shell.theme-light .field-operations-heading dt {
+  color: #526860;
+}
+
+.control-app-shell.theme-light .field-operations-heading dl div {
+  background: #edf3f0;
+}
+
+@media (max-width: 900px) {
+  .field-operations-dashboard {
+    padding: 12px;
+  }
+
+  .field-operations-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .field-control-workspace {
+    min-height: 980px;
+  }
+}
+
+@media (max-width: 520px) {
+  .field-operations-dashboard {
+    padding: 9px;
+  }
+
+  .field-operations-heading {
+    padding: 13px;
+  }
+
+  .field-operations-heading dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .field-operations-heading dl div {
+    min-width: 0;
+    padding: 7px 8px;
+  }
+
+  .field-operations-heading dd {
+    font-size: 15px;
+  }
+}
+
+/* Final compact field-list theme guard. Keep this last in the cascade. */
+.control-page-surface .search-line .check input[type="checkbox"] {
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px;
+  margin: 0;
+  accent-color: #c4d82e;
+}
+
+@media (max-width: 1100px) {
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table tbody tr,
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table tbody tr:hover,
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table tbody tr.selected {
+    border-color: rgb(164 199 188 / 38%) !important;
+    background: #0d3531 !important;
+  }
+
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table tbody td {
+    border-bottom-color: rgb(164 199 188 / 20%) !important;
+    background: transparent !important;
+    color: #eef7f4 !important;
+  }
+
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table .field-access {
+    color: #ffffff !important;
+    font-weight: 800;
+  }
+
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table .field-meta,
+  .control-app-shell:not(.theme-light) .control-page-surface .field-list-table tbody td::before {
+    color: #a9bdb6 !important;
+  }
+
+  .control-app-shell.theme-light .control-page-surface .field-list-table tbody tr,
+  .control-app-shell.theme-light .control-page-surface .field-list-table tbody tr:hover,
+  .control-app-shell.theme-light .control-page-surface .field-list-table tbody tr.selected,
+  .control-app-shell.theme-light .control-page-surface .field-list-table tbody td {
+    border-color: #d0dbd6 !important;
+    background: #ffffff !important;
+    color: #14231f !important;
+  }
+
+  .control-app-shell.theme-light .control-page-surface .field-list-table .field-access {
+    color: #123d32 !important;
+    font-weight: 800;
+  }
+}
+
+@media (min-width: 1101px) {
+  .control-page-surface .field-list-table th,
+  .control-page-surface .field-list-table td {
+    width: auto !important;
+  }
+
+  .control-page-surface .field-list-table tbody tr {
+    height: 78px;
+  }
+
+  .control-page-surface .field-list-table .service-strip {
+    width: 138px;
+    grid-template-columns: repeat(3, 44px);
+  }
+
+  .control-page-surface .field-list-table .service-strip a {
+    width: 44px;
+  }
+}
+
+/* Final desktop field grid: explicit business-column widths prevent text stacks. */
+@media (min-width: 1101px) {
+  .control-page-surface .table-scroll {
+    overflow-x: auto;
+    scrollbar-color: #58766d #082c29;
+  }
+
+  .control-page-surface .field-list-table {
+    width: 100%;
+    min-width: 1080px;
+    table-layout: fixed;
+  }
+
+  .control-page-surface .field-list-table col.field-col-company { width: 168px; }
+  .control-page-surface .field-list-table col.field-col-branch { width: 142px; }
+  .control-page-surface .field-list-table col.field-col-name { width: 250px; }
+  .control-page-surface .field-list-table col.field-col-address { width: 190px; }
+  .control-page-surface .field-list-table col.field-col-date { width: 120px; }
+  .control-page-surface .field-list-table col.field-col-status { width: 96px; }
+  .control-page-surface .field-list-table col.field-col-services { width: 154px; }
+
+  .control-page-surface .field-list-table th,
+  .control-page-surface .field-list-table td {
+    width: auto !important;
+    padding: 12px 14px;
+    border-right: 1px solid rgb(164 199 188 / 13%);
+  }
+
+  .control-page-surface .field-list-table th:last-child,
+  .control-page-surface .field-list-table td:last-child {
+    border-right: 0;
+  }
+
+  .control-page-surface .field-list-table th {
+    height: 44px;
+    background: #102f2d;
+    color: #c4d3ce;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .control-page-surface .field-list-table tbody tr {
+    height: 78px;
+  }
+
+  .control-page-surface .field-list-table td {
+    min-height: 78px;
+    line-height: 1.45;
+  }
+
+  .control-page-surface .field-list-table .field-access {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 28px;
+    justify-content: flex-start;
+    gap: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .control-page-surface .field-list-table .field-access svg {
+    flex: 0 0 16px;
+  }
+
+  .control-page-surface .field-list-table .field-meta {
+    min-height: 20px;
+    flex-wrap: nowrap;
+    gap: 5px;
+    overflow: hidden;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .control-page-surface .field-list-table .field-meta button,
+  .control-page-surface .field-list-table .field-meta i {
+    flex: 0 0 auto;
+  }
+
+  .control-page-surface .field-list-table td:nth-child(1),
+  .control-page-surface .field-list-table td:nth-child(2),
+  .control-page-surface .field-list-table td:nth-child(5),
+  .control-page-surface .field-list-table td:nth-child(6),
+  .control-page-surface .field-list-table td:nth-child(7) {
+    white-space: nowrap;
+  }
+
+  .control-page-surface .field-list-table td:nth-child(4) {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .control-page-surface .field-list-table .service-strip {
+    width: 138px;
+    height: 46px;
+    grid-template-columns: repeat(3, 44px);
+    gap: 3px;
+  }
+
+  .control-page-surface .field-list-table .service-strip a {
+    width: 44px;
+    height: 46px;
+  }
+
+  .control-app-shell.theme-light .control-page-surface .field-list-table th {
+    border-bottom-color: #b9c9c3;
+    background: #e7efeb;
+    color: #2b433b;
+  }
+}
+
+/* 2026-08-31 — field-management table hierarchy and stable column grid. */
+.control-page-surface .field-list-table {
+  table-layout: fixed;
+}
+
+.control-page-surface .field-list-table th:nth-child(1),
+.control-page-surface .field-list-table td:nth-child(1) { width: 14%; }
+.control-page-surface .field-list-table th:nth-child(2),
+.control-page-surface .field-list-table td:nth-child(2) { width: 11%; }
+.control-page-surface .field-list-table th:nth-child(3),
+.control-page-surface .field-list-table td:nth-child(3) { width: 21%; }
+.control-page-surface .field-list-table th:nth-child(4),
+.control-page-surface .field-list-table td:nth-child(4) { width: 16%; }
+.control-page-surface .field-list-table th:nth-child(5),
+.control-page-surface .field-list-table td:nth-child(5),
+.control-page-surface .field-list-table th:nth-child(6),
+.control-page-surface .field-list-table td:nth-child(6) { width: 9%; }
+.control-page-surface .field-list-table th:nth-child(7),
+.control-page-surface .field-list-table td:nth-child(7) { width: 8%; }
+.control-page-surface .field-list-table th:nth-child(8),
+.control-page-surface .field-list-table td:nth-child(8) { width: 12%; }
+
+.control-page-surface .field-list-table th {
+  white-space: nowrap;
+}
+
+.control-page-surface .field-list-table td {
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.control-page-surface .field-list-table td:nth-child(5),
+.control-page-surface .field-list-table td:nth-child(6) {
+  color: #d8e5e0 !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.control-page-surface .field-list-table .field-access {
+  min-height: 30px;
+  line-height: 1.25;
+}
+
+.control-page-surface .field-list-table .field-meta {
+  min-height: 20px;
+  margin-top: 3px;
+  font-size: 11px;
+}
+
+.field-status {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 4px 9px;
+  border: 1px solid rgb(196 216 46 / 52%);
+  border-radius: 999px;
+  background: rgb(196 216 46 / 10%);
+  color: #dce85c;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.control-app-shell.theme-light .field-status {
+  border-color: #9db33c;
+  background: #eff6ce;
+  color: #3f5707;
+}
+
+@media (min-width: 1101px) {
+  .control-page-surface .field-list-table th,
+  .control-page-surface .field-list-table td {
+    padding-inline: 14px;
+  }
+
+  .control-page-surface .field-list-table tbody tr {
+    height: 84px;
+  }
+
+  .control-page-surface .field-list-table .service-strip {
+    width: 134px;
+    grid-template-columns: repeat(3, 42px);
+  }
+
+  .control-page-surface .field-list-table .service-strip a {
+    width: 42px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .control-page-surface .field-list-table th,
+  .control-page-surface .field-list-table td {
+    width: auto !important;
+  }
+
+  .control-page-surface .field-list-table td:nth-child(5),
+  .control-page-surface .field-list-table td:nth-child(6) {
+    white-space: normal;
+  }
+}
+
+/* Cascade lock for the desktop field grid. */
+@media (min-width: 1101px) {
+  .control-page-surface .field-list-table th,
+  .control-page-surface .field-list-table td {
+    width: auto !important;
+  }
+
+  .control-page-surface .field-list-table tbody tr {
+    height: 78px;
+  }
+
+  .control-page-surface .field-list-table .service-strip {
+    width: 138px;
+    grid-template-columns: repeat(3, 44px);
+  }
+
+  .control-page-surface .field-list-table .service-strip a {
+    width: 44px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .control-page-surface .table-scroll .field-list-table tbody tr {
+    height: auto !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .control-page-surface .table-scroll .field-list-table tbody td {
+    min-height: 62px;
+  }
+
+  .control-page-surface .table-scroll .field-list-table tbody td:nth-child(3),
+  .control-page-surface .table-scroll .field-list-table tbody td:nth-child(4),
+  .control-page-surface .table-scroll .field-list-table tbody td:nth-child(8) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Final field-table header alignment: prevent labels touching the lower rule. */
+@media (min-width: 1101px) {
+  .control-page-surface .field-list-table thead,
+  .control-page-surface .field-list-table thead tr {
+    height: 52px;
+    background: #102f2d;
+  }
+
+  .control-page-surface .field-list-table thead th {
+    box-sizing: border-box;
+    height: 52px;
+    padding: 0 14px !important;
+    border-right: 1px solid rgb(164 199 188 / 18%);
+    border-bottom: 1px solid rgb(196 216 46 / 38%);
+    background: #102f2d;
+    color: #c8d7d2;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.25;
+    vertical-align: middle !important;
+    white-space: nowrap;
+  }
+
+  .control-page-surface .field-list-table thead th:last-child {
+    border-right: 0;
+  }
+
+  .control-app-shell.theme-light .control-page-surface .field-list-table thead,
+  .control-app-shell.theme-light .control-page-surface .field-list-table thead tr,
+  .control-app-shell.theme-light .control-page-surface .field-list-table thead th {
+    background: #e7efeb;
+    color: #2b433b;
+  }
+}
+
+/* 2026-08-31 full-page UX audit fixes. */
+.control-app-shell:not(.theme-light) .product-top .help {
+  border: 1px solid rgb(196 216 46 / 55%);
+  background: #c4d82e;
+  color: #092b27;
+  font-weight: 800;
+}
+
+.control-app-shell:not(.theme-light) .labor-count b {
+  color: #f4faf7;
+}
+
+.control-app-shell:not(.theme-light) .transport-page {
+  background: #032724;
+  color: #edf6f2;
+}
+
+.control-app-shell:not(.theme-light) .segmented-control,
+.control-app-shell:not(.theme-light) .view-switch,
+.control-app-shell:not(.theme-light) .segmented-control button,
+.control-app-shell:not(.theme-light) .view-switch button {
+  border-color: rgb(177 211 201 / 30%);
+  background: #0b3531;
+  color: #dce9e4;
+}
+
+.control-app-shell:not(.theme-light) .segmented-control button.active,
+.control-app-shell:not(.theme-light) .view-switch button.active {
+  background: #2e7566;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.control-app-shell .generic-table-wrap {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: #6e8c83 #082c29;
+}
+
+.control-app-shell .generic-table {
+  min-width: max(720px, calc(var(--cols) * 122px));
+}
+
+.control-app-shell .generic-head {
+  min-height: 48px;
+}
+
+.control-app-shell .generic-head > div {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  padding: 8px 12px;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.control-app-shell .generic-tr:not(.generic-head) > div {
+  min-height: 66px;
+  align-content: center;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.control-app-shell.is-collapsed .nav-group button[title] {
+  position: relative;
+}
+
+.control-app-shell.is-collapsed .nav-group button[title]:hover,
+.control-app-shell.is-collapsed .nav-group button[title]:focus-visible {
+  z-index: 80;
+  border-color: #c4d82e;
+  background: #16463f;
+}
+
+@media (min-width: 761px) and (max-width: 1180px) {
+  .control-toolbar > label {
+    min-width: 168px;
+    flex-basis: 168px;
+    font-size: 11px;
+  }
+
+  .control-toolbar > label select {
+    min-width: 130px;
+    color: var(--ui-text);
+    font-size: 12px;
+    opacity: 1;
+  }
+
+  .control-app-shell .product-top {
+    min-height: 46px;
+    padding-inline: 14px;
+  }
+
+  .control-app-shell .product-top b {
+    color: #f4faf7;
+  }
+
+  .control-app-shell.theme-light .product-top b {
+    color: #14231f;
+  }
+
+  .control-app-shell .product-menu {
+    min-height: 56px;
+    background: #082e2a;
+  }
+
+  .control-app-shell .product-menu button {
+    min-width: 156px;
+    background: transparent;
+    color: #c7d6d1;
+  }
+
+  .control-app-shell .product-menu button.active {
+    background: #1a4a42;
+    color: #eef68b;
+  }
+
+  .control-app-shell:not(.theme-light) .service-menu > b {
+    min-width: 120px;
+    background: #0b3531;
+    color: #f4faf7;
+    white-space: nowrap;
+  }
+
+  .control-app-shell:not(.theme-light) .service-menu {
+    border-color: rgb(177 211 201 / 25%);
+    background: #082e2a;
+  }
+
+  .control-app-shell:not(.theme-light) .service-menu button {
+    background: transparent;
+    color: #c7d6d1;
+  }
+
+  .control-app-shell:not(.theme-light) .service-menu button.active {
+    background: #1a4a42;
+    color: #eef68b;
+  }
+
+  .control-app-shell.theme-light .product-menu {
+    background: #edf3f0;
+  }
+
+  .control-app-shell.theme-light .product-menu button {
+    color: #3a5149;
+  }
+
+  .control-app-shell.theme-light .product-menu button.active {
+    background: #e9f2c9;
+    color: #223b32;
+  }
+
+  .control-app-shell .gf-page .gf-table,
+  .control-app-shell .service-table {
+    min-width: 920px;
+  }
+}
+
+@media (max-width: 760px) {
+  .control-app-shell .generic-table {
+    min-width: max(720px, calc(var(--cols) * 148px));
+  }
+
+  .control-app-shell .product-top .help {
+    min-width: 72px;
+    min-height: 38px;
+  }
+
+  .control-app-shell .schedule-switches {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .control-app-shell .segmented-control,
+  .control-app-shell .view-switch {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .control-app-shell .segmented-control button,
+  .control-app-shell .view-switch button {
+    min-height: 46px;
+    flex: 1 0 130px;
+  }
+}
+
+.control-app-shell .schedule-switches {
+  background: transparent;
+}
+
+@media (min-width: 761px) and (max-width: 1180px) {
+  .control-app-shell .service-menu > b {
+    min-width: 120px;
+    white-space: nowrap;
+  }
+}
+
+/* 2026-09-01 — final foreground/background and overflow guard.
+   Keep these rules last: earlier responsive table rules intentionally change
+   layout, but must never replace dark-theme surfaces with white cards. */
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .table-scroll
+  .field-list-table
+  tbody
+  tr,
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .table-scroll
+  .field-list-table
+  tbody
+  tr:hover,
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .table-scroll
+  .field-list-table
+  tbody
+  tr.selected {
+  border-color: rgb(164 199 188 / 34%) !important;
+  background: #0d3531 !important;
+  color: #eef7f4 !important;
+}
+
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .field-list-table
+  tbody
+  td {
+  background: transparent !important;
+  color: #eef7f4 !important;
+}
+
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .field-list-table
+  .field-access {
+  color: #ffffff !important;
+}
+
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .field-list-table
+  .field-meta,
+.control-app-shell:not(.theme-light)
+  .control-page-surface
+  .field-list-table
+  tbody
+  td::before {
+  color: #a9bdb6 !important;
+}
+
+.control-app-shell .control-page-surface,
+.control-app-shell .generic-page,
+.control-app-shell .generic-table-wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.control-app-shell .generic-table-wrap {
+  width: 100%;
+}
+
+/* The transport screen started as a dark-only surface. Give every normal
+   foreground an explicit light-theme value so controls remain readable before
+   hover as well as while hovering. */
+.control-app-shell.theme-light .transport-page {
+  background: #f5f8f6;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light
+  .transport-page
+  :where(h1, h2, h3, p, span, b, strong, small, label, select, button, dt, dd) {
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .transport-toolbar,
+.control-app-shell.theme-light .transport-summary,
+.control-app-shell.theme-light .segmented-control,
+.control-app-shell.theme-light .view-switch,
+.control-app-shell.theme-light .transport-card,
+.control-app-shell.theme-light .transport-list > button {
+  border-color: #c8d5d0;
+  background: #ffffff;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .segmented-control button.active,
+.control-app-shell.theme-light .view-switch button.active {
+  background: #2e7566;
+  color: #ffffff;
+}
+
+.control-app-shell.theme-light
+  .transport-page
+  :where(.traffic-status.open, .traffic-status.medium, .traffic-status.busy) {
+  color: #14231f;
+}
+
+.control-app-shell.theme-light .transport-list-head {
+  border-color: #c8d5d0;
+  background: #e7efeb;
+  color: #14231f;
+}
+
+.control-app-shell.theme-light
+  .transport-list-head
+  :where(h2, p, span, b, strong, small) {
+  color: #14231f;
+}
+
+@media (min-width: 1101px) {
+  .control-page-surface .field-list-table {
+    min-width: 960px;
+  }
+
+  .control-page-surface .field-list-table col.field-col-company { width: 14%; }
+  .control-page-surface .field-list-table col.field-col-branch { width: 11%; }
+  .control-page-surface .field-list-table col.field-col-name { width: 20%; }
+  .control-page-surface .field-list-table col.field-col-address { width: 16%; }
+  .control-page-surface .field-list-table col.field-col-date { width: 8%; }
+  .control-page-surface .field-list-table col.field-col-status { width: 8%; }
+  .control-page-surface .field-list-table col.field-col-services { width: 15%; }
+
+  .control-page-surface .field-list-table .service-strip {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(34px, 1fr));
+  }
+
+  .control-page-surface .field-list-table .service-strip a {
+    width: auto;
+    min-width: 34px;
   }
 }

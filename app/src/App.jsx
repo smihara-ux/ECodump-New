@@ -30,6 +30,8 @@ import {
   Search,
   Settings,
   ShieldCheck,
+  Sun,
+  Moon,
   UserRound,
   UsersRound,
   Truck,
@@ -40,12 +42,15 @@ import {
 
 const navGroups = [
   {
-    title: "資源循環",
-    items: [[Layers3, "発生土マッチング", "UCRマッチング"]],
+    title: "現場管理",
+    items: [
+      [Building2, "現場一覧", "現場一覧"],
+      [Layers3, "発生土マッチ", "UCRマッチング"],
+    ],
   },
   {
-    title: "現場業務",
-    items: [[Building2, "現場一覧", "現場一覧"]],
+    title: "運行管理",
+    items: [[Route, "運行ダッシュボード", "運行管制"]],
   },
   {
     title: "現場サービス",
@@ -78,7 +83,7 @@ const navGroups = [
 ];
 const fields = Array.from({ length: 23 }, (_, i) => ({
   id: `${32182 + i}`,
-  company: `サンプル建設株式会社 ${String.fromCharCode(65 + (i % 5))}`,
+  company: `サンプル建設株式会社${String.fromCharCode(65 + (i % 5))}`,
   branch: ["東京支店", "首都圏建築支店", "関東支店"][i % 3],
   field: `${i % 3 === 0 ? "（仮称）" : ""}サンプル現場 ${String.fromCharCode(65 + (i % 20))}${i > 19 ? i + 1 : ""}`,
   address: `${["東京都中央区", "千葉県船橋市", "神奈川県川崎市"][i % 3]} サンプル${i + 1}-${(i % 5) + 1}`,
@@ -219,11 +224,11 @@ function Header({ title, onHelp, onClose, onMenu }) {
 function Pager() {
   return (
     <div className="pagination">
-      <button disabled>
+      <button disabled aria-label="前のページ" title="前のページ">
         <ChevronLeft />
       </button>
       <button className="current">1</button>
-      <button disabled>
+      <button disabled aria-label="次のページ" title="次のページ">
         <ChevronRight />
       </button>
     </div>
@@ -274,13 +279,18 @@ function GridTable({ headers, rows, empty = false, onConfirm }) {
       <div className="generic-table" style={{ "--cols": headers.length }}>
         <div className="generic-tr generic-head">
           {headers.map((h, index) => (
-            <div key={`${h}-${index}`}>{h}</div>
+            <div key={`${h}-${index}`} title={h || undefined}>
+              {h}
+            </div>
           ))}
         </div>
         {rows.map((r, i) => (
           <div className="generic-tr" key={i}>
             {r.map((cell, j) => (
-              <div key={j}>
+              <div
+                key={j}
+                title={typeof cell === "string" && cell !== "__confirm" ? cell : undefined}
+              >
                 {cell === "__confirm" ? (
                   <button className="outline" onClick={() => onConfirm?.(i)}>
                     確認
@@ -359,6 +369,16 @@ function FieldList({
         </div>
         <div className="table-scroll">
           <table className="field-list-table">
+            <colgroup>
+              <col className="field-col-company" />
+              <col className="field-col-branch" />
+              <col className="field-col-name" />
+              <col className="field-col-address" />
+              <col className="field-col-date" />
+              <col className="field-col-date" />
+              <col className="field-col-status" />
+              <col className="field-col-services" />
+            </colgroup>
             <thead>
               <tr>
                 {[
@@ -387,6 +407,7 @@ function FieldList({
                   <td>
                     <button
                       className="field-access"
+                      title={`${r.field}の詳細を開く`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelected(r.id);
@@ -399,6 +420,8 @@ function FieldList({
                     <div className="field-meta">
                       ID：{r.id}
                       <button
+                        aria-label={`現場ID ${r.id} をコピー`}
+                        title={`現場ID ${r.id} をコピー`}
                         onClick={(e) => {
                           e.stopPropagation();
                           copyId(r.id);
@@ -419,7 +442,9 @@ function FieldList({
                   <td>{r.address}</td>
                   <td>{r.start}</td>
                   <td>{r.end}</td>
-                  <td></td>
+                  <td>
+                    <span className="field-status">稼働中</span>
+                  </td>
                   <td>
                     <div className="service-strip">
                       <a
@@ -1390,13 +1415,20 @@ function FieldDetailPage({ field, navigate, setConfirm }) {
   const [tab, setTab] = useState(() =>
     new URLSearchParams(location.search).get("section") === "contractors"
       ? "協力会社"
-      : "概要",
+      : "運行マップ",
   );
   const [expandedContractor, setExpandedContractor] = useState("SC-02-01");
   const fieldPlans = transportPlans.filter(
     (plan) => plan.departure === field.field && plan.day === "当日",
   );
-  const tabs = ["概要", "協力会社", "入退場", "搬出・受入", "車両・運転手"];
+  const tabs = [
+    "運行マップ",
+    "概要",
+    "協力会社",
+    "入退場",
+    "搬出・受入",
+    "車両・運転手",
+  ];
   return (
     <section className="field-detail-page">
       <div className="field-detail-hero">
@@ -1426,6 +1458,14 @@ function FieldDetailPage({ field, navigate, setConfirm }) {
           </button>
         ))}
       </nav>
+      {tab === "運行マップ" && (
+        <FieldOperationsDashboard
+          field={field}
+          navigate={navigate}
+          setConfirm={setConfirm}
+          onShowSchedule={() => setTab("搬出・受入")}
+        />
+      )}
       {tab === "概要" && (
         <div className="field-dashboard">
           <div className="field-kpis">
@@ -3309,6 +3349,8 @@ function MatchingPage({ setConfirm }) {
         </label>
         <button
           className="outline"
+          aria-label="詳細条件を開く"
+          title="詳細条件を開く"
           onClick={() =>
             setConfirm({
               title: "詳細条件",
@@ -4009,6 +4051,7 @@ function OperationsMap({
   selectedTripData,
   navigate,
   setConfirm,
+  locations = controlMapLocations,
 }) {
   const elementRef = useRef(null);
   const mapRef = useRef(null);
@@ -4019,7 +4062,7 @@ function OperationsMap({
 
   useEffect(() => {
     if (!elementRef.current || mapRef.current) return undefined;
-    const points = Object.values(controlMapLocations).map(
+    const points = Object.values(locations).map(
       (location) => location.position,
     );
     const map = L.map(elementRef.current, {
@@ -4035,7 +4078,7 @@ function OperationsMap({
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19,
     }).addTo(map);
-    Object.entries(controlMapLocations).forEach(([code, location]) => {
+    Object.entries(locations).forEach(([code, location]) => {
       const isSite = location.type === "site";
       const marker = L.circleMarker(location.position, {
         radius: 9,
@@ -4092,7 +4135,7 @@ function OperationsMap({
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [locations]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4100,8 +4143,8 @@ function OperationsMap({
     if (routeLayerRef.current) routeLayerRef.current.remove();
     const layers = visibleTrips
       .flatMap((trip) => {
-        const from = controlMapLocations[mapLocationCode(trip.from)];
-        const to = controlMapLocations[mapLocationCode(trip.to)];
+        const from = locations[mapLocationCode(trip.from)];
+        const to = locations[mapLocationCode(trip.to)];
         if (!from || !to) return [];
         const roadRoute =
           controlRoadRoutes[
@@ -4143,13 +4186,13 @@ function OperationsMap({
       })
       .filter(Boolean);
     routeLayerRef.current = L.layerGroup(layers).addTo(map);
-  }, [visibleTrips, selectedTripData]);
+  }, [visibleTrips, selectedTripData, locations]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedTripData) return;
-    const from = controlMapLocations[mapLocationCode(selectedTripData.from)];
-    const to = controlMapLocations[mapLocationCode(selectedTripData.to)];
+    const from = locations[mapLocationCode(selectedTripData.from)];
+    const to = locations[mapLocationCode(selectedTripData.to)];
     const roadRoute =
       controlRoadRoutes[
         `${mapLocationCode(selectedTripData.from)}:${mapLocationCode(selectedTripData.to)}`
@@ -4161,11 +4204,11 @@ function OperationsMap({
         duration: 0.55,
       });
     }
-  }, [selectedTripData]);
+  }, [selectedTripData, locations]);
 
   const fitAll = () =>
     mapRef.current?.fitBounds(
-      Object.values(controlMapLocations).map((location) => location.position),
+      Object.values(locations).map((location) => location.position),
       { padding: [42, 42] },
     );
   const selectedRoadRoute = selectedTripData
@@ -4174,10 +4217,10 @@ function OperationsMap({
       ]
     : null;
   const selectedFrom = selectedTripData
-    ? controlMapLocations[mapLocationCode(selectedTripData.from)]
+    ? locations[mapLocationCode(selectedTripData.from)]
     : null;
   const selectedTo = selectedTripData
-    ? controlMapLocations[mapLocationCode(selectedTripData.to)]
+    ? locations[mapLocationCode(selectedTripData.to)]
     : null;
 
   return (
@@ -4193,11 +4236,21 @@ function OperationsMap({
         <b>現場・受入先マップ</b>
         <span>
           <i className="site-dot" />
-          搬出現場（5）
+          搬出現場（
+          {
+            Object.values(locations).filter((item) => item.type === "site")
+              .length
+          }
+          ）
         </span>
         <span>
           <i className="receive-dot" />
-          受入先（5）
+          受入先（
+          {
+            Object.values(locations).filter((item) => item.type === "receive")
+              .length
+          }
+          ）
         </span>
         <span>
           <Navigation />
@@ -4271,6 +4324,150 @@ function OperationsMap({
   );
 }
 
+function FieldOperationsDashboard({
+  field,
+  navigate,
+  setConfirm,
+  onShowSchedule,
+}) {
+  const fieldIndex = Math.max(
+    0,
+    fields.findIndex((item) => item.id === field.id),
+  );
+  const siteCode = `S-${String((fieldIndex % 5) + 1).padStart(2, "0")}`;
+  const sourceTrips = controlTrips.filter(
+    (trip) => mapLocationCode(trip.from) === siteCode,
+  );
+  const fieldTrips = sourceTrips.map((trip) => ({
+    ...trip,
+    from: `${siteCode} ${field.field}`,
+  }));
+  const trips = fieldTrips.length ? fieldTrips : [controlTrips[0]];
+  const [selectedTrip, setSelectedTrip] = useState(trips[0].id);
+  const selectedTripData =
+    trips.find((trip) => trip.id === selectedTrip) || trips[0];
+  const locations = useMemo(
+    () => ({
+      [siteCode]: {
+        ...controlMapLocations[siteCode],
+        name: field.field,
+        fieldId: field.id,
+        detail: `本日の運行 ${trips.length}便`,
+      },
+      ...Object.fromEntries(
+        Object.entries(controlMapLocations).filter(([code]) =>
+          code.startsWith("R-"),
+        ),
+      ),
+    }),
+    [field.field, field.id, siteCode, trips.length],
+  );
+  const activeCount = trips.filter((trip) =>
+    ["運行中", "遅延", "受入中"].includes(trip.status),
+  ).length;
+  const completedCount = trips.filter((trip) => trip.status === "完了").length;
+
+  return (
+    <section className="field-operations-dashboard">
+      <header className="field-operations-heading">
+        <div>
+          <span>現場別リアルタイム運行</span>
+          <h2>{field.field} 運行ダッシュボード</h2>
+          <p>搬出現場から受入場所までの道路ルートと車両状況を確認できます。</p>
+        </div>
+        <dl>
+          <div>
+            <dt>本日の予定</dt>
+            <dd>{trips.length}便</dd>
+          </div>
+          <div>
+            <dt>運行中</dt>
+            <dd>{activeCount}便</dd>
+          </div>
+          <div>
+            <dt>完了</dt>
+            <dd>{completedCount}便</dd>
+          </div>
+        </dl>
+      </header>
+      <div className="control-workspace field-control-workspace">
+        <OperationsMap
+          key={field.id}
+          visibleTrips={trips}
+          selectedTripData={selectedTripData}
+          navigate={navigate}
+          setConfirm={setConfirm}
+          locations={locations}
+        />
+        <div className="timeline-panel">
+          <header>
+            <div>
+              <b>本日の運行タイムライン</b>
+              <small>選択中：{selectedTrip}</small>
+            </div>
+            <dl>
+              <div>
+                <dt>計画</dt>
+                <dd>{trips.length}台</dd>
+              </div>
+              <div>
+                <dt>運行中</dt>
+                <dd>{activeCount}台</dd>
+              </div>
+              <div>
+                <dt>遅延</dt>
+                <dd>
+                  {trips.filter((trip) => trip.status === "遅延").length}台
+                </dd>
+              </div>
+              <div>
+                <dt>完了</dt>
+                <dd>{completedCount}台</dd>
+              </div>
+            </dl>
+            <button
+              className="timeline-detail-action"
+              onClick={() =>
+                setConfirm({
+                  title: `${selectedTripData.id} 運行詳細`,
+                  message: `${selectedTripData.from} → ${selectedTripData.to}／状態：${selectedTripData.status}／到着・完了予定：${selectedTripData.eta}`,
+                })
+              }
+            >
+              詳細 <ChevronRight />
+            </button>
+          </header>
+          <div className="timeline-list">
+            {trips.map((trip) => (
+              <button
+                key={trip.id}
+                className={selectedTrip === trip.id ? "selected" : ""}
+                title={`${trip.id}：${trip.from} → ${trip.to}／${trip.status}／${trip.eta}`}
+                onClick={() => setSelectedTrip(trip.id)}
+              >
+                <time>{trip.time}</time>
+                <b>{trip.id}</b>
+                <span className={`trip-status status-${trip.status}`}>
+                  {trip.status}
+                </span>
+                <span className="trip-route">
+                  <span title={trip.from}>{trip.from}</span>
+                  <ChevronRight />
+                  <span title={trip.to}>{trip.to}</span>
+                </span>
+                <small>{trip.eta}</small>
+              </button>
+            ))}
+          </div>
+          <button className="all-trips" onClick={onShowSchedule}>
+            この現場の運行予定を表示 <ChevronRight />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ControlTopBar({
   page,
   navigate,
@@ -4278,6 +4475,8 @@ function ControlTopBar({
   setMenuOpen,
   setHelpOpen,
   setConfirm,
+  theme,
+  toggleTheme,
 }) {
   const projects = [
     ["首都圏サンプルプロジェクト", "稼働中 8現場"],
@@ -4302,8 +4501,8 @@ function ControlTopBar({
       <header className="control-topbar">
         <button
           className="control-brand"
-          onClick={() => navigate("運行管制")}
-          aria-label="運行管制へ戻る"
+          onClick={() => navigate("現場一覧")}
+          aria-label="現場管理へ戻る"
         >
           <img
             src={`${import.meta.env.BASE_URL}ecodump-logo.png`}
@@ -4404,8 +4603,21 @@ function ControlTopBar({
           </div>
         )}
         <button
+          className="control-icon-button theme-toggle"
+          onClick={toggleTheme}
+          aria-label={
+            theme === "dark"
+              ? "ライトモードに切り替え"
+              : "ダークモードに切り替え"
+          }
+          title={theme === "dark" ? "ライトモード" : "ダークモード"}
+        >
+          {theme === "dark" ? <Sun /> : <Moon />}
+        </button>
+        <button
           className="control-icon-button"
           aria-label="通知"
+          title="通知"
           aria-expanded={notificationOpen}
           onClick={() => setNotificationOpen((value) => !value)}
         >
@@ -4448,6 +4660,7 @@ function ControlTopBar({
           className="control-icon-button"
           onClick={() => setHelpOpen(true)}
           aria-label="ヘルプ"
+          title="ヘルプ"
         >
           <CircleHelp />
         </button>
@@ -4774,6 +4987,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
               <button
                 key={trip.id}
                 className={selectedTrip === trip.id ? "selected" : ""}
+                title={`${trip.id}：${trip.from} → ${trip.to}／${trip.status}／${trip.eta}`}
                 onClick={() => setSelectedTrip(trip.id)}
               >
                 <time>{trip.time}</time>
@@ -4892,7 +5106,7 @@ export function App() {
       if (target === "agency-request") return "代行登録申請";
       if (target === "prime-contractors") return "自社の代行元一覧";
       if (target === "matching") return "UCRマッチング";
-      return "運行管制";
+      return "現場一覧";
     }),
     [collapsed, setCollapsed] = useState(
       () => window.matchMedia("(max-width: 1024px)").matches,
@@ -4908,7 +5122,27 @@ export function App() {
     [selected, setSelected] = useState(
       () => new URLSearchParams(location.search).get("fieldId") || null,
     ),
-    [copied, setCopied] = useState(null);
+    [copied, setCopied] = useState(null),
+    [theme, setTheme] = useState(() => {
+      const saved = window.localStorage.getItem("ecodump-theme");
+      if (saved === "light" || saved === "dark") return saved;
+      return window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark";
+    });
+  useEffect(() => {
+    window.localStorage.setItem("ecodump-theme", theme);
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
+  useEffect(() => {
+    document.querySelector(".content")?.scrollTo({ top: 0, left: 0 });
+    document.querySelector(".control-page-surface")?.scrollTo({
+      top: 0,
+      left: 0,
+    });
+    document.querySelector(".product-main")?.scrollTo({ top: 0, left: 0 });
+    document.querySelector(".service-main")?.scrollTo({ top: 0, left: 0 });
+  }, [page]);
   useEffect(() => {
     const tabletQuery = window.matchMedia("(max-width: 1024px)");
     const syncNavigation = (event) => setCollapsed(event.matches);
@@ -5011,7 +5245,8 @@ export function App() {
     );
   return (
     <div
-      className={`app-shell control-app-shell ${collapsed ? "is-collapsed" : ""}`}
+      className={`app-shell control-app-shell theme-${theme} ${collapsed ? "is-collapsed" : ""}`}
+      data-theme={theme}
     >
       <ControlTopBar
         {...{
@@ -5021,6 +5256,9 @@ export function App() {
           setMenuOpen,
           setHelpOpen,
           setConfirm,
+          theme,
+          toggleTheme: () =>
+            setTheme((current) => (current === "dark" ? "light" : "dark")),
         }}
       />
       <button
@@ -5055,19 +5293,6 @@ export function App() {
           </button>
         </div>
         <nav>
-          <section className="nav-group nav-group-primary">
-            {!collapsed && <h2>運行管制</h2>}
-            <button
-              className={page === "運行管制" ? "active" : ""}
-              onClick={() => navigate("運行管制")}
-              aria-label="運行管制"
-            >
-              <span className="nav-icon">
-                <Route />
-              </span>
-              <span>運行ダッシュボード</span>
-            </button>
-          </section>
           {navGroups.map((g) => (
             <section className="nav-group" key={g.title}>
               {!collapsed && <h2>{g.title}</h2>}
@@ -5089,13 +5314,17 @@ export function App() {
           ))}
         </nav>
         <div className="sidebar-footer">
-          <button>
+          <button aria-label="通知" title="通知">
             <span className="nav-icon">
               <Bell />
             </span>
             <span>通知</span>
           </button>
-          <button onClick={() => setHelpOpen(true)}>
+          <button
+            onClick={() => setHelpOpen(true)}
+            aria-label="ヘルプ"
+            title="ヘルプ"
+          >
             <span className="nav-icon">
               <CircleHelp />
             </span>
@@ -5124,7 +5353,7 @@ export function App() {
           <Header
             title={
               page === "現場一覧"
-                ? "現場確認"
+                ? "現場管理"
                 : page === "現場詳細"
                   ? "現場詳細"
                   : page
