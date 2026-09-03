@@ -81,6 +81,29 @@ const navGroups = [
     ],
   },
 ];
+
+const routeKeys = {
+  運行管制: "control",
+  現場一覧: "fields",
+  現場詳細: "field",
+  "搬出・受入スケジュール": "transport",
+  車両一覧: "vehicles",
+  労務安全: "labor",
+  入退場管理: "gatekeeper",
+  調整会議: "conference",
+  会社情報: "company",
+  ユーザー一覧: "users",
+  代行先一覧: "agencies",
+  代行登録申請: "agency-request",
+  自社の代行元一覧: "prime-contractors",
+  UCRマッチング: "matching",
+};
+
+const pageFromLocation = () => {
+  const target = new URLSearchParams(location.search).get("page");
+  return Object.entries(routeKeys).find(([, key]) => key === target)?.[0] ||
+    (target ? "現場一覧" : "現場一覧");
+};
 const fields = Array.from({ length: 23 }, (_, i) => ({
   id: `${32182 + i}`,
   company: `サンプル建設株式会社${String.fromCharCode(65 + (i % 5))}`,
@@ -4514,6 +4537,17 @@ function ControlTopBar({
   const [globalQuery, setGlobalQuery] = useState("");
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [unread, setUnread] = useState(3);
+  useEffect(() => {
+    const closeTransientUi = (event) => {
+      if (event.key !== "Escape") return;
+      setProjectOpen(false);
+      setNotificationOpen(false);
+      setGlobalQuery("");
+      setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeTransientUi);
+    return () => window.removeEventListener("keydown", closeTransientUi);
+  }, [setMenuOpen]);
   const globalResults = [
     [Building2, "サンプル現場A", "現場", "現場詳細", "32182"],
     [Truck, "10t ダンプ 01", "車両", "車両一覧"],
@@ -4539,8 +4573,13 @@ function ControlTopBar({
         </button>
         <button
           className="control-project"
-          onClick={() => setProjectOpen((value) => !value)}
+          onClick={() => {
+            setNotificationOpen(false);
+            setProjectOpen((value) => !value);
+          }}
           aria-expanded={projectOpen}
+          aria-haspopup="menu"
+          title="表示するプロジェクトを切り替える"
         >
           <Building2 />
           <span>{project}</span>
@@ -4643,7 +4682,10 @@ function ControlTopBar({
           aria-label="通知"
           title="通知"
           aria-expanded={notificationOpen}
-          onClick={() => setNotificationOpen((value) => !value)}
+          onClick={() => {
+            setProjectOpen(false);
+            setNotificationOpen((value) => !value);
+          }}
         >
           <Bell />
           {unread > 0 && <i>{unread}</i>}
@@ -5140,23 +5182,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
 }
 
 export function App() {
-  const [page, setPage] = useState(() => {
-      const target = new URLSearchParams(location.search).get("page");
-      if (target === "labor") return "労務安全";
-      if (target === "gatekeeper") return "入退場管理";
-      if (target === "conference") return "調整会議";
-      if (target === "transport") return "搬出・受入スケジュール";
-      if (target === "vehicles") return "車両一覧";
-      if (target === "field") return "現場詳細";
-      if (target === "fields") return "現場一覧";
-      if (target === "company") return "会社情報";
-      if (target === "users") return "ユーザー一覧";
-      if (target === "agencies") return "代行先一覧";
-      if (target === "agency-request") return "代行登録申請";
-      if (target === "prime-contractors") return "自社の代行元一覧";
-      if (target === "matching") return "UCRマッチング";
-      return "現場一覧";
-    }),
+  const [page, setPage] = useState(pageFromLocation),
     [collapsed, setCollapsed] = useState(
       () => window.matchMedia("(max-width: 1024px)").matches,
     ),
@@ -5184,6 +5210,33 @@ export function App() {
     document.documentElement.style.colorScheme = theme;
   }, [theme]);
   useEffect(() => {
+    document.title = `ECO DUMP | ${page}`;
+  }, [page]);
+  useEffect(() => {
+    const restoreRoute = () => {
+      setPage(pageFromLocation());
+      setSelected(new URLSearchParams(location.search).get("fieldId"));
+      setQuery("");
+      setDetailOpen(false);
+      setHelpOpen(false);
+      setConfirm(null);
+    };
+    window.addEventListener("popstate", restoreRoute);
+    return () => window.removeEventListener("popstate", restoreRoute);
+  }, []);
+  useEffect(() => {
+    const closeDialog = (event) => {
+      if (event.key !== "Escape") return;
+      setDetailOpen(false);
+      setHelpOpen(false);
+      setOperatorOpen(false);
+      setConfirm(null);
+      setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeDialog);
+    return () => window.removeEventListener("keydown", closeDialog);
+  }, []);
+  useEffect(() => {
     document.querySelector(".content")?.scrollTo({ top: 0, left: 0 });
     document.querySelector(".control-page-surface")?.scrollTo({
       top: 0,
@@ -5202,29 +5255,19 @@ export function App() {
     setPage(p);
     setQuery("");
     setDetailOpen(false);
-    const routeKeys = {
-      運行管制: "control",
-      現場一覧: "fields",
-      現場詳細: "field",
-      "搬出・受入スケジュール": "transport",
-      車両一覧: "vehicles",
-      労務安全: "labor",
-      入退場管理: "gatekeeper",
-      調整会議: "conference",
-      会社情報: "company",
-      ユーザー一覧: "users",
-      代行先一覧: "agencies",
-      代行登録申請: "agency-request",
-      自社の代行元一覧: "prime-contractors",
-      UCRマッチング: "matching",
-    };
-    const params = new URLSearchParams();
+    setMenuOpen(false);
+    setHelpOpen(false);
+    setOperatorOpen(false);
+    setConfirm(null);
+    const params = new URLSearchParams(location.search);
+    params.delete("fieldId");
     if (routeKeys[p] && routeKeys[p] !== "control")
       params.set("page", routeKeys[p]);
+    else params.delete("page");
     if (p === "現場詳細" && (fieldId || selected))
       params.set("fieldId", fieldId || selected);
-    history.replaceState(
-      null,
+    history.pushState(
+      { page: p },
       "",
       `${location.pathname}${params.size ? `?${params}` : ""}`,
     );
