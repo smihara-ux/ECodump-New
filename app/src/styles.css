@@ -7642,6 +7642,209 @@ a:focus-visible {
   }
 }
 
+/* 2026-09-03 — final two-theme contrast contract.
+   This block intentionally comes last so legacy page-level colors cannot make
+   controls readable only on hover or render pale text on pale surfaces. */
+.control-app-shell {
+  color-scheme: dark;
+  --theme-canvas: #032724;
+  --theme-surface: #0a3430;
+  --theme-surface-raised: #123f39;
+  --theme-surface-muted: #173f3a;
+  --theme-text: #f4faf7;
+  --theme-muted: #b7cac4;
+  --theme-border: #4f7068;
+  --theme-field: #061f1d;
+  --theme-link: #d8e94c;
+  --theme-disabled-bg: #36544e;
+  --theme-disabled-text: #c2d0cb;
+  --theme-hover: #184a43;
+  --theme-selected: #214f35;
+}
+
+.control-app-shell.theme-light {
+  color-scheme: light;
+  --theme-canvas: #edf2ef;
+  --theme-surface: #ffffff;
+  --theme-surface-raised: #f4f7f5;
+  --theme-surface-muted: #e5ede9;
+  --theme-text: #14231f;
+  --theme-muted: #52655e;
+  --theme-border: #9fb3ab;
+  --theme-field: #ffffff;
+  --theme-link: #405900;
+  --theme-disabled-bg: #dce5e1;
+  --theme-disabled-text: #53665f;
+  --theme-hover: #e5eee9;
+  --theme-selected: #e9f3c9;
+}
+
+.control-app-shell .control-page-surface,
+.control-app-shell .product-body,
+.control-app-shell .product-main,
+.control-app-shell .service-main {
+  background-color: var(--theme-canvas);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(h1, h2, h3, h4, legend, dt, dd),
+.control-app-shell .service-shell
+  :where(h1, h2, h3, h4, legend, dt, dd),
+.control-app-shell .product-body
+  :where(h1, h2, h3, h4, legend, dt, dd) {
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(p, small, label, .field-meta, .gf-lead, .gf-purpose span,
+    .gf-comment p, .detail-list dt, .transport-meta, .route-duration),
+.control-app-shell .service-shell :where(p, small, label),
+.control-app-shell .product-body :where(p, small, label) {
+  color: var(--theme-muted);
+}
+
+.control-app-shell .control-page-surface
+  :where(input, select, textarea),
+.control-app-shell .modal :where(input, select, textarea) {
+  border-color: var(--theme-border);
+  background: var(--theme-field);
+  color: var(--theme-text);
+  caret-color: var(--theme-text);
+}
+
+.control-app-shell
+  :where(input, textarea)::placeholder {
+  color: var(--theme-muted);
+  opacity: 1;
+}
+
+.control-app-shell :where(select option) {
+  background: var(--theme-field);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(.search-panel, .action-strip, .company-actions, .table-area,
+    .generic-table-wrap, .company-card, .field-section, .field-dashboard,
+    .transport-card, .transport-toolbar, .transport-summary, .matching-hero,
+    .matching-toolbar, .match-detail, .gf-page, .gf-toolbar, .gf-subhead,
+    .gf-filter, .gf-comment, .gf-download-list, .org-card, .plan-canvas,
+    .dashboard-cols > section) {
+  border-color: var(--theme-border);
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(thead, .generic-head, .table-tools, .transport-list-head,
+    .transport-card-head, .gf-table th, .service-table th) {
+  border-color: var(--theme-border);
+  background: var(--theme-surface-muted);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(table, td, .generic-tr, .gf-table, .service-table) {
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(tbody tr:hover td, .generic-tr:not(.generic-head):hover,
+    .transport-list > button:hover) {
+  background-color: var(--theme-hover);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(tbody tr.selected td, .transport-list > button.selected) {
+  background-color: var(--theme-selected);
+  color: var(--theme-text);
+}
+
+.control-app-shell .control-page-surface
+  :where(button.outline, button.text-button, .page-tabs button,
+    .company-tabs button, .field-subnav button, .gf-tabs button,
+    .gf-inner-tabs button) {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-raised) !important;
+  color: var(--theme-text) !important;
+  opacity: 1;
+}
+
+.control-app-shell .control-page-surface
+  :where(button.outline, button.text-button, .page-tabs button,
+    .company-tabs button, .field-subnav button, .gf-tabs button,
+    .gf-inner-tabs button):hover:not(:disabled) {
+  border-color: var(--ui-primary) !important;
+  background: var(--theme-hover) !important;
+  color: var(--theme-text) !important;
+}
+
+.control-app-shell .control-page-surface
+  :where(.page-tabs button.active, .company-tabs button.active,
+    .field-subnav button.active, .gf-tabs button.active,
+    .gf-inner-tabs button.active) {
+  border-color: var(--ui-primary) !important;
+  background: var(--ui-primary) !important;
+  color: var(--ui-primary-text) !important;
+}
+
+.control-app-shell .control-page-surface
+  :where(button.text, a, .text-button),
+.control-app-shell.theme-light .control-page-surface .table-tools a {
+  color: var(--theme-link) !important;
+}
+
+.control-app-shell :where(button, input, select, textarea):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ui-primary) 58%, transparent);
+  outline-offset: 2px;
+}
+
+.control-app-shell :where(button, input, select, textarea):disabled {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-disabled-bg) !important;
+  color: var(--theme-disabled-text) !important;
+  opacity: 1 !important;
+}
+
+.control-app-shell :where(.modal, .project-dropdown, .global-search-results,
+  .notification-popover) {
+  border-color: var(--theme-border);
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+.control-app-shell :where(.project-dropdown, .global-search-results,
+  .notification-popover) > button {
+  border-color: var(--theme-border);
+  background: var(--theme-surface-raised);
+  color: var(--theme-text);
+}
+
+.control-app-shell :where(.project-dropdown, .global-search-results,
+  .notification-popover) > button:hover {
+  background: var(--theme-hover);
+  color: var(--theme-text);
+}
+
+.control-app-shell :where(.project-dropdown, .global-search-results,
+  .notification-popover) :where(small, p) {
+  color: var(--theme-muted);
+}
+
+.control-app-shell.theme-light .matching-kpis b,
+.control-app-shell.theme-light .field-detail-hero .field-meta,
+.control-app-shell.theme-light .field-overview-card span,
+.control-app-shell.theme-light .field-quick-card small {
+  color: var(--theme-text) !important;
+}
+
+.control-app-shell.theme-light .overlay {
+  background: rgb(20 35 31 / 48%);
+}
+
 /* Final desktop field grid: explicit business-column widths prevent text stacks. */
 @media (min-width: 1101px) {
   .control-page-surface .table-scroll {
