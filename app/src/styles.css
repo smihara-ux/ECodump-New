@@ -5679,6 +5679,34 @@ a:focus-visible {
   font-size: 9px;
   font-weight: 800;
 }
+.map-load-details {
+  display: grid;
+  gap: 3px;
+  margin: 5px 0 2px;
+  padding-top: 5px;
+  border-top: 1px solid rgb(169 192 185 / 24%);
+}
+.map-load-details > div {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 6px;
+}
+.map-load-details dt,
+.map-load-details dd {
+  overflow: hidden;
+  margin: 0;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-load-details dt {
+  color: #8ea8a0;
+}
+.map-load-details dd {
+  color: #f5faf8;
+  font-weight: 700;
+}
 .timeline-panel {
   display: flex;
   min-width: 0;

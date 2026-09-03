@@ -3666,7 +3666,17 @@ const controlTrips = [
     to: "R-03 エコダンプ市川",
     eta: "12:20",
   },
-];
+].map((trip, index) => ({
+  ...trip,
+  cargo: index % 4 === 3 ? "コンクリートがら" : "建設発生土",
+  plannedVolume: `${[7.0, 8.0, 9.5][index % 3].toFixed(1)}m³`,
+  actualVolume:
+    trip.status === "完了" || trip.status === "受入中"
+      ? `${[6.8, 7.6, 9.1][index % 3].toFixed(1)}m³`
+      : "計量待ち",
+  vehicle: `10t ダンプ ${String((index % 6) + 1).padStart(2, "0")}`,
+  driver: `サンプル 運転者${(index % 6) + 1}`,
+}));
 
 const controlMapLocations = {
   "S-01": {
@@ -4280,6 +4290,20 @@ function OperationsMap({
         <span className="map-tracking-status">
           現在位置：{selectedTripData?.status}／車両を追跡中
         </span>
+        <dl className="map-load-details">
+          <div>
+            <dt>車両・運転手</dt>
+            <dd>{selectedTripData?.vehicle}／{selectedTripData?.driver}</dd>
+          </div>
+          <div>
+            <dt>荷種</dt>
+            <dd>{selectedTripData?.cargo}</dd>
+          </div>
+          <div>
+            <dt>予定／実績</dt>
+            <dd>{selectedTripData?.plannedVolume}／{selectedTripData?.actualVolume}</dd>
+          </div>
+        </dl>
         {selectedRoadRoute && (
           <small>
             道路距離 {selectedRoadRoute.distance}／所要時間{" "}
@@ -4430,7 +4454,7 @@ function FieldOperationsDashboard({
               onClick={() =>
                 setConfirm({
                   title: `${selectedTripData.id} 運行詳細`,
-                  message: `${selectedTripData.from} → ${selectedTripData.to}／状態：${selectedTripData.status}／到着・完了予定：${selectedTripData.eta}`,
+                  message: `${selectedTripData.from} → ${selectedTripData.to}／状態：${selectedTripData.status}／到着・完了予定：${selectedTripData.eta}／車両：${selectedTripData.vehicle}／運転手：${selectedTripData.driver}／荷種：${selectedTripData.cargo}／予定積載量：${selectedTripData.plannedVolume}／実績：${selectedTripData.actualVolume}`,
                 })
               }
             >
@@ -4742,6 +4766,8 @@ function ControlOperationModal({ mode, onClose, onSave }) {
     driver: "サンプル 運転者1",
     time: "13:30",
     status: mode === "dispatch" ? "運行中" : "待機中",
+    cargo: "建設発生土",
+    plannedVolume: "7.0",
   });
   const update = (key) => (event) =>
     setForm((current) => ({ ...current, [key]: event.target.value }));
@@ -4810,12 +4836,30 @@ function ControlOperationModal({ mode, onClose, onSave }) {
               <option>受入中</option>
             </select>
           </label>
+          <label>
+            荷種
+            <select value={form.cargo} onChange={update("cargo")}>
+              <option>建設発生土</option>
+              <option>コンクリートがら</option>
+              <option>アスファルトがら</option>
+            </select>
+          </label>
+          <label>
+            予定積載量（m³）
+            <input
+              type="number"
+              min="0"
+              step="0.1"
+              value={form.plannedVolume}
+              onChange={update("plannedVolume")}
+            />
+          </label>
         </div>
         <div className="operation-preview">
           <Truck />
           <span>
             <b>{form.vehicle}</b>
-            <small>{form.driver}</small>
+            <small>{form.driver}／{form.cargo} {form.plannedVolume}m³</small>
           </span>
           <ChevronRight />
           <span>
@@ -4975,7 +5019,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
               onClick={() =>
                 setConfirm({
                   title: `${selectedTripData.id} 運行詳細`,
-                  message: `${selectedTripData.from} → ${selectedTripData.to}／状態：${selectedTripData.status}／到着・完了予定：${selectedTripData.eta}／車両：10t ダンプ 01／運転手：サンプル 運転者1`,
+                  message: `${selectedTripData.from} → ${selectedTripData.to}／状態：${selectedTripData.status}／到着・完了予定：${selectedTripData.eta}／車両：${selectedTripData.vehicle}／運転手：${selectedTripData.driver}／荷種：${selectedTripData.cargo}／予定積載量：${selectedTripData.plannedVolume}／実績：${selectedTripData.actualVolume}`,
                 })
               }
             >
@@ -5074,6 +5118,11 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
                 from: form.from,
                 to: form.to,
                 eta: "約45分",
+                cargo: form.cargo,
+                plannedVolume: `${Number(form.plannedVolume || 0).toFixed(1)}m³`,
+                actualVolume: "計量待ち",
+                vehicle: form.vehicle,
+                driver: form.driver,
               },
             ]);
             setSelectedTrip(nextId);

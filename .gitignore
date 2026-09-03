@@ -17,3 +17,5 @@ app/service-buttons-*.png
 app/sidebar-*.png
 app/third-party-share-*.png
 app/timeline-grid-*.png
+app/output/manual/
+app/tmp/
