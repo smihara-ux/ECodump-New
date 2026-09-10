@@ -19,3 +19,6 @@ app/third-party-share-*.png
 app/timeline-grid-*.png
 app/output/manual/
 app/tmp/
+app/ui-improvement-kit/
+app/test-results/
+app/playwright-report/

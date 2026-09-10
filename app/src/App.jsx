@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { databaseMode } from "./lib/databaseConfig";
 import {
   Bell,
   Building2,
@@ -15,11 +16,15 @@ import {
   Clock3,
   Copy,
   DoorOpen,
+  Eye,
+  EyeOff,
   FileText,
   Filter,
   HardHat,
   LayoutGrid,
   Layers3,
+  LockKeyhole,
+  LogOut,
   MapPin,
   MapPinned,
   Menu,
@@ -30,6 +35,7 @@ import {
   Search,
   Settings,
   ShieldCheck,
+  Smartphone,
   Sun,
   Moon,
   UserRound,
@@ -37,6 +43,9 @@ import {
   Truck,
   TriangleAlert,
   UserCircle2,
+  Volume2,
+  VolumeX,
+  Wifi,
   X,
 } from "lucide-react";
 
@@ -101,9 +110,231 @@ const routeKeys = {
 
 const pageFromLocation = () => {
   const target = new URLSearchParams(location.search).get("page");
-  return Object.entries(routeKeys).find(([, key]) => key === target)?.[0] ||
-    (target ? "現場一覧" : "現場一覧");
+  return (
+    Object.entries(routeKeys).find(([, key]) => key === target)?.[0] ||
+    (target ? "現場一覧" : "現場一覧")
+  );
 };
+
+function LoginScreen({ theme, toggleTheme, onLogin }) {
+  const [form, setForm] = useState({ company: "", email: "", password: "" });
+  const [remember, setRemember] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [notice, setNotice] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const update = (key) => (event) => {
+    setForm((current) => ({ ...current, [key]: event.target.value }));
+    setErrors((current) => ({ ...current, [key]: "" }));
+  };
+  const submit = async (event) => {
+    event.preventDefault();
+    const next = {};
+    if (!form.company.trim())
+      next.company = "会社ID・お客様番号を入力してください";
+    if (!/^\S+@\S+\.\S+$/.test(form.email))
+      next.email = "有効なメールアドレスを入力してください";
+    if (form.password.length < 6)
+      next.password = "パスワードは6文字以上で入力してください";
+    setErrors(next);
+    if (Object.keys(next).length) return;
+    setSubmitting(true);
+    setNotice("");
+    try {
+      await onLogin(remember, form);
+    } catch (error) {
+      setNotice(error.message || "ログインできませんでした。入力内容をご確認ください。");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  return (
+    <main className={`login-screen theme-${theme}`} data-theme={theme}>
+      <section className="login-visual" aria-label="ECO DUMPサービス概要">
+        <img
+          className="login-map"
+          src={`${import.meta.env.BASE_URL}ecodump-control-map.png`}
+          alt="東京湾岸エリアの建設循環物流マップ"
+        />
+        <div className="login-visual-shade" />
+        <header className="login-brand-lockup">
+          <img src={`${import.meta.env.BASE_URL}ecodump-logo.png`} alt="" />
+          <div>
+            <h1>ECO DUMP</h1>
+            <p>TRANSPORT CONTROL CENTER</p>
+          </div>
+        </header>
+        <div className="login-message">
+          <h2>建設循環物流オペレーション</h2>
+          <p>
+            建設現場と受入先をつなぐ、最適で確実な輸送を。
+            <br />
+            リアルタイム可視化で、効率・安全・環境価値を最大化します。
+          </p>
+        </div>
+        <aside className="login-legend" aria-label="マップ凡例">
+          <b>凡例</b>
+          <span>
+            <Building2 /> 建設現場
+          </span>
+          <span>
+            <Layers3 /> 受入ヤード
+          </span>
+          <span>
+            <Truck /> 走行中の車両
+          </span>
+          <span>
+            <i className="route-line orange" /> 積込完了・向かい中
+          </span>
+          <span>
+            <i className="route-line lime" /> 搬入完了
+          </span>
+          <span>
+            <i className="route-line planned" /> 計画ルート
+          </span>
+        </aside>
+        <div className="login-system-status">
+          <i />
+          <b>
+            システム稼働状況：<em>正常</em>
+          </b>
+          <span>最終更新：2026/09/03 10:30:45</span>
+        </div>
+      </section>
+      <section className="login-panel-wrap">
+        <button
+          className="login-theme-toggle"
+          onClick={toggleTheme}
+          aria-label={`${theme === "dark" ? "ライト" : "ダーク"}モードに切り替え`}
+        >
+          <Sun /> ライト <span /> <Moon />{" "}
+          <b>{theme === "dark" ? "ダーク" : "ライト"}</b>
+        </button>
+        <form className="login-card" onSubmit={submit} noValidate>
+          <h2>ECO DUMPへログイン</h2>
+          <label className={errors.company ? "has-error" : ""}>
+            <span>会社ID・お客様番号</span>
+            <Building2 />
+            <input
+              type="text"
+              autoFocus
+              autoComplete="organization"
+              value={form.company}
+              onChange={update("company")}
+              placeholder="会社ID・お客様番号"
+            />
+            {errors.company && <small>{errors.company}</small>}
+          </label>
+          <label className={errors.email ? "has-error" : ""}>
+            <span>メールアドレス</span>
+            <UserRound />
+            <input
+              type="email"
+              autoComplete="username"
+              value={form.email}
+              onChange={update("email")}
+              placeholder="メールアドレス"
+            />
+            {errors.email && <small>{errors.email}</small>}
+          </label>
+          <label className={errors.password ? "has-error" : ""}>
+            <span>パスワード</span>
+            <LockKeyhole />
+            <input
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              value={form.password}
+              onChange={update("password")}
+              placeholder="パスワード"
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword((value) => !value)}
+              aria-label={
+                showPassword ? "パスワードを隠す" : "パスワードを表示"
+              }
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </button>
+            {errors.password && <small>{errors.password}</small>}
+          </label>
+          <label className="remember-check">
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={(event) => setRemember(event.target.checked)}
+            />
+            <span>ログイン状態を保持する</span>
+          </label>
+          <button className="login-submit" type="submit" disabled={submitting}>
+            {submitting ? "確認中…" : "ログイン"}
+          </button>
+          <div className="login-divider">
+            <span>または</span>
+          </div>
+          <button
+            type="button"
+            className="login-test"
+            onClick={() => onLogin(false, { demo: true })}
+          >
+            <UserRound />
+            <span>
+              <b>テスト用ログイン</b>
+              <small>入力せずにデモ画面を確認できます</small>
+            </span>
+          </button>
+          <button
+            type="button"
+            className="login-secondary"
+            onClick={() =>
+              setNotice(
+                "パスワード再設定の案内を登録メールアドレスへ送信します。",
+              )
+            }
+          >
+            <LockKeyhole />
+            パスワードを忘れた方
+          </button>
+          <button
+            type="button"
+            className="login-secondary"
+            onClick={() =>
+              setNotice("招待コードによる初回登録画面は現在デモ表示です。")
+            }
+          >
+            <UserRound />
+            招待コードで初回登録
+          </button>
+          <button
+            type="button"
+            className="login-secondary"
+            onClick={() => setNotice("会社のSSO認証画面へ接続します。")}
+          >
+            <ShieldCheck />
+            SSOでログイン
+          </button>
+          {notice && (
+            <p className="login-notice" role="status">
+              {notice}
+              <button
+                type="button"
+                onClick={() => setNotice("")}
+                aria-label="お知らせを閉じる"
+              >
+                <X />
+              </button>
+            </p>
+          )}
+          <p className="login-security">
+            <ShieldCheck />
+            この接続はSSL/TLSで暗号化されています
+          </p>
+        </form>
+      </section>
+    </main>
+  );
+}
 const fields = Array.from({ length: 23 }, (_, i) => ({
   id: `${32182 + i}`,
   company: `サンプル建設株式会社${String.fromCharCode(65 + (i % 5))}`,
@@ -113,6 +344,21 @@ const fields = Array.from({ length: 23 }, (_, i) => ({
   start: `2026/${String((i % 9) + 1).padStart(2, "0")}/01`,
   end: `2027/${String((i % 9) + 1).padStart(2, "0")}/28`,
 }));
+const formatDatabaseDate = (value) =>
+  value ? String(value).replaceAll("-", "/") : "—";
+const normalizeSiteRecord = (site) => ({
+  id: String(site.external_code || site.id),
+  databaseId: site.id,
+  organizationId: site.organization_id,
+  projectId: site.project_id,
+  company: site.organization?.name || "所属会社",
+  branch: site.project?.name || "—",
+  field: site.name,
+  address: site.address || "—",
+  start: formatDatabaseDate(site.start_on),
+  end: formatDatabaseDate(site.end_on),
+  status: site.status || "active",
+});
 const people = Array.from({ length: 9 }, (_, i) => ({
   branch: "本社",
   name: `サンプルユーザー ${i + 1}`,
@@ -312,7 +558,11 @@ function GridTable({ headers, rows, empty = false, onConfirm }) {
             {r.map((cell, j) => (
               <div
                 key={j}
-                title={typeof cell === "string" && cell !== "__confirm" ? cell : undefined}
+                title={
+                  typeof cell === "string" && cell !== "__confirm"
+                    ? cell
+                    : undefined
+                }
               >
                 {cell === "__confirm" ? (
                   <button className="outline" onClick={() => onConfirm?.(i)}>
@@ -336,6 +586,8 @@ function GridTable({ headers, rows, empty = false, onConfirm }) {
 }
 
 function FieldList({
+  records,
+  dataStatus,
   query,
   setQuery,
   setDetailOpen,
@@ -348,12 +600,12 @@ function FieldList({
 }) {
   const filtered = useMemo(
     () =>
-      fields.filter((r) =>
+      records.filter((r) =>
         `${r.company} ${r.field} ${r.id}`
           .toLowerCase()
           .includes(query.toLowerCase()),
       ),
-    [query],
+    [query, records],
   );
   return (
     <>
@@ -380,6 +632,21 @@ function FieldList({
         onClear={() => setQuery("")}
       />
       <section className="table-area">
+        {dataStatus === "loading" && (
+          <div className="data-sync-banner" role="status">
+            クラウドDBから現場情報を読み込んでいます…
+          </div>
+        )}
+        {dataStatus === "error" && (
+          <div className="data-sync-banner is-error" role="alert">
+            クラウドDBに接続できないため、安全にデモデータへ切り替えました。
+          </div>
+        )}
+        {dataStatus === "empty" && (
+          <div className="data-sync-banner" role="status">
+            クラウドDBには、閲覧可能な現場がまだ登録されていません。
+          </div>
+        )}
         <div className="table-tools">
           <button className="outline" onClick={onOperatorSelect}>
             <Settings />
@@ -512,6 +779,12 @@ function FieldList({
               ))}
             </tbody>
           </table>
+          {!filtered.length && dataStatus !== "loading" && (
+            <div className="field-list-empty">
+              <strong>該当する現場がありません</strong>
+              <span>検索条件を変更するか、管理者へ閲覧権限をご確認ください。</span>
+            </div>
+          )}
         </div>
         <Pager />
       </section>
@@ -4079,6 +4352,22 @@ function tripRouteProgress(status) {
   return 0.68;
 }
 
+const largeDumpVehicleProfile = {
+  label: "大型ダンプ（10tクラス）",
+  width: "2.49m",
+  height: "3.30m",
+  length: "7.70m",
+  grossWeight: "20.0t",
+  axleWeight: "10.0t以下",
+};
+
+const largeDumpComplianceChecks = [
+  ["道路標識・交通規制", "要確認", "大型貨物通行止め・時間帯規制を照合"],
+  ["幅員・高さ・長さ", "適合候補", "幅2.5m／高さ3.8m／長さ12m以内"],
+  ["総重量・軸重", "適合候補", "総重量20t／軸重10t以下"],
+  ["現場進入路", "承認済み", "指定ゲート・進入方向を使用"],
+];
+
 function OperationsMap({
   visibleTrips,
   selectedTripData,
@@ -4190,14 +4479,14 @@ function OperationsMap({
             trip.status === "遅延"
               ? "#f39a2d"
               : selected
-                ? "#d7e82f"
+                ? "#39a9ff"
                 : "#63c9b2",
           weight: selected ? 6 : 3,
           opacity: selected ? 0.95 : 0.42,
           lineCap: "round",
           lineJoin: "round",
         }).bindTooltip(
-          `${trip.id} ${trip.from} → ${to.destinationKind || "受入場所"} ${trip.to}${roadRoute ? `／${roadRoute.distance}・${roadRoute.duration}` : ""}`,
+          `${trip.id} 大型ダンプ承認候補ルート／${trip.from} → ${to.destinationKind || "受入場所"} ${trip.to}${roadRoute ? `／${roadRoute.distance}・${roadRoute.duration}` : ""}`,
         );
         if (!selected) return [routeLine];
         const progressIndex = Math.min(
@@ -4266,7 +4555,7 @@ function OperationsMap({
     >
       <div className="leaflet-map" ref={elementRef} />
       <div className="map-legend">
-        <b>現場・受入先マップ</b>
+        <b>大型ダンプ運行判定</b>
         <span>
           <i className="site-dot" />
           搬出現場（
@@ -4286,12 +4575,16 @@ function OperationsMap({
           ）
         </span>
         <span>
-          <Navigation />
-          選択運行ルート
+          <i className="approved-route-line" />
+          承認候補ルート
         </span>
         <span>
-          <TriangleAlert />
-          遅延・渋滞
+          <i className="conditional-route-line" />
+          条件付き・要確認
+        </span>
+        <span>
+          <i className="restricted-route-line" />
+          大型車通行不可
         </span>
       </div>
       <div className="map-selection" aria-live="polite">
@@ -4316,7 +4609,9 @@ function OperationsMap({
         <dl className="map-load-details">
           <div>
             <dt>車両・運転手</dt>
-            <dd>{selectedTripData?.vehicle}／{selectedTripData?.driver}</dd>
+            <dd>
+              {selectedTripData?.vehicle}／{selectedTripData?.driver}
+            </dd>
           </div>
           <div>
             <dt>荷種</dt>
@@ -4324,14 +4619,46 @@ function OperationsMap({
           </div>
           <div>
             <dt>予定／実績</dt>
-            <dd>{selectedTripData?.plannedVolume}／{selectedTripData?.actualVolume}</dd>
+            <dd>
+              {selectedTripData?.plannedVolume}／
+              {selectedTripData?.actualVolume}
+            </dd>
           </div>
         </dl>
         {selectedRoadRoute && (
-          <small>
-            道路距離 {selectedRoadRoute.distance}／所要時間{" "}
-            {selectedRoadRoute.duration}
-          </small>
+          <>
+            <small>
+              道路距離 {selectedRoadRoute.distance}／所要時間{" "}
+              {selectedRoadRoute.duration}
+            </small>
+            <div className="large-dump-compliance">
+              <div>
+                <ShieldCheck />
+                <span>
+                  <b>法令照合：確認待ち</b>
+                  <small>実運行前に最新規制と許可経路を確認</small>
+                </span>
+              </div>
+              <ul>
+                {largeDumpComplianceChecks.map(([label, state, detail]) => (
+                  <li key={label} title={detail}>
+                    <span>{label}</span>
+                    <b
+                      className={
+                        state === "承認済み"
+                          ? "ok"
+                          : state === "要確認"
+                            ? "warn"
+                            : "candidate"
+                      }
+                    >
+                      {state}
+                    </b>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
         )}
       </div>
       <div className="map-tools">
@@ -4413,6 +4740,7 @@ function FieldOperationsDashboard({
     ["運行中", "遅延", "受入中"].includes(trip.status),
   ).length;
   const completedCount = trips.filter((trip) => trip.status === "完了").length;
+  const [vehicleProjection, setVehicleProjection] = useState(null);
 
   return (
     <section className="field-operations-dashboard">
@@ -4437,6 +4765,101 @@ function FieldOperationsDashboard({
           </div>
         </dl>
       </header>
+      <div className="large-dump-route-summary" role="status">
+        <div className="large-dump-route-title">
+          <Truck />
+          <span>
+            <b>大型ダンプ専用ルート</b>
+            <small>車検証情報と道路規制を照合して運行経路を判定</small>
+          </span>
+        </div>
+        <dl>
+          <div>
+            <dt>車両</dt>
+            <dd>{largeDumpVehicleProfile.label}</dd>
+          </div>
+          <div>
+            <dt>全幅</dt>
+            <dd>{largeDumpVehicleProfile.width}</dd>
+          </div>
+          <div>
+            <dt>全高</dt>
+            <dd>{largeDumpVehicleProfile.height}</dd>
+          </div>
+          <div>
+            <dt>全長</dt>
+            <dd>{largeDumpVehicleProfile.length}</dd>
+          </div>
+          <div>
+            <dt>総重量</dt>
+            <dd>{largeDumpVehicleProfile.grossWeight}</dd>
+          </div>
+          <div>
+            <dt>軸重</dt>
+            <dd>{largeDumpVehicleProfile.axleWeight}</dd>
+          </div>
+        </dl>
+        <div className="large-dump-route-warning">
+          <TriangleAlert />
+          <span>
+            <b>現在は承認候補です</b>
+            <small>
+              道路管理者・警察の最新規制、特殊車両通行許可、現場指定経路の確認後に運行してください。
+            </small>
+          </span>
+        </div>
+      </div>
+      <section
+        className="vehicle-link-panel"
+        aria-labelledby="vehicle-link-title"
+      >
+        <div className="vehicle-link-intro">
+          <span className="vehicle-link-icon">
+            <Smartphone />
+          </span>
+          <div>
+            <span className="vehicle-link-eyebrow">
+              ECO DUMP DRIVER CONNECT
+            </span>
+            <h3 id="vehicle-link-title">車載ディスプレイで大型ダンプナビ</h3>
+            <p>
+              選択中の承認候補ルートを、運転用に情報を絞った画面で確認します。
+            </p>
+          </div>
+        </div>
+        <div className="vehicle-link-status" aria-label="車載連携の状態">
+          <span>
+            <Wifi />
+            <b>接続待機中</b>
+          </span>
+          <small>ECO DUMPドライバーアプリが必要です</small>
+        </div>
+        <div className="vehicle-link-actions">
+          <button type="button" onClick={() => setVehicleProjection("carplay")}>
+            <Smartphone />
+            <span>
+              <small>iPhone</small>
+              <b>Apple CarPlay</b>
+            </span>
+            <ChevronRight />
+          </button>
+          <button
+            type="button"
+            onClick={() => setVehicleProjection("android-auto")}
+          >
+            <Smartphone />
+            <span>
+              <small>Android</small>
+              <b>Android Auto</b>
+            </span>
+            <ChevronRight />
+          </button>
+        </div>
+        <p className="vehicle-link-note">
+          <ShieldCheck />
+          実運行前に道路管理者・警察の最新規制と許可経路を確認してください。
+        </p>
+      </section>
       <div className="control-workspace field-control-workspace">
         <OperationsMap
           key={field.id}
@@ -4511,7 +4934,137 @@ function FieldOperationsDashboard({
           </button>
         </div>
       </div>
+      {vehicleProjection && (
+        <VehicleProjectionDialog
+          platform={vehicleProjection}
+          field={field}
+          trip={selectedTripData}
+          onClose={() => setVehicleProjection(null)}
+        />
+      )}
     </section>
+  );
+}
+
+function VehicleProjectionDialog({ platform, field, trip, onClose }) {
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const platformName =
+    platform === "carplay" ? "Apple CarPlay" : "Android Auto";
+
+  useEffect(() => {
+    const closeOnEscape = (event) => event.key === "Escape" && onClose();
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+
+  return (
+    <div className="vehicle-projection-backdrop" onMouseDown={onClose}>
+      <section
+        className="vehicle-projection-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="projection-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header>
+          <div>
+            <span>車載画面プレビュー</span>
+            <h2 id="projection-title">{platformName} 大型ダンプナビ</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="車載画面プレビューを閉じる"
+          >
+            <X />
+          </button>
+        </header>
+        <div className="vehicle-projection-screen">
+          <div
+            className="projection-map-stage"
+            style={{
+              "--projection-map-image": `url("${import.meta.env.BASE_URL}ecodump-control-map.png")`,
+            }}
+          >
+            <div className="projection-safety-strip">
+              <ShieldCheck />
+              大型車ルート候補・規制確認待ち
+            </div>
+            <div className="projection-turn-card">
+              <Navigation />
+              <div>
+                <strong>800 m</strong>
+                <span>都道316号を右方向</span>
+              </div>
+            </div>
+            <div className="projection-route-card">
+              <span>
+                <small>到着予定</small>
+                <b>{trip?.eta || "15:10"}</b>
+              </span>
+              <span>
+                <small>残り</small>
+                <b>18.4 km</b>
+              </span>
+              <span>
+                <small>所要</small>
+                <b>約38分</b>
+              </span>
+            </div>
+          </div>
+          <aside className="projection-trip-panel">
+            <div className="projection-trip-head">
+              <Truck />
+              <span>
+                <small>{trip?.vehicle}</small>
+                <b>{trip?.id}</b>
+              </span>
+            </div>
+            <ol>
+              <li>
+                <span>出発</span>
+                <b>{field.field}</b>
+              </li>
+              <li className="active">
+                <span>走行中</span>
+                <b>大型車指定ルート</b>
+              </li>
+              <li>
+                <span>到着</span>
+                <b>{trip?.to}</b>
+              </li>
+            </ol>
+            <div className="projection-warning">
+              <TriangleAlert />
+              <span>
+                <b>高さ・重量制限に注意</b>
+                <small>規制情報は運行前に再確認してください</small>
+              </span>
+            </div>
+          </aside>
+        </div>
+        <footer>
+          <p>
+            <Smartphone />
+            これはWeb版の操作プレビューです。実車接続には審査済みのiOS／Androidアプリが必要です。
+          </p>
+          <div>
+            <button
+              type="button"
+              className="projection-voice"
+              onClick={() => setVoiceEnabled((value) => !value)}
+              aria-pressed={voiceEnabled}
+            >
+              {voiceEnabled ? <Volume2 /> : <VolumeX />}
+              {voiceEnabled ? "音声案内 ON" : "音声案内 OFF"}
+            </button>
+            <button type="button" className="projection-end" onClick={onClose}>
+              案内を終了
+            </button>
+          </div>
+        </footer>
+      </section>
+    </div>
   );
 }
 
@@ -4524,6 +5077,7 @@ function ControlTopBar({
   setConfirm,
   theme,
   toggleTheme,
+  onLogout,
 }) {
   const projects = [
     ["首都圏サンプルプロジェクト", "稼働中 8現場"],
@@ -4736,6 +5290,14 @@ function ControlTopBar({
             <b>管制 太郎</b>
             <small>管制センター</small>
           </span>
+          <button
+            className="control-logout"
+            onClick={onLogout}
+            aria-label="ログアウト"
+            title="ログアウト"
+          >
+            <LogOut />
+          </button>
         </div>
       </header>
       {menuOpen && (
@@ -4901,7 +5463,9 @@ function ControlOperationModal({ mode, onClose, onSave }) {
           <Truck />
           <span>
             <b>{form.vehicle}</b>
-            <small>{form.driver}／{form.cargo} {form.plannedVolume}m³</small>
+            <small>
+              {form.driver}／{form.cargo} {form.plannedVolume}m³
+            </small>
           </span>
           <ChevronRight />
           <span>
@@ -5204,14 +5768,70 @@ export function App() {
       return window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
         : "dark";
-    });
+    }),
+    [authenticated, setAuthenticated] = useState(
+      () =>
+        window.sessionStorage.getItem("ecodump-session-v2") === "active" ||
+        window.localStorage.getItem("ecodump-session-v2") === "active" ||
+        new URLSearchParams(location.search).get("preview") === "app",
+    ),
+    [siteRecords, setSiteRecords] = useState(fields),
+    [dataStatus, setDataStatus] = useState(
+      databaseMode === "cloud" ? "loading" : "demo",
+    );
   useEffect(() => {
     window.localStorage.setItem("ecodump-theme", theme);
     document.documentElement.style.colorScheme = theme;
   }, [theme]);
   useEffect(() => {
-    document.title = `ECO DUMP | ${page}`;
-  }, [page]);
+    if (databaseMode !== "cloud") return undefined;
+    let active = true;
+    let unsubscribe = () => {};
+    import("./lib/supabase").then(({ supabase }) => {
+      if (!active || !supabase) return;
+      supabase.auth.getSession().then(({ data }) => {
+        if (active && data.session) setAuthenticated(true);
+      });
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (active) setAuthenticated(Boolean(session));
+      });
+      unsubscribe = () => data.subscription.unsubscribe();
+    });
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
+    if (!authenticated || databaseMode !== "cloud") {
+      setSiteRecords(fields);
+      setDataStatus("demo");
+      return undefined;
+    }
+    let active = true;
+    setDataStatus("loading");
+    import("./data/ecodumpRepository")
+      .then(({ ecodumpRepository }) => ecodumpRepository.listSites())
+      .then(({ data }) => {
+        if (!active) return;
+        const records = (data || []).map(normalizeSiteRecord);
+        setSiteRecords(records);
+        setDataStatus(records.length ? "cloud" : "empty");
+      })
+      .catch(() => {
+        if (!active) return;
+        setSiteRecords(fields);
+        setDataStatus("error");
+      });
+    return () => {
+      active = false;
+    };
+  }, [authenticated]);
+  useEffect(() => {
+    document.title = authenticated
+      ? `ECO DUMP | ${page}`
+      : "ECO DUMP | ログイン";
+  }, [page, authenticated]);
   useEffect(() => {
     const restoreRoute = () => {
       setPage(pageFromLocation());
@@ -5278,6 +5898,34 @@ export function App() {
     setCopied(id);
     setTimeout(() => setCopied(null), 1200);
   };
+  const toggleTheme = () =>
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  const login = async (remember, credentials = {}) => {
+    if (databaseMode === "cloud" && !credentials.demo) {
+      const { supabase } = await import("./lib/supabase");
+      const { error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
+      if (error) throw new Error("メールアドレスまたはパスワードを確認してください。");
+      setAuthenticated(true);
+      return;
+    }
+    (remember ? window.localStorage : window.sessionStorage).setItem(
+      "ecodump-session-v2",
+      "active",
+    );
+    setAuthenticated(true);
+  };
+  const logout = async () => {
+    if (databaseMode === "cloud") {
+      const { supabase } = await import("./lib/supabase");
+      await supabase.auth.signOut();
+    }
+    window.localStorage.removeItem("ecodump-session-v2");
+    window.sessionStorage.removeItem("ecodump-session-v2");
+    setAuthenticated(false);
+  };
   let body;
   if (page === "運行管制")
     body = (
@@ -5289,6 +5937,8 @@ export function App() {
     body = (
       <FieldList
         {...{
+          records: siteRecords,
+          dataStatus,
           query,
           setQuery,
           setDetailOpen,
@@ -5304,7 +5954,11 @@ export function App() {
   else if (page === "現場詳細")
     body = (
       <FieldDetailPage
-        field={fields.find((item) => item.id === selected) || fields[0]}
+        field={
+          siteRecords.find((item) => item.id === selected) ||
+          siteRecords[0] ||
+          fields[0]
+        }
         {...{ navigate, setConfirm }}
       />
     );
@@ -5335,6 +5989,10 @@ export function App() {
         {...{ query, setQuery, setDetailOpen, setConfirm }}
       />
     );
+  if (!authenticated)
+    return (
+      <LoginScreen theme={theme} toggleTheme={toggleTheme} onLogin={login} />
+    );
   return (
     <div
       className={`app-shell control-app-shell theme-${theme} ${collapsed ? "is-collapsed" : ""}`}
@@ -5349,8 +6007,8 @@ export function App() {
           setHelpOpen,
           setConfirm,
           theme,
-          toggleTheme: () =>
-            setTheme((current) => (current === "dark" ? "light" : "dark")),
+          toggleTheme,
+          onLogout: logout,
         }}
       />
       <button
@@ -5406,6 +6064,30 @@ export function App() {
           ))}
         </nav>
         <div className="sidebar-footer">
+          {!collapsed && (
+            <div
+              className={`data-source-status is-${dataStatus}`}
+              role="status"
+            >
+              <i />
+              <span>
+                <b>
+                  {dataStatus === "cloud" && "クラウドDB接続済み"}
+                  {dataStatus === "loading" && "クラウドDB同期中"}
+                  {dataStatus === "empty" && "クラウドDB接続済み"}
+                  {dataStatus === "error" && "DB接続エラー・デモ表示"}
+                  {dataStatus === "demo" && "デモデータで表示中"}
+                </b>
+                <small>
+                  {dataStatus === "cloud" && "Supabaseから同期"}
+                  {dataStatus === "loading" && "現場情報を取得しています"}
+                  {dataStatus === "empty" && "閲覧可能な現場は0件です"}
+                  {dataStatus === "error" && "接続設定と権限をご確認ください"}
+                  {dataStatus === "demo" && "本番データは使用していません"}
+                </small>
+              </span>
+            </div>
+          )}
           <button aria-label="通知" title="通知">
             <span className="nav-icon">
               <Bell />
