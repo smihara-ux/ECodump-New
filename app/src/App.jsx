@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { databaseMode } from "./lib/databaseConfig";
 import {
@@ -116,13 +115,71 @@ const pageFromLocation = () => {
   );
 };
 
-function LoginScreen({ theme, toggleTheme, onLogin }) {
+function useDialogAccessibility() {
+  useEffect(() => {
+    let dialog = null;
+    let returnFocus = null;
+    const focusableSelector =
+      'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
+    const syncDialog = () => {
+      const next = [...document.querySelectorAll('[role="dialog"]')].at(-1);
+      if (next === dialog) return;
+      if (next) {
+        if (!dialog) returnFocus = document.activeElement;
+        dialog = next;
+        dialog.setAttribute("aria-modal", "true");
+        if (!dialog.hasAttribute("tabindex")) dialog.tabIndex = -1;
+        requestAnimationFrame(() => {
+          const target = dialog?.querySelector(focusableSelector) || dialog;
+          target?.focus({ preventScroll: true });
+        });
+      } else if (dialog) {
+        dialog = null;
+        returnFocus?.focus?.({ preventScroll: true });
+        returnFocus = null;
+      }
+    };
+    const trapFocus = (event) => {
+      if (event.key !== "Tab" || !dialog) return;
+      const focusable = [...dialog.querySelectorAll(focusableSelector)].filter(
+        (element) => element.getClientRects().length,
+      );
+      if (!focusable.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    const observer = new MutationObserver(syncDialog);
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("keydown", trapFocus);
+    syncDialog();
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("keydown", trapFocus);
+    };
+  }, []);
+}
+
+function LoginScreen({ theme, toggleTheme, onLogin, isDemoMode }) {
   const [form, setForm] = useState({ company: "", email: "", password: "" });
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [notice, setNotice] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const companyRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
   const update = (key) => (event) => {
     setForm((current) => ({ ...current, [key]: event.target.value }));
     setErrors((current) => ({ ...current, [key]: "" }));
@@ -137,7 +194,15 @@ function LoginScreen({ theme, toggleTheme, onLogin }) {
     if (form.password.length < 6)
       next.password = "パスワードは6文字以上で入力してください";
     setErrors(next);
-    if (Object.keys(next).length) return;
+    if (Object.keys(next).length) {
+      const firstInvalid = next.company
+        ? companyRef.current
+        : next.email
+          ? emailRef.current
+          : passwordRef.current;
+      requestAnimationFrame(() => firstInvalid?.focus());
+      return;
+    }
     setSubmitting(true);
     setNotice("");
     try {
@@ -153,7 +218,7 @@ function LoginScreen({ theme, toggleTheme, onLogin }) {
       <section className="login-visual" aria-label="ECO DUMPサービス概要">
         <img
           className="login-map"
-          src={`${import.meta.env.BASE_URL}ecodump-control-map.png`}
+          src={`${import.meta.env.BASE_URL}ecodump-control-map.jpg`}
           alt="東京湾岸エリアの建設循環物流マップ"
         />
         <div className="login-visual-shade" />
@@ -216,36 +281,48 @@ function LoginScreen({ theme, toggleTheme, onLogin }) {
             <span>会社ID・お客様番号</span>
             <Building2 />
             <input
+              ref={companyRef}
+              id="login-company"
               type="text"
               autoFocus
               autoComplete="organization"
               value={form.company}
               onChange={update("company")}
               placeholder="会社ID・お客様番号"
+              aria-invalid={Boolean(errors.company)}
+              aria-describedby={errors.company ? "login-company-error" : undefined}
             />
-            {errors.company && <small>{errors.company}</small>}
+            {errors.company && <small id="login-company-error" role="alert">{errors.company}</small>}
           </label>
           <label className={errors.email ? "has-error" : ""}>
             <span>メールアドレス</span>
             <UserRound />
             <input
+              ref={emailRef}
+              id="login-email"
               type="email"
               autoComplete="username"
               value={form.email}
               onChange={update("email")}
               placeholder="メールアドレス"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "login-email-error" : undefined}
             />
-            {errors.email && <small>{errors.email}</small>}
+            {errors.email && <small id="login-email-error" role="alert">{errors.email}</small>}
           </label>
           <label className={errors.password ? "has-error" : ""}>
             <span>パスワード</span>
             <LockKeyhole />
             <input
+              ref={passwordRef}
+              id="login-password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               value={form.password}
               onChange={update("password")}
               placeholder="パスワード"
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby={errors.password ? "login-password-error" : undefined}
             />
             <button
               type="button"
@@ -257,7 +334,7 @@ function LoginScreen({ theme, toggleTheme, onLogin }) {
             >
               {showPassword ? <EyeOff /> : <Eye />}
             </button>
-            {errors.password && <small>{errors.password}</small>}
+            {errors.password && <small id="login-password-error" role="alert">{errors.password}</small>}
           </label>
           <label className="remember-check">
             <input
@@ -273,17 +350,19 @@ function LoginScreen({ theme, toggleTheme, onLogin }) {
           <div className="login-divider">
             <span>または</span>
           </div>
-          <button
-            type="button"
-            className="login-test"
-            onClick={() => onLogin(false, { demo: true })}
-          >
-            <UserRound />
-            <span>
-              <b>テスト用ログイン</b>
-              <small>入力せずにデモ画面を確認できます</small>
-            </span>
-          </button>
+          {isDemoMode && (
+            <button
+              type="button"
+              className="login-test"
+              onClick={() => onLogin(false, { demo: true })}
+            >
+              <UserRound />
+              <span>
+                <b>テスト用ログイン</b>
+                <small>入力せずにデモ画面を確認できます</small>
+              </span>
+            </button>
+          )}
           <button
             type="button"
             className="login-secondary"
@@ -513,6 +592,13 @@ function SearchBar({
   onClear,
   onSearch,
 }) {
+  const runSearch = () => {
+    if (onSearch) onSearch();
+    else
+      document
+        .querySelector(".table-area, .generic-table-wrap, .matching-workspace")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   return (
     <section className="search-panel">
       <div className="search-line">
@@ -528,7 +614,7 @@ function SearchBar({
         {extra}
       </div>
       <div className="search-actions">
-        <button className="primary" onClick={onSearch}>
+        <button className="primary" onClick={runSearch}>
           <Search />
           検索
         </button>
@@ -691,6 +777,14 @@ function FieldList({
                   key={r.id}
                   className={selected === r.id ? "selected" : ""}
                   onClick={() => setSelected(r.id)}
+                  tabIndex={0}
+                  aria-selected={selected === r.id}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelected(r.id);
+                    }
+                  }}
                 >
                   <td>{r.company}</td>
                   <td>{r.branch}</td>
@@ -990,6 +1084,8 @@ function CreateRecordModal({ type, onClose, onSave }) {
       <section
         className="modal form-modal"
         role="dialog"
+        aria-modal="true"
+        tabIndex={-1}
         aria-label={`${type.slice(0, -2)}新規作成`}
       >
         <h2>{type.slice(0, -2)}新規作成</h2>
@@ -4375,6 +4471,7 @@ function OperationsMap({
   setConfirm,
   locations = controlMapLocations,
 }) {
+  const [leaflet, setLeaflet] = useState(null);
   const elementRef = useRef(null);
   const mapRef = useRef(null);
   const routeLayerRef = useRef(null);
@@ -4383,11 +4480,21 @@ function OperationsMap({
   callbacksRef.current = { navigate, setConfirm };
 
   useEffect(() => {
-    if (!elementRef.current || mapRef.current) return undefined;
+    let active = true;
+    import("leaflet").then(({ default: library }) => {
+      if (active) setLeaflet(library);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!leaflet || !elementRef.current || mapRef.current) return undefined;
     const points = Object.values(locations).map(
       (location) => location.position,
     );
-    const map = L.map(elementRef.current, {
+    const map = leaflet.map(elementRef.current, {
       center: [35.61, 139.82],
       zoom: 10,
       minZoom: 8,
@@ -4395,14 +4502,14 @@ function OperationsMap({
       zoomControl: false,
     });
     mapRef.current = map;
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19,
     }).addTo(map);
     Object.entries(locations).forEach(([code, location]) => {
       const isSite = location.type === "site";
-      const marker = L.circleMarker(location.position, {
+      const marker = leaflet.circleMarker(location.position, {
         radius: 9,
         color: "#f7fbef",
         weight: 3,
@@ -4427,15 +4534,15 @@ function OperationsMap({
     map.fitBounds(points, { padding: [42, 42] });
     map.on("locationfound", (event) => {
       if (locationLayerRef.current) locationLayerRef.current.remove();
-      locationLayerRef.current = L.layerGroup([
-        L.circle(event.latlng, {
+      locationLayerRef.current = leaflet.layerGroup([
+        leaflet.circle(event.latlng, {
           radius: event.accuracy,
           color: "#61d6c5",
           fillColor: "#61d6c5",
           fillOpacity: 0.08,
           weight: 1,
         }),
-        L.circleMarker(event.latlng, {
+        leaflet.circleMarker(event.latlng, {
           radius: 7,
           color: "#fff",
           fillColor: "#21b9a8",
@@ -4457,11 +4564,11 @@ function OperationsMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [locations]);
+  }, [leaflet, locations]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
+    if (!leaflet || !map) return;
     if (routeLayerRef.current) routeLayerRef.current.remove();
     const layers = visibleTrips
       .flatMap((trip) => {
@@ -4474,7 +4581,7 @@ function OperationsMap({
           ];
         const selected = trip.id === selectedTripData?.id;
         const routePoints = roadRoute?.points || [from.position, to.position];
-        const routeLine = L.polyline(routePoints, {
+        const routeLine = leaflet.polyline(routePoints, {
           color:
             trip.status === "遅延"
               ? "#f39a2d"
@@ -4493,7 +4600,7 @@ function OperationsMap({
           routePoints.length - 1,
           Math.round((routePoints.length - 1) * tripRouteProgress(trip.status)),
         );
-        const vehicleMarker = L.circleMarker(routePoints[progressIndex], {
+        const vehicleMarker = leaflet.circleMarker(routePoints[progressIndex], {
           radius: 8,
           color: "#ffffff",
           weight: 3,
@@ -4507,8 +4614,8 @@ function OperationsMap({
         return [routeLine, vehicleMarker];
       })
       .filter(Boolean);
-    routeLayerRef.current = L.layerGroup(layers).addTo(map);
-  }, [visibleTrips, selectedTripData, locations]);
+    routeLayerRef.current = leaflet.layerGroup(layers).addTo(map);
+  }, [leaflet, visibleTrips, selectedTripData, locations]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -5245,7 +5352,13 @@ function ControlTopBar({
           {unread > 0 && <i>{unread}</i>}
         </button>
         {notificationOpen && (
-          <div className="notification-popover" role="dialog" aria-label="通知">
+          <div
+            className="notification-popover"
+            role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
+            aria-label="通知"
+          >
             <header>
               <div>
                 <b>通知</b>
@@ -5310,6 +5423,8 @@ function ControlTopBar({
           <div
             className="function-launcher"
             role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
             aria-label="機能メニュー"
           >
             <div className="launcher-heading">
@@ -5746,6 +5861,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed }) {
 }
 
 export function App() {
+  useDialogAccessibility();
   const [page, setPage] = useState(pageFromLocation),
     [collapsed, setCollapsed] = useState(
       () => window.matchMedia("(max-width: 1024px)").matches,
@@ -5773,7 +5889,8 @@ export function App() {
       () =>
         window.sessionStorage.getItem("ecodump-session-v2") === "active" ||
         window.localStorage.getItem("ecodump-session-v2") === "active" ||
-        new URLSearchParams(location.search).get("preview") === "app",
+        (databaseMode === "demo" &&
+          new URLSearchParams(location.search).get("preview") === "app"),
     ),
     [siteRecords, setSiteRecords] = useState(fields),
     [dataStatus, setDataStatus] = useState(
@@ -5991,7 +6108,12 @@ export function App() {
     );
   if (!authenticated)
     return (
-      <LoginScreen theme={theme} toggleTheme={toggleTheme} onLogin={login} />
+      <LoginScreen
+        theme={theme}
+        toggleTheme={toggleTheme}
+        onLogin={login}
+        isDemoMode={databaseMode === "demo"}
+      />
     );
   return (
     <div
@@ -6088,7 +6210,16 @@ export function App() {
               </span>
             </div>
           )}
-          <button aria-label="通知" title="通知">
+          <button
+            aria-label="通知"
+            title="通知"
+            onClick={() =>
+              setConfirm({
+                title: "通知",
+                message: "現在、新しい通知はありません。",
+              })
+            }
+          >
             <span className="nav-icon">
               <Bell />
             </span>
@@ -6148,6 +6279,8 @@ export function App() {
           <section
             className="modal operator-modal"
             role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
             aria-label="操作ユーザー選択"
             onMouseDown={(event) => event.stopPropagation()}
           >
@@ -6213,6 +6346,8 @@ export function App() {
           <section
             className="modal detail-modal"
             role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
             aria-label="詳細検索"
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -6268,6 +6403,8 @@ export function App() {
           <section
             className="modal help-modal"
             role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
             aria-label={confirm?.title || "ヘルプ"}
             onMouseDown={(e) => e.stopPropagation()}
           >

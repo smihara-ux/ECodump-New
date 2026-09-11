@@ -62,3 +62,41 @@ for (const viewport of [
     });
   }
 }
+
+test("login validation identifies and focuses the first invalid field", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "ログイン", exact: true }).click();
+  const company = page.locator("#login-company");
+  await expect(company).toBeFocused();
+  await expect(company).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByRole("alert").first()).toBeVisible();
+});
+
+test("demo login and theme toggle complete the primary entry flow", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /ダークモードに切り替え/ }).click();
+  await expect(page.locator(".login-screen")).toHaveAttribute("data-theme", "dark");
+  await page.getByRole("button", { name: /テスト用ログイン/ }).click();
+  await expect(page.locator(".app-shell")).toBeVisible();
+});
+
+test("detail search is keyboard-contained and closes with Escape", async ({ page }) => {
+  await page.goto("/?preview=app&page=fields");
+  await page.getByRole("button", { name: "詳細検索" }).click();
+  const dialog = page.getByRole("dialog", { name: "詳細検索" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAttribute("aria-modal", "true");
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
+for (const route of routes) {
+  test(`${route} does not clip the document at compact desktop width`, async ({ page }) => {
+    await page.setViewportSize({ width: 1088, height: 900 });
+    await page.goto(`/?preview=app&page=${route}`);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(2);
+  });
+}

@@ -95,6 +95,126 @@
   }
 }
 
+/* Public-release responsive guard: preserve the information hierarchy at
+   compact desktop and tablet widths without clipping controls or details. */
+@media (min-width: 761px) and (max-width: 1180px) {
+  .control-app-shell .control-toolbar {
+    display: grid;
+    height: auto;
+    min-height: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .control-app-shell .control-toolbar > :where(button, label) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .control-app-shell .control-toolbar .dispatch-primary {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .control-app-shell .control-tower-page {
+    overflow: auto;
+  }
+
+  .control-app-shell .control-workspace {
+    min-height: 680px;
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .control-app-shell .matching-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .control-app-shell .match-detail {
+    position: static;
+  }
+
+  .control-app-shell .matching-toolbar,
+  .control-app-shell .search-panel,
+  .control-app-shell .search-line,
+  .control-app-shell .search-actions {
+    flex-wrap: wrap;
+  }
+
+  .control-app-shell .search-panel {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .control-app-shell .search-actions {
+    margin-left: 0;
+  }
+
+  .control-app-shell .product-body {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .control-app-shell .product-menu {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
+
+  .control-app-shell .product-menu :where(h2, h3, button) {
+    flex: 0 0 auto;
+  }
+
+  .control-app-shell .product-main {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.fatal-error {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background: #062b27;
+  color: #f4faf7;
+  text-align: center;
+}
+
+.fatal-error > div {
+  width: min(100%, 520px);
+  padding: 36px;
+  border: 1px solid #55756d;
+  border-radius: 14px;
+  background: #0b3833;
+}
+
+.fatal-error p {
+  color: #c6df22;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.fatal-error span {
+  display: block;
+  margin: 12px 0 24px;
+  color: #c8d8d2;
+}
+
+.fatal-error button {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 7px;
+  background: #c6df22;
+  color: #10251f;
+  font-weight: 800;
+}
+
 /* 2026-09-10 cross-screen contrast pass.
    This block intentionally stays last so legacy page-specific colors cannot
    make controls readable only on hover. */
@@ -373,6 +493,53 @@
     background: #edf3f6;
     color: #3f5968;
   }
+}
+
+/* Release-width layout lock. Keep this final so earlier module rules cannot
+   reintroduce horizontal clipping between tablet and desktop. */
+@media (min-width: 761px) and (max-width: 1180px) {
+  .control-app-shell .control-tower-page { overflow: auto; }
+  .control-app-shell .control-toolbar {
+    display: grid;
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .control-app-shell .control-toolbar > :where(button, label) {
+    width: 100%;
+    min-width: 0;
+  }
+  .control-app-shell .control-toolbar .dispatch-primary {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .control-app-shell .control-workspace {
+    min-height: 680px;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: visible;
+  }
+  .control-app-shell .matching-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .control-app-shell .match-detail { position: static; }
+  .control-app-shell :where(.matching-toolbar, .search-panel, .search-line, .search-actions) {
+    flex-wrap: wrap;
+  }
+  .control-app-shell .search-panel { align-items: flex-start; gap: 12px; }
+  .control-app-shell .search-actions { margin-left: 0; }
+  .control-app-shell .product-body {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .control-app-shell .product-menu {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+  .control-app-shell .product-menu :where(h2, h3, button) { flex: 0 0 auto; }
+  .control-app-shell .product-main { width: 100%; min-width: 0; }
 }
 
 /* Final theme readability lock (2026-09-10). */

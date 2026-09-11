@@ -1,0 +1,45 @@
+/* Final responsive release contract. Imported after the legacy module sheet. */
+@media (min-width: 761px) and (max-width: 1180px) {
+  .control-app-shell .control-tower-page { overflow: auto; }
+  .control-app-shell .control-toolbar {
+    display: grid;
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .control-app-shell .control-toolbar > :where(button, label) {
+    width: 100%;
+    min-width: 0;
+  }
+  .control-app-shell .control-toolbar .dispatch-primary {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .control-app-shell .control-workspace {
+    min-height: 680px;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: visible;
+  }
+  .control-app-shell .matching-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .control-app-shell .match-detail { position: static; }
+  .control-app-shell :where(.matching-toolbar, .search-panel, .search-line, .search-actions) {
+    flex-wrap: wrap;
+  }
+  .control-app-shell .search-panel { align-items: flex-start; gap: 12px; }
+  .control-app-shell .search-actions { margin-left: 0; }
+  .control-app-shell .product-body {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .control-app-shell .product-menu {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+  .control-app-shell .product-menu :where(h2, h3, button) { flex: 0 0 auto; }
+  .control-app-shell .product-main { width: 100%; min-width: 0; }
+}
