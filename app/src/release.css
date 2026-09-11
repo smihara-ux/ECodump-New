@@ -43,3 +43,59 @@
   .control-app-shell .product-menu :where(h2, h3, button) { flex: 0 0 auto; }
   .control-app-shell .product-main { width: 100%; min-width: 0; }
 }
+
+.table-scroll-hint {
+  display: none;
+  margin: 0;
+  padding: 8px 14px;
+  border-top: 1px solid var(--theme-border);
+  background: var(--theme-surface-muted);
+  color: var(--theme-muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+@media (max-width: 1400px) {
+  .table-scroll-hint { display: block; }
+  .field-list-table :where(th:first-child, td:first-child) {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--theme-surface) !important;
+    box-shadow: 1px 0 0 var(--theme-border), 7px 0 12px rgb(0 0 0 / 8%);
+  }
+  .field-list-table thead th:first-child {
+    z-index: 3;
+    background: var(--theme-surface-muted) !important;
+  }
+}
+
+.control-app-shell.theme-light .data-source-status,
+.control-app-shell.theme-light .data-source-status :where(b, small) {
+  color: #eaf4f6 !important;
+  -webkit-text-fill-color: #eaf4f6 !important;
+  opacity: 1 !important;
+}
+
+.control-app-shell.theme-light .data-source-status small {
+  color: #bed1d7 !important;
+  -webkit-text-fill-color: #bed1d7 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media print {
+  .control-topbar, .sidebar, .page-header, .search-panel,
+  .action-strip, .product-top, .product-menu, button { display: none !important; }
+  .app-shell, .content, .control-page-surface, .service-main,
+  .product-main, .org-page { display: block !important; overflow: visible !important; }
+  body { background: #fff !important; color: #000 !important; }
+  :where(table, th, td) { color: #000 !important; border-color: #777 !important; }
+}

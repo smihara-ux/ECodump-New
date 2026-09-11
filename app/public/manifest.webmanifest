@@ -1,0 +1,17 @@
+{
+  "name": "ECO DUMP Transport Control Tower",
+  "short_name": "ECO DUMP",
+  "description": "建設循環物流オペレーション",
+  "lang": "ja",
+  "start_url": "./?page=fields",
+  "display": "standalone",
+  "background_color": "#062b27",
+  "theme_color": "#062b27",
+  "icons": [
+    {
+      "src": "ecodump-logo.png",
+      "sizes": "320x320",
+      "type": "image/png"
+    }
+  ]
+}

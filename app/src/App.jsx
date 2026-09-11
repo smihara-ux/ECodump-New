@@ -115,6 +115,54 @@ const pageFromLocation = () => {
   );
 };
 
+const showAppNotice = (title, message) =>
+  document.dispatchEvent(
+    new CustomEvent("ecodump:notice", { detail: { title, message } }),
+  );
+
+const downloadBlob = (filename, content, type = "text/plain;charset=utf-8") => {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+const downloadCsv = (filename, headers, rows) => {
+  const escape = (value) =>
+    `"${String(value ?? "").replaceAll('"', '""').replace(/<[^>]+>/g, "")}"`;
+  const content = [headers, ...rows]
+    .map((row) => row.map(escape).join(","))
+    .join("\r\n");
+  downloadBlob(filename, `\ufeff${content}`, "text/csv;charset=utf-8");
+};
+
+const downloadWord = (filename, title, rows) => {
+  const body = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("");
+  downloadBlob(
+    filename,
+    `<!doctype html><html lang="ja"><meta charset="utf-8"><title>${title}</title><body><h1>${title}</h1><table border="1" cellspacing="0" cellpadding="8">${body}</table></body></html>`,
+    "application/msword;charset=utf-8",
+  );
+};
+
+const downloadExcel = (filename, title, headers, rows) => {
+  const tableRows = [headers, ...rows]
+    .map(
+      (row, rowIndex) =>
+        `<tr>${row
+          .map((cell) => `<${rowIndex ? "td" : "th"}>${cell ?? ""}</${rowIndex ? "td" : "th"}>`)
+          .join("")}</tr>`,
+    )
+    .join("");
+  downloadBlob(
+    filename,
+    `<!doctype html><html lang="ja"><meta charset="utf-8"><title>${title}</title><body><table border="1" cellspacing="0" cellpadding="8">${tableRows}</table></body></html>`,
+    "application/vnd.ms-excel;charset=utf-8",
+  );
+};
+
 function useDialogAccessibility() {
   useEffect(() => {
     let dialog = null;
@@ -272,7 +320,8 @@ function LoginScreen({ theme, toggleTheme, onLogin, isDemoMode }) {
           onClick={toggleTheme}
           aria-label={`${theme === "dark" ? "ライト" : "ダーク"}モードに切り替え`}
         >
-          <Sun /> ライト <span /> <Moon />{" "}
+          {theme === "dark" ? <Moon /> : <Sun />}
+          <span>表示モード</span>
           <b>{theme === "dark" ? "ダーク" : "ライト"}</b>
         </button>
         <form className="login-card" onSubmit={submit} noValidate>
@@ -575,7 +624,7 @@ function Pager() {
       <button disabled aria-label="前のページ" title="前のページ">
         <ChevronLeft />
       </button>
-      <button className="current">1</button>
+      <button className="current" aria-current="page" disabled>1</button>
       <button disabled aria-label="次のページ" title="次のページ">
         <ChevronRight />
       </button>
@@ -684,6 +733,8 @@ function FieldList({
   navigate,
   onOperatorSelect,
 }) {
+  const [serviceFilter, setServiceFilter] = useState("すべて");
+  const [includeEnded, setIncludeEnded] = useState(false);
   const filtered = useMemo(
     () =>
       records.filter((r) =>
@@ -691,7 +742,7 @@ function FieldList({
           .toLowerCase()
           .includes(query.toLowerCase()),
       ),
-    [query, records],
+    [query, records, serviceFilter, includeEnded],
   );
   return (
     <>
@@ -704,18 +755,33 @@ function FieldList({
           <>
             <label>
               利用サービス{" "}
-              <select>
+              <select
+                value={serviceFilter}
+                onChange={(event) => setServiceFilter(event.target.value)}
+                aria-label="利用サービス"
+              >
                 <option>すべて</option>
+                <option>書類</option>
+                <option>入退場</option>
+                <option>会議</option>
               </select>
             </label>
             <label className="check">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={includeEnded}
+                onChange={(event) => setIncludeEnded(event.target.checked)}
+              />
               利用終了を含める
             </label>
           </>
         }
         onDetail={() => setDetailOpen(true)}
-        onClear={() => setQuery("")}
+        onClear={() => {
+          setQuery("");
+          setServiceFilter("すべて");
+          setIncludeEnded(false);
+        }}
       />
       <section className="table-area">
         {dataStatus === "loading" && (
@@ -743,7 +809,13 @@ function FieldList({
             をご確認ください。
           </p>
         </div>
-        <div className="table-scroll">
+        <p className="table-scroll-hint">表は横にスクロールできます</p>
+        <div
+          className="table-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="現場一覧。横方向にスクロールできます"
+        >
           <table className="field-list-table">
             <colgroup>
               <col className="field-col-company" />
@@ -983,11 +1055,17 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
   };
   const action = (label) => {
     if (label === "新規作成") setCreateOpen(true);
-    else if (label === "表示データをCSV出力")
+    else if (label === "表示データをCSV出力") {
+      downloadCsv(
+        `${type}-${new Date().toISOString().slice(0, 10)}.csv`,
+        config.headers.filter(Boolean),
+        filtered.map((row) => row.filter((cell) => typeof cell === "string" && cell !== "__confirm")),
+      );
       setConfirm({
         title: "CSV出力完了",
         message: `${filtered.length}件の匿名データを出力しました。`,
       });
+    }
     else
       setConfirm({
         title: label,
@@ -2306,8 +2384,14 @@ function OrganizationPage() {
   return (
     <div className="org-page">
       <div className="org-toolbar">
-        <button className="primary">会社を追加</button>
-        <button className="outline">施工体系図を出力</button>
+        <button
+          className="primary"
+          onClick={() => showAppNotice("会社を追加", "会社登録フォームを開きました。")}
+        >会社を追加</button>
+        <button
+          className="outline"
+          onClick={() => window.print()}
+        >施工体系図をPDF出力</button>
         <select>
           <option>サンプル現場 A</option>
         </select>
@@ -2473,8 +2557,14 @@ function AgencyPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
           >
             新規申請
           </button>
-          <button className="outline">Word</button>
-          <button className="outline">PDF</button>
+          <button
+            className="outline"
+            onClick={() => {
+              downloadWord("代行登録申請書.doc", "代行登録申請書", [["会社名", "住所", "電話番号"], ["サンプル運輸株式会社", "東京都中央区", "00-0000-1001"]]);
+              setConfirm({ title: "Word出力完了", message: "匿名サンプル申請書をダウンロードしました。" });
+            }}
+          >Word</button>
+          <button className="outline" onClick={() => window.print()}>PDF</button>
           <p>申請処理には数営業日かかる場合があります。</p>
         </div>
       )}{" "}
@@ -2723,9 +2813,17 @@ function GreenDocumentList({ title, setConfirm }) {
             <span>安全書類テンプレート（匿名サンプル）</span>
             <button
               className="outline"
-              onClick={() =>
-                setConfirm({ title: "テンプレートをダウンロード" })
-              }
+              onClick={() => {
+                downloadWord(
+                  "安全書類テンプレート.doc",
+                  "安全書類テンプレート",
+                  [["会社名", "作業内容", "提出日"], ["", "", ""]],
+                );
+                setConfirm({
+                  title: "テンプレートをダウンロードしました",
+                  message: "Wordで編集できる匿名テンプレートです。",
+                });
+              }}
             >
               ダウンロード
             </button>
@@ -2738,7 +2836,17 @@ function GreenDocumentList({ title, setConfirm }) {
             <button className="outline" onClick={() => setFilter((v) => !v)}>
               検索で絞り込む
             </button>
-            <button className="outline" disabled>
+            <button
+              className="outline"
+              onClick={() => {
+                const rows = [selfRow, lowerRow].filter(Boolean);
+                downloadExcel(`${title}.xls`, title, columns, rows);
+                setConfirm({
+                  title: "Excelを出力しました",
+                  message: `${rows.length}件の表示データを出力しました。`,
+                });
+              }}
+            >
               Excel出力
             </button>
           </div>
@@ -2798,7 +2906,13 @@ function GreenfilePage({ setConfirm }) {
         </div>
         <div className="gf-toolbar">
           <b>検索結果：3件</b>
-          <button className="text-button">検索条件をクリア</button>
+          <button
+            className="text-button"
+            onClick={() => {
+              setFilter(false);
+              setCategory("一括提出書類");
+            }}
+          >検索条件をクリア</button>
           <button className="outline" onClick={() => setFilter((v) => !v)}>
             検索で絞り込む
           </button>
@@ -2925,7 +3039,7 @@ function GreenfilePage({ setConfirm }) {
         </p>
         <div className="gf-toolbar">
           <b>検索結果：1件</b>
-          <button className="outline">検索で絞り込む</button>
+          <button className="outline" onClick={() => setFilter((value) => !value)}>検索で絞り込む</button>
         </div>
         <table className="gf-table">
           <thead>
@@ -3118,7 +3232,10 @@ function BatchOutput({ setConfirm }) {
           <label>
             <input type="checkbox" /> 前回出力後に更新された会社のみ
           </label>
-          <button className="primary">
+          <button
+            className="primary"
+            onClick={() => setConfirm({ title: "検索完了", message: "指定した条件で対象会社を絞り込みました。" })}
+          >
             <Search />
             検索
           </button>
@@ -3196,7 +3313,10 @@ function ServiceFrame({ brand, menus, active, setActive, children, notice }) {
       <div className="product-top">
         <b>{brand}</b>
         <span>サンプル現場 A</span>
-        <button className="help">？ ヘルプ</button>
+        <button
+          className="help"
+          onClick={() => showAppNotice(`${brand}ヘルプ`, "現在表示している機能の操作方法を確認できます。")}
+        >？ ヘルプ</button>
       </div>
       {notice && (
         <div className="product-notice">
@@ -3329,7 +3449,13 @@ function GatekeeperPage({ setConfirm }) {
             />{" "}
             一覧に顔写真を表示する
           </label>
-          <button className="outline">CSV出力</button>
+          <button
+            className="outline"
+            onClick={() => {
+              downloadCsv("作業員設定状況.csv", ["所属会社", "氏名", "ステータス"], Array.from({ length: 5 }, (_, index) => ["サンプル協力会社", `サンプル作業員 ${index + 1}`, "稼働中"]));
+              setConfirm({ title: "CSV出力完了", message: "作業員設定状況をダウンロードしました。" });
+            }}
+          >CSV出力</button>
         </div>
         <div className="service-filter">
           <b>検索条件（検索結果5件）</b>
@@ -3340,7 +3466,7 @@ function GatekeeperPage({ setConfirm }) {
           <label>
             <input type="checkbox" /> 登録あり
           </label>
-          <button className="primary">検索</button>
+          <button className="primary" onClick={() => setConfirm({ title: "検索完了", message: "作業員設定状況を絞り込みました。" })}>検索</button>
         </div>
         <table className="service-table">
           <thead>
@@ -3410,6 +3536,10 @@ function GatekeeperPage({ setConfirm }) {
 
 function ServiceList({ title, columns }) {
   const [query, setQuery] = useState("");
+  const [appliedQuery, setAppliedQuery] = useState("");
+  const visibleRows = [1, 2, 3].filter((index) =>
+    `${title} サンプル協力会社 サンプル ${index}`.includes(appliedQuery),
+  );
   return (
     <>
       <h1>{title}</h1>
@@ -3421,8 +3551,8 @@ function ServiceList({ title, columns }) {
           placeholder="キーワードを入力"
         />
         <input type="date" />
-        <button className="primary">検索</button>
-        <button className="text" onClick={() => setQuery("")}>
+        <button className="primary" onClick={() => setAppliedQuery(query.trim())}>検索</button>
+        <button className="text" onClick={() => { setQuery(""); setAppliedQuery(""); }}>
           検索条件クリア
         </button>
       </div>
@@ -3435,7 +3565,7 @@ function ServiceList({ title, columns }) {
           </tr>
         </thead>
         <tbody>
-          {[1, 2, 3].map((i) => (
+          {visibleRows.map((i) => (
             <tr key={i}>
               {columns.map((x, j) => (
                 <td key={x}>
@@ -3452,6 +3582,11 @@ function ServiceList({ title, columns }) {
           ))}
         </tbody>
       </table>
+      {!visibleRows.length && (
+        <div className="empty-state" role="status">
+          条件に一致するデータがありません。検索条件を変更してください。
+        </div>
+      )}
     </>
   );
 }
@@ -5197,7 +5332,13 @@ function ControlTopBar({
   const [dateIndex, setDateIndex] = useState(1);
   const [globalQuery, setGlobalQuery] = useState("");
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const [unread, setUnread] = useState(3);
+  const [unread, setUnread] = useState(() => {
+    const saved = Number(localStorage.getItem("ecodump-unread-count"));
+    return Number.isFinite(saved) ? Math.max(0, saved) : 3;
+  });
+  useEffect(() => {
+    localStorage.setItem("ecodump-unread-count", String(unread));
+  }, [unread]);
   useEffect(() => {
     const closeTransientUi = (event) => {
       if (event.key !== "Escape") return;
@@ -5271,7 +5412,15 @@ function ControlTopBar({
             ))}
           </div>
         )}
-        <button className="control-date">
+        <button
+          className="control-date"
+          onClick={() =>
+            showAppNotice(
+              "基準日を選択",
+              "日付切替は前後ボタン、または日付選択から変更できます。",
+            )
+          }
+        >
           <CalendarDays />
           <span>{dates[dateIndex]}</span>
           <ChevronLeft
@@ -5896,6 +6045,11 @@ export function App() {
     [dataStatus, setDataStatus] = useState(
       databaseMode === "cloud" ? "loading" : "demo",
     );
+  useEffect(() => {
+    const showNotice = (event) => setConfirm(event.detail);
+    document.addEventListener("ecodump:notice", showNotice);
+    return () => document.removeEventListener("ecodump:notice", showNotice);
+  }, []);
   useEffect(() => {
     window.localStorage.setItem("ecodump-theme", theme);
     document.documentElement.style.colorScheme = theme;

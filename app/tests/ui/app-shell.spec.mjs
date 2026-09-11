@@ -80,6 +80,39 @@ test("demo login and theme toggle complete the primary entry flow", async ({ pag
   await expect(page.locator(".app-shell")).toBeVisible();
 });
 
+test("field table is keyboard reachable", async ({ page }) => {
+  await page.goto("/?preview=app&page=fields");
+  const tableRegion = page.getByRole("region", { name: /現場一覧/ });
+  await expect(tableRegion).toBeVisible();
+  await tableRegion.focus();
+  await expect(tableRegion).toBeFocused();
+});
+
+test("list data exports CSV", async ({ page }) => {
+  await page.goto("/?preview=app&page=users");
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "表示データをCSV出力" }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/\.csv$/);
+});
+
+test("notification read state persists after reload", async ({ page }) => {
+  await page.goto("/?preview=app&page=fields");
+  await page.getByRole("button", { name: "通知", exact: true }).first().click();
+  await page.getByRole("button", { name: "すべて既読" }).click();
+  await page.reload();
+  await page.getByRole("button", { name: "通知", exact: true }).first().click();
+  await expect(page.getByText("未読 0件")).toBeVisible();
+});
+
+test("release metadata and manifest are exposed", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "ja");
+  await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
+  const response = await page.request.get("/manifest.webmanifest");
+  expect(response.ok()).toBeTruthy();
+});
+
 test("detail search is keyboard-contained and closes with Escape", async ({ page }) => {
   await page.goto("/?preview=app&page=fields");
   await page.getByRole("button", { name: "詳細検索" }).click();
