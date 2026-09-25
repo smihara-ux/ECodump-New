@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {conditionDiff} from '../src/matching/conditionDiff.mjs';
+test('agreement comparison retains quantity, unit, period and receiving condition differences',()=>{const original={soil:'第2種',quantity:10,unit:'m3',start:'2026-09-25',conditions:'手動受付'};const current={...original,quantity:9.5,unit:'t',conditions:'原票照合'};assert.deepEqual(conditionDiff(original,current).map(d=>d.key),['quantity','unit','conditions']);assert.equal(original.quantity,10);assert.equal(conditionDiff(original,{...original,quantity:'10'}).length,0);});
+test('missing private fields and extra hidden keys are not rendered',()=>{assert.deepEqual(conditionDiff({internal:'secret'},{}),[]);});

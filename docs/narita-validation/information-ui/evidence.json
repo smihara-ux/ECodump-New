@@ -1,0 +1,25 @@
+{
+  "environment": "dgx-staging",
+  "base": "https://life-id.tailbe6181.ts.net:9462",
+  "production": false,
+  "checks": [
+    {
+      "role": "construction",
+      "accountName": "narita-construction",
+      "width": 1440,
+      "visible": "WINNERS建設〈検証用〉 社内連絡",
+      "hidden": "栃木モデル受入会社〈架空〉 社内連絡",
+      "documentOverflow": false,
+      "pageErrors": []
+    },
+    {
+      "role": "receiving",
+      "accountName": "narita-receiver-tochigi",
+      "width": 820,
+      "visible": "栃木モデル受入会社〈架空〉 社内連絡",
+      "hidden": "WINNERS建設〈検証用〉 社内連絡",
+      "documentOverflow": false,
+      "pageErrors": []
+    }
+  ]
+}

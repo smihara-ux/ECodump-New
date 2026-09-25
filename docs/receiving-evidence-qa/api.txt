@@ -1,0 +1,15 @@
+▶ receiving evidence: persisted original, review, correction, gate, isolation and uncertain outcomes
+  ✔ driver original submission, receiver return, resubmission retain history (138.959625ms)
+  ✔ unload and explicit original check required; concurrent review cannot overwrite (50.185334ms)
+  ✔ correction has original actor, time, before/after; lost reply is queried (151.316125ms)
+  ✔ gate records separate human verification and duplicates (107.269292ms)
+  ✔ API and raw RLS prevent unrelated evidence and attachment access (240.472625ms)
+✔ receiving evidence: persisted original, review, correction, gate, isolation and uncertain outcomes (934.215542ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1015.086458

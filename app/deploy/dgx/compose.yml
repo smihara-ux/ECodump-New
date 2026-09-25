@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ecodump_direct_validation
+      POSTGRES_USER: ecodump_owner
+      POSTGRES_PASSWORD: ${ECODUMP_DB_ADMIN_PASSWORD}
+    volumes:
+      - ecodump-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecodump_owner -d ecodump_direct_validation"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [backend]
+
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/dgx/Dockerfile.api
+    restart: unless-stopped
+    environment:
+      ECODUMP_DEPLOYMENT_MODE: dgx-private
+      ECODUMP_DIRECT_PORT: 6102
+      ECODUMP_ALLOWED_HOSTS: 100.83.235.95,life-id,life-id.tailbe6181.ts.net,localhost,127.0.0.1
+      ECODUMP_DB_HOST: db
+      ECODUMP_DB_PORT: 5432
+      ECODUMP_DB_NAME: ecodump_direct_validation
+      ECODUMP_DB_ADMIN_USER: ecodump_owner
+      ECODUMP_DB_ADMIN_PASSWORD: ${ECODUMP_DB_ADMIN_PASSWORD}
+      ECODUMP_DB_API_USER: ecodump_api
+      ECODUMP_DB_API_PASSWORD: ${ECODUMP_DB_API_PASSWORD}
+      ECODUMP_DB_AUTH_USER: ecodump_auth
+      ECODUMP_DB_AUTH_PASSWORD: ${ECODUMP_DB_AUTH_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [backend]
+
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "100.83.235.95:8101:80"
+    volumes:
+      - ../../web:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [api]
+    networks: [backend]
+
+volumes:
+  ecodump-db:
+
+networks:
+  backend:
+    driver: bridge

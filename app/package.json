@@ -5,12 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:api": "node server/start-workflow-api.mjs",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "db:check": "node scripts/check-public-env.mjs",
     "test:db": "node --test tests/db-schema.test.mjs",
     "test:ui": "playwright test",
     "preview": "vite preview",
-    "test:sites": "node --test tests/sites-worker.test.mjs"
+    "test:sites": "node --test tests/sites-worker.test.mjs",
+    "test:workflow": "node --test tests/workflow-api.test.mjs",
+    "test:workflow-ui": "node scripts/test-workflow-ui.mjs",
+    "test:matching": "node --test tests/matching-api.test.mjs",
+    "test:matching-ui": "node scripts/test-matching-ui.mjs",
+    "test:trial": "node --test tests/trial-operation-api.test.mjs",
+    "test:matching:shared": "node --test tests/shared-matching-api.test.mjs",
+    "test:matching:shared-ui": "node scripts/test-shared-matching-ui.mjs",
+    "test:narita-ui": "node scripts/capture-narita-validation-ui.mjs",
+    "dev:api:shared": "ECODUMP_DIRECT_PORT=6103 node server/index.mjs",
+    "db:setup:isolated": "node server/setup.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

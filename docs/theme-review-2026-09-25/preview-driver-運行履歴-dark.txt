@@ -1,0 +1,37 @@
+- region "iPhone表示 ドライバーアプリ":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー
+  - button "ライト表示に切り替え":
+  - text: 試作・API未接続
+  - generic: すべて匿名サンプル
+  - main:
+    - generic: TRIP HISTORY
+    - heading "運行履歴" [level=1]
+    - paragraph: 過去のサンプル記録と、荷下ろし報告の下書き
+    - text: 日付・便番号・現場で検索
+    - textbox "日付・便番号・現場で検索":
+      - /placeholder: 例：サンプル現場 A
+    - generic: 2026-09-24 · 受入実績は未確定
+    - button "1便目 ／ 1往復目 荷下ろし完了 09:00 現場指定 09:45 受入指定 A サンプル現場 A B サンプル受入場所 B サンプル車両 01 · 7 m³":
+      - text: 1便目
+      - generic: ／ 1往復目
+      - generic: 荷下ろし完了
+      - text: 09:00
+      - text: 現場指定
+      - text: 09:45 受入指定
+      - generic: A
+      - strong: サンプル現場 A
+      - generic: B
+      - strong: サンプル受入場所 B
+      - text: サンプル車両 01 · 7 m³
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴" [active]:
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ

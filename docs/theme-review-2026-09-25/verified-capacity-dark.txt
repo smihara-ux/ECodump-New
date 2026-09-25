@@ -1,0 +1,301 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "発生土マッチ" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - note: 操作プレビュー：変更は保存・送信されません。適合度・距離・件数はサンプルです。
+  - text: SOIL CIRCULATION MATCHING
+  - heading "建設発生土マッチング" [level=2]
+  - paragraph: 搬出時期・土量・土質・距離・受入条件を確認する共通画面です。施工側は受入候補、受入側は搬出案件を確認できます。
+  - button "新しい案件を登録":
+    - text: 新しい案件を登録
+  - article:
+    - generic: 公開中の搬出案件
+    - generic: 18件
+    - generic: 総量 48,600m³
+  - article:
+    - generic: 受入可能案件
+    - generic: 12件
+    - generic: 総余力 92,400m³
+  - article:
+    - generic: 条件調整中
+    - generic: 5件
+    - generic: 今週 +2件
+  - article:
+    - generic: 成立済み
+    - generic: 9件
+    - generic: 再利用率 68%
+  - button "現場から探す"
+  - button "受入れから探す"
+  - text: キーワード
+  - textbox "キーワード":
+    - /placeholder: 受入地・地域・土質
+  - text: 並び順
+  - combobox "並び順":
+    - option "適合度順" [selected]
+    - option "距離順"
+  - button "詳細条件を開く":
+    - text: 詳細条件
+  - generic: マッチング候補
+  - generic: 3件のサンプル候補
+  - generic: 施工側：受入先と自社の搬出案件を確認
+  - button "94 適合度 MT-2026-001 湾岸第2受入ヤード 千葉県市川市 第2種建設発生土 2026/09/01〜2027/03/31 18.4km 約38分 事前相談可能":
+    - generic: "94"
+    - generic: 適合度
+    - text: MT-2026-001
+    - heading "湾岸第2受入ヤード" [level=3]
+    - paragraph: 千葉県市川市
+    - generic: 第2種建設発生土
+    - generic: 2026/09/01〜2027/03/31
+    - generic: 18.4km
+    - generic: 約38分
+    - generic: 事前相談可能
+  - button "86 適合度 MT-2026-002 北総ストックヤード 千葉県印西市 第2・第3種建設発生土 2026/08/20〜2027/06/30 31.2km 約54分 条件確認中":
+    - generic: "86"
+    - generic: 適合度
+    - text: MT-2026-002
+    - heading "北総ストックヤード" [level=3]
+    - paragraph: 千葉県印西市
+    - generic: 第2・第3種建設発生土
+    - generic: 2026/08/20〜2027/06/30
+    - generic: 31.2km
+    - generic: 約54分
+    - generic: 条件確認中
+  - button "72 適合度 MT-2026-003 臨海造成受入地 神奈川県川崎市 第1・第2種建設発生土 2026/10/01〜2027/02/28 42.8km 約71分 追加試験必要":
+    - generic: "72"
+    - generic: 適合度
+    - text: MT-2026-003
+    - heading "臨海造成受入地" [level=3]
+    - paragraph: 神奈川県川崎市
+    - generic: 第1・第2種建設発生土
+    - generic: 2026/10/01〜2027/02/28
+    - generic: 42.8km
+    - generic: 約71分
+    - generic: 追加試験必要
+  - complementary:
+    - text: MT-2026-001
+    - heading "湾岸第2受入ヤード" [level=3]
+    - paragraph: 千葉県市川市
+    - generic "サンプル適合度 94点":
+      - generic: "94"
+      - generic: 点
+      - generic: サンプル適合度
+    - img "適合度の項目別サンプルグラフ":
+      - generic: 適合条件バランス
+      - generic: 0〜100のサンプル評価・実計算ではありません
+      - generic: "100"
+      - generic: 土質
+      - generic: "96"
+      - generic: 期間
+      - generic: "92"
+      - generic: 受入余力
+      - generic: "80"
+      - generic: 必要書類
+      - list:
+        - generic: 土質
+        - generic: "100"
+        - generic: 期間
+        - generic: "96"
+        - generic: 受入余力
+        - generic: "92"
+        - generic: 必要書類
+        - generic: "80"
+    - generic "マッチング進行状況":
+      - generic: "1"
+      - text: 候補
+      - generic: "2"
+      - text: 事前相談
+      - generic: "3"
+      - text: 条件調整
+      - generic: "4"
+      - text: 書類審査
+      - generic: "5"
+      - text: 条件合意
+    - generic: 搬出元
+    - generic: サンプル現場A
+    - generic: 運搬
+    - generic: 18.4km
+    - emphasis: 約38分
+    - generic: 受入先
+    - generic: 湾岸第2受入ヤード
+    - region "容量・予約状況":
+      - strong: 湾岸第2受入ヤード
+      - generic: 架空データ・画面案
+      - heading "容量・予約状況" [level=3]
+      - combobox "容量グラフの年":
+        - option "2025年"
+        - option "2026年" [selected]
+        - option "2027年"
+      - combobox "容量グラフの期間":
+        - option "年間" [selected]
+        - option "1月"
+        - option "2月"
+        - option "3月"
+        - option "4月"
+        - option "5月"
+        - option "6月"
+        - option "7月"
+        - option "8月"
+        - option "9月"
+        - option "10月"
+        - option "11月"
+        - option "12月"
+      - combobox "容量グラフの単位":
+        - option "m³" [selected]
+        - option "t"
+      - generic: 9月の搬入済み
+      - strong: 280m³
+      - generic: 予約済み
+      - strong: 380m³
+      - generic: 空き
+      - strong: 340m³
+      - paragraph:
+        - text: 2026年・月別
+        - generic: 棒を選ぶと内訳を確認できます
+      - generic: m³
+      - generic: "0"
+      - generic: "500"
+      - generic: 1,000
+      - generic: 上限 1,000
+      - generic: 1,500
+      - button "1月 搬入済み280、予約済み380、空き340、超過0m³の内訳":
+        - generic: 1月
+      - button "2月 搬入済み330、予約済み330、空き340、超過0m³の内訳":
+        - generic: 2月
+      - button "3月 搬入済み360、予約済み780、空き0、超過140m³の内訳":
+        - text: 超過
+        - text: "140"
+        - generic: 3月
+      - button "4月 搬入済み420、予約済み220、空き360、超過0m³の内訳":
+        - generic: 4月
+      - button "5月 搬入済み280、予約済み380、空き340、超過0m³の内訳":
+        - generic: 5月
+      - button "6月 搬入済み440、予約済み240、空き320、超過0m³の内訳":
+        - generic: 6月
+      - button "7月 搬入済み460、予約済み660、空き0、超過120m³の内訳":
+        - text: 超過
+        - text: "120"
+        - generic: 7月
+      - button "8月 搬入済み350、予約済み280、空き370、超過0m³の内訳":
+        - generic: 8月
+      - button "9月 搬入済み280、予約済み380、空き340、超過0m³の内訳" [pressed]:
+        - generic: 9月
+      - button "10月 搬入済み360、予約済み300、空き340、超過0m³の内訳":
+        - generic: 10月
+      - button "11月 搬入済み400、予約済み220、空き380、超過0m³の内訳":
+        - generic: 11月
+      - button "12月 搬入済み330、予約済み200、空き470、超過0m³の内訳":
+        - generic: 12月
+      - generic: 搬入済み
+      - generic: 予約済み
+      - generic: 空き
+      - generic: 上限
+      - generic: 超過
+      - heading "9月の内訳" [level=4]
+      - text: 搬入済み
+      - generic: 280 m³
+      - text: 予約済み
+      - generic: 380 m³
+      - text: 空き
+      - generic: 340 m³
+      - button "予約内訳を見る →"
+      - generic "集計の考え方"
+      - generic: 検証用データです。実際の空き容量ではありません。
+    - term: 受入可能土質
+    - definition: 第2種建設発生土
+    - term: 受入可能量
+    - definition: 残り 12,400m³
+    - term: 日別上限
+    - definition: 120台/日
+    - term: 受入期間
+    - definition: 2026/09/01〜2027/03/31
+    - term: 参考単価
+    - definition: 受入 2,800円/m³
+    - text: 判定内容
+    - text: 土質適合
+    - text: 工期一致
+    - text: 日量余裕あり
+    - text: 必要書類4/5
+    - button "必要書類を確認"
+    - button "事前相談を開始"

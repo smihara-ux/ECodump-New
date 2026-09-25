@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-09-25T06:52:41.909Z",
+  "environment": "isolated-postgresql",
+  "production": false,
+  "day": "2055-02-08",
+  "scenario": "WINNERS Narita fictional validation",
+  "trips": [
+    {
+      "bookingId": "afbe4b2e-4564-41d9-85b4-3a3d1c0b117f",
+      "tripId": "45babe97-3b76-4aea-a896-1f643bea8f64",
+      "rotation": 1,
+      "siteId": "21000000-0000-4000-8000-000000000001",
+      "locationId": "21000000-0000-4000-8000-000000000003",
+      "planned": 10,
+      "confirmedActual": 9.5,
+      "unit": "m3"
+    },
+    {
+      "bookingId": "1048a577-d093-4719-bd52-3deec5b6b1ed",
+      "tripId": "a0faa906-318c-4e11-9f24-9fd4b22ab7b8",
+      "rotation": 2,
+      "siteId": "21000000-0000-4000-8000-000000000001",
+      "locationId": "21000000-0000-4000-8000-000000000004",
+      "planned": 10,
+      "confirmedActual": 10,
+      "unit": "m3"
+    },
+    {
+      "bookingId": "c4cd36bf-8e42-42d9-a2c1-dd45e6a54049",
+      "tripId": "22995b99-8c1e-4b4d-b1c2-ee76770882ab",
+      "rotation": 3,
+      "siteId": "21000000-0000-4000-8000-000000000002",
+      "locationId": "21000000-0000-4000-8000-000000000003",
+      "planned": 10,
+      "confirmedActual": 10,
+      "unit": "m3"
+    }
+  ],
+  "unknownOperation": "af420c8b-d794-4930-a403-4ed3fdab7266",
+  "scopeDenied": true,
+  "notes": [
+    "Three rotations are currently represented by three bookings because the current schema allows one trip per booking.",
+    "GPS and physical-device confirmation are outside this API test."
+  ]
+}

@@ -1,0 +1,113 @@
+[WebServer] (node:53384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 70 tests using 9 workers
+
+(node:53387) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53389) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53390) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53395) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53394) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:53391) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/70] tests/ui/app-shell.spec.mjs:25:5 › fields renders without overflow in light mode
+(node:53393) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/70] tests/ui/app-shell.spec.mjs:25:5 › control renders without overflow in light mode
+[3/70] tests/ui/app-shell.spec.mjs:25:5 › matching renders without overflow in light mode
+[4/70] tests/ui/app-shell.spec.mjs:25:5 › gatekeeper renders without overflow in light mode
+[5/70] tests/ui/app-shell.spec.mjs:25:5 › conference renders without overflow in light mode
+[6/70] tests/ui/app-shell.spec.mjs:25:5 › company renders without overflow in light mode
+[7/70] tests/ui/app-shell.spec.mjs:25:5 › transport renders without overflow in light mode
+[8/70] tests/ui/app-shell.spec.mjs:25:5 › labor renders without overflow in light mode
+[9/70] tests/ui/app-shell.spec.mjs:25:5 › users renders without overflow in light mode
+[10/70] tests/ui/app-shell.spec.mjs:25:5 › agencies renders without overflow in light mode
+[11/70] tests/ui/app-shell.spec.mjs:25:5 › vehicles renders without overflow in light mode
+[12/70] tests/ui/app-shell.spec.mjs:25:5 › agency-request renders without overflow in light mode
+[13/70] tests/ui/app-shell.spec.mjs:25:5 › prime-contractors renders without overflow in light mode
+[14/70] tests/ui/app-shell.spec.mjs:25:5 › dispatch renders without overflow in light mode
+[15/70] tests/ui/app-shell.spec.mjs:25:5 › results renders without overflow in light mode
+[16/70] tests/ui/app-shell.spec.mjs:25:5 › settings renders without overflow in light mode
+[17/70] tests/ui/app-shell.spec.mjs:25:5 › field&fieldId=32182 renders without overflow in light mode
+[18/70] tests/ui/app-shell.spec.mjs:25:5 › fields renders without overflow in dark mode
+[19/70] tests/ui/app-shell.spec.mjs:25:5 › matching renders without overflow in dark mode
+[20/70] tests/ui/app-shell.spec.mjs:25:5 › control renders without overflow in dark mode
+[21/70] tests/ui/app-shell.spec.mjs:25:5 › gatekeeper renders without overflow in dark mode
+[22/70] tests/ui/app-shell.spec.mjs:25:5 › labor renders without overflow in dark mode
+[23/70] tests/ui/app-shell.spec.mjs:25:5 › conference renders without overflow in dark mode
+[24/70] tests/ui/app-shell.spec.mjs:25:5 › transport renders without overflow in dark mode
+[25/70] tests/ui/app-shell.spec.mjs:25:5 › company renders without overflow in dark mode
+[26/70] tests/ui/app-shell.spec.mjs:25:5 › users renders without overflow in dark mode
+[27/70] tests/ui/app-shell.spec.mjs:25:5 › vehicles renders without overflow in dark mode
+[28/70] tests/ui/app-shell.spec.mjs:25:5 › agencies renders without overflow in dark mode
+[29/70] tests/ui/app-shell.spec.mjs:25:5 › prime-contractors renders without overflow in dark mode
+[30/70] tests/ui/app-shell.spec.mjs:25:5 › dispatch renders without overflow in dark mode
+[31/70] tests/ui/app-shell.spec.mjs:25:5 › agency-request renders without overflow in dark mode
+[32/70] tests/ui/app-shell.spec.mjs:25:5 › results renders without overflow in dark mode
+[33/70] tests/ui/app-shell.spec.mjs:25:5 › settings renders without overflow in dark mode
+[34/70] tests/ui/app-shell.spec.mjs:25:5 › field&fieldId=32182 renders without overflow in dark mode
+[35/70] tests/ui/app-shell.spec.mjs:49:5 › fields keeps primary UI reachable on tablet
+[36/70] tests/ui/app-shell.spec.mjs:49:5 › control keeps primary UI reachable on tablet
+[37/70] tests/ui/app-shell.spec.mjs:49:5 › field&fieldId=32182 keeps primary UI reachable on tablet
+[38/70] tests/ui/app-shell.spec.mjs:49:5 › fields keeps primary UI reachable on phone
+[39/70] tests/ui/app-shell.spec.mjs:49:5 › control keeps primary UI reachable on phone
+[40/70] tests/ui/app-shell.spec.mjs:49:5 › field&fieldId=32182 keeps primary UI reachable on phone
+[41/70] tests/ui/app-shell.spec.mjs:69:1 › login validation identifies and focuses the first invalid field
+[42/70] tests/ui/app-shell.spec.mjs:78:1 › demo login and theme toggle complete the primary entry flow
+[43/70] tests/ui/app-shell.spec.mjs:86:1 › field table is keyboard reachable
+[44/70] tests/ui/app-shell.spec.mjs:94:1 › list data exports CSV
+[45/70] tests/ui/app-shell.spec.mjs:102:1 › notification read state persists after reload
+[46/70] tests/ui/app-shell.spec.mjs:111:1 › release metadata and manifest are exposed
+[47/70] tests/ui/app-shell.spec.mjs:119:1 › construction mode opens field-based home and role menus
+[48/70] tests/ui/app-shell.spec.mjs:136:1 › construction dispatch makes only a local prototype assignment
+[49/70] tests/ui/app-shell.spec.mjs:144:1 › construction weekly copy requires review and remains a local draft
+[50/70] tests/ui/app-shell.spec.mjs:154:1 › control timeline expands and draft scheduling does not claim persistence
+[51/70] tests/ui/app-shell.spec.mjs:163:1 › detail search is keyboard-contained and closes with Escape
+[52/70] tests/ui/app-shell.spec.mjs:174:3 › fields does not clip the document at compact desktop width
+[53/70] tests/ui/app-shell.spec.mjs:174:3 › matching does not clip the document at compact desktop width
+[54/70] tests/ui/app-shell.spec.mjs:174:3 › control does not clip the document at compact desktop width
+[55/70] tests/ui/app-shell.spec.mjs:174:3 › labor does not clip the document at compact desktop width
+[56/70] tests/ui/app-shell.spec.mjs:174:3 › gatekeeper does not clip the document at compact desktop width
+[57/70] tests/ui/app-shell.spec.mjs:174:3 › conference does not clip the document at compact desktop width
+[58/70] tests/ui/app-shell.spec.mjs:174:3 › transport does not clip the document at compact desktop width
+[59/70] tests/ui/app-shell.spec.mjs:174:3 › company does not clip the document at compact desktop width
+[60/70] tests/ui/app-shell.spec.mjs:174:3 › users does not clip the document at compact desktop width
+[61/70] tests/ui/app-shell.spec.mjs:174:3 › vehicles does not clip the document at compact desktop width
+[62/70] tests/ui/app-shell.spec.mjs:174:3 › agencies does not clip the document at compact desktop width
+[63/70] tests/ui/app-shell.spec.mjs:174:3 › agency-request does not clip the document at compact desktop width
+[64/70] tests/ui/app-shell.spec.mjs:174:3 › prime-contractors does not clip the document at compact desktop width
+[65/70] tests/ui/app-shell.spec.mjs:174:3 › dispatch does not clip the document at compact desktop width
+[66/70] tests/ui/app-shell.spec.mjs:174:3 › results does not clip the document at compact desktop width
+[67/70] tests/ui/app-shell.spec.mjs:174:3 › settings does not clip the document at compact desktop width
+[68/70] tests/ui/app-shell.spec.mjs:174:3 › field&fieldId=32182 does not clip the document at compact desktop width
+[69/70] tests/ui/receiving-actual-form.spec.mjs:4:3 › 実績数量・単位・差異理由を確認してから送信 1440px
+[70/70] tests/ui/receiving-actual-form.spec.mjs:4:3 › 実績数量・単位・差異理由を確認してから送信 820px
+  70 passed (6.8s)

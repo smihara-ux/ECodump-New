@@ -1,0 +1,11 @@
+✔ publication boundaries and withdrawal take precedence over scheduled window (1.402417ms)
+✔ agreement comparison retains quantity, unit, period and receiving condition differences (1.06175ms)
+✔ missing private fields and extra hidden keys are not rendered (0.050541ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.887

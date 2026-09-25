@@ -1,0 +1,2 @@
+export const conditionLabels={title:'案件名',region:'地域',soil:'土質',quantity:'数量',unit:'単位',start:'期間開始',end:'期間終了',public:'公開条件',shared:'相談共有条件',conditions:'合意する条件',message:'メッセージ'};
+export function conditionDiff(before={},after={}){return Object.entries(conditionLabels).filter(([key])=>Object.hasOwn(before,key)||Object.hasOwn(after,key)).filter(([key])=>String(before[key]??'')!==String(after[key]??'')).map(([key,label])=>({key,label,before:before[key]??'未記載',after:after[key]??'未記載'}));}

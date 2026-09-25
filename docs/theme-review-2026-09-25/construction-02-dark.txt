@@ -1,0 +1,210 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード" [active]:
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - note: 地図・位置・運行状況はサンプル表示です。保存済みの予約・実績は受入管理から確認できます。
+  - button "配車を組む":
+    - generic: 配車を組む
+  - button "予定を追加":
+    - text: 予定を追加
+  - text: 現場
+  - combobox "現場":
+    - option "すべての現場" [selected]
+    - option "サンプル現場A"
+    - option "サンプル現場B"
+  - text: 荷種
+  - combobox "荷種":
+    - option "すべての荷種" [selected]
+    - option "建設発生土"
+    - option "コンクリートがら"
+  - text: 状態
+  - combobox "状態":
+    - option "すべてのステータス" [selected]
+    - option "運行中"
+    - option "遅延"
+    - option "受入中"
+    - option "完了"
+    - option "待機中"
+  - button "フィルター":
+    - text: フィルター
+  - generic: 本日の運行タイムライン
+  - generic: 選択中：D-103
+  - term: 計画
+  - definition: 68台
+  - term: 運行中
+  - definition: 28台
+  - term: 遅延
+  - definition: 3台
+  - term: 完了
+  - definition: 22台
+  - button "詳細":
+    - text: 詳細
+  - button "地図と並べる" [pressed]
+  - note:
+    - generic: 便を選ぶと走行経路を地図で表示します
+    - generic: 運行中・遅延・受入中・現場待機中の車両を便単位で確認できます。
+  - button "07:00 D-101 受入先へ運行中 S-01 サンプル現場A R-03 エコダンプ市川 07:45":
+    - time: 07:00
+    - generic: D-101
+    - generic: 受入先へ運行中
+    - generic "S-01 サンプル現場A"
+    - generic "R-03 エコダンプ市川"
+    - generic: 07:45
+  - button "07:30 D-102 受入先へ運行中 S-02 サンプル現場B R-01 エコダンプ船橋 08:00":
+    - time: 07:30
+    - generic: D-102
+    - generic: 受入先へ運行中
+    - generic "S-02 サンプル現場B"
+    - generic "R-01 エコダンプ船橋"
+    - generic: 08:00
+  - button "08:05 D-103 遅延 S-01 サンプル現場A R-01 エコダンプ船橋 +25分":
+    - time: 08:05
+    - generic: D-103
+    - generic: 遅延
+    - generic "S-01 サンプル現場A"
+    - generic "R-01 エコダンプ船橋"
+    - generic: +25分
+  - button "08:30 D-104 受入中 S-03 サンプル現場C R-03 エコダンプ市川 08:50":
+    - time: 08:30
+    - generic: D-104
+    - generic: 受入中
+    - generic "S-03 サンプル現場C"
+    - generic "R-03 エコダンプ市川"
+    - generic: 08:50
+  - button "09:15 D-105 完了 S-02 サンプル現場B R-02 エコダンプ横浜 09:05":
+    - time: 09:15
+    - generic: D-105
+    - generic: 完了
+    - generic "S-02 サンプル現場B"
+    - generic "R-02 エコダンプ横浜"
+    - generic: 09:05
+  - button "10:00 D-106 受入先へ運行中 S-04 サンプル現場D R-04 エコダンプ千葉 10:50":
+    - time: 10:00
+    - generic: D-106
+    - generic: 受入先へ運行中
+    - generic "S-04 サンプル現場D"
+    - generic "R-04 エコダンプ千葉"
+    - generic: 10:50
+  - button "10:30 D-107 現場待機中 S-05 サンプル現場E R-01 エコダンプ船橋 出発待ち":
+    - time: 10:30
+    - generic: D-107
+    - generic: 現場待機中
+    - generic "S-05 サンプル現場E"
+    - generic "R-01 エコダンプ船橋"
+    - generic: 出発待ち
+  - button "11:00 D-108 受入先へ運行中 S-01 サンプル現場A R-05 エコダンプ木更津 11:40":
+    - time: 11:00
+    - generic: D-108
+    - generic: 受入先へ運行中
+    - generic "S-01 サンプル現場A"
+    - generic "R-05 エコダンプ木更津"
+    - generic: 11:40
+  - button "11:45 D-109 遅延 S-03 サンプル現場C R-02 エコダンプ横浜 +15分":
+    - time: 11:45
+    - generic: D-109
+    - generic: 遅延
+    - generic "S-03 サンプル現場C"
+    - generic "R-02 エコダンプ横浜"
+    - generic: +15分
+  - button "12:30 D-110 完了 S-04 サンプル現場D R-03 エコダンプ市川 12:20":
+    - time: 12:30
+    - generic: D-110
+    - generic: 完了
+    - generic "S-04 サンプル現場D"
+    - generic "R-03 エコダンプ市川"
+    - generic: 12:20
+  - button "すべての運行（68台）を表示":
+    - text: すべての運行（68台）を表示
+  - generic: 本日の運行サマリー
+  - generic: 最終更新 14:32
+  - button "予定総便数 68便":
+    - generic: 予定総便数
+    - generic: 68便
+  - button "配車済み 53便":
+    - generic: 配車済み
+    - generic: 53便
+  - button "運行中 28便":
+    - generic: 運行中
+    - generic: 28便
+  - button "遅延 3便":
+    - generic: 遅延
+    - generic: 3便
+  - button "待機中 6便":
+    - generic: 待機中
+    - generic: 6便
+  - button "受入完了 22便":
+    - generic: 受入完了
+    - generic: 22便

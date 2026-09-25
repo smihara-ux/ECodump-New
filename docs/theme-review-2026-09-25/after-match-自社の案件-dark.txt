@@ -1,0 +1,125 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "発生土マッチ" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - region "共通発生土マッチAPI":
+    - text: SOIL CIRCULATION MATCHING
+    - heading "建設発生土マッチング" [level=2]
+    - paragraph: 公開案件から相談し、条件合意・予約へ進みます。
+    - button "受入側管理へ戻る"
+    - button "再取得"
+    - article:
+      - generic: 公開候補
+      - generic: 19件
+    - article:
+      - generic: 自社の案件
+      - generic: 1件
+    - article:
+      - generic: 相談・条件調整
+      - generic: 0件
+    - article:
+      - generic: 成立済み
+      - generic: 0件
+    - navigation "発生土マッチの区分":
+      - button "探す"
+      - button "自社の案件" [active] [pressed]
+      - button "相談・条件調整"
+      - button "成立済み"
+    - heading "新しい案件を登録" [level=3]
+    - generic: 受入場所
+    - combobox "受入場所":
+      - option "栃木モデル採石場〈架空〉" [selected]
+    - generic: 案件名
+    - textbox "案件名"
+    - generic: 地域
+    - textbox "地域"
+    - generic: 土質
+    - textbox "土質": 第2種建設発生土
+    - generic: 数量
+    - spinbutton "数量": "100"
+    - generic: 単位
+    - combobox "単位":
+      - option "m³" [selected]
+      - option "t"
+    - generic: 期間開始
+    - textbox "期間開始": 2026-09-25
+    - generic: 期間終了
+    - textbox "期間終了": 2026-09-25
+    - generic: 公開情報
+    - textbox "公開情報"
+    - generic: 相談相手共有情報・受入条件
+    - textbox "相談相手共有情報・受入条件"
+    - generic: 社内情報（相手には非公開）
+    - textbox "社内情報（相手には非公開）"
+    - generic: 関連資料（PDF・PNG・JPEG／1件1MB、5件まで）
+    - button "関連資料（PDF・PNG・JPEG／1件1MB、5件まで）"
+    - button "下書き保存"
+    - article:
+      - generic: 栃木モデル採石場・受入案件〈架空〉
+      - generic: 公開中 · v2
+      - generic: 10 m³ · 2026-09-25〜2026-12-31
+      - button "編集"
+      - button "詳細・変更履歴"
+      - button "公開終了"

@@ -1,0 +1,38 @@
+{
+  "error": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('表示日（日本時間）', { exact: true })\u001b[22m\n\n    at logoutLogin (/Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/scripts/test-cross-role-readiness.mjs:16:355)\n    at async file:///Users/miharasoushi/Documents/ChatGPT/ECO%20DUMP%20new/app/scripts/test-cross-role-readiness.mjs:35:29",
+  "evidence": {
+    "date": "2045-09-25",
+    "scenarios": [
+      {
+        "label": "matching",
+        "bookingId": "7f676454-735d-4647-9aa1-a27980409385",
+        "tripId": "1d5f7923-d1bc-4a8f-9406-0b4d850acbf1",
+        "rotation": 1,
+        "actual": 7.8,
+        "unit": "m3",
+        "status": "PASS"
+      },
+      {
+        "label": "direct",
+        "bookingId": "dd5a3813-833f-4d17-8883-e0b0fcf05e6f",
+        "tripId": "ab0f0111-e549-45ec-ab2e-da220a61a294",
+        "rotation": 2,
+        "actual": 6.8,
+        "unit": "m3",
+        "status": "PASS"
+      }
+    ],
+    "viewports": [
+      {
+        "label": "driver-390-dark",
+        "width": 390,
+        "height": 844,
+        "overflow": false,
+        "smallTargets": [],
+        "bodyFont": "14px"
+      }
+    ],
+    "limitations": [],
+    "consoleErrors": []
+  }
+}

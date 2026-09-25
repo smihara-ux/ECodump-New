@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-09-25T16:52:06.669195+09:00",
+  "release": "20260925-165053",
+  "files": [
+    {
+      "path": "src/information/Information.jsx",
+      "sha256": "a07348a1840d0eb5989b081a6b2fef3082385013005f8d83952d6c4ba8d0a711",
+      "matchesLocal": true
+    },
+    {
+      "path": "src/information/information.css",
+      "sha256": "f857c6a83fb78e05dd460a733e875d9b946f3311a913db0876f2145dcb7cb723",
+      "matchesLocal": true
+    },
+    {
+      "path": "src/App.jsx",
+      "sha256": "43464ddcc8a545ff6578e6a921f85b8299e605297797b72aaafbf65faa0de469",
+      "matchesLocal": true
+    },
+    {
+      "path": "src/receiving/mutationJournal.mjs",
+      "sha256": "44fc67b23f4de90c47d3c9a47308210f1870d1c2ff8f8c93fcdfd196057b2c43",
+      "matchesLocal": true
+    },
+    {
+      "path": "server/information-handler.mjs",
+      "sha256": "203a94422f64e18bac3716098f101afa2135fe9e57734409e67cb42a0537e733",
+      "matchesLocal": true
+    },
+    {
+      "path": "server/migrations/20260925_information.sql",
+      "sha256": "a742c941ef91d04da78f77e3492bdef38038e4e92a20ba6ccc8623e5b5aceb00",
+      "matchesLocal": true
+    },
+    {
+      "path": "/srv/ecodump/server/information-handler.mjs",
+      "sha256": "203a94422f64e18bac3716098f101afa2135fe9e57734409e67cb42a0537e733",
+      "matchesLocal": true
+    }
+  ],
+  "localChanges": [
+    {
+      "path": "src/information/Information.jsx",
+      "sha256": "f00473ebb8903b14d49fa3f05ae33b60dafca46653ae148c0a18ce43962492b9"
+    },
+    {
+      "path": "src/information/publicationState.mjs",
+      "sha256": "33be1be718e0c969662dcef6bb47335cca788798bb3a5362792a1da791ac6111"
+    },
+    {
+      "path": "tests/information-publication.test.mjs",
+      "sha256": "d2c3bb334032bde35e9e625c4a65b4d655438e7cdbed9b02527b006286b72189"
+    }
+  ]
+}

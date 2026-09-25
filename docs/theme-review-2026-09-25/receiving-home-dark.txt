@@ -1,0 +1,309 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "受入管理〈ホーム〉" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - note:
+    - generic: 受入側の操作試作 · API未接続
+    - generic: 変更はこの画面を開いている間だけ保持されます。再読込でリセットされ、相手への送信・DB保存は行いません。
+  - button "本日 2026-09-25" [pressed]:
+    - generic: 本日
+    - generic: 2026-09-25
+  - button "翌日 2026-09-26":
+    - generic: 翌日
+    - generic: 2026-09-26
+  - button "受入場所別" [pressed]
+  - button "現場別"
+  - generic: 受入場所
+  - combobox "受入場所":
+    - option "すべて" [selected]
+    - option "サンプル受入ヤード A"
+    - option "サンプル受入ヤード B"
+    - option "サンプル受入ヤード C"
+  - generic: 混雑状況
+  - combobox "混雑状況":
+    - option "すべて" [selected]
+    - option "空きあり"
+    - option "やや混雑"
+    - option "混雑"
+  - generic: 現場・受入場所・車両を検索
+  - textbox "現場・受入場所・車両を検索":
+    - /placeholder: 便ID・現場名・車両
+  - button "直接予約を試す":
+    - text: 直接予約を試す
+  - article:
+    - button "本日の予定の明細":
+      - text: 本日の予定
+      - strong: 6便
+  - article:
+    - button "到着予定の明細":
+      - text: 到着予定
+      - strong: 2便
+  - article:
+    - button "待機の明細":
+      - text: 待機
+      - strong: 1便
+  - article:
+    - button "受入中の明細":
+      - text: 受入中
+      - strong: 2便
+  - article:
+    - button "完了の明細":
+      - text: 完了
+      - strong: 1便
+  - article:
+    - button "取消の明細":
+      - text: 取消
+      - strong: 0便
+  - article:
+    - button "差分の明細":
+      - text: 差分
+      - strong: 5便
+  - article:
+    - button "未確認伝票の明細":
+      - text: 未確認伝票
+      - strong: 5便
+  - paragraph:
+    - button "車両実台数 5台 / 延べ運行回数 6便"
+  - generic: m³
+  - button "予定 48.000"
+  - button "原票確認済み 7.800"
+  - button "確認待ち 0.000"
+  - generic: t
+  - button "予定 0.000"
+  - button "原票確認済み 0.000"
+  - button "確認待ち 0.000"
+  - generic: 実績＝受入実績確定済み。差分＝取消・受入不可を除く予定−実績（便）。未着は未到着の便で、遅延判定ではありません。数量の確認済みは原票照合済みのみ。旧方式の実績は未確認伝票に含めます。
+  - heading "搬出・受入スケジュール" [level=2]
+  - paragraph: 1便ごとの到着と受入状況。荷下ろし報告後も、実績確定までは「受入中」に含めます。
+  - generic: 5台 / 延べ6便
+  - article:
+    - generic: Y-01 · 08:00–17:00
+    - heading "サンプル受入ヤード A" [level=3]
+    - paragraph: 到着予定：09:00、11:00
+    - generic: やや混雑
+    - button "予定 5便":
+      - text: 予定
+      - generic: 5便
+    - button "待機 1便":
+      - text: 待機
+      - generic: 1便
+    - button "受入中 2便":
+      - text: 受入中
+      - generic: 2便
+    - button "完了 0便":
+      - text: 完了
+      - generic: 0便
+    - region "搬出元現場別の予定・実績":
+      - table:
+        - rowgroup:
+          - row "搬出元現場 予定 実績 未着 取消 差分 未確認伝票":
+            - columnheader "搬出元現場"
+            - columnheader "予定"
+            - columnheader "実績"
+            - columnheader "未着"
+            - columnheader "取消"
+            - columnheader "差分"
+            - columnheader "未確認伝票"
+        - rowgroup:
+          - row "サンプル搬出現場 A サンプル搬出現場 Aの予定 サンプル搬出現場 Aの実績 サンプル搬出現場 Aの未着 サンプル搬出現場 Aの取消 サンプル搬出現場 Aの差分 サンプル搬出現場 Aの未確認伝票":
+            - cell "サンプル搬出現場 A":
+              - button "サンプル搬出現場 A"
+            - cell "サンプル搬出現場 Aの予定":
+              - button "サンプル搬出現場 Aの予定": 2便
+            - cell "サンプル搬出現場 Aの実績":
+              - button "サンプル搬出現場 Aの実績": 0便
+            - cell "サンプル搬出現場 Aの未着":
+              - button "サンプル搬出現場 Aの未着": 2便
+            - cell "サンプル搬出現場 Aの取消":
+              - button "サンプル搬出現場 Aの取消": 0便
+            - cell "サンプル搬出現場 Aの差分":
+              - button "サンプル搬出現場 Aの差分": 2便
+            - cell "サンプル搬出現場 Aの未確認伝票":
+              - button "サンプル搬出現場 Aの未確認伝票": 2便
+          - row "サンプル搬出現場 C サンプル搬出現場 Cの予定 サンプル搬出現場 Cの実績 サンプル搬出現場 Cの未着 サンプル搬出現場 Cの取消 サンプル搬出現場 Cの差分 サンプル搬出現場 Cの未確認伝票":
+            - cell "サンプル搬出現場 C":
+              - button "サンプル搬出現場 C"
+            - cell "サンプル搬出現場 Cの予定":
+              - button "サンプル搬出現場 Cの予定": 1便
+            - cell "サンプル搬出現場 Cの実績":
+              - button "サンプル搬出現場 Cの実績": 0便
+            - cell "サンプル搬出現場 Cの未着":
+              - button "サンプル搬出現場 Cの未着": 0便
+            - cell "サンプル搬出現場 Cの取消":
+              - button "サンプル搬出現場 Cの取消": 0便
+            - cell "サンプル搬出現場 Cの差分":
+              - button "サンプル搬出現場 Cの差分": 1便
+            - cell "サンプル搬出現場 Cの未確認伝票":
+              - button "サンプル搬出現場 Cの未確認伝票": 1便
+          - row "サンプル搬出現場 D サンプル搬出現場 Dの予定 サンプル搬出現場 Dの実績 サンプル搬出現場 Dの未着 サンプル搬出現場 Dの取消 サンプル搬出現場 Dの差分 サンプル搬出現場 Dの未確認伝票":
+            - cell "サンプル搬出現場 D":
+              - button "サンプル搬出現場 D"
+            - cell "サンプル搬出現場 Dの予定":
+              - button "サンプル搬出現場 Dの予定": 1便
+            - cell "サンプル搬出現場 Dの実績":
+              - button "サンプル搬出現場 Dの実績": 0便
+            - cell "サンプル搬出現場 Dの未着":
+              - button "サンプル搬出現場 Dの未着": 0便
+            - cell "サンプル搬出現場 Dの取消":
+              - button "サンプル搬出現場 Dの取消": 0便
+            - cell "サンプル搬出現場 Dの差分":
+              - button "サンプル搬出現場 Dの差分": 1便
+            - cell "サンプル搬出現場 Dの未確認伝票":
+              - button "サンプル搬出現場 Dの未確認伝票": 1便
+          - row "サンプル搬出現場 E サンプル搬出現場 Eの予定 サンプル搬出現場 Eの実績 サンプル搬出現場 Eの未着 サンプル搬出現場 Eの取消 サンプル搬出現場 Eの差分 サンプル搬出現場 Eの未確認伝票":
+            - cell "サンプル搬出現場 E":
+              - button "サンプル搬出現場 E"
+            - cell "サンプル搬出現場 Eの予定":
+              - button "サンプル搬出現場 Eの予定": 1便
+            - cell "サンプル搬出現場 Eの実績":
+              - button "サンプル搬出現場 Eの実績": 0便
+            - cell "サンプル搬出現場 Eの未着":
+              - button "サンプル搬出現場 Eの未着": 0便
+            - cell "サンプル搬出現場 Eの取消":
+              - button "サンプル搬出現場 Eの取消": 0便
+            - cell "サンプル搬出現場 Eの差分":
+              - button "サンプル搬出現場 Eの差分": 1便
+            - cell "サンプル搬出現場 Eの未確認伝票":
+              - button "サンプル搬出現場 Eの未確認伝票": 1便
+    - generic "便一覧・従来の予約詳細"
+    - button "場所・受入条件"
+  - article:
+    - generic: Y-02 · 09:00–16:00
+    - heading "サンプル受入ヤード B" [level=3]
+    - paragraph: 到着予定：未到着の便なし
+    - generic: 空きあり
+    - button "予定 1便":
+      - text: 予定
+      - generic: 1便
+    - button "待機 0便":
+      - text: 待機
+      - generic: 0便
+    - button "受入中 0便":
+      - text: 受入中
+      - generic: 0便
+    - button "完了 1便":
+      - text: 完了
+      - generic: 1便
+    - region "搬出元現場別の予定・実績":
+      - table:
+        - rowgroup:
+          - row "搬出元現場 予定 実績 未着 取消 差分 未確認伝票":
+            - columnheader "搬出元現場"
+            - columnheader "予定"
+            - columnheader "実績"
+            - columnheader "未着"
+            - columnheader "取消"
+            - columnheader "差分"
+            - columnheader "未確認伝票"
+        - rowgroup:
+          - row "サンプル搬出現場 F サンプル搬出現場 Fの予定 サンプル搬出現場 Fの実績 サンプル搬出現場 Fの未着 サンプル搬出現場 Fの取消 サンプル搬出現場 Fの差分 サンプル搬出現場 Fの未確認伝票":
+            - cell "サンプル搬出現場 F":
+              - button "サンプル搬出現場 F"
+            - cell "サンプル搬出現場 Fの予定":
+              - button "サンプル搬出現場 Fの予定": 1便
+            - cell "サンプル搬出現場 Fの実績":
+              - button "サンプル搬出現場 Fの実績": 1便
+            - cell "サンプル搬出現場 Fの未着":
+              - button "サンプル搬出現場 Fの未着": 0便
+            - cell "サンプル搬出現場 Fの取消":
+              - button "サンプル搬出現場 Fの取消": 0便
+            - cell "サンプル搬出現場 Fの差分":
+              - button "サンプル搬出現場 Fの差分": 0便
+            - cell "サンプル搬出現場 Fの未確認伝票":
+              - button "サンプル搬出現場 Fの未確認伝票": 0便
+    - generic "便一覧・従来の予約詳細"
+    - button "場所・受入条件"
+  - article:
+    - generic: Y-03 · 08:30–17:00
+    - heading "サンプル受入ヤード C" [level=3]
+    - paragraph: 到着予定：未到着の便なし
+    - generic: 混雑
+    - button "予定 0便":
+      - text: 予定
+      - generic: 0便
+    - button "待機 0便":
+      - text: 待機
+      - generic: 0便
+    - button "受入中 0便":
+      - text: 受入中
+      - generic: 0便
+    - button "完了 0便":
+      - text: 完了
+      - generic: 0便
+    - region "搬出元現場別の予定・実績":
+      - table:
+        - rowgroup:
+          - row "搬出元現場 予定 実績 未着 取消 差分 未確認伝票":
+            - columnheader "搬出元現場"
+            - columnheader "予定"
+            - columnheader "実績"
+            - columnheader "未着"
+            - columnheader "取消"
+            - columnheader "差分"
+            - columnheader "未確認伝票"
+        - rowgroup
+      - paragraph: 該当する予定はありません。
+    - generic "便一覧・従来の予約詳細"
+    - button "場所・受入条件"

@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-25T01:59:06.184Z",
+  "environment": "isolated-postgresql",
+  "day": "2040-01-08",
+  "matchedBooking": "af56d2d0-1d09-4a1f-8bcd-d7cf2c03c04f",
+  "directBooking": "9b01ac58-1dd5-4ded-8d09-6d6b16093b16",
+  "trips": [
+    "d04ab8c0-7027-4d00-a004-a9736213ebca",
+    "d33a4229-c8d1-4277-a3a9-c1e5c16807e3"
+  ],
+  "actuals": [
+    6.8,
+    7
+  ],
+  "rotations": [
+    1,
+    2
+  ],
+  "relogin": [
+    "construction",
+    "receiver",
+    "driver"
+  ],
+  "unsupported404": [
+    "change",
+    "cancel",
+    "reassign",
+    "delay",
+    "refuse",
+    "correct"
+  ]
+}

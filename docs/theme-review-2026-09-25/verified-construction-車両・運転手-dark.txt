@@ -1,0 +1,128 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手" [active]:
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "車両一覧" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 車両情報
+  - generic: 運転手情報は、各車両の「運転手情報」ボタンから確認できます。
+  - generic: 検索結果：3件
+  - text: 検索
+  - textbox "検索":
+    - /placeholder: 車両名・車両番号を入力
+  - text: 状態
+  - combobox "状態":
+    - option "すべて" [selected]
+  - checkbox "期限切れのみ"
+  - text: 期限切れのみ
+  - button "検索":
+    - text: 検索
+  - button "詳細検索"
+  - button "クリア"
+  - button "車両情報を登録"
+  - paragraph: 配車時に使用する車両を管理し、割り当てられた運転手情報を車両ごとに確認します。
+  - generic "車両名"
+  - generic "車両番号"
+  - generic "種別"
+  - generic "最大積載量"
+  - generic "利用状況"
+  - generic "運転手"
+  - generic "10t ダンプ 01"
+  - generic "品川 100 あ 12-34"
+  - generic "大型ダンプ"
+  - generic "10t"
+  - generic "稼働中"
+  - button "運転手情報"
+  - generic "4t ダンプ 02"
+  - generic "足立 100 か 56-78"
+  - generic "中型ダンプ"
+  - generic "4t"
+  - generic "稼働中"
+  - button "運転手情報"
+  - generic "アームロール 03"
+  - generic "練馬 100 き 90-12"
+  - generic "脱着装置付コンテナ車"
+  - generic "8t"
+  - generic "点検予定"
+  - button "運転手情報"
+  - button "前のページ" [disabled]:
+  - button "1" [disabled]
+  - button "次のページ" [disabled]:

@@ -1,0 +1,94 @@
+/* Readability corrections from the 2026-09-25 rendered light/dark review.
+   Scope overrides to affected components; preserve business states and layouts. */
+.control-app-shell .sidebar-suite-nav button.suite-information-disabled:disabled { background: #293b38 !important; color: #a5b4af !important; border-color: #52645e !important; box-shadow: none !important; opacity: 1 !important; cursor: not-allowed; transform: none !important; }
+.control-app-shell .sidebar-suite-nav button.suite-information-disabled:disabled span { color: inherit; }
+.control-app-shell .sidebar-suite-nav button.suite-information-disabled::after { display: none; }
+.information-restricted { padding: 24px; line-height: 1.7; }
+.control-app-shell .information-restricted button { min-height: 44px; padding: 10px 16px; border: 1px solid #718f83; border-radius: 8px; background: #e5eeea; color: #193b32; cursor: pointer; }
+.control-app-shell.theme-light .control-brand small { color: #53620b; }
+.control-app-shell .control-brand>span { min-width: 0; }
+.control-app-shell .control-brand b { overflow: hidden; text-overflow: ellipsis; }
+.control-app-shell.theme-light { --ui-muted: #455c54; }
+.control-app-shell.theme-light .connected-table-wrap th { color: #405b50 !important; }
+.control-app-shell .sidebar-collapse-row .collapse,
+.control-app-shell .sidebar-footer > small { color: #cfdfda !important; }
+.control-app-shell .segmented-control button span { color: inherit !important; opacity: 1; }
+.control-app-shell.theme-dark .segmented-control button:not(.active) { color: #d3e4de; }
+.control-app-shell .segmented-control button.active :is(b, span) { color: #17352c !important; }
+.control-app-shell.theme-light .timeline-primary-guide :is(b,small),
+.control-app-shell.theme-light .construction-hero > div > span,
+.control-app-shell.theme-light .dispatch-detail > span { color: #345348; }
+.control-app-shell.theme-light .control-summary > button.warning :is(b,i,svg) { color: #895000; }
+.control-app-shell.theme-light .control-summary > button.complete :is(b,i,svg) { color: #4c650b; }
+.control-app-shell .danger { color: #a73119 !important; background: #fff4ef; }
+.control-app-shell.theme-dark .generic-table button.outline { background: #23473f; color: #f3f8f5; }
+.control-app-shell.theme-light .matching-progress span { color: #4b675d; font-size: 12px; }
+.control-app-shell.theme-light .matching-progress span.active { color: #173e32; font-weight: 700; }
+.control-app-shell.theme-light .match-route-preview :is(small,em) { color: #4b675d; }
+.control-app-shell .matching-progress span { font-size: 12px; }
+.control-app-shell .match-route-preview :is(small,em) { font-size: 12px; }
+.control-app-shell.theme-light .modal.form-modal { background: #fff; color: #173e32; border-color: #9bb5aa; }
+.control-app-shell.theme-light .modal.form-modal :is(h2,label) { color: #173e32; }
+.control-app-shell .modal-actions { flex-wrap: wrap; gap: 12px; }
+.control-app-shell .modal-actions button { min-height: 44px; min-width: 110px; white-space: normal; }
+.control-app-shell :is(.field-total-card,.field-total-main) button { min-width: 100px; }
+/* Explicit component tokens prevent the shell's descendant text rules from
+   putting light text on the capacity chart's previously fixed white panels. */
+.control-app-shell .cap-a { --ca-ink: #153f35; --ca-muted: #45655b; --ca-panel: #fff; --ca-raised: #edf5f1; --ca-line: #b7cdc4; background: var(--ca-panel); color: var(--ca-ink); }
+.control-app-shell.theme-dark .cap-a { --ca-ink: #eef7f3; --ca-muted: #c2d6cd; --ca-panel: #173c34; --ca-raised: #244b40; --ca-line: #65867a; }
+.control-app-shell .cap-a :is(.cap-a-caption,.cap-a-stats,footer,.cap-a-detail h4) { background: var(--ca-raised); color: var(--ca-ink) !important; }
+.control-app-shell .cap-a :is(strong,b,.cap-a-month,.cap-a-legend,.cap-a-detail-row>span) { color: var(--ca-ink) !important; }
+.control-app-shell .cap-a :is(p,small,.cap-a-hint span,.cap-a-axis-unit,.cap-a-grid>span) { color: var(--ca-muted) !important; }
+.control-app-shell .cap-a .cap-a-header h3 { color: #fff !important; }
+.control-app-shell .cap-a .cap-a-caption>span { background: var(--ca-panel); color: var(--ca-ink); }
+.control-app-shell .cap-a .cap-a-grid>b { background: var(--ca-panel); }
+.control-app-shell .cap-a .cap-a-grid { border-color: var(--ca-line); }
+.control-app-shell .cap-a .cap-a-detail-row>button { background: var(--ca-panel); color: var(--ca-ink); }
+.control-app-shell .cap-a .cap-a-columns button[aria-pressed=true] .cap-a-month { color: #183d2e !important; }
+.control-app-shell .cap-a .cap-a-over-label,
+.control-app-shell .cap-a .cap-a-over-label b { color: #ad2538 !important; }
+.control-app-shell.theme-dark .cap-a .cap-a-over-label,
+.control-app-shell.theme-dark .cap-a .cap-a-over-label b { color: #ffb3bf !important; }
+.control-app-shell .cap-a :is(th,td) { background: var(--ca-panel) !important; color: var(--ca-ink) !important; }
+.control-app-shell .cap-a { container-type: inline-size; }
+.control-app-shell .cap-a-controls { flex-wrap: wrap; }
+@container (max-width: 480px) {
+  .control-app-shell .cap-a-stats { grid-template-columns: minmax(0,1fr); margin: 16px 12px; padding: 8px 0; }
+  .control-app-shell .cap-a-stats>div { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 0; padding: 10px 14px; }
+  .control-app-shell .cap-a-stats strong { font-size: 26px; }
+  .control-app-shell .cap-a-stats span { margin: 0; }
+  .control-app-shell .cap-a-hint span { float: none; display: block; margin-top: 6px; }
+}
+.control-app-shell .rc-capacity.cap-a .receipt-totals { background: var(--ca-raised); color: var(--ca-ink); }
+.control-app-shell .rc-capacity.cap-a .rc-quota-limit { color: var(--ca-muted); border-color: var(--ca-line); }
+.control-app-shell .rc-capacity.cap-a :is(.rc-quota-column>span,figcaption) { color: var(--ca-muted); }
+.control-app-shell .evidence-original a { color: #245b35 !important; display: inline-flex; min-height: 44px; align-items: center; text-decoration: underline; }
+/* Information uses the same readable surfaces as other management pages. */
+.control-app-shell .information-workspace { --surface: var(--ui-panel); }
+.control-app-shell.theme-dark .information-workspace { --ink: #eef7f3; --muted: #c5d9d0; --line: #66867a; color: #eef7f3; }
+.control-app-shell.theme-dark .information-workspace>[role=status] { color: #d1e982; }
+.control-app-shell.theme-dark .shared-match { --surface: #193b36; --panel: #23473f; --ink: #eef7f3; --muted: #c5d9d0; --border: #66867a; --line: #66867a; }
+.control-app-shell.theme-dark .shared-match .matching-kpis article { background: #193b36; }
+.control-app-shell.theme-dark .shared-match .matching-kpis :is(span,b) { color: #eef7f3 !important; }
+.control-app-shell.theme-dark .connected-root.business-connected { --bg: transparent; --surface: #193b36; --raised: #23473f; --text: #f2f6ef; --muted: #bed0c6; --line: #66867a; --warn: #ffd187; --warning-bg: #443925; }
+.control-app-shell.theme-dark .business-login { --surface: #193b36; --ink: #eef7f3; }
+.control-app-shell.theme-dark .business-login input { background: #102d26; color: #eef7f3; }
+.control-app-shell .business-connected .connected-grid>button.connected-card { display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 6px 10px; text-align: left; }
+.control-app-shell .business-connected .connected-grid>button.connected-card>svg { grid-row: 1 / span 3; }
+.control-app-shell .business-connected .connected-grid>button.connected-card>:is(strong,small,span) { grid-column: 2; overflow-wrap: anywhere; }
+.control-app-shell.theme-dark .information-workspace :is(.information-empty,.information-detail,.information-list>button) { background: #193b36; color: #f0f7f3; border-color: #66867a; }
+.control-app-shell.theme-dark .information-workspace .information-list>button.is-selected { background: #294d3e; }
+.control-app-shell.theme-dark .information-workspace :is(.information-empty,.information-detail,.information-list) :is(h3,strong) { color: #f0f7f3 !important; }
+.control-app-shell.theme-dark .information-workspace :is(.information-empty,.information-detail,.information-list) :is(p,small,span,label,summary) { color: #c5d9d0 !important; }
+.control-app-shell.theme-dark .information-workspace .information-detail :is(input,textarea,select) { background: #102d26; color: #f0f7f3 !important; }
+.control-app-shell .information-layout { grid-template-columns: minmax(0,.9fr) minmax(0,1.3fr); }
+.control-app-shell .information-workspace :is(button,p,h3,strong) { overflow-wrap: anywhere; }
+@media(max-width:1100px) { .control-app-shell .information-layout { grid-template-columns: 1fr; } }
+.driver-preview .direct-workflow { background: var(--surface); --ink: var(--text); }
+.driver-preview.dark { color-scheme: dark; }
+.driver-preview.light { color-scheme: light; }
+.driver-preview :is(input,textarea)::placeholder { color: var(--muted); opacity: 1; }
+.driver-preview .direct-workflow a { color: var(--text); text-decoration: underline; }
+.driver-preview.light .direct-workflow .workflow-error { color: #a32727; }
+.driver-preview.light .direct-workflow :is(.workflow-success,.workflow-complete) { color: #41620e; }
+@media(prefers-reduced-motion:reduce) { .control-app-shell *, .driver-preview * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }

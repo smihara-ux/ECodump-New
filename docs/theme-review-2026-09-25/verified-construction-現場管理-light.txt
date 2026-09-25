@@ -1,0 +1,700 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理" [active]:
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "現場管理" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - generic: 検索結果：23件
+  - text: 検索
+  - textbox "検索":
+    - /placeholder: 現場名/IDを入力
+  - text: 利用サービス
+  - combobox "利用サービス":
+    - option "すべて" [selected]
+    - option "書類"
+    - option "入退場"
+    - option "会議"
+  - checkbox "利用終了を含める"
+  - text: 利用終了を含める
+  - button "検索":
+    - text: 検索
+  - button "詳細検索"
+  - button "クリア"
+  - button "操作ユーザー選択":
+    - text: 操作ユーザー選択
+  - paragraph:
+    - text: アクセスしたい現場が表示されない場合は
+    - link "こちら":
+      - /url: "#help"
+    - text: をご確認ください。
+  - region "現場一覧。横方向にスクロールできます":
+    - table:
+      - rowgroup:
+        - row "元請名 支店名 現場名 住所 着工日 竣工日 ステータス 利用中のサービス":
+          - columnheader "元請名"
+          - columnheader "支店名"
+          - columnheader "現場名"
+          - columnheader "住所"
+          - columnheader "着工日"
+          - columnheader "竣工日"
+          - columnheader "ステータス"
+          - columnheader "利用中のサービス"
+      - rowgroup:
+        - row "サンプル建設株式会社A 東京支店 （仮称）サンプル現場 A ID：32182 現場ID 32182 をコピー ／ CCUS 東京都中央区 サンプル1-1 2026/01/01 2027/01/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社A"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 A ID：32182 現場ID 32182 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 A":
+              - text: （仮称）サンプル現場 A
+            - text: ID：32182
+            - button "現場ID 32182 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル1-1"
+          - cell "2026/01/01"
+          - cell "2027/01/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社B 首都圏建築支店 サンプル現場 B ID：32183 現場ID 32183 をコピー ／ CCUS 千葉県船橋市 サンプル2-2 2026/02/01 2027/02/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社B"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 B ID：32183 現場ID 32183 をコピー ／ CCUS":
+            - button "サンプル現場 B":
+              - text: サンプル現場 B
+            - text: ID：32183
+            - button "現場ID 32183 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル2-2"
+          - cell "2026/02/01"
+          - cell "2027/02/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社C 関東支店 サンプル現場 C ID：32184 現場ID 32184 をコピー ／ CCUS 神奈川県川崎市 サンプル3-3 2026/03/01 2027/03/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社C"
+          - cell "関東支店"
+          - cell "サンプル現場 C ID：32184 現場ID 32184 をコピー ／ CCUS":
+            - button "サンプル現場 C":
+              - text: サンプル現場 C
+            - text: ID：32184
+            - button "現場ID 32184 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル3-3"
+          - cell "2026/03/01"
+          - cell "2027/03/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社D 東京支店 （仮称）サンプル現場 D ID：32185 現場ID 32185 をコピー ／ CCUS 東京都中央区 サンプル4-4 2026/04/01 2027/04/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社D"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 D ID：32185 現場ID 32185 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 D":
+              - text: （仮称）サンプル現場 D
+            - text: ID：32185
+            - button "現場ID 32185 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル4-4"
+          - cell "2026/04/01"
+          - cell "2027/04/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社E 首都圏建築支店 サンプル現場 E ID：32186 現場ID 32186 をコピー ／ CCUS 千葉県船橋市 サンプル5-5 2026/05/01 2027/05/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社E"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 E ID：32186 現場ID 32186 をコピー ／ CCUS":
+            - button "サンプル現場 E":
+              - text: サンプル現場 E
+            - text: ID：32186
+            - button "現場ID 32186 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル5-5"
+          - cell "2026/05/01"
+          - cell "2027/05/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社A 関東支店 サンプル現場 F ID：32187 現場ID 32187 をコピー ／ CCUS 神奈川県川崎市 サンプル6-1 2026/06/01 2027/06/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社A"
+          - cell "関東支店"
+          - cell "サンプル現場 F ID：32187 現場ID 32187 をコピー ／ CCUS":
+            - button "サンプル現場 F":
+              - text: サンプル現場 F
+            - text: ID：32187
+            - button "現場ID 32187 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル6-1"
+          - cell "2026/06/01"
+          - cell "2027/06/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社B 東京支店 （仮称）サンプル現場 G ID：32188 現場ID 32188 をコピー ／ CCUS 東京都中央区 サンプル7-2 2026/07/01 2027/07/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社B"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 G ID：32188 現場ID 32188 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 G":
+              - text: （仮称）サンプル現場 G
+            - text: ID：32188
+            - button "現場ID 32188 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル7-2"
+          - cell "2026/07/01"
+          - cell "2027/07/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社C 首都圏建築支店 サンプル現場 H ID：32189 現場ID 32189 をコピー ／ CCUS 千葉県船橋市 サンプル8-3 2026/08/01 2027/08/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社C"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 H ID：32189 現場ID 32189 をコピー ／ CCUS":
+            - button "サンプル現場 H":
+              - text: サンプル現場 H
+            - text: ID：32189
+            - button "現場ID 32189 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル8-3"
+          - cell "2026/08/01"
+          - cell "2027/08/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社D 関東支店 サンプル現場 I ID：32190 現場ID 32190 をコピー ／ CCUS 神奈川県川崎市 サンプル9-4 2026/09/01 2027/09/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社D"
+          - cell "関東支店"
+          - cell "サンプル現場 I ID：32190 現場ID 32190 をコピー ／ CCUS":
+            - button "サンプル現場 I":
+              - text: サンプル現場 I
+            - text: ID：32190
+            - button "現場ID 32190 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル9-4"
+          - cell "2026/09/01"
+          - cell "2027/09/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社E 東京支店 （仮称）サンプル現場 J ID：32191 現場ID 32191 をコピー ／ CCUS 東京都中央区 サンプル10-5 2026/01/01 2027/01/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社E"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 J ID：32191 現場ID 32191 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 J":
+              - text: （仮称）サンプル現場 J
+            - text: ID：32191
+            - button "現場ID 32191 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル10-5"
+          - cell "2026/01/01"
+          - cell "2027/01/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社A 首都圏建築支店 サンプル現場 K ID：32192 現場ID 32192 をコピー ／ CCUS 千葉県船橋市 サンプル11-1 2026/02/01 2027/02/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社A"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 K ID：32192 現場ID 32192 をコピー ／ CCUS":
+            - button "サンプル現場 K":
+              - text: サンプル現場 K
+            - text: ID：32192
+            - button "現場ID 32192 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル11-1"
+          - cell "2026/02/01"
+          - cell "2027/02/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社B 関東支店 サンプル現場 L ID：32193 現場ID 32193 をコピー ／ CCUS 神奈川県川崎市 サンプル12-2 2026/03/01 2027/03/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社B"
+          - cell "関東支店"
+          - cell "サンプル現場 L ID：32193 現場ID 32193 をコピー ／ CCUS":
+            - button "サンプル現場 L":
+              - text: サンプル現場 L
+            - text: ID：32193
+            - button "現場ID 32193 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル12-2"
+          - cell "2026/03/01"
+          - cell "2027/03/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社C 東京支店 （仮称）サンプル現場 M ID：32194 現場ID 32194 をコピー ／ CCUS 東京都中央区 サンプル13-3 2026/04/01 2027/04/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社C"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 M ID：32194 現場ID 32194 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 M":
+              - text: （仮称）サンプル現場 M
+            - text: ID：32194
+            - button "現場ID 32194 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル13-3"
+          - cell "2026/04/01"
+          - cell "2027/04/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社D 首都圏建築支店 サンプル現場 N ID：32195 現場ID 32195 をコピー ／ CCUS 千葉県船橋市 サンプル14-4 2026/05/01 2027/05/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社D"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 N ID：32195 現場ID 32195 をコピー ／ CCUS":
+            - button "サンプル現場 N":
+              - text: サンプル現場 N
+            - text: ID：32195
+            - button "現場ID 32195 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル14-4"
+          - cell "2026/05/01"
+          - cell "2027/05/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社E 関東支店 サンプル現場 O ID：32196 現場ID 32196 をコピー ／ CCUS 神奈川県川崎市 サンプル15-5 2026/06/01 2027/06/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社E"
+          - cell "関東支店"
+          - cell "サンプル現場 O ID：32196 現場ID 32196 をコピー ／ CCUS":
+            - button "サンプル現場 O":
+              - text: サンプル現場 O
+            - text: ID：32196
+            - button "現場ID 32196 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル15-5"
+          - cell "2026/06/01"
+          - cell "2027/06/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社A 東京支店 （仮称）サンプル現場 P ID：32197 現場ID 32197 をコピー ／ CCUS 東京都中央区 サンプル16-1 2026/07/01 2027/07/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社A"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 P ID：32197 現場ID 32197 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 P":
+              - text: （仮称）サンプル現場 P
+            - text: ID：32197
+            - button "現場ID 32197 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル16-1"
+          - cell "2026/07/01"
+          - cell "2027/07/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社B 首都圏建築支店 サンプル現場 Q ID：32198 現場ID 32198 をコピー ／ CCUS 千葉県船橋市 サンプル17-2 2026/08/01 2027/08/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社B"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 Q ID：32198 現場ID 32198 をコピー ／ CCUS":
+            - button "サンプル現場 Q":
+              - text: サンプル現場 Q
+            - text: ID：32198
+            - button "現場ID 32198 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル17-2"
+          - cell "2026/08/01"
+          - cell "2027/08/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社C 関東支店 サンプル現場 R ID：32199 現場ID 32199 をコピー ／ CCUS 神奈川県川崎市 サンプル18-3 2026/09/01 2027/09/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社C"
+          - cell "関東支店"
+          - cell "サンプル現場 R ID：32199 現場ID 32199 をコピー ／ CCUS":
+            - button "サンプル現場 R":
+              - text: サンプル現場 R
+            - text: ID：32199
+            - button "現場ID 32199 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル18-3"
+          - cell "2026/09/01"
+          - cell "2027/09/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社D 東京支店 （仮称）サンプル現場 S ID：32200 現場ID 32200 をコピー ／ CCUS 東京都中央区 サンプル19-4 2026/01/01 2027/01/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社D"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 S ID：32200 現場ID 32200 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 S":
+              - text: （仮称）サンプル現場 S
+            - text: ID：32200
+            - button "現場ID 32200 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル19-4"
+          - cell "2026/01/01"
+          - cell "2027/01/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社E 首都圏建築支店 サンプル現場 T ID：32201 現場ID 32201 をコピー ／ CCUS 千葉県船橋市 サンプル20-5 2026/02/01 2027/02/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社E"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 T ID：32201 現場ID 32201 をコピー ／ CCUS":
+            - button "サンプル現場 T":
+              - text: サンプル現場 T
+            - text: ID：32201
+            - button "現場ID 32201 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル20-5"
+          - cell "2026/02/01"
+          - cell "2027/02/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社A 関東支店 サンプル現場 A21 ID：32202 現場ID 32202 をコピー ／ CCUS 神奈川県川崎市 サンプル21-1 2026/03/01 2027/03/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社A"
+          - cell "関東支店"
+          - cell "サンプル現場 A21 ID：32202 現場ID 32202 をコピー ／ CCUS":
+            - button "サンプル現場 A21":
+              - text: サンプル現場 A21
+            - text: ID：32202
+            - button "現場ID 32202 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "神奈川県川崎市 サンプル21-1"
+          - cell "2026/03/01"
+          - cell "2027/03/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社B 東京支店 （仮称）サンプル現場 B22 ID：32203 現場ID 32203 をコピー ／ CCUS 東京都中央区 サンプル22-2 2026/04/01 2027/04/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社B"
+          - cell "東京支店"
+          - cell "（仮称）サンプル現場 B22 ID：32203 現場ID 32203 をコピー ／ CCUS":
+            - button "（仮称）サンプル現場 B22":
+              - text: （仮称）サンプル現場 B22
+            - text: ID：32203
+            - button "現場ID 32203 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "東京都中央区 サンプル22-2"
+          - cell "2026/04/01"
+          - cell "2027/04/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+        - row "サンプル建設株式会社C 首都圏建築支店 サンプル現場 C23 ID：32204 現場ID 32204 をコピー ／ CCUS 千葉県船橋市 サンプル23-3 2026/05/01 2027/05/28 稼働中 労務安全を開く 入退場管理を開く 調整会議を開く":
+          - cell "サンプル建設株式会社C"
+          - cell "首都圏建築支店"
+          - cell "サンプル現場 C23 ID：32204 現場ID 32204 をコピー ／ CCUS":
+            - button "サンプル現場 C23":
+              - text: サンプル現場 C23
+            - text: ID：32204
+            - button "現場ID 32204 をコピー":
+            - generic: ／
+            - text: CCUS
+          - cell "千葉県船橋市 サンプル23-3"
+          - cell "2026/05/01"
+          - cell "2027/05/28"
+          - cell "稼働中":
+            - generic: 稼働中
+          - cell "労務安全を開く 入退場管理を開く 調整会議を開く":
+            - link "労務安全を開く":
+              - /url: "?page=labor"
+              - generic: 書類
+            - link "入退場管理を開く":
+              - /url: "?page=gatekeeper"
+              - generic: 入退場
+            - link "調整会議を開く":
+              - /url: "?page=conference"
+              - generic: 会議
+  - button "前のページ" [disabled]:
+  - button "1" [disabled]
+  - button "次のページ" [disabled]:

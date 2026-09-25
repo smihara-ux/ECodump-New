@@ -1,0 +1,113 @@
+{
+  "scenarios": [
+    {
+      "label": "matching",
+      "bookingId": "e978a254-cfdf-446b-97eb-da17ef96f001",
+      "tripId": "9645f3ee-740a-4fb8-8322-5b77f4ecefea",
+      "rotation": 1,
+      "actual": 7.8,
+      "unit": "m3",
+      "status": "PASS"
+    },
+    {
+      "label": "direct",
+      "bookingId": "583b66a9-7996-4d78-bf89-d27a9cc74661",
+      "tripId": "36352bbb-6f80-4523-b345-f9e5f2b3f48c",
+      "rotation": 2,
+      "actual": 6.8,
+      "unit": "m3",
+      "status": "PASS"
+    }
+  ],
+  "viewports": [
+    {
+      "label": "driver-390-dark",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    },
+    {
+      "label": "construction-pc-dark",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    },
+    {
+      "label": "construction-tablet-light",
+      "width": 820,
+      "height": 1180,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    },
+    {
+      "label": "receiving-tablet-dark",
+      "width": 820,
+      "height": 1180,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    },
+    {
+      "label": "receiving-pc-light",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    },
+    {
+      "label": "driver-390-light",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    },
+    {
+      "label": "driver-360-light",
+      "width": 360,
+      "height": 800,
+      "overflow": false,
+      "smallTargets": [],
+      "bodyFont": "14px"
+    }
+  ],
+  "limitations": [
+    {
+      "action": "change",
+      "status": 404,
+      "meaning": "共通PostgreSQLでは未対応"
+    },
+    {
+      "action": "cancel",
+      "status": 404,
+      "meaning": "共通PostgreSQLでは未対応"
+    },
+    {
+      "action": "reassign",
+      "status": 404,
+      "meaning": "共通PostgreSQLでは未対応"
+    },
+    {
+      "action": "delay",
+      "status": 404,
+      "meaning": "共通PostgreSQLでは未対応"
+    },
+    {
+      "action": "unavailable",
+      "status": 404,
+      "meaning": "共通PostgreSQLでは未対応"
+    },
+    {
+      "action": "correct",
+      "status": 404,
+      "meaning": "共通PostgreSQLでは未対応"
+    }
+  ],
+  "consoleErrors": []
+}

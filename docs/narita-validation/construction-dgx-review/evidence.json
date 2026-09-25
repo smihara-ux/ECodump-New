@@ -1,0 +1,72 @@
+{
+  "checkedAt": "2026-09-25T07:52:55.420Z",
+  "base": "https://life-id.tailbe6181.ts.net:9462",
+  "release": "20260925-165053",
+  "checks": [
+    {
+      "name": "担当現場",
+      "route": "fields",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "配車・運行管理",
+      "route": "dispatch",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "実績・伝票",
+      "route": "results",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "発生土マッチ",
+      "route": "matching",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "総合インフォメーション",
+      "route": "information",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "労務安全",
+      "route": "labor",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "入退場管理",
+      "route": "gatekeeper",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "調整会議",
+      "route": "conference",
+      "width": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "name": "施工タブレット",
+      "route": "transport",
+      "width": 820,
+      "overflow": false,
+      "emptyButtons": 0
+    }
+  ],
+  "pageErrors": [],
+  "note": "Read-only integrated construction screen review; formal cross-role mutation test not run."
+}

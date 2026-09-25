@@ -1,0 +1,158 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票" [active]:
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "実績・帳票" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - status:
+    - generic: 画面試作 API未接続のため、割当・変更内容はこの画面を閉じると失われます。
+  - text: RESULTS & REPORTS
+  - heading "実績・帳票" [level=2]
+  - paragraph: 予定、ドライバー報告、受入確認済みを分け、原本伝票まで便単位で追跡します。
+  - button "CSV出力"
+  - article:
+    - generic: 受入確認済み
+    - generic: 1便
+  - article:
+    - generic: 伝票確認待ち
+    - generic: 1便
+  - article:
+    - generic: 確認済み合計（容積）
+    - generic: 6.8m³
+  - article:
+    - generic: 確認済み合計（重量）
+    - generic: 0.0t
+  - paragraph: 確認待ち数量は確認済み合計に含めません。t と m³ は換算せず別集計です。
+  - table:
+    - rowgroup:
+      - row "便番号 往復 現場 受入先 予定 報告済み 受入確認済み 状態 原本伝票 操作":
+        - columnheader "便番号"
+        - columnheader "往復"
+        - columnheader "現場"
+        - columnheader "受入先"
+        - columnheader "予定"
+        - columnheader "報告済み"
+        - columnheader "受入確認済み"
+        - columnheader "状態"
+        - columnheader "原本伝票"
+        - columnheader "操作"
+    - rowgroup:
+      - row "TR-20260820-01 1便目 （仮称）サンプル現場 A 湾岸リサイクルセンター 7.0m³ 6.9m³ 6.8m³ 受入確認済み 計量票 W-0820-01 確認":
+        - cell "TR-20260820-01"
+        - cell "1便目"
+        - cell "（仮称）サンプル現場 A"
+        - cell "湾岸リサイクルセンター"
+        - cell "7.0m³"
+        - cell "6.9m³"
+        - cell "6.8m³"
+        - cell "受入確認済み"
+        - cell "計量票 W-0820-01":
+          - button "計量票 W-0820-01"
+        - cell "確認":
+          - button "確認"
+      - row "TR-20260820-05 2便目 （仮称）サンプル現場 A 湾岸リサイクルセンター 7.0m³ 6.7m³ — 報告済み・確認待ち 計量票 W-0820-05 確認":
+        - cell "TR-20260820-05"
+        - cell "2便目"
+        - cell "（仮称）サンプル現場 A"
+        - cell "湾岸リサイクルセンター"
+        - cell "7.0m³"
+        - cell "6.7m³"
+        - cell "—"
+        - cell "報告済み・確認待ち"
+        - cell "計量票 W-0820-05":
+          - button "計量票 W-0820-05"
+        - cell "確認":
+          - button "確認"
+      - row "TR-20260820-02 1便目 サンプル現場 B 中央中間処理施設 8.0t — — 運行中 未提出 確認":
+        - cell "TR-20260820-02"
+        - cell "1便目"
+        - cell "サンプル現場 B"
+        - cell "中央中間処理施設"
+        - cell "8.0t"
+        - cell "—"
+        - cell "—"
+        - cell "運行中"
+        - cell "未提出":
+          - button "未提出"
+        - cell "確認":
+          - button "確認"

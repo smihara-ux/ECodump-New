@@ -1,0 +1,112 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え" [active]:
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "総合インフォメーション" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - text: ECO DUMP INFORMATION
+  - heading "総合インフォメーション" [level=2]
+  - paragraph: 公開範囲に応じたお知らせを確認します。
+  - button "管理画面へ戻る"
+  - generic: 記事公開と通知配信は別処理です。メール・Pushは未接続です。
+  - text: 掲載範囲
+  - combobox "掲載範囲":
+    - option "すべて" [selected]
+    - option "運営共通"
+    - option "会社内"
+    - option "現場別"
+  - text: カテゴリ
+  - combobox "カテゴリ":
+    - option "すべて" [selected]
+    - option "お知らせ"
+    - option "運用案内"
+    - option "安全・注意"
+    - option "保守情報"
+  - text: 検索
+  - textbox "検索":
+    - /placeholder: タイトル・本文
+  - button "再取得"
+  - paragraph: 閲覧用アカウントです。投稿・編集・公開・取下げ権限は付与されていません。
+  - paragraph: 閲覧者には公開期間内の記事だけ表示します。公開前・期限切れ・取下げ記事は編集権限のある担当者のみ確認できます。期間表示は端末時刻、閲覧・確認の可否はサーバー時刻で判定します。
+  - button "運営共通 · 運用案内 · 公開中 ECO DUMP 検証環境の利用について 2026/1/1 0:00:00 〜 2027/12/31 23:59:00 確認が必要 · 添付 0件":
+    - generic: 運営共通 · 運用案内 · 公開中
+    - strong: ECO DUMP 検証環境の利用について
+    - generic: 2026/1/1 0:00:00 〜 2027/12/31 23:59:00
+    - generic: 確認が必要 · 添付 0件
+  - button "会社内 · お知らせ · 公開中 栃木モデル受入会社〈架空〉 社内連絡 2026/1/1 0:00:00 〜 2027/12/31 23:59:00 閲覧のみ · 添付 0件":
+    - generic: 会社内 · お知らせ · 公開中
+    - strong: 栃木モデル受入会社〈架空〉 社内連絡
+    - generic: 2026/1/1 0:00:00 〜 2027/12/31 23:59:00
+    - generic: 閲覧のみ · 添付 0件
+  - button "現場別 · 運用案内 · 公開中 栃木モデル採石場 受付確認 2026/1/1 0:00:00 〜 2027/12/31 23:59:00 確認済み · 添付 0件":
+    - generic: 現場別 · 運用案内 · 公開中
+    - strong: 栃木モデル採石場 受付確認
+    - generic: 2026/1/1 0:00:00 〜 2027/12/31 23:59:00
+    - generic: 確認済み · 添付 0件
+  - generic: 運営共通 · 運用案内 · 第1版 · 公開中
+  - heading "ECO DUMP 検証環境の利用について" [level=3]
+  - paragraph: この画面は隔離した検証環境です。本番データ・実在契約・実通知は使用していません。
+  - paragraph: 公開期間：2026/1/1 0:00:00 〜 2027/12/31 23:59:00
+  - button "内容を確認しました"
+  - paragraph: 確認記録は第1版に対するものです。改訂・再公開された記事は改めて確認が必要です。
+  - generic "掲載内容・権限の整理案"

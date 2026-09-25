@@ -1,0 +1,18 @@
+✔ lost response survives reload and can only be reconciled, never blindly replayed (1.517333ms)
+✔ storage failure prevents transmission and a different actor cannot inherit the pending operation (2.2255ms)
+✔ a rejected stale update and an uncertain server failure remain distinct (0.112792ms)
+▶ PostgreSQL shared matching acceptance
+  ✔ scoped draft creation, file persistence, invalid inputs and immutable idempotency (36.526041ms)
+  ✔ public and consultation document visibility, unit-aware search and messaging (77.578292ms)
+  ✔ editable offers, history, stale versions and renewed bilateral consent (104.394583ms)
+  ✔ agreed snapshot stays frozen after edits, transfers correct locations without confirming or dispatching (81.831333ms)
+  ✔ database denies raw private reads and out-of-scope mutations; driver cannot match (7.906ms)
+✔ PostgreSQL shared matching acceptance (502.531334ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 578.882583

@@ -1,0 +1,207 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理" [active]:
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "受入管理〈ホーム〉" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - generic: 保存済みの予約・実績
+  - button "再取得"
+  - button "本日 2026-09-25" [pressed]:
+    - generic: 本日
+    - generic: 2026-09-25
+  - button "翌日 2026-09-26":
+    - generic: 翌日
+    - generic: 2026-09-26
+  - button "受入場所別" [pressed]
+  - button "現場別"
+  - generic: 表示日
+  - textbox "表示日": 2026-09-25
+  - generic: 受入場所
+  - combobox "受入場所":
+    - option "すべて" [selected]
+    - option "栃木モデル採石場〈架空〉"
+  - generic: 混雑状況
+  - combobox "混雑状況":
+    - option "すべて" [selected]
+    - option "空きあり"
+    - option "やや混雑"
+    - option "混雑"
+  - generic: 現場・受入場所・車両を検索
+  - textbox "現場・受入場所・車両を検索":
+    - /placeholder: 便ID・現場名・車両
+  - article:
+    - button "本日の予定の明細":
+      - text: 本日の予定
+      - strong: 2便
+  - article:
+    - button "到着予定の明細":
+      - text: 到着予定
+      - strong: 1便
+  - article:
+    - button "待機の明細":
+      - text: 待機
+      - strong: 0便
+  - article:
+    - button "受入中の明細":
+      - text: 受入中
+      - strong: 1便
+  - article:
+    - button "完了の明細":
+      - text: 完了
+      - strong: 0便
+  - article:
+    - button "取消の明細":
+      - text: 取消
+      - strong: 0便
+  - article:
+    - button "差分の明細":
+      - text: 差分
+      - strong: 2便
+  - article:
+    - button "未確認伝票の明細":
+      - text: 未確認伝票
+      - strong: 2便
+  - paragraph:
+    - button "車両実台数 1台 / 延べ運行回数 2便"
+  - generic: m³
+  - button "予定 20.000"
+  - button "原票確認済み 0.000"
+  - button "確認待ち 9.500"
+  - generic: t
+  - button "予定 0.000"
+  - button "原票確認済み 0.000"
+  - button "確認待ち 0.000"
+  - generic: 実績＝受入実績確定済み。差分＝取消・受入不可を除く予定−実績（便）。未着は未到着の便で、遅延判定ではありません。数量の確認済みは原票照合済みのみ。旧方式の実績は未確認伝票に含めます。
+  - heading "搬出・受入スケジュール" [level=2]
+  - paragraph: 1便ごとの到着と受入状況。荷下ろし報告後も、実績確定までは「受入中」に含めます。
+  - generic: 1台 / 延べ2便
+  - article:
+    - generic: 21000000-0000-4000-8000-000000000003 · 営業時間は場所管理で確認
+    - heading "栃木モデル採石場〈架空〉" [level=3]
+    - paragraph: 到着予定：16:00
+    - generic: 混雑未確認
+    - button "予定 2便":
+      - text: 予定
+      - generic: 2便
+    - button "待機 0便":
+      - text: 待機
+      - generic: 0便
+    - button "受入中 1便":
+      - text: 受入中
+      - generic: 1便
+    - button "完了 0便":
+      - text: 完了
+      - generic: 0便
+    - region "搬出元現場別の予定・実績":
+      - table:
+        - rowgroup:
+          - row "搬出元現場 予定 実績 未着 取消 差分 未確認伝票":
+            - columnheader "搬出元現場"
+            - columnheader "予定"
+            - columnheader "実績"
+            - columnheader "未着"
+            - columnheader "取消"
+            - columnheader "差分"
+            - columnheader "未確認伝票"
+        - rowgroup:
+          - row "成田空港モデル現場A工区 成田空港モデル現場A工区の予定 成田空港モデル現場A工区の実績 成田空港モデル現場A工区の未着 成田空港モデル現場A工区の取消 成田空港モデル現場A工区の差分 成田空港モデル現場A工区の未確認伝票":
+            - cell "成田空港モデル現場A工区":
+              - button "成田空港モデル現場A工区"
+            - cell "成田空港モデル現場A工区の予定":
+              - button "成田空港モデル現場A工区の予定": 1便
+            - cell "成田空港モデル現場A工区の実績":
+              - button "成田空港モデル現場A工区の実績": 0便
+            - cell "成田空港モデル現場A工区の未着":
+              - button "成田空港モデル現場A工区の未着": 0便
+            - cell "成田空港モデル現場A工区の取消":
+              - button "成田空港モデル現場A工区の取消": 0便
+            - cell "成田空港モデル現場A工区の差分":
+              - button "成田空港モデル現場A工区の差分": 1便
+            - cell "成田空港モデル現場A工区の未確認伝票":
+              - button "成田空港モデル現場A工区の未確認伝票": 1便
+          - row "成田空港モデル現場B工区 成田空港モデル現場B工区の予定 成田空港モデル現場B工区の実績 成田空港モデル現場B工区の未着 成田空港モデル現場B工区の取消 成田空港モデル現場B工区の差分 成田空港モデル現場B工区の未確認伝票":
+            - cell "成田空港モデル現場B工区":
+              - button "成田空港モデル現場B工区"
+            - cell "成田空港モデル現場B工区の予定":
+              - button "成田空港モデル現場B工区の予定": 1便
+            - cell "成田空港モデル現場B工区の実績":
+              - button "成田空港モデル現場B工区の実績": 0便
+            - cell "成田空港モデル現場B工区の未着":
+              - button "成田空港モデル現場B工区の未着": 1便
+            - cell "成田空港モデル現場B工区の取消":
+              - button "成田空港モデル現場B工区の取消": 0便
+            - cell "成田空港モデル現場B工区の差分":
+              - button "成田空港モデル現場B工区の差分": 1便
+            - cell "成田空港モデル現場B工区の未確認伝票":
+              - button "成田空港モデル現場B工区の未確認伝票": 1便
+    - generic "便一覧・従来の予約詳細"
+    - button "場所・受入条件"
+  - generic "入退場の要確認（0件） · カメラ未接続"
+  - option "栃木モデル採石場〈架空〉" [selected]
+  - option "入場" [selected]
+  - option "退場"
+  - option "手動記録・照合待ち" [selected]
+  - option "未読取"
+  - option "未登録車両"
+  - option "予定外車両"
+  - option "二重検知の疑い"

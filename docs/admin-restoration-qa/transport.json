@@ -1,0 +1,10 @@
+{
+  "date": "2048-02-15",
+  "bookingId": "e75666a8-27d3-4b84-9b65-8e2db9077b05",
+  "planned": 5,
+  "actual": 4.8,
+  "unit": "m3",
+  "normalAdminUI": "create-confirm-assign-actual-refetch-reload-both-roles PASS",
+  "driver": "authenticated API status reports (not device)",
+  "result": "PASS"
+}

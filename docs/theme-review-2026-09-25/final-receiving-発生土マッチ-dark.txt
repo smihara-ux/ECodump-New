@@ -1,0 +1,246 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ" [active]:
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "発生土マッチ" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - region "共通発生土マッチAPI":
+    - text: SOIL CIRCULATION MATCHING
+    - heading "建設発生土マッチング" [level=2]
+    - paragraph: 公開案件から相談し、条件合意・予約へ進みます。
+    - button "受入側管理へ戻る"
+    - button "再取得"
+    - article:
+      - generic: 公開候補
+      - generic: 19件
+    - article:
+      - generic: 自社の案件
+      - generic: 1件
+    - article:
+      - generic: 相談・条件調整
+      - generic: 0件
+    - article:
+      - generic: 成立済み
+      - generic: 0件
+    - navigation "発生土マッチの区分":
+      - button "探す" [pressed]
+      - button "自社の案件"
+      - button "相談・条件調整"
+      - button "成立済み"
+    - button "現場から探す" [pressed]
+    - button "受入れから探す"
+    - paragraph: 数量は選択した単位の下限、期間は重なる案件で検索します。距離・適合度・経路料金は未接続のため確定値を表示しません。
+    - generic: 地域
+    - textbox "地域"
+    - generic: 土質
+    - textbox "土質"
+    - generic: 数量下限
+    - spinbutton "数量下限"
+    - generic: 検索期間開始
+    - textbox "検索期間開始"
+    - generic: 検索期間終了
+    - textbox "検索期間終了"
+    - generic: 検索単位
+    - combobox "検索単位":
+      - option "m³" [selected]
+      - option "t"
+    - generic: 相談に使用する自社案件
+    - combobox "相談に使用する自社案件":
+      - option "公開済みの自社案件を選択" [disabled]
+      - option "栃木モデル採石場・受入案件〈架空〉" [selected]
+    - generic: 相談メッセージ
+    - textbox "相談メッセージ":
+      - /placeholder: 相手に確認したい内容
+    - article:
+      - generic: 成田モデルB工区・搬出案件〈検証用〉
+      - generic: 千葉県成田市 · 第2種建設発生土
+      - text: 10 m³
+      - text: 2026-09-25〜2026-12-31
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 成田モデルA工区・搬出案件〈検証用〉
+      - generic: 千葉県成田市 · 第2種建設発生土
+      - text: 10 m³
+      - text: 2026-09-25〜2026-12-31
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: サンプル搬出 758803
+      - generic: サンプル地域 · 第2種建設発生土
+      - text: 12 m³
+      - text: 2048-03-10〜2048-03-10
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: サンプル搬出 722545
+      - generic: サンプル地域 · 第2種建設発生土
+      - text: 12 m³
+      - text: 2045-09-26〜2045-09-26
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 試験運用 8
+      - generic: 匿名検証地域 · 第2種建設発生土
+      - text: 7 m³
+      - text: 2040-01-08〜2040-01-08
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: サンプル搬出 502352
+      - generic: サンプル地域 · 第2種建設発生土
+      - text: 12 m³
+      - text: 2045-09-25〜2045-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 共有確認 搬出0925 編集後
+      - generic: 共有確認地域 · 第2種建設発生土
+      - text: 7 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb61id
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb4hnl
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb3c8l
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb2sqn
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: サンプル搬出 139534
+      - generic: サンプル地域 · 第2種建設発生土
+      - text: 12 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb1156
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb0kee
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugb08bs
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugaz2df
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugaxv6t
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: 匿名搬出案件 mugaxcsv
+      - generic: 匿名地域 · 第2種建設発生土
+      - text: 100 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"
+    - article:
+      - generic: サンプル搬出 870417
+      - generic: サンプル地域 · 第2種建設発生土
+      - text: 12 m³
+      - text: 2026-09-25〜2026-09-25
+      - button "案件詳細"
+      - button "事前相談"

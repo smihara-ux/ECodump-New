@@ -1,0 +1,112 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: WINNERS建設 配車担当〈検証用〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理" [active]:
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "現場管理" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: WINNERS建設 配車担当〈検証用〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - heading "担当現場" [level=1]
+  - paragraph: A/B工区を共通DBの担当範囲で分離して表示します。
+  - button "再取得":
+    - text: 再取得
+  - button "成田空港モデル現場A工区WINNERS建設〈検証用〉千葉県成田市 モデル区画A（架空）":
+    - strong: 成田空港モデル現場A工区
+    - text: WINNERS建設〈検証用〉千葉県成田市 モデル区画A（架空）
+  - button "成田空港モデル現場B工区WINNERS建設〈検証用〉千葉県成田市 モデル区画B（架空）":
+    - strong: 成田空港モデル現場B工区
+    - text: WINNERS建設〈検証用〉千葉県成田市 モデル区画B（架空）
+  - heading "成田空港モデル現場A工区" [level=2]:
+    - text: 成田空港モデル現場A工区
+  - term: 会社
+  - definition: WINNERS建設〈検証用〉
+  - term: 所在地
+  - definition: 千葉県成田市 モデル区画A（架空）
+  - term: 入口
+  - definition: 検証用ゲート
+  - term: 担当者
+  - definition: 検証担当者
+  - term: 連絡先
+  - definition: 未登録
+  - term: 搬出条件・注意事項
+  - definition: 架空の検証データです。実在工事・契約条件ではありません。
+  - button "現場詳細を開く"
+  - button "現場情報を編集"

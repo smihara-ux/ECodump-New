@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-09-25T07:51:32.482Z",
+  "base": "https://life-id.tailbe6181.ts.net:9462",
+  "confirmationDate": "2055-01-02",
+  "checks": [
+    {
+      "role": "construction",
+      "accountName": "narita-construction",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "pageErrors": [],
+      "source": "DGX dedicated staging",
+      "production": false
+    },
+    {
+      "role": "receiving",
+      "accountName": "narita-receiver-tochigi",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "pageErrors": [],
+      "source": "DGX dedicated staging",
+      "production": false
+    },
+    {
+      "role": "receiving",
+      "accountName": "narita-receiver-tochigi",
+      "width": 820,
+      "height": 1180,
+      "overflow": false,
+      "pageErrors": [],
+      "source": "DGX dedicated staging",
+      "production": false
+    },
+    {
+      "role": "driver",
+      "accountName": "narita-driver-aoki",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "pageErrors": [],
+      "source": "DGX dedicated staging",
+      "production": false
+    }
+  ]
+}

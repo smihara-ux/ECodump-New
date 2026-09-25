@@ -1,0 +1,116 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: WINNERS建設 配車担当〈検証用〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - complementary:
+    - generic: 労務安全
+    - button "書類状況一覧"
+    - button "└ 新規入場時等教育実施報告書":
+      - generic: └
+      - text: 新規入場時等教育実施報告書
+    - button "└ 【元請会社】新規入場者調査票":
+      - generic: └
+      - text: 【元請会社】新規入場者調査票
+    - button "└ その他の安全書類":
+      - generic: └
+      - text: その他の安全書類
+    - button "元請帳票の確認"
+    - button "配下協力会社検索"
+    - button "配下作業員検索（送り出し教育）"
+    - button "是正依頼内容の確認・返信" [active]
+    - button "書類一括出力"
+    - button "共通メニュー"
+    - button "現場掲示板"
+  - heading "是正依頼内容の確認・返信" [level=2]
+  - paragraph: 元請会社からの是正依頼と返信状況を確認できます。
+  - generic: 検索結果：1件
+  - button "検索で絞り込む"
+  - table:
+    - rowgroup:
+      - row "受付日 対象書類 依頼内容 ステータス 操作":
+        - columnheader "受付日"
+        - columnheader "対象書類"
+        - columnheader "依頼内容"
+        - columnheader "ステータス"
+        - columnheader "操作"
+    - rowgroup:
+      - row "2026/08/18 作業員名簿 記載内容をご確認ください 未返信 確認・返信":
+        - cell "2026/08/18"
+        - cell "作業員名簿"
+        - cell "記載内容をご確認ください"
+        - cell "未返信"
+        - cell "確認・返信":
+          - button "確認・返信"

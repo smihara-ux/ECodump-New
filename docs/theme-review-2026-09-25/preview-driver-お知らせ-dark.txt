@@ -1,0 +1,29 @@
+- region "iPhone表示 ドライバーアプリ":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー
+  - button "ライト表示に切り替え":
+  - text: 試作・API未接続
+  - generic: すべて匿名サンプル
+  - main:
+    - generic: NOTIFICATIONS
+    - heading "お知らせ" [level=1]
+    - paragraph: 表示例です。管理者からの受信・Push通知は未接続です。
+    - button "サンプル · 07:30 配車の確認 本日の3便が割り当てられています。各便の指定時刻と入口を確認してください。":
+      - generic: サンプル · 07:30
+      - generic: 配車の確認
+      - paragraph: 本日の3便が割り当てられています。各便の指定時刻と入口を確認してください。
+    - button "サンプル · 07:15 受入先の注意事項 南側の大型車ゲートから入場してください。受付前の荷下ろしは行わないでください。":
+      - generic: サンプル · 07:15
+      - generic: 受入先の注意事項
+      - paragraph: 南側の大型車ゲートから入場してください。受付前の荷下ろしは行わないでください。
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ" [active]:
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ

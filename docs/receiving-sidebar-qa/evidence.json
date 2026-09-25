@@ -1,0 +1,254 @@
+[
+  {
+    "label": "pc",
+    "width": 1440,
+    "height": 1000,
+    "layout": [
+      {
+        "text": "発生土\nマッチ",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "発生土",
+            "clipped": false
+          },
+          {
+            "text": "マッチ",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "受入側\n管理",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "受入側",
+            "clipped": false
+          },
+          {
+            "text": "管理",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "総合\nインフォメーション\n(管理)",
+        "width": 131,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "総合",
+            "clipped": false
+          },
+          {
+            "text": "インフォメーション",
+            "clipped": false
+          },
+          {
+            "text": "(管理)",
+            "clipped": false
+          }
+        ]
+      }
+    ],
+    "focusOutline": "solid",
+    "navigation": "PASS",
+    "collapse": "PASS",
+    "unimplementedDialog": "PASS"
+  },
+  {
+    "label": "tablet",
+    "width": 820,
+    "height": 1180,
+    "layout": [
+      {
+        "text": "発生土\nマッチ",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "発生土",
+            "clipped": false
+          },
+          {
+            "text": "マッチ",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "受入側\n管理",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "受入側",
+            "clipped": false
+          },
+          {
+            "text": "管理",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "総合\nインフォメーション\n(管理)",
+        "width": 131,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "総合",
+            "clipped": false
+          },
+          {
+            "text": "インフォメーション",
+            "clipped": false
+          },
+          {
+            "text": "(管理)",
+            "clipped": false
+          }
+        ]
+      }
+    ],
+    "focusOutline": "solid",
+    "navigation": "PASS",
+    "collapse": "PASS",
+    "unimplementedDialog": "PASS"
+  },
+  {
+    "label": "phone",
+    "width": 390,
+    "height": 844,
+    "layout": [
+      {
+        "text": "発生土\nマッチ",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "発生土",
+            "clipped": false
+          },
+          {
+            "text": "マッチ",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "受入側\n管理",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "受入側",
+            "clipped": false
+          },
+          {
+            "text": "管理",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "総合\nインフォメーション\n(管理)",
+        "width": 132,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "総合",
+            "clipped": false
+          },
+          {
+            "text": "インフォメーション",
+            "clipped": false
+          },
+          {
+            "text": "(管理)",
+            "clipped": false
+          }
+        ]
+      }
+    ],
+    "focusOutline": "solid",
+    "navigation": "PASS",
+    "collapse": "PASS",
+    "unimplementedDialog": "PASS"
+  },
+  {
+    "label": "small-phone",
+    "width": 360,
+    "height": 800,
+    "layout": [
+      {
+        "text": "発生土\nマッチ",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "発生土",
+            "clipped": false
+          },
+          {
+            "text": "マッチ",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "受入側\n管理",
+        "width": 54,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "受入側",
+            "clipped": false
+          },
+          {
+            "text": "管理",
+            "clipped": false
+          }
+        ]
+      },
+      {
+        "text": "総合\nインフォメーション\n(管理)",
+        "width": 132,
+        "height": 76,
+        "inside": true,
+        "lines": [
+          {
+            "text": "総合",
+            "clipped": false
+          },
+          {
+            "text": "インフォメーション",
+            "clipped": false
+          },
+          {
+            "text": "(管理)",
+            "clipped": false
+          }
+        ]
+      }
+    ],
+    "focusOutline": "solid",
+    "navigation": "PASS",
+    "collapse": "PASS",
+    "unimplementedDialog": "PASS"
+  }
+]

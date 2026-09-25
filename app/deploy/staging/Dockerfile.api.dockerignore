@@ -1,0 +1,7 @@
+node_modules
+server/.local
+.local-data
+**/.env
+**/.env.*
+deploy/staging/private
+dist

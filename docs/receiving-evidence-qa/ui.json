@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "widths": [
+    1440,
+    820
+  ],
+  "checks": [
+    "sample site panel",
+    "camera unavailable",
+    "live scoped home",
+    "gate duration50min",
+    "original image",
+    "correction saved",
+    "date and search retained",
+    "reload persisted correction",
+    "unit specific drilldown",
+    "tablet panel fits",
+    "Escape closes"
+  ],
+  "errors": []
+}

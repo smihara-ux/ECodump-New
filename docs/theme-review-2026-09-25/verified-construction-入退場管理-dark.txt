@@ -1,0 +1,118 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理" [active]:
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - generic: 入退場管理
+  - generic: サンプル現場 A
+  - button "？ ヘルプ"
+  - generic: あなたへの重要なお知らせが1件あります
+  - complementary:
+    - heading "機能一覧" [level=2]
+    - button "ダッシュボード":
+      - generic: ダッシュボード
+    - button "入退場実績":
+      - generic: 入退場実績
+    - button "作業員設定状況一覧":
+      - generic: 作業員設定状況一覧
+    - heading "共通メニュー" [level=3]
+    - button "共通メニュー":
+      - generic: 共通メニュー
+    - button "現場掲示板":
+      - generic: 現場掲示板
+  - main:
+    - heading "ダッシュボード" [level=1]
+    - heading "現場詳細" [level=3]
+    - term: 現場名
+    - definition: サンプル現場 A
+    - term: 着工 - 竣工予定日
+    - definition: 2026/04/20(月) - 2027/03/31(水)
+    - term: 現場所在地
+    - definition: 東京都中央区 サンプル1-1
+    - heading "入退場実績" [level=3]
+    - table:
+      - rowgroup:
+        - row "08/18(火) 入場者数 0人":
+          - cell "08/18(火)"
+          - cell "入場者数"
+          - cell "0人"
+        - row "08/19(水) 入場者数 0人":
+          - cell "08/19(水)"
+          - cell "入場者数"
+          - cell "0人"
+        - row "退場者数 0人":
+          - cell
+          - cell "退場者数"
+          - cell "0人"

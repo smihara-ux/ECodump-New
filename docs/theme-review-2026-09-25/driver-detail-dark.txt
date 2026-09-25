@@ -1,0 +1,155 @@
+- region "iPhone表示 API接続ドライバー":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー / DB接続検証
+  - button "明暗表示を切替":
+  - main:
+    - text: 検証用DBに接続
+    - generic: 本番ではありません
+    - text: 青木太郎〈架空〉
+    - generic: 最終取得 17:15:36
+    - button "再取得":
+      - text: 再取得
+    - button "一覧へ戻る":
+      - text: 一覧へ戻る
+    - heading "運行詳細" [level=1]
+    - paragraph:
+      - text: 予約 e666833b-c230-4579-aaf9-125c56c2b655
+      - text: 便 637e5120-d586-499e-bdb7-2b72b49a837d / 2往復目
+    - generic: 条件合意：合意済み
+    - generic: 予約：確定
+    - generic: 運行：配車済み
+    - generic: 受入実績：未確定
+    - heading "状態報告" [level=2]
+    - list:
+      - generic: ·
+      - text: 現場到着
+      - generic: ·
+      - text: 積込完了・出発
+      - generic: ·
+      - text: 受入先到着
+      - generic: ·
+      - text: 荷下ろし完了
+    - paragraph: 停車中に操作してください。到着報告は入場記録、荷下ろし完了は退場記録ではありません。受入実績は受入担当が別途確認・確定します。
+    - button "現場到着を報告"
+    - link "問題報告・担当の確認依頼へ":
+      - /url: "#driver-issue"
+    - generic "登録経路・位置情報"
+    - link "伝票を撮影・提出へ":
+      - /url: "#driver-receipt"
+    - heading "運搬内容" [level=2]
+    - term: 指定時刻
+    - definition: 09/25 12:00
+    - term: 土質・便の予定数量
+    - definition: 第2種建設発生土 / 10 m³
+    - term: 車両
+    - definition: 検証車両01 / 成田100を01-01
+    - term: ドライバー
+    - definition: 青木太郎〈架空〉
+    - heading "搬出現場" [level=2]:
+      - text: 搬出現場
+    - heading "成田空港モデル現場A工区" [level=3]
+    - paragraph: 千葉県成田市 モデル区画A（架空）
+    - term: 入口
+    - definition: 検証用ゲート
+    - term: 担当者
+    - definition: 検証担当者
+    - term: 連絡先
+    - definition: 検証データには電話番号未設定
+    - paragraph: 架空の検証データです。実在工事・契約条件ではありません。
+    - heading "受入先" [level=2]:
+      - text: 受入先
+    - heading "茨城モデル採石場〈架空〉" [level=3]
+    - paragraph: 茨城県 モデル受入区画（架空）
+    - term: 入口
+    - definition: 検証用ゲート
+    - term: 担当者
+    - definition: 検証担当者
+    - term: 連絡先
+    - definition: 検証データには電話番号未設定
+    - paragraph: 架空の検証データです。実在工事・契約条件ではありません。
+    - heading "位置情報" [level=2]
+    - paragraph:
+      - text: 端末GPS：
+      - strong: 未取得
+    - paragraph: 最終取得：なし
+    - button "現在地を端末で確認"
+    - text: 位置はこの画面だけに表示し、管理側には送信しません。取得から5分を超えると「古い」と表示します（検証用の目安）。模擬位置・ナビ・到着見込みは表示しません。
+    - heading "問題報告・担当の確認依頼" [level=2]
+    - paragraph: 停車中に内容を確認して送信してください。問題報告だけで入場・退場・数量を確定しません。
+    - text: 問題の種類
+    - combobox "問題の種類":
+      - option "遅延" [selected]
+      - option "車両トラブル"
+      - option "受入不可の連絡"
+      - option "車両・担当違いの確認依頼"
+      - option "その他"
+    - text: 状況・管理者への確認内容
+    - textbox "状況・管理者への確認内容"
+    - generic: 入力はこのユーザー・便の端末下書きとして保持します。未送信です。
+    - button "内容を確認して問題報告へ"
+    - article:
+      - strong: 担当確認
+      - paragraph: 検証用：出発前の車番と担当内容を確認してください。
+      - generic: 管理側の対応待ち / 2026/9/25 15:50:43
+    - generic "報告日時を訂正する"
+    - region "運行の伝票":
+      - heading "伝票を撮影・提出" [level=2]:
+        - text: 伝票を撮影・提出
+      - paragraph:
+        - text: 対象便 637e5120 / 2往復目
+        - text: 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+      - paragraph: この運行の原票写真と手入力を提出します。提出だけで数量・受入実績は確定しません。
+      - status: 未送信・端末下書き
+      - text: 伝票を撮影
+      - button "伝票を撮影"
+      - text: 保存済みの写真を選択
+      - button "保存済みの伝票写真"
+      - generic: JPEG / PNG・2MB以下。選択した原本を変換せず保存します。
+      - paragraph: 自動読取は未接続です。原票を見て入力してください。
+      - text: 伝票日付
+      - textbox "伝票日付": 2026-09-25
+      - text: 伝票番号
+      - textbox "伝票番号"
+      - text: 番号がない場合の理由
+      - textbox "番号がない場合の理由"
+      - text: 品名・土質
+      - textbox "品名・土質": 第2種建設発生土
+      - text: 原票の車番
+      - textbox "原票の車番": 成田100を01-01
+      - text: 原票の搬出元
+      - textbox "原票の搬出元": 成田空港モデル現場A工区
+      - text: 原票の受入先
+      - textbox "原票の受入先": 茨城モデル採石場〈架空〉
+      - text: 原票の数量
+      - spinbutton "原票の数量"
+      - text: 原票の単位
+      - combobox "原票の単位":
+        - option "m³" [selected]
+        - option "t"
+      - generic: t と m³ は換算しません。予定単位と異なる場合も原票のまま提出します。
+      - generic "計量票の追加項目（原票記載どおり・任意）"
+      - text: 管理者へのメモ
+      - textbox "管理者へのメモ"
+      - checkbox "写真・数量・単位・運行の対応を確認しました"
+      - text: 写真・数量・単位・運行の対応を確認しました
+      - button "提出内容を確認" [disabled]
+      - generic "提出・修正・確認の履歴"
+    - heading "添付書類" [level=2]:
+      - text: 添付書類
+    - paragraph: 添付書類はありません。
+    - text: PNG・JPEG・PDFを追加（2MB以下）
+    - button "添付書類を追加"
+    - text: 取引当事者と担当ドライバーのみ取得できます。
+    - heading "サーバー受領済みの報告履歴" [level=2]
+    - paragraph: 報告はありません。
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ

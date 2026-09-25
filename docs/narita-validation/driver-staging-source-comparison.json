@@ -1,0 +1,738 @@
+{
+  "checkedAt": "2026-09-25T16:44:39.818423+09:00",
+  "release": "20260925-162902",
+  "files": [
+    {
+      "path": "src/driver/DriverInbox.jsx",
+      "localSha256": "8e036991c956b152c7d48745bea69811a16d7900092ae6d29a7f2ab79bf9bad0",
+      "dgxSha256": "8e036991c956b152c7d48745bea69811a16d7900092ae6d29a7f2ab79bf9bad0",
+      "match": true
+    },
+    {
+      "path": "src/driver/driverModel.js",
+      "localSha256": "1d8f4f17213df3c6877e4af8234378a99cb9ba66e949538e3b22c4d526280ede",
+      "dgxSha256": "1d8f4f17213df3c6877e4af8234378a99cb9ba66e949538e3b22c4d526280ede",
+      "match": true
+    },
+    {
+      "path": "src/driver/DriverReportCorrection.jsx",
+      "localSha256": "f5053cae6a1c43e84b6a5fe2e4b70896d0354814a069db3c3399c2cae6544a3e",
+      "dgxSha256": "f5053cae6a1c43e84b6a5fe2e4b70896d0354814a069db3c3399c2cae6544a3e",
+      "match": true
+    },
+    {
+      "path": "src/driver/connectedModel.mjs",
+      "localSha256": "4492614bb3e4bea12e34b23ecc15666ba0b3164c6f064aaa701d62bdd35b6967",
+      "dgxSha256": "4492614bb3e4bea12e34b23ecc15666ba0b3164c6f064aaa701d62bdd35b6967",
+      "match": true
+    },
+    {
+      "path": "src/driver/locationState.mjs",
+      "localSha256": "02738f80767a637387b03453687c09857912fa9e764b6f98c8d426f21bb7a30d",
+      "dgxSha256": "02738f80767a637387b03453687c09857912fa9e764b6f98c8d426f21bb7a30d",
+      "match": true
+    },
+    {
+      "path": "src/driver/DriverLocation.jsx",
+      "localSha256": "38affb86f36fb6f03cebd1b01f3eb5867e46e7b5a5f71761c9108062a029d6e1",
+      "dgxSha256": "38affb86f36fb6f03cebd1b01f3eb5867e46e7b5a5f71761c9108062a029d6e1",
+      "match": true
+    },
+    {
+      "path": "src/driver/documents/documents.css",
+      "localSha256": "99ced8a39fca8c778adab5755a32a03577af7ca84d4121aba57cf36635f0d8ba",
+      "dgxSha256": "99ced8a39fca8c778adab5755a32a03577af7ca84d4121aba57cf36635f0d8ba",
+      "match": true
+    },
+    {
+      "path": "src/driver/documents/DriverDocuments.jsx",
+      "localSha256": "4d5eaf70d375004ca67c70b7c6120f37f6125c553192e288b5aa22055d57915f",
+      "dgxSha256": "4d5eaf70d375004ca67c70b7c6120f37f6125c553192e288b5aa22055d57915f",
+      "match": true
+    },
+    {
+      "path": "src/driver/documents/draftStore.mjs",
+      "localSha256": "97daf4f6f6f0d120b546c8f36d631e9b25ced7f20b543cb365dea106f320b78d",
+      "dgxSha256": "97daf4f6f6f0d120b546c8f36d631e9b25ced7f20b543cb365dea106f320b78d",
+      "match": true
+    },
+    {
+      "path": "src/driver/documents/DriverIdentity.jsx",
+      "localSha256": "5dfdae9325e414e9bcd5c137dce5c183bd0898c44adaa9bbb3bc8f9b8e217190",
+      "dgxSha256": "5dfdae9325e414e9bcd5c137dce5c183bd0898c44adaa9bbb3bc8f9b8e217190",
+      "match": true
+    },
+    {
+      "path": "src/driver/PhoneStatus.jsx",
+      "localSha256": "89fdf1c5c1c221400d4e7c37069f5bf7a6300ee5fd3553fe8548ce3b0ba7d858",
+      "dgxSha256": "89fdf1c5c1c221400d4e7c37069f5bf7a6300ee5fd3553fe8548ce3b0ba7d858",
+      "match": true
+    },
+    {
+      "path": "src/driver/DriverIssueForm.jsx",
+      "localSha256": "6b1bf62e0d91b3f9ec076abbc7f3d97191350e0257a40db394d1d7c1480e3014",
+      "dgxSha256": "6b1bf62e0d91b3f9ec076abbc7f3d97191350e0257a40db394d1d7c1480e3014",
+      "match": true
+    },
+    {
+      "path": "src/driver/driver.css",
+      "localSha256": "9edaab9c047a501e96cec5e2b8b3386cceae5ab0a8f07b1872783d0a1d948ff0",
+      "dgxSha256": "9edaab9c047a501e96cec5e2b8b3386cceae5ab0a8f07b1872783d0a1d948ff0",
+      "match": true
+    },
+    {
+      "path": "src/driver/DriverApp.jsx",
+      "localSha256": "0102704f29dc0ccc8145e6513f759a9bf35f7d95960334bd31385640317df5b3",
+      "dgxSha256": "0102704f29dc0ccc8145e6513f759a9bf35f7d95960334bd31385640317df5b3",
+      "match": true
+    },
+    {
+      "path": "src/integration/connected.css",
+      "localSha256": "d1ec351ca9da892e92158f9ab8f37adaf89424eae45804f5e6a5fd2e459744b1",
+      "dgxSha256": "d1ec351ca9da892e92158f9ab8f37adaf89424eae45804f5e6a5fd2e459744b1",
+      "match": true
+    },
+    {
+      "path": "src/integration/delivery.mjs",
+      "localSha256": "41e0062ce038f3fe076c40cfaeb93e6cdbb5e435dae2b5136eb00e77a13aa306",
+      "dgxSha256": "41e0062ce038f3fe076c40cfaeb93e6cdbb5e435dae2b5136eb00e77a13aa306",
+      "match": true
+    },
+    {
+      "path": "src/integration/ConnectedApp.jsx",
+      "localSha256": "95969f2efb2879fa4aa0e737bfe777b9f9183511859d14dcc28fd36cd1754107",
+      "dgxSha256": "95969f2efb2879fa4aa0e737bfe777b9f9183511859d14dcc28fd36cd1754107",
+      "match": true
+    },
+    {
+      "path": "src/integration/api.js",
+      "localSha256": "0b58a2628d203139c63c831ab8ca090fc4795c357464539119fa7ac7b04e42ba",
+      "dgxSha256": "0b58a2628d203139c63c831ab8ca090fc4795c357464539119fa7ac7b04e42ba",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_condition_conflict.sql",
+      "localSha256": "d4f88cd1c5a4430b77da47765d356b8ad8902d74f3b627ce7feee8a4fffc5721",
+      "dgxSha256": "d4f88cd1c5a4430b77da47765d356b8ad8902d74f3b627ce7feee8a4fffc5721",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_v2_compat.sql",
+      "localSha256": "0b066763f1e7042028d3ef5435aece3b67ae134ef303244816042213c4ae0e37",
+      "dgxSha256": "0b066763f1e7042028d3ef5435aece3b67ae134ef303244816042213c4ae0e37",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_projection_privacy.sql",
+      "localSha256": "c130dcd2fa8d5efb2e0e709900aff73abe95617c037881339e7846334d4022b4",
+      "dgxSha256": "c130dcd2fa8d5efb2e0e709900aff73abe95617c037881339e7846334d4022b4",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents.sql",
+      "localSha256": "191e624586b1ed09fcd74329a0421dcd0d9bb3f2afc5448ffcd5b127af720bed",
+      "dgxSha256": "191e624586b1ed09fcd74329a0421dcd0d9bb3f2afc5448ffcd5b127af720bed",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_evidence.sql",
+      "localSha256": "def17e02a182dc914fc907be76811c05ce4a52537c632576f99b3dc3a432c62c",
+      "dgxSha256": "def17e02a182dc914fc907be76811c05ce4a52537c632576f99b3dc3a432c62c",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_visibility_guards.sql",
+      "localSha256": "35a07815ea0c240b807103a95aa2b68481b09e2bdda8321c405a58b3d90efd04",
+      "dgxSha256": "35a07815ea0c240b807103a95aa2b68481b09e2bdda8321c405a58b3d90efd04",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_reapproval.sql",
+      "localSha256": "cdb207bca76189d6e1823390201b5c3ba50e8971f06ba5af5297f9e1b3436133",
+      "dgxSha256": "cdb207bca76189d6e1823390201b5c3ba50e8971f06ba5af5297f9e1b3436133",
+      "match": true
+    },
+    {
+      "path": "server/migrations/005_audit_scope.sql",
+      "localSha256": "8f3723b7ca7b03bffa03f7e1ecc359528169bc6e973974bba85f17f7e2922841",
+      "dgxSha256": "8f3723b7ca7b03bffa03f7e1ecc359528169bc6e973974bba85f17f7e2922841",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_evidence_metadata.sql",
+      "localSha256": "e2d1140b17fb506dddf0d1af45d5b2f1e3c9a58b0f5e74ec8f1438f74faed837",
+      "dgxSha256": "e2d1140b17fb506dddf0d1af45d5b2f1e3c9a58b0f5e74ec8f1438f74faed837",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_result.sql",
+      "localSha256": "cb6d5addd6a56519d84fdf715e45680a321f3a809b59d035c6f05a3874027138",
+      "dgxSha256": "cb6d5addd6a56519d84fdf715e45680a321f3a809b59d035c6f05a3874027138",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_issue_kinds.sql",
+      "localSha256": "f4eaa79edbbd2454515642da39ecbeec07ed38dcb06792b160940a498c45f7c2",
+      "dgxSha256": "f4eaa79edbbd2454515642da39ecbeec07ed38dcb06792b160940a498c45f7c2",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_lock_order.sql",
+      "localSha256": "92c21ce3b89a71cf94d3dd13cdec2376d8889592f99d45bf7a3b6829b45ee294",
+      "dgxSha256": "92c21ce3b89a71cf94d3dd13cdec2376d8889592f99d45bf7a3b6829b45ee294",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_trip_projection_time.sql",
+      "localSha256": "eff1ad81851dca2a835721ebd6b6040830c9f5b668295e5487d3e2375974b188",
+      "dgxSha256": "eff1ad81851dca2a835721ebd6b6040830c9f5b668295e5487d3e2375974b188",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_booking_reference.sql",
+      "localSha256": "82accd2bdc36713465cb17419200af68a0c9b86514ec1981e8df9b498701413c",
+      "dgxSha256": "82accd2bdc36713465cb17419200af68a0c9b86514ec1981e8df9b498701413c",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_booking_reference_guards.sql",
+      "localSha256": "8c345bc7513886a21a808f1dcf405ca7cacbd7e7362664ee7e291bea56fe7352",
+      "dgxSha256": "8c345bc7513886a21a808f1dcf405ca7cacbd7e7362664ee7e291bea56fe7352",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_reservation_checks.sql",
+      "localSha256": "0bc403d8f421732f6a41414e8206b01abc4d712222aba55b6df099d8e8ec8468",
+      "dgxSha256": "0bc403d8f421732f6a41414e8206b01abc4d712222aba55b6df099d8e8ec8468",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_conditions_v2.sql",
+      "localSha256": "8512195e59cc76e6b05af70e9139d1a71e51cd2d606ffdda150751a270c879ad",
+      "dgxSha256": "8512195e59cc76e6b05af70e9139d1a71e51cd2d606ffdda150751a270c879ad",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching.sql",
+      "localSha256": "7acf639ef9039b5aa3dfecd5287c5043d9a57492f91aa04af1ee192ade338aa6",
+      "dgxSha256": "7acf639ef9039b5aa3dfecd5287c5043d9a57492f91aa04af1ee192ade338aa6",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_condition_reason.sql",
+      "localSha256": "04e83f61a31818003b8c167bc6ab8bf9542251abf28f432161303cd99cc5e6cc",
+      "dgxSha256": "04e83f61a31818003b8c167bc6ab8bf9542251abf28f432161303cd99cc5e6cc",
+      "match": true
+    },
+    {
+      "path": "server/migrations/002_direct_transport.sql",
+      "localSha256": "90cde1a72c57b17fb1697f4d5a38cb6c4063f4d2199c13c39b2089555ffebe2e",
+      "dgxSha256": "90cde1a72c57b17fb1697f4d5a38cb6c4063f4d2199c13c39b2089555ffebe2e",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_refinement.sql",
+      "localSha256": "a45cf08350f1d0f88b1dfb372b1e0b632eecc4a87e5282e7b7608a90e3c5f9f1",
+      "dgxSha256": "a45cf08350f1d0f88b1dfb372b1e0b632eecc4a87e5282e7b7608a90e3c5f9f1",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_information.sql",
+      "localSha256": "a742c941ef91d04da78f77e3492bdef38038e4e92a20ba6ccc8623e5b5aceb00",
+      "dgxSha256": "a742c941ef91d04da78f77e3492bdef38038e4e92a20ba6ccc8623e5b5aceb00",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_state_fixes.sql",
+      "localSha256": "65d687044c9b1087dcdcab38af4e2376606e1593b9dd09e985ba9c4dd55dc5be",
+      "dgxSha256": "65d687044c9b1087dcdcab38af4e2376606e1593b9dd09e985ba9c4dd55dc5be",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_v2.sql",
+      "localSha256": "1679b07b8a5d2ee19bab6218a9e220cfb5b2eb6360454fa530d7a6f5ec9fe7f0",
+      "dgxSha256": "1679b07b8a5d2ee19bab6218a9e220cfb5b2eb6360454fa530d7a6f5ec9fe7f0",
+      "match": true
+    },
+    {
+      "path": "server/migrations/003_null_guards.sql",
+      "localSha256": "eaf59da90fc54daaeac570a4b5bf0cec7fda4d7085fe2aef43d020424d4836ab",
+      "dgxSha256": "eaf59da90fc54daaeac570a4b5bf0cec7fda4d7085fe2aef43d020424d4836ab",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_site_management_v2.sql",
+      "localSha256": "e9da888f273acfe2a9d4b6ad07d212a6527f27d3c8a98f73190cf8c93c4c3d52",
+      "dgxSha256": "e9da888f273acfe2a9d4b6ad07d212a6527f27d3c8a98f73190cf8c93c4c3d52",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_evidence_guards.sql",
+      "localSha256": "b9f920fec16c4cacfb32765b8c6fa7faa46b3981e8bc04dda57aa40962d8e249",
+      "dgxSha256": "b9f920fec16c4cacfb32765b8c6fa7faa46b3981e8bc04dda57aa40962d8e249",
+      "match": true
+    },
+    {
+      "path": "server/migrations/001_core.sql",
+      "localSha256": "3c74f4beadb5411081f830176ebfe763251cde956fc3f9b601149dee8cbd473f",
+      "dgxSha256": "3c74f4beadb5411081f830176ebfe763251cde956fc3f9b601149dee8cbd473f",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_strict_trip_version.sql",
+      "localSha256": "424cb51bdfc54d584684613cfc7de4cf7369641dfe85f9769da7a7be72c9577c",
+      "dgxSha256": "424cb51bdfc54d584684613cfc7de4cf7369641dfe85f9769da7a7be72c9577c",
+      "match": true
+    },
+    {
+      "path": "server/migrations/004_quantity_and_time.sql",
+      "localSha256": "6b1626779269861589174d0d28f6aece36753c072071be0a0f2d3e83d669f3c5",
+      "dgxSha256": "6b1626779269861589174d0d28f6aece36753c072071be0a0f2d3e83d669f3c5",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_partial_cancel.sql",
+      "localSha256": "10eaa85e5f81cee50f9f9c374ab2de4fcf169501037454d42b5f8686e1fcf2a9",
+      "dgxSha256": "10eaa85e5f81cee50f9f9c374ab2de4fcf169501037454d42b5f8686e1fcf2a9",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_projection_v2.sql",
+      "localSha256": "1442d35e4f4d4e1f15d8eefb33a709b533bab515a26b2c1a793765ee4cd97ab9",
+      "dgxSha256": "1442d35e4f4d4e1f15d8eefb33a709b533bab515a26b2c1a793765ee4cd97ab9",
+      "match": true
+    },
+    {
+      "path": "server/index.mjs",
+      "localSha256": "3ca02e77b5f9e11d68a245ed1ef9fa4a8235e278397ddfeeac3819f40800b856",
+      "dgxSha256": "3ca02e77b5f9e11d68a245ed1ef9fa4a8235e278397ddfeeac3819f40800b856",
+      "match": true
+    }
+  ],
+  "runningApiFiles": [
+    {
+      "path": "server/index.mjs",
+      "localSha256": "3ca02e77b5f9e11d68a245ed1ef9fa4a8235e278397ddfeeac3819f40800b856",
+      "runningDgxSha256": "3ca02e77b5f9e11d68a245ed1ef9fa4a8235e278397ddfeeac3819f40800b856",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_condition_conflict.sql",
+      "localSha256": "d4f88cd1c5a4430b77da47765d356b8ad8902d74f3b627ce7feee8a4fffc5721",
+      "runningDgxSha256": "d4f88cd1c5a4430b77da47765d356b8ad8902d74f3b627ce7feee8a4fffc5721",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_v2_compat.sql",
+      "localSha256": "0b066763f1e7042028d3ef5435aece3b67ae134ef303244816042213c4ae0e37",
+      "runningDgxSha256": "0b066763f1e7042028d3ef5435aece3b67ae134ef303244816042213c4ae0e37",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_projection_privacy.sql",
+      "localSha256": "c130dcd2fa8d5efb2e0e709900aff73abe95617c037881339e7846334d4022b4",
+      "runningDgxSha256": "c130dcd2fa8d5efb2e0e709900aff73abe95617c037881339e7846334d4022b4",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents.sql",
+      "localSha256": "191e624586b1ed09fcd74329a0421dcd0d9bb3f2afc5448ffcd5b127af720bed",
+      "runningDgxSha256": "191e624586b1ed09fcd74329a0421dcd0d9bb3f2afc5448ffcd5b127af720bed",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_evidence.sql",
+      "localSha256": "def17e02a182dc914fc907be76811c05ce4a52537c632576f99b3dc3a432c62c",
+      "runningDgxSha256": "def17e02a182dc914fc907be76811c05ce4a52537c632576f99b3dc3a432c62c",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_visibility_guards.sql",
+      "localSha256": "35a07815ea0c240b807103a95aa2b68481b09e2bdda8321c405a58b3d90efd04",
+      "runningDgxSha256": "35a07815ea0c240b807103a95aa2b68481b09e2bdda8321c405a58b3d90efd04",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_reapproval.sql",
+      "localSha256": "cdb207bca76189d6e1823390201b5c3ba50e8971f06ba5af5297f9e1b3436133",
+      "runningDgxSha256": "cdb207bca76189d6e1823390201b5c3ba50e8971f06ba5af5297f9e1b3436133",
+      "match": true
+    },
+    {
+      "path": "server/migrations/005_audit_scope.sql",
+      "localSha256": "8f3723b7ca7b03bffa03f7e1ecc359528169bc6e973974bba85f17f7e2922841",
+      "runningDgxSha256": "8f3723b7ca7b03bffa03f7e1ecc359528169bc6e973974bba85f17f7e2922841",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_evidence_metadata.sql",
+      "localSha256": "e2d1140b17fb506dddf0d1af45d5b2f1e3c9a58b0f5e74ec8f1438f74faed837",
+      "runningDgxSha256": "e2d1140b17fb506dddf0d1af45d5b2f1e3c9a58b0f5e74ec8f1438f74faed837",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_result.sql",
+      "localSha256": "cb6d5addd6a56519d84fdf715e45680a321f3a809b59d035c6f05a3874027138",
+      "runningDgxSha256": "cb6d5addd6a56519d84fdf715e45680a321f3a809b59d035c6f05a3874027138",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_issue_kinds.sql",
+      "localSha256": "f4eaa79edbbd2454515642da39ecbeec07ed38dcb06792b160940a498c45f7c2",
+      "runningDgxSha256": "f4eaa79edbbd2454515642da39ecbeec07ed38dcb06792b160940a498c45f7c2",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_lock_order.sql",
+      "localSha256": "92c21ce3b89a71cf94d3dd13cdec2376d8889592f99d45bf7a3b6829b45ee294",
+      "runningDgxSha256": "92c21ce3b89a71cf94d3dd13cdec2376d8889592f99d45bf7a3b6829b45ee294",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_trip_projection_time.sql",
+      "localSha256": "eff1ad81851dca2a835721ebd6b6040830c9f5b668295e5487d3e2375974b188",
+      "runningDgxSha256": "eff1ad81851dca2a835721ebd6b6040830c9f5b668295e5487d3e2375974b188",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_booking_reference.sql",
+      "localSha256": "82accd2bdc36713465cb17419200af68a0c9b86514ec1981e8df9b498701413c",
+      "runningDgxSha256": "82accd2bdc36713465cb17419200af68a0c9b86514ec1981e8df9b498701413c",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_booking_reference_guards.sql",
+      "localSha256": "8c345bc7513886a21a808f1dcf405ca7cacbd7e7362664ee7e291bea56fe7352",
+      "runningDgxSha256": "8c345bc7513886a21a808f1dcf405ca7cacbd7e7362664ee7e291bea56fe7352",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_reservation_checks.sql",
+      "localSha256": "0bc403d8f421732f6a41414e8206b01abc4d712222aba55b6df099d8e8ec8468",
+      "runningDgxSha256": "0bc403d8f421732f6a41414e8206b01abc4d712222aba55b6df099d8e8ec8468",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_conditions_v2.sql",
+      "localSha256": "8512195e59cc76e6b05af70e9139d1a71e51cd2d606ffdda150751a270c879ad",
+      "runningDgxSha256": "8512195e59cc76e6b05af70e9139d1a71e51cd2d606ffdda150751a270c879ad",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching.sql",
+      "localSha256": "7acf639ef9039b5aa3dfecd5287c5043d9a57492f91aa04af1ee192ade338aa6",
+      "runningDgxSha256": "7acf639ef9039b5aa3dfecd5287c5043d9a57492f91aa04af1ee192ade338aa6",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_condition_reason.sql",
+      "localSha256": "04e83f61a31818003b8c167bc6ab8bf9542251abf28f432161303cd99cc5e6cc",
+      "runningDgxSha256": "04e83f61a31818003b8c167bc6ab8bf9542251abf28f432161303cd99cc5e6cc",
+      "match": true
+    },
+    {
+      "path": "server/migrations/002_direct_transport.sql",
+      "localSha256": "90cde1a72c57b17fb1697f4d5a38cb6c4063f4d2199c13c39b2089555ffebe2e",
+      "runningDgxSha256": "90cde1a72c57b17fb1697f4d5a38cb6c4063f4d2199c13c39b2089555ffebe2e",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_matching_refinement.sql",
+      "localSha256": "a45cf08350f1d0f88b1dfb372b1e0b632eecc4a87e5282e7b7608a90e3c5f9f1",
+      "runningDgxSha256": "a45cf08350f1d0f88b1dfb372b1e0b632eecc4a87e5282e7b7608a90e3c5f9f1",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_information.sql",
+      "localSha256": "a742c941ef91d04da78f77e3492bdef38038e4e92a20ba6ccc8623e5b5aceb00",
+      "runningDgxSha256": "a742c941ef91d04da78f77e3492bdef38038e4e92a20ba6ccc8623e5b5aceb00",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_state_fixes.sql",
+      "localSha256": "65d687044c9b1087dcdcab38af4e2376606e1593b9dd09e985ba9c4dd55dc5be",
+      "runningDgxSha256": "65d687044c9b1087dcdcab38af4e2376606e1593b9dd09e985ba9c4dd55dc5be",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_v2.sql",
+      "localSha256": "1679b07b8a5d2ee19bab6218a9e220cfb5b2eb6360454fa530d7a6f5ec9fe7f0",
+      "runningDgxSha256": "1679b07b8a5d2ee19bab6218a9e220cfb5b2eb6360454fa530d7a6f5ec9fe7f0",
+      "match": true
+    },
+    {
+      "path": "server/migrations/003_null_guards.sql",
+      "localSha256": "eaf59da90fc54daaeac570a4b5bf0cec7fda4d7085fe2aef43d020424d4836ab",
+      "runningDgxSha256": "eaf59da90fc54daaeac570a4b5bf0cec7fda4d7085fe2aef43d020424d4836ab",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_site_management_v2.sql",
+      "localSha256": "e9da888f273acfe2a9d4b6ad07d212a6527f27d3c8a98f73190cf8c93c4c3d52",
+      "runningDgxSha256": "e9da888f273acfe2a9d4b6ad07d212a6527f27d3c8a98f73190cf8c93c4c3d52",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_receiving_evidence_guards.sql",
+      "localSha256": "b9f920fec16c4cacfb32765b8c6fa7faa46b3981e8bc04dda57aa40962d8e249",
+      "runningDgxSha256": "b9f920fec16c4cacfb32765b8c6fa7faa46b3981e8bc04dda57aa40962d8e249",
+      "match": true
+    },
+    {
+      "path": "server/migrations/001_core.sql",
+      "localSha256": "3c74f4beadb5411081f830176ebfe763251cde956fc3f9b601149dee8cbd473f",
+      "runningDgxSha256": "3c74f4beadb5411081f830176ebfe763251cde956fc3f9b601149dee8cbd473f",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_driver_documents_strict_trip_version.sql",
+      "localSha256": "424cb51bdfc54d584684613cfc7de4cf7369641dfe85f9769da7a7be72c9577c",
+      "runningDgxSha256": "424cb51bdfc54d584684613cfc7de4cf7369641dfe85f9769da7a7be72c9577c",
+      "match": true
+    },
+    {
+      "path": "server/migrations/004_quantity_and_time.sql",
+      "localSha256": "6b1626779269861589174d0d28f6aece36753c072071be0a0f2d3e83d669f3c5",
+      "runningDgxSha256": "6b1626779269861589174d0d28f6aece36753c072071be0a0f2d3e83d669f3c5",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_operations_partial_cancel.sql",
+      "localSha256": "10eaa85e5f81cee50f9f9c374ab2de4fcf169501037454d42b5f8686e1fcf2a9",
+      "runningDgxSha256": "10eaa85e5f81cee50f9f9c374ab2de4fcf169501037454d42b5f8686e1fcf2a9",
+      "match": true
+    },
+    {
+      "path": "server/migrations/20260925_shared_projection_v2.sql",
+      "localSha256": "1442d35e4f4d4e1f15d8eefb33a709b533bab515a26b2c1a793765ee4cd97ab9",
+      "runningDgxSha256": "1442d35e4f4d4e1f15d8eefb33a709b533bab515a26b2c1a793765ee4cd97ab9",
+      "match": true
+    },
+    {
+      "path": "server/driver-documents-handler.mjs",
+      "localSha256": "c627dc6d184d328b78fe0948d46445b882d8960862bc8395152072cbdbdadf14",
+      "runningDgxSha256": "c627dc6d184d328b78fe0948d46445b882d8960862bc8395152072cbdbdadf14",
+      "match": true
+    },
+    {
+      "path": "server/information-handler.mjs",
+      "localSha256": "203a94422f64e18bac3716098f101afa2135fe9e57734409e67cb42a0537e733",
+      "runningDgxSha256": "203a94422f64e18bac3716098f101afa2135fe9e57734409e67cb42a0537e733",
+      "match": true
+    },
+    {
+      "path": "server/matching-handler.mjs",
+      "localSha256": "c806cbc889a132db99f71d45d40a64467965a8ecd0fd99044c0f9ac1c063609e",
+      "runningDgxSha256": "c806cbc889a132db99f71d45d40a64467965a8ecd0fd99044c0f9ac1c063609e",
+      "match": true
+    }
+  ],
+  "appliedMigrations": [
+    {
+      "version": "001_core.sql",
+      "sha256": "3c74f4beadb5411081f830176ebfe763251cde956fc3f9b601149dee8cbd473f",
+      "appliedAt": "2026-09-25 06:05:24.839031+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "002_direct_transport.sql",
+      "sha256": "90cde1a72c57b17fb1697f4d5a38cb6c4063f4d2199c13c39b2089555ffebe2e",
+      "appliedAt": "2026-09-25 06:05:24.917943+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "003_null_guards.sql",
+      "sha256": "eaf59da90fc54daaeac570a4b5bf0cec7fda4d7085fe2aef43d020424d4836ab",
+      "appliedAt": "2026-09-25 06:05:25.081502+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "004_quantity_and_time.sql",
+      "sha256": "6b1626779269861589174d0d28f6aece36753c072071be0a0f2d3e83d669f3c5",
+      "appliedAt": "2026-09-25 06:05:25.087211+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "005_audit_scope.sql",
+      "sha256": "8f3723b7ca7b03bffa03f7e1ecc359528169bc6e973974bba85f17f7e2922841",
+      "appliedAt": "2026-09-25 06:05:25.092208+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_driver_documents.sql",
+      "sha256": "191e624586b1ed09fcd74329a0421dcd0d9bb3f2afc5448ffcd5b127af720bed",
+      "appliedAt": "2026-09-25 06:05:25.286001+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_driver_documents_lock_order.sql",
+      "sha256": "92c21ce3b89a71cf94d3dd13cdec2376d8889592f99d45bf7a3b6829b45ee294",
+      "appliedAt": "2026-09-25 06:05:25.303971+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_driver_documents_result.sql",
+      "sha256": "cb6d5addd6a56519d84fdf715e45680a321f3a809b59d035c6f05a3874027138",
+      "appliedAt": "2026-09-25 06:05:25.300878+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_driver_documents_strict_trip_version.sql",
+      "sha256": "424cb51bdfc54d584684613cfc7de4cf7369641dfe85f9769da7a7be72c9577c",
+      "appliedAt": "2026-09-25 07:24:39.455787+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_driver_documents_v2_compat.sql",
+      "sha256": "0b066763f1e7042028d3ef5435aece3b67ae134ef303244816042213c4ae0e37",
+      "appliedAt": "2026-09-25 07:24:39.411684+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_information.sql",
+      "sha256": "a742c941ef91d04da78f77e3492bdef38038e4e92a20ba6ccc8623e5b5aceb00",
+      "appliedAt": "2026-09-25 07:24:39.4984+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_matching.sql",
+      "sha256": "7acf639ef9039b5aa3dfecd5287c5043d9a57492f91aa04af1ee192ade338aa6",
+      "appliedAt": "2026-09-25 06:05:25.095052+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_matching_booking_reference.sql",
+      "sha256": "82accd2bdc36713465cb17419200af68a0c9b86514ec1981e8df9b498701413c",
+      "appliedAt": "2026-09-25 07:24:39.483883+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_matching_booking_reference_guards.sql",
+      "sha256": "8c345bc7513886a21a808f1dcf405ca7cacbd7e7362664ee7e291bea56fe7352",
+      "appliedAt": "2026-09-25 07:24:39.493526+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_matching_refinement.sql",
+      "sha256": "a45cf08350f1d0f88b1dfb372b1e0b632eecc4a87e5282e7b7608a90e3c5f9f1",
+      "appliedAt": "2026-09-25 06:05:25.210277+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_matching_reservation_checks.sql",
+      "sha256": "0bc403d8f421732f6a41414e8206b01abc4d712222aba55b6df099d8e8ec8468",
+      "appliedAt": "2026-09-25 06:05:25.217078+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_matching_visibility_guards.sql",
+      "sha256": "35a07815ea0c240b807103a95aa2b68481b09e2bdda8321c405a58b3d90efd04",
+      "appliedAt": "2026-09-25 06:05:25.22109+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_receiving_condition_conflict.sql",
+      "sha256": "d4f88cd1c5a4430b77da47765d356b8ad8902d74f3b627ce7feee8a4fffc5721",
+      "appliedAt": "2026-09-25 07:24:39.458325+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_receiving_condition_reason.sql",
+      "sha256": "04e83f61a31818003b8c167bc6ab8bf9542251abf28f432161303cd99cc5e6cc",
+      "appliedAt": "2026-09-25 07:24:39.450535+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_receiving_conditions_v2.sql",
+      "sha256": "8512195e59cc76e6b05af70e9139d1a71e51cd2d606ffdda150751a270c879ad",
+      "appliedAt": "2026-09-25 07:24:39.414577+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_receiving_evidence.sql",
+      "sha256": "def17e02a182dc914fc907be76811c05ce4a52537c632576f99b3dc3a432c62c",
+      "appliedAt": "2026-09-25 06:05:25.224559+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_receiving_evidence_guards.sql",
+      "sha256": "b9f920fec16c4cacfb32765b8c6fa7faa46b3981e8bc04dda57aa40962d8e249",
+      "appliedAt": "2026-09-25 06:05:25.281902+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_receiving_evidence_metadata.sql",
+      "sha256": "e2d1140b17fb506dddf0d1af45d5b2f1e3c9a58b0f5e74ec8f1438f74faed837",
+      "appliedAt": "2026-09-25 06:05:25.306242+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_operations_issue_kinds.sql",
+      "sha256": "f4eaa79edbbd2454515642da39ecbeec07ed38dcb06792b160940a498c45f7c2",
+      "appliedAt": "2026-09-25 07:24:39.392109+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_operations_partial_cancel.sql",
+      "sha256": "10eaa85e5f81cee50f9f9c374ab2de4fcf169501037454d42b5f8686e1fcf2a9",
+      "appliedAt": "2026-09-25 07:24:39.401812+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_operations_reapproval.sql",
+      "sha256": "cdb207bca76189d6e1823390201b5c3ba50e8971f06ba5af5297f9e1b3436133",
+      "appliedAt": "2026-09-25 07:24:39.39691+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_operations_state_fixes.sql",
+      "sha256": "65d687044c9b1087dcdcab38af4e2376606e1593b9dd09e985ba9c4dd55dc5be",
+      "appliedAt": "2026-09-25 07:24:39.405985+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_operations_v2.sql",
+      "sha256": "1679b07b8a5d2ee19bab6218a9e220cfb5b2eb6360454fa530d7a6f5ec9fe7f0",
+      "appliedAt": "2026-09-25 07:24:39.340129+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_projection_privacy.sql",
+      "sha256": "c130dcd2fa8d5efb2e0e709900aff73abe95617c037881339e7846334d4022b4",
+      "appliedAt": "2026-09-25 07:24:39.447684+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_shared_projection_v2.sql",
+      "sha256": "1442d35e4f4d4e1f15d8eefb33a709b533bab515a26b2c1a793765ee4cd97ab9",
+      "appliedAt": "2026-09-25 07:24:39.431592+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_site_management_v2.sql",
+      "sha256": "e9da888f273acfe2a9d4b6ad07d212a6527f27d3c8a98f73190cf8c93c4c3d52",
+      "appliedAt": "2026-09-25 07:24:39.461856+00",
+      "matchesLocal": true
+    },
+    {
+      "version": "20260925_trip_projection_time.sql",
+      "sha256": "eff1ad81851dca2a835721ebd6b6040830c9f5b668295e5487d3e2375974b188",
+      "appliedAt": "2026-09-25 07:24:39.453642+00",
+      "matchesLocal": true
+    }
+  ],
+  "postFixLocalChanges": [
+    {
+      "path": "src/integration/ConnectedApp.jsx",
+      "sha256": "800aca1042a5287d43558bcda7359a91004151bea498122262c5a1af8e45f982"
+    },
+    {
+      "path": "src/driver/connectedModel.mjs",
+      "sha256": "8b4d2b1399478621c7e3256300fada265c0bd74f329f5a732bf356c501ddf313"
+    },
+    {
+      "path": "tests/driver-connected-model.test.mjs",
+      "sha256": "085a17483e4272fc78227fb5fe2526f43826c684075f920f22fb668838ff0e95"
+    }
+  ]
+}

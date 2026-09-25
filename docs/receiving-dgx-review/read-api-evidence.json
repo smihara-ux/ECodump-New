@@ -1,0 +1,83 @@
+[
+  {
+    "account": "narita-receiver-tochigi",
+    "sites": [
+      {
+        "id": "21000000-0000-4000-8000-000000000003",
+        "name": "栃木モデル採石場〈架空〉",
+        "company": "栃木モデル受入会社〈架空〉"
+      }
+    ],
+    "conditions": [
+      {
+        "id": "21000000-0000-4000-8000-000000000003",
+        "name": "栃木モデル採石場〈架空〉",
+        "soil": "第2種建設発生土",
+        "unit": "m3",
+        "dailyLimit": 300,
+        "calculationStatus": "provisional"
+      }
+    ],
+    "date": "2055-01-02",
+    "rows": [
+      {
+        "bookingId": "151a7079-2bd3-4850-85ed-443eaad6e0bf",
+        "tripId": "42ef07b8-8252-4efe-983e-36b38e208064",
+        "rotation": 1,
+        "planned": 10,
+        "actual": 9.5,
+        "receiptStatus": "none",
+        "attachmentCount": 0
+      },
+      {
+        "bookingId": "cd714dba-459b-4f46-b6e5-f03d0299f077",
+        "tripId": "0811d3a0-57d1-4185-b9e3-9883338f6f6b",
+        "rotation": 3,
+        "planned": 10,
+        "actual": 10,
+        "receiptStatus": "none",
+        "attachmentCount": 0
+      }
+    ],
+    "scopeCheck": "passed"
+  },
+  {
+    "account": "narita-receiver-ibaraki",
+    "sites": [
+      {
+        "id": "21000000-0000-4000-8000-000000000004",
+        "name": "茨城モデル採石場〈架空〉",
+        "company": "茨城モデル受入会社〈架空〉"
+      }
+    ],
+    "conditions": [
+      {
+        "id": "21000000-0000-4000-8000-000000000004",
+        "name": "茨城モデル採石場〈架空〉",
+        "soil": "第2種建設発生土",
+        "unit": "m3",
+        "dailyLimit": 300,
+        "calculationStatus": "provisional"
+      }
+    ],
+    "date": "2055-01-02",
+    "rows": [
+      {
+        "bookingId": "1a3a4add-77b5-47bd-9b36-a9224ec21557",
+        "tripId": "3cd54b1c-0b5d-4521-bab9-cb9a5ca927df",
+        "rotation": 2,
+        "planned": 10,
+        "actual": 10,
+        "receiptStatus": "none",
+        "attachmentCount": 0
+      },
+      {
+        "bookingId": "d6243c8f-3c27-4a0a-8392-29894fee819f",
+        "planned": 10,
+        "receiptStatus": "none",
+        "attachmentCount": 0
+      }
+    ],
+    "scopeCheck": "passed"
+  }
+]

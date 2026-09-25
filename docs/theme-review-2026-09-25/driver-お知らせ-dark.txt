@@ -1,0 +1,146 @@
+- region "iPhone表示 API接続ドライバー":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー / DB接続検証
+  - button "明暗表示を切替" [active]:
+  - main:
+    - text: 検証用DBに接続
+    - generic: 本番ではありません
+    - text: 青木太郎〈架空〉
+    - generic: 最終取得 17:15:36
+    - button "再取得":
+      - text: 再取得
+    - heading "お知らせ・未処理" [level=1]
+    - paragraph: 共通DBから取得した現在の確認状況です。端末へのPush通知は未接続です。
+    - heading "端末に残っている伝票" [level=2]
+    - paragraph: 未送信の伝票はありません。
+    - heading "伝票は管理側の確認待ち" [level=2]
+    - paragraph: 2026-09-25 / 便 f2e24c7a / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 提出済みです。受入実績はまだ確定していません。
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2026-09-25 / 便 637e5120 / 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+    - paragraph: 検証用：出発前の車番と担当内容を確認してください。
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-23 / 便 461d79ab / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 9.5 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-23 / 便 eb6c284a / 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-23 / 便 8a546f56 / 成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-24 / 便 d55cda73 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 9.5 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-24 / 便 5ac58aed / 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-24 / 便 162142d0 / 成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-27 / 便 67958251 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 9.5 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-27 / 便 e60067ef / 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-01-27 / 便 e90fb624 / 成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-02-03 / 便 6a7180b5 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 9.5 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-02-03 / 便 2c9d4a60 / 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-02-03 / 便 40d663c8 / 成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-02-08 / 便 45babe97 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 9.5 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-02-08 / 便 a0faa906 / 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "受入実績が確定" [level=2]
+    - paragraph: 2055-02-08 / 便 22995b99 / 成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 10 m³
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-01 / 便 5195abc3 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-02 / 便 52ab5157 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-07 / 便 e491ed0a / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "伝票は管理側の確認待ち" [level=2]
+    - paragraph: 2057-02-10 / 便 ba2956ff / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 提出済みです。受入実績はまだ確定していません。
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-10 / 便 ba2956ff / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "伝票は管理側の確認待ち" [level=2]
+    - paragraph: 2057-02-13 / 便 dbb2d5e0 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 提出済みです。受入実績はまだ確定していません。
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-13 / 便 dbb2d5e0 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "伝票は管理側の確認待ち" [level=2]
+    - paragraph: 2057-02-14 / 便 1098fc48 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 提出済みです。受入実績はまだ確定していません。
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-14 / 便 1098fc48 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "伝票は管理側の確認待ち" [level=2]
+    - paragraph: 2057-02-16 / 便 79554380 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 提出済みです。受入実績はまだ確定していません。
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-16 / 便 79554380 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+    - heading "伝票は管理側の確認待ち" [level=2]
+    - paragraph: 2057-02-17 / 便 63fb2682 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 提出済みです。受入実績はまだ確定していません。
+    - button "対象便を開く"
+    - heading "問題報告は対応待ち" [level=2]
+    - paragraph: 2057-02-17 / 便 63fb2682 / 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉
+    - paragraph: 検証用の受入不可連絡
+    - button "対象便を開く"
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ

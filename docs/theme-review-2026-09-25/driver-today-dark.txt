@@ -1,0 +1,68 @@
+- region "iPhone表示 API接続ドライバー":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー / DB接続検証
+  - button "明暗表示を切替" [active]:
+  - main:
+    - text: 検証用DBに接続
+    - generic: 本番ではありません
+    - text: 青木太郎〈架空〉
+    - generic: 最終取得 17:15:36
+    - button "再取得":
+      - text: 再取得
+    - generic: ドライバー · DIRECT TRANSPORT
+    - heading "今日の運行" [level=1]
+    - text: 表示日（日本時間）
+    - textbox "表示日（日本時間）": 2026-09-25
+    - generic "成田モデル・架空データでの検証"
+    - text: 今日の担当・出発前に確認
+    - paragraph: 青木太郎〈架空〉
+    - paragraph: モデル運送〈架空〉
+    - paragraph: 車番：成田100を01-01
+    - generic "車両・担当が違う／管理者に確認"
+    - button "次の運行 / 2往復目 配車済み 09/25 12:00 A 成田空港モデル現場A工区 B 茨城モデル採石場〈架空〉 検証車両01 / 成田100を01-01 便 637e5120 · 予定 10 m³ 受入確定数量：未確定 · DB取得済み伝票：未提出":
+      - generic: 次の運行 / 2往復目
+      - generic: 配車済み
+      - generic: 09/25 12:00
+      - generic: A
+      - strong: 成田空港モデル現場A工区
+      - generic: B
+      - strong: 茨城モデル採石場〈架空〉
+      - text: 検証車両01 / 成田100を01-01
+      - text: 便 637e5120 · 予定 10 m³
+      - generic: 受入確定数量：未確定 · DB取得済み
+      - generic: 伝票：未提出
+    - button "運行 / 3往復目 配車済み 09/25 16:00 A 成田空港モデル現場B工区 B 栃木モデル採石場〈架空〉 検証車両01 / 成田100を01-01 便 61bfd982 · 予定 10 m³ 受入確定数量：未確定 · DB取得済み伝票：未提出":
+      - generic: 運行 / 3往復目
+      - generic: 配車済み
+      - generic: 09/25 16:00
+      - generic: A
+      - strong: 成田空港モデル現場B工区
+      - generic: B
+      - strong: 栃木モデル採石場〈架空〉
+      - text: 検証車両01 / 成田100を01-01
+      - text: 便 61bfd982 · 予定 10 m³
+      - generic: 受入確定数量：未確定 · DB取得済み
+      - generic: 伝票：未提出
+    - button "運行 / 1往復目 荷下ろし完了 09/25 08:00 A 成田空港モデル現場A工区 B 栃木モデル採石場〈架空〉 検証車両01 / 成田100を01-01 便 f2e24c7a · 予定 10 m³ 受入確定数量：未確定 · DB取得済み伝票：確認待ち":
+      - generic: 運行 / 1往復目
+      - generic: 荷下ろし完了
+      - generic: 09/25 08:00
+      - generic: A
+      - strong: 成田空港モデル現場A工区
+      - generic: B
+      - strong: 栃木モデル採石場〈架空〉
+      - text: 検証車両01 / 成田100を01-01
+      - text: 便 f2e24c7a · 予定 10 m³
+      - generic: 受入確定数量：未確定 · DB取得済み
+      - generic: 伝票：確認待ち
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ

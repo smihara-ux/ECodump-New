@@ -1,0 +1,22 @@
+{
+  "date": "2026-09-25",
+  "pc": [
+    1440,
+    1000
+  ],
+  "tablet": [
+    820,
+    1180
+  ],
+  "smartphone": [
+    390,
+    844
+  ],
+  "constructionRelogin": true,
+  "receivingRelogin": true,
+  "driverRelogin": true,
+  "measuredButtonHeights": "construction tablet and driver smartphone: >=44px",
+  "pageOverflow": false,
+  "physicalDevices": false,
+  "production": false
+}

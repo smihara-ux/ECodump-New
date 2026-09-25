@@ -1,0 +1,199 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え" [active]:
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "搬出管理" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - generic "予定表示の切り替え":
+    - button "当日 2026/08/20":
+      - generic: 当日
+      - generic: 2026/08/20
+    - button "翌日 2026/08/21":
+      - generic: 翌日
+      - generic: 2026/08/21
+    - button "現場別"
+    - button "受入場所別"
+  - text: 現場
+  - combobox "現場":
+    - option "すべて" [selected]
+    - option "（仮称）サンプル現場 A"
+    - option "サンプル現場 B"
+    - option "サンプル現場 C"
+    - option "（仮称）サンプル現場 D"
+    - option "サンプル現場 E"
+    - option "サンプル現場 F"
+    - option "（仮称）サンプル現場 G"
+    - option "サンプル現場 H"
+  - text: 受入先
+  - combobox "受入先":
+    - option "すべて" [selected]
+    - option "湾岸リサイクルセンター"
+    - option "中央中間処理施設"
+    - option "北部資源化センター"
+  - text: 運行状態
+  - combobox "運行状態":
+    - option "すべて" [selected]
+    - option "未手配"
+    - option "未出発"
+    - option "運行中"
+    - option "遅延"
+    - option "報告済み"
+    - option "受入確認済み"
+  - text: 現場・受入場所・車両
+  - textbox "現場・受入場所・車両":
+    - /placeholder: キーワードを入力
+  - generic "主な操作":
+    - button "予定を作る"
+    - button "今日の車両を見る"
+    - button "伝票を確認する"
+  - generic "運行予定の集計":
+    - button "本日の予定便数 6便":
+      - generic: 本日の予定便数
+      - generic: 6便
+    - button "完了便数 1便":
+      - generic: 完了便数
+      - generic: 1便
+    - button "未手配 1便":
+      - generic: 未手配
+      - generic: 1便
+    - button "未出発 1便":
+      - generic: 未出発
+      - generic: 1便
+    - button "未完了 5便":
+      - generic: 未完了
+      - generic: 5便
+    - button "伝票確認待ち 1便":
+      - generic: 伝票確認待ち
+      - generic: 1便
+    - button "遅延 1便":
+      - generic: 遅延
+      - generic: 1便
+    - button "実車両数 4台":
+      - generic: 実車両数
+      - generic: 4台
+    - button "延べ便数 6便":
+      - generic: 延べ便数
+      - generic: 6便
+  - heading "搬出・受入スケジュール" [level=2]
+  - paragraph: 同じ車両の複数便も1便1台として、現場ごとの予定延べ台数を集計します。
+  - generic: 対象：4現場／延べ6台
+  - article:
+    - text: 出発現場
+    - heading "（仮称）サンプル現場 A" [level=3]
+    - paragraph: 運行予定 08:30〜12:00 ／ 受入先 1か所
+    - button "現場詳細"
+    - generic: 2台
+    - generic: 予定延べ台数
+    - generic: 1台
+    - generic: 実車両数
+    - button "内訳を表示"
+  - article:
+    - text: 出発現場
+    - heading "サンプル現場 B" [level=3]
+    - paragraph: 運行予定 09:10〜13:55 ／ 受入先 1か所
+    - button "現場詳細"
+    - generic: 2台
+    - generic: 予定延べ台数
+    - generic: 1台
+    - generic: 実車両数
+    - button "内訳を表示"
+  - article:
+    - text: 出発現場
+    - heading "サンプル現場 C" [level=3]
+    - paragraph: 運行予定 11:20〜12:25 ／ 受入先 1か所
+    - button "現場詳細"
+    - generic: 1台
+    - generic: 予定延べ台数
+    - generic: 1台
+    - generic: 実車両数
+    - button "内訳を表示"
+  - article:
+    - text: 出発現場
+    - heading "（仮称）サンプル現場 D" [level=3]
+    - paragraph: 運行予定 13:30〜15:00 ／ 受入先 1か所
+    - button "現場詳細"
+    - generic: 1台
+    - generic: 予定延べ台数
+    - generic: 1台
+    - generic: 実車両数
+    - button "内訳を表示"

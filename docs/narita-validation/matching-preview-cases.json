@@ -1,0 +1,36 @@
+{
+  "environment": "local-isolated",
+  "createdAt": "2026-09-25T07:57:11.352Z",
+  "cases": [
+    {
+      "caseId": "62000000-0000-4000-8000-000000000001",
+      "siteId": "21000000-0000-4000-8000-000000000001",
+      "side": "construction",
+      "title": "成田モデルA工区・搬出案件〈検証用〉",
+      "result": "created_published"
+    },
+    {
+      "caseId": "62000000-0000-4000-8000-000000000002",
+      "siteId": "21000000-0000-4000-8000-000000000002",
+      "side": "construction",
+      "title": "成田モデルB工区・搬出案件〈検証用〉",
+      "result": "created_published"
+    },
+    {
+      "caseId": "62000000-0000-4000-8000-000000000003",
+      "siteId": "21000000-0000-4000-8000-000000000003",
+      "side": "receiving",
+      "title": "栃木モデル採石場・受入案件〈架空〉",
+      "result": "created_published"
+    },
+    {
+      "caseId": "62000000-0000-4000-8000-000000000004",
+      "siteId": "21000000-0000-4000-8000-000000000004",
+      "side": "receiving",
+      "title": "茨城モデル採石場・受入案件〈架空〉",
+      "result": "created_published"
+    }
+  ],
+  "agreementsCreated": false,
+  "bookingsCreated": false
+}

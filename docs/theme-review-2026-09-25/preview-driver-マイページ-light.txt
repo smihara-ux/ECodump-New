@@ -1,0 +1,43 @@
+- region "iPhone表示 ドライバーアプリ":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー
+  - button "ダーク表示に切り替え":
+  - text: 試作・API未接続
+  - generic: すべて匿名サンプル
+  - main:
+    - generic: MY PAGE
+    - heading "マイページ" [level=1]
+    - heading "サンプル運転者 01" [level=2]
+    - paragraph: サンプル運送会社 A
+    - text: 本人割当の表示例・認証未接続
+    - heading "利用車両" [level=2]
+    - paragraph: サンプル車両 01 · DEMO-001
+    - heading "接続状況" [level=2]
+    - term: API・管理者への送信
+    - definition: 未接続
+    - term: 位置情報
+    - definition: 未接続・取得していません
+    - term: Push通知
+    - definition: 未接続
+    - term: 写真の保管
+    - definition: このブラウザ内のみ
+    - heading "未送信の記録 0件" [level=2]:
+      - text: 未送信の記録
+      - generic: 0件
+    - paragraph: 下書きはこのブラウザに保存されます。別端末と同期されません。サイトデータ削除で失われます。
+    - paragraph: 未送信の記録はありません。
+    - button "API未接続のため送信できません" [disabled]
+    - heading "プレビューの確認" [level=2]
+    - button "通信状態の表示を確認（模擬）"
+    - paragraph: ここでの状態変更は下書き・運行に影響しません。
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ" [active]:
+      - generic: マイページ

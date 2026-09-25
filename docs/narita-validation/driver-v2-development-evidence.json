@@ -1,0 +1,24 @@
+{
+  "at": "2026-09-25T06:56:43.592Z",
+  "boundary": "local isolated API development, not formal acceptance",
+  "bookingId": "3d8aaa0c-d21f-4d93-98fc-5b6c8298dcd4",
+  "tripIds": [
+    "63fb2682-0fd7-45ec-ace5-ecde977d7b42",
+    "887255c1-df78-4f5b-985e-69aef5b141c8",
+    "5c52af62-58e3-4868-95e1-5db0093efce4"
+  ],
+  "checks": [
+    "own-trip projection",
+    "carrier master",
+    "old version rejected",
+    "duplicate report idempotent",
+    "invalid report order rejected",
+    "report time correction history",
+    "lost response lookup",
+    "issue does not change receipt state",
+    "stale/missing document version rejected",
+    "sibling document isolation",
+    "foreign original denied",
+    "relogin persistence"
+  ]
+}

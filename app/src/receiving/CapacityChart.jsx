@@ -1,0 +1,24 @@
+import {useId,useState} from 'react';
+import './capacity-chart.css';
+export default function CapacityChart({name='受入場所'}){
+ const id=useId(),[year,setYear]=useState(2026),[month,setMonth]=useState('all'),[unit,setUnit]=useState('m³'),[selected,setSelected]=useState(8),[open,setOpen]=useState(false);
+ const monthly=[[280,380],[330,330],[360,780],[420,220],[280,380],[440,240],[460,660],[350,280],[280,380],[360,300],[400,220],[330,200]];
+ const count=month==='all'?12:new Date(year,Number(month),0).getDate();
+ const rows=Array.from({length:count},(_,i)=>{const limit=month==='all'?1000:50;const [received,reserved]=month==='all'?monthly[i]:[Math.round(monthly[Number(month)-1][0]/count),Math.round(monthly[Number(month)-1][1]/count)];return {key:i,label:month==='all'?`${i+1}月`:`${i+1}日`,limit,received,reserved,free:Math.max(0,limit-received-reserved),over:Math.max(0,received+reserved-limit)};});
+ const max=month==='all'?1500:75,detail=rows[Math.min(selected,rows.length-1)],fmt=n=>n.toLocaleString('ja-JP');
+ const choose=(fn,v)=>{fn(v);setSelected(0);setOpen(false);};
+ return <section className="cap-a" aria-labelledby={id}>
+ <div className="cap-a-caption"><strong>{name}</strong><span>架空データ・画面案</span></div>
+ <header className="cap-a-header"><h3 id={id}>容量・予約状況</h3><div className="cap-a-controls"><select aria-label="容量グラフの年" value={year} onChange={e=>choose(setYear,Number(e.target.value))}>{[2025,2026,2027].map(y=><option key={y} value={y}>{y}年</option>)}</select><select aria-label="容量グラフの期間" value={month} onChange={e=>choose(setMonth,e.target.value)}><option value="all">年間</option>{Array.from({length:12},(_,i)=><option key={i} value={i+1}>{i+1}月</option>)}</select><select aria-label="容量グラフの単位" value={unit} onChange={e=>choose(setUnit,e.target.value)}><option>m³</option><option>t</option></select></div></header>
+ <div className="cap-a-stats">{[[`${detail.label}の搬入済み`,detail.received,'received'],['予約済み',detail.reserved,'reserved'],[detail.over?'超過':'空き',detail.over||detail.free,detail.over?'over':'free']].map(([label,value,tone])=><div key={label} className={tone}><span>{label}</span><strong>{fmt(value)}<small>{unit}</small></strong></div>)}</div>
+ <p className="cap-a-hint">{year}年{month==='all'?'・月別':` ${month}月・日別`} <span>棒を選ぶと内訳を確認できます</span></p>
+ <div className="cap-a-scroll"><div className="cap-a-graph" style={{minWidth:month==='all'?520:count*40+90}}>
+ <span className="cap-a-axis-unit">{unit}</span>
+ {[0,1/3,2/3,1].map(f=><div key={f} className={`cap-a-grid ${f===2/3?'is-limit':''}`} style={{bottom:36+220*f}}><span>{fmt(Math.round(max*f))}</span>{f===2/3&&<b>上限 {fmt(rows[0].limit)}</b>}</div>)}
+ <div className="cap-a-columns" style={{gridTemplateColumns:`repeat(${rows.length},minmax(0,1fr))`}}>{rows.map(r=><button key={r.key} aria-pressed={selected===r.key} aria-label={`${r.label} 搬入済み${r.received}、予約済み${r.reserved}、空き${r.free}、超過${r.over}${unit}の内訳`} onClick={()=>{setSelected(r.key);setOpen(true);}}><span className="cap-a-bar-area"><span className="cap-a-stack" style={{height:`${Math.max(r.limit,r.received+r.reserved)/max*100}%`}}><i className="cap-a-delivered" style={{height:`${r.received/Math.max(r.limit,r.received+r.reserved)*100}%`}}/><i className="cap-a-reserved" style={{height:`${(r.reserved-r.over)/Math.max(r.limit,r.received+r.reserved)*100}%`}}/><i className="cap-a-remaining" style={{height:`${r.free/Math.max(r.limit,r.received+r.reserved)*100}%`}}/><i className="cap-a-overflow" style={{height:`${r.over/Math.max(r.limit,r.received+r.reserved)*100}%`}}/></span>{r.over>0&&<span className="cap-a-over-label" style={{bottom:`${(r.received+r.reserved)/max*100}%`}}>超過<br/><b>{r.over}</b></span>}</span><b className="cap-a-month">{r.label}</b></button>)}</div>
+ </div></div>
+ <div className="cap-a-legend"><span><i className="cap-a-delivered"/>搬入済み</span><span><i className="cap-a-reserved"/>予約済み</span><span><i className="cap-a-remaining"/>空き</span><span><i className="cap-a-dash"/>上限</span><span><i className="cap-a-overflow"/>超過</span></div>
+ <section className="cap-a-detail"><h4>{detail.label}の内訳</h4><div className="cap-a-detail-row"><span>搬入済み<b>{fmt(detail.received)} <small>{unit}</small></b></span><span>予約済み<b>{fmt(detail.reserved)} <small>{unit}</small></b></span><span>{detail.over?'超過':'空き'}<b>{fmt(detail.over||detail.free)} <small>{unit}</small></b></span><button onClick={()=>setOpen(v=>!v)} aria-expanded={open}>{open?'内訳を閉じる':'予約内訳を見る'} →</button></div>{open&&<div className="cap-a-table"><table><thead><tr><th>区分・現場（架空）</th><th>数量（{unit}）</th></tr></thead><tbody><tr><td>搬入済み · モデル現場A</td><td>{detail.received}</td></tr><tr><td>未完了予約 · モデル現場B</td><td>{detail.reserved}</td></tr></tbody></table></div>}</section>
+ <footer><details><summary>集計の考え方</summary><p>表示案は期間別の受入枠で、物理的な容量ではありません。消費枠＝搬入済み＋未完了予約。完了時は予約を実績に置換し、取消は除外する想定です。定義は未確定・API未接続です。年・単位を切り替えても説明用データを表示し、単位換算は行いません。</p></details><small>検証用データです。実際の空き容量ではありません。</small></footer>
+ </section>;
+}

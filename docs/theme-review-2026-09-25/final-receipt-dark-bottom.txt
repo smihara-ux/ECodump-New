@@ -1,0 +1,170 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え" [active]:
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "搬入予約・受付" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - heading "搬入予約・受付" [level=2]
+  - paragraph: 共通DB · 許可された受入場所のみ表示 · 検証用
+  - button "再取得"
+  - status
+  - button "← 一覧に戻る"
+  - heading "成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉" [level=3]
+  - paragraph: 予約 be8d70b0-be57-4d1a-9d07-a79659509b99 / 便 1
+  - generic: 予約：予約確定
+  - generic: 運行：荷下ろし完了
+  - generic: 入場：未確認
+  - generic: 数量：未確定
+  - term: 施工会社
+  - definition: WINNERS建設〈検証用〉
+  - term: 日時 / 土質
+  - definition: 2026/9/25 8:00:00 / 第2種建設発生土
+  - term: 車番 / 運転手
+  - definition: 成田100を01-01 / 青木太郎〈架空〉
+  - term: 予約数量 / 便予定
+  - definition: 10 m³ / 10 m³
+  - term: 原票数量 / 確定数量
+  - definition: 9.5 m³ / 未確定
+  - term: 条件
+  - definition: 成田ドライバー共通プレビュー 2026-09-25 第1便（架空・検証用）
+  - generic "予約・運行の変更履歴（1件）"
+  - paragraph: 到着報告・入場確認・荷下ろし・数量確定はそれぞれ別に管理します。GPS・ゲート機器・QR・OCRは未接続です。
+  - generic "到着報告・入退場"
+  - paragraph: 現場到着：2026/9/25 15:33:00
+  - paragraph: 積込完了・出発：2026/9/25 15:36:07
+  - paragraph: 受入先到着：2026/9/25 15:36:18
+  - paragraph: 荷下ろし完了：2026/9/25 15:36:32
+  - heading "入退場を記録（人による確認用）" [level=4]
+  - text: 車番
+  - textbox "車番": 成田100を01-01
+  - text: 区分
+  - combobox "区分":
+    - option "入場" [selected]
+    - option "退場"
+  - text: 記録時刻（日本時間）
+  - textbox "記録時刻（日本時間）"
+  - text: 読取・照合状態
+  - combobox "読取・照合状態":
+    - option "手動記録・照合待ち" [selected]
+    - option "未読取"
+    - option "未登録車両"
+    - option "予定外車両"
+    - option "二重検知の疑い"
+  - text: 運行に紐付く写真
+  - combobox "運行に紐付く写真":
+    - option "写真なし" [selected]
+    - option "narita-driver-receipt-9.5.png"
+  - text: 記録メモ
+  - textbox "記録メモ"
+  - button "要確認として記録"
+  - generic "原票・数量確認"
+  - heading "伝票・数量確認" [level=3]
+  - paragraph: 原本写真と入力値を照合してください。OCRは未接続です。
+  - text: 便の予定
+  - generic: 10 m³
+  - text: 原票の報告
+  - generic: 9.5 m³
+  - text: 原票照合済み数量
+  - generic: 未確定
+  - paragraph: 予定との差：-0.5 m³
+  - img "原本写真：narita-driver-receipt-9.5.png"
+  - link "原本を取得":
+    - /url: blob:http://127.0.0.1:5203/a4dee7e7-e59a-4477-b3c2-5b65c24751ad
+  - term: 伝票日付
+  - definition: 2026-09-25
+  - term: 伝票番号
+  - definition: NARITA-DRIVER-01
+  - term: 番号なし理由
+  - definition: 記載なし
+  - term: 品名・土質
+  - definition: 第2種建設発生土
+  - term: 原票車番
+  - definition: 成田100を01-01
+  - term: 搬出元
+  - definition: 成田空港モデル現場A工区
+  - term: 受入先
+  - definition: 栃木モデル採石場〈架空〉
+  - term: 総重量
+  - definition: 記載なし
+  - term: 空車重量
+  - definition: 記載なし
+  - term: 正味重量
+  - definition: 記載なし
+  - paragraph: 確認待ち · 9.5 m³
+  - paragraph: 担当ドライバー提出 · 2026/9/25 15:37:33
+  - heading "原票を確認して実績確定" [level=4]
+  - text: 原票の数量
+  - spinbutton "原票の数量": "9.5"
+  - text: 原票の単位
+  - combobox "原票の単位":
+    - option "m³" [selected]
+    - option "t"
+  - text: 差異・訂正理由
+  - textbox "差異・訂正理由"
+  - checkbox "原本写真と数量・単位を照合しました"
+  - text: 原本写真と数量・単位を照合しました
+  - button "照合して実績を確定"
+  - text: 差戻し理由
+  - textbox "差戻し理由"
+  - button "理由付きで差し戻す"
+  - generic "提出・確認・訂正の履歴（1件）"

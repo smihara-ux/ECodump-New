@@ -1,0 +1,166 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え" [active]:
+  - button "通知":
+  - button "ヘルプ":
+  - generic: WINNERS建設 配車担当〈検証用〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "配車・運行管理" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: WINNERS建設 配車担当〈検証用〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - text: WINNERS建設 配車担当〈検証用〉
+  - generic: 最終取得 17:20:05
+  - button "再取得":
+    - text: 再取得
+  - heading "搬出予定・直接予約" [level=1]
+  - button "搬出予定・予約を作成"
+  - text: 表示日（日本時間）
+  - textbox "表示日（日本時間）": 2026-09-25
+  - region "運搬一覧。横にスクロールして全項目を確認":
+    - table:
+      - rowgroup:
+        - row "指定日時 / 予約・便 搬出現場 → 受入先 予約 / 便予定 予約 運行 受入実績 操作":
+          - columnheader "指定日時 / 予約・便"
+          - columnheader "搬出現場 → 受入先"
+          - columnheader "予約 / 便予定"
+          - columnheader "予約"
+          - columnheader "運行"
+          - columnheader "受入実績"
+          - columnheader "操作"
+      - rowgroup:
+        - row "09/25 08:00 予約 be8d70b0 / 便 f2e24c7a 成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉 10 m³ 便 10 m³ 承認済み 荷下ろし完了 / 1便目 未確定 詳細を確認":
+          - cell "09/25 08:00 予約 be8d70b0 / 便 f2e24c7a":
+            - text: 09/25 08:00
+            - generic: 予約 be8d70b0 / 便 f2e24c7a
+          - cell "成田空港モデル現場A工区 → 栃木モデル採石場〈架空〉":
+            - text: 成田空港モデル現場A工区
+            - generic: → 栃木モデル採石場〈架空〉
+          - cell "10 m³ 便 10 m³":
+            - text: 10 m³
+            - generic: 便 10 m³
+          - cell "承認済み"
+          - cell "荷下ろし完了 / 1便目"
+          - cell "未確定"
+          - cell "詳細を確認":
+            - button "詳細を確認"
+        - row "09/25 09:00 予約 3839b854 / 便 05bd2843 成田空港モデル現場B工区 → 茨城モデル採石場〈架空〉 10 m³ 便 10 m³ 承認済み 配車済み / 1便目 未確定 詳細を確認":
+          - cell "09/25 09:00 予約 3839b854 / 便 05bd2843":
+            - text: 09/25 09:00
+            - generic: 予約 3839b854 / 便 05bd2843
+          - cell "成田空港モデル現場B工区 → 茨城モデル採石場〈架空〉":
+            - text: 成田空港モデル現場B工区
+            - generic: → 茨城モデル採石場〈架空〉
+          - cell "10 m³ 便 10 m³":
+            - text: 10 m³
+            - generic: 便 10 m³
+          - cell "承認済み"
+          - cell "配車済み / 1便目"
+          - cell "未確定"
+          - cell "詳細を確認":
+            - button "詳細を確認"
+        - row "09/25 12:00 予約 e666833b / 便 637e5120 成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉 10 m³ 便 10 m³ 承認済み 配車済み / 2便目 未確定 詳細を確認":
+          - cell "09/25 12:00 予約 e666833b / 便 637e5120":
+            - text: 09/25 12:00
+            - generic: 予約 e666833b / 便 637e5120
+          - cell "成田空港モデル現場A工区 → 茨城モデル採石場〈架空〉":
+            - text: 成田空港モデル現場A工区
+            - generic: → 茨城モデル採石場〈架空〉
+          - cell "10 m³ 便 10 m³":
+            - text: 10 m³
+            - generic: 便 10 m³
+          - cell "承認済み"
+          - cell "配車済み / 2便目"
+          - cell "未確定"
+          - cell "詳細を確認":
+            - button "詳細を確認"
+        - row "09/25 16:00 予約 b7690e8e / 便 61bfd982 成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉 10 m³ 便 10 m³ 承認済み 配車済み / 3便目 未確定 詳細を確認":
+          - cell "09/25 16:00 予約 b7690e8e / 便 61bfd982":
+            - text: 09/25 16:00
+            - generic: 予約 b7690e8e / 便 61bfd982
+          - cell "成田空港モデル現場B工区 → 栃木モデル採石場〈架空〉":
+            - text: 成田空港モデル現場B工区
+            - generic: → 栃木モデル採石場〈架空〉
+          - cell "10 m³ 便 10 m³":
+            - text: 10 m³
+            - generic: 便 10 m³
+          - cell "承認済み"
+          - cell "配車済み / 3便目"
+          - cell "未確定"
+          - cell "詳細を確認":
+            - button "詳細を確認"

@@ -1,0 +1,150 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票" [active]:
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "受入実績・帳票" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - heading "受入実績・数量集計" [level=2]
+  - paragraph: 共通DB · 許可された受入場所のみ表示 · 検証用
+  - button "再取得"
+  - status
+  - text: 表示日
+  - textbox "表示日": 2026-09-25
+  - text: 期間
+  - combobox "期間":
+    - option "日別" [selected]
+    - option "月別"
+  - text: 集計
+  - combobox "集計":
+    - option "現場・工区別" [selected]
+    - option "施工会社別"
+    - option "土質別"
+  - text: 予約単位で表示
+  - combobox "予約単位で表示":
+    - option "すべての予約・便" [selected]
+    - option "成田空港モデル現場A工区 · be8d70b0 · 1便"
+    - option "成田空港モデル現場B工区 · b7690e8e · 1便"
+  - text: 検索
+  - textbox "検索":
+    - /placeholder: 現場・場所・車両・運転手
+  - paragraph: 確認済み数量は原票照合済みのみ。旧実績・未確認・差戻し中の数量は含めず、tとm³を別集計します。便数・実車両台数は表示中の集計区分ごとです。
+  - table:
+    - rowgroup:
+      - row "集計区分 便数 / 実車両台数 未提出 / 差戻し / 未確認 確認済み数量":
+        - columnheader "集計区分"
+        - columnheader "便数 / 実車両台数"
+        - columnheader "未提出 / 差戻し / 未確認"
+        - columnheader "確認済み数量"
+    - rowgroup:
+      - row "成田空港モデル現場A工区 / m³ 1便 / 1台 0 / 0 / 1 0.000 m³":
+        - cell "成田空港モデル現場A工区 / m³"
+        - cell "1便 / 1台"
+        - cell "0 / 0 / 1"
+        - cell "0.000 m³"
+      - row "成田空港モデル現場B工区 / m³ 1便 / 1台 1 / 0 / 0 0.000 m³":
+        - cell "成田空港モデル現場B工区 / m³"
+        - cell "1便 / 1台"
+        - cell "1 / 0 / 0"
+        - cell "0.000 m³"
+  - table:
+    - rowgroup:
+      - row "予定日時 / 予約 現場 → 受入先 便・車両 予定 / 原票 / 確定 予約・運行 操作":
+        - columnheader "予定日時 / 予約"
+        - columnheader "現場 → 受入先"
+        - columnheader "便・車両"
+        - columnheader "予定 / 原票 / 確定"
+        - columnheader "予約・運行"
+        - columnheader "操作"
+    - rowgroup:
+      - row "2026/9/25 8:00:00 be8d70b0 成田空港モデル現場A工区 栃木モデル採石場〈架空〉 第1便 成田100を01-01 10 m³ / 9.5 m³ / — 予約確定 荷下ろし完了 詳細":
+        - cell "2026/9/25 8:00:00 be8d70b0":
+          - text: 2026/9/25 8:00:00
+          - generic: be8d70b0
+        - cell "成田空港モデル現場A工区 栃木モデル採石場〈架空〉":
+          - text: 成田空港モデル現場A工区
+          - generic: 栃木モデル採石場〈架空〉
+        - cell "第1便 成田100を01-01":
+          - text: 第1便
+          - generic: 成田100を01-01
+        - cell "10 m³ / 9.5 m³ / —"
+        - cell "予約確定 荷下ろし完了":
+          - text: 予約確定
+          - generic: 荷下ろし完了
+        - cell "詳細":
+          - button "詳細"
+      - row "2026/9/25 16:00:00 b7690e8e 成田空港モデル現場B工区 栃木モデル採石場〈架空〉 第3便 成田100を01-01 10 m³ / — / — 予約確定 配車済み 詳細":
+        - cell "2026/9/25 16:00:00 b7690e8e":
+          - text: 2026/9/25 16:00:00
+          - generic: b7690e8e
+        - cell "成田空港モデル現場B工区 栃木モデル採石場〈架空〉":
+          - text: 成田空港モデル現場B工区
+          - generic: 栃木モデル採石場〈架空〉
+        - cell "第3便 成田100を01-01":
+          - text: 第3便
+          - generic: 成田100を01-01
+        - cell "10 m³ / — / —"
+        - cell "予約確定 配車済み":
+          - text: 予約確定
+          - generic: 配車済み
+        - cell "詳細":
+          - button "詳細"

@@ -1,0 +1,92 @@
+[WebServer] (node:6533) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 9 tests using 9 workers
+
+(node:6541) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6545) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6538) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6542) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6546) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:6539) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/9] tests/ui/receiving.spec.mjs:129:1 › 変更依頼・再申請・受入不可・取消と検索
+[2/9] tests/ui/receiving.spec.mjs:150:3 › PC・タブレット全6画面表示 dark
+[3/9] tests/ui/receiving.spec.mjs:187:1 › ホーム絞込・翌日・事業切替で受入と施工の文脈を保持
+[4/9] tests/ui/receiving.spec.mjs:150:3 › PC・タブレット全6画面表示 light
+[5/9] tests/ui/receiving.spec.mjs:10:3 › tablet-portrait: 承認から受付・実績確定、再読込で試作リセット
+[6/9] tests/ui/receiving.spec.mjs:75:1 › 公開範囲のプレビューと場所編集を反映
+[7/9] tests/ui/receiving.spec.mjs:10:3 › tablet: 承認から受付・実績確定、再読込で試作リセット
+[8/9] tests/ui/receiving.spec.mjs:10:3 › PC: 承認から受付・実績確定、再読込で試作リセット
+[9/9] tests/ui/receiving.spec.mjs:97:1 › 従来サンプルの搬出候補から申請、直接予約も申請止まり
+  1) tests/ui/receiving.spec.mjs:97:1 › 従来サンプルの搬出候補から申請、直接予約も申請止まり ─────────────────────────────────
+
+    Error: expect(locator).toHaveClass(expected) failed
+
+    Locator: getByRole('button', { name: '搬出案件を探す' })
+    Expected pattern: /active/
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveClass" getByRole('button', { name: '搬出案件を探す' }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '搬出案件を探す' })
+
+
+      101 |   await expect(
+      102 |     page.getByRole("button", { name: "搬出案件を探す" }),
+    > 103 |   ).toHaveClass(/active/);
+          |     ^
+      104 |   await expect(page.locator(".match-detail h3")).toHaveText(
+      105 |     "サンプル搬出現場 A",
+      106 |   );
+        at /Users/miharasoushi/Documents/ChatGPT/ECO DUMP new/app/tests/ui/receiving.spec.mjs:103:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/receiving-従来サンプルの搬出候補から申請、直接予約も申請止まり/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/receiving-従来サンプルの搬出候補から申請、直接予約も申請止まり/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/receiving-従来サンプルの搬出候補から申請、直接予約も申請止まり/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/receiving-従来サンプルの搬出候補から申請、直接予約も申請止まり/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    tests/ui/receiving.spec.mjs:97:1 › 従来サンプルの搬出候補から申請、直接予約も申請止まり ──────────────────────────────────
+  8 passed (7.7s)

@@ -1,0 +1,21 @@
+✔ unauthenticated and invalid-password access rejected (239.641166ms)
+✔ real shared 7-step flow persists and is visible across roles (132.971334ms)
+✔ API denies other site, location, driver, company and unauthorized transitions (76.541292ms)
+✔ duplicate request is one row, key/body conflict and stale updates are rejected (22.051208ms)
+✔ lost response is resolved by operation lookup without a duplicate mutation (14.2835ms)
+✔ attachment bytes persist and inaccessible parties cannot read them (5.689958ms)
+✔ database RLS and mutation permissions reject access without relying on API filters (6.485375ms)
+✔ same vehicle round trips remain independent; invalid step and premature actual are denied (48.525834ms)
+✔ capacity and asset overlap are enforced under concurrent writes (6.617041ms)
+✔ membership revocation is enforced for existing authenticated sessions (1.322334ms)
+✔ a role query or actor field cannot impersonate another account (1.791125ms)
+✔ invalid quantities, wrong units, and out-of-order timestamps cannot reach actuals (14.460916ms)
+✔ raw DB projections do not expose agreement terms or audit history to a driver (26.215167ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 672.779625

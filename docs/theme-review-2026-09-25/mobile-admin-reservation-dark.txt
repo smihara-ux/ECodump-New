@@ -1,0 +1,60 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え" [active]:
+  - button "通知":
+  - button "ヘルプ":
+- button "メニューを開く":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - button "サイドバーを開く":
+  - navigation:
+    - button "搬出管理"
+    - button "現場管理"
+    - button "運行ダッシュボード"
+    - button "配車・運行管理"
+    - button "労務安全"
+    - button "入退場管理"
+    - button "調整会議"
+    - button "実績・帳票"
+    - button "会社情報"
+    - button "ユーザー"
+    - button "車両・運転手"
+    - button "協力会社"
+    - button "登録申請"
+    - button "元請会社"
+  - button "通知"
+  - button "ヘルプ"
+- main:
+  - heading "搬出管理" [level=1]
+  - generic: WINNERS建設 配車担当〈検証用〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - text: WINNERS建設 配車担当〈検証用〉
+  - generic: 最終取得 17:23:16
+  - button "再取得":
+    - text: 再取得
+  - heading "搬出予定・搬入予約を作成" [level=2]
+  - paragraph: 既存取引先への直接予約です。発生土マッチは経由しません。
+  - text: 搬出現場
+  - combobox "搬出現場":
+    - option "成田空港モデル現場A工区" [selected]
+    - option "成田空港モデル現場B工区"
+  - text: 受入先
+  - combobox "受入先":
+    - option "栃木モデル採石場〈架空〉" [selected]
+    - option "茨城モデル採石場〈架空〉"
+  - text: 搬入日（日本時間）
+  - textbox "搬入日（日本時間）": 2026-09-25
+  - text: 指定時刻
+  - textbox "指定時刻": 09:00
+  - text: 予定数量（m³）
+  - spinbutton "予定数量（m³）": "7"
+  - text: 土質・受入条件
+  - textbox "土質・受入条件": 第2種建設発生土
+  - text: 直接取引の条件・合意内容（受入側確認前）
+  - textbox "直接取引の条件・合意内容（受入側確認前）": 指定の土質・数量・日時で搬入を希望します。受入側で条件を確認してください。
+  - button "予約を申請"
+  - button "戻る"

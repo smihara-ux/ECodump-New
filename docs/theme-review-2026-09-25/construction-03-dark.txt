@@ -1,0 +1,163 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理" [active]:
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "配車・運行管理" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - status:
+    - generic: 画面試作 API未接続のため、割当・変更内容はこの画面を閉じると失われます。
+  - text: CONSTRUCTION DISPATCH
+  - heading "配車・運行管理" [level=2]
+  - paragraph: 1便単位で未割当と割当済みを確認し、同じ車両の複数往復も便番号で区別します。
+  - button "運行地図を開く":
+    - text: 運行地図を開く
+  - tablist "予定編集方法":
+    - tab "日単位の予定・割当" [selected]
+    - tab "前日・前週からコピー"
+  - text: 日付
+  - textbox "日付": 2026-08-20
+  - text: 搬出元
+  - textbox "搬出元": （仮称）サンプル現場 A
+  - text: 受入先
+  - textbox "受入先": 湾岸リサイクルセンター
+  - text: 車両
+  - textbox "車両": 品川 100 あ 12-34
+  - text: 運転手
+  - textbox "運転手": サンプル 運転者1
+  - text: 予定回数
+  - spinbutton "予定回数": "2"
+  - text: 1便の数量
+  - spinbutton "1便の数量": "7.0"
+  - text: 単位
+  - combobox "単位":
+    - option "m³" [selected]
+    - option "t"
+  - text: 登録経路
+  - combobox "登録経路":
+    - option "既存取引先への直接予約" [selected]
+    - option "発生土マッチの条件合意から作成"
+  - button "下書きへ反映"
+  - paragraph: 車両台帳と運転手台帳は別管理です。通常の組合せを候補表示しますが、固定の1対1にはしません。
+  - article:
+    - generic: 予定便
+    - generic: 4便
+  - article:
+    - generic: 未割当
+    - generic: 2便
+  - article:
+    - generic: 割当済み
+    - generic: 2便
+  - article:
+    - generic: 実車両数
+    - generic: 2台
+  - tablist:
+    - tab "未割当" [selected]
+    - tab "割当済み"
+  - button "TR-20260820-02 1便目・09:10出発 サンプル現場 B 中央中間処理施設 未割当":
+    - generic: TR-20260820-02
+    - generic: 1便目・09:10出発
+    - generic: サンプル現場 B
+    - generic: 中央中間処理施設
+    - generic: 未割当
+  - button "TR-20260820-06 2便目・12:15出発 サンプル現場 B 中央中間処理施設 未割当":
+    - generic: TR-20260820-06
+    - generic: 2便目・12:15出発
+    - generic: サンプル現場 B
+    - generic: 中央中間処理施設
+    - generic: 未割当
+  - complementary:
+    - text: 選択中の便
+    - heading "TR-20260820-02 1便目" [level=3]
+    - term: 搬出現場
+    - definition: サンプル現場 B
+    - term: 受入先
+    - definition: 中央中間処理施設
+    - term: 出発予定
+    - definition: 09:10
+    - term: 車両
+    - definition: 未割当
+    - term: ドライバー
+    - definition: 未割当
+    - button "サンプル車両を仮割当":
+      - text: サンプル車両を仮割当
+    - button "運行詳細"

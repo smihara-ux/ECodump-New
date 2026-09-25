@@ -1,0 +1,197 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー" [active]:
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "ユーザー一覧" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 検索結果：9件
+  - text: 検索
+  - textbox "検索":
+    - /placeholder: 氏名を入力
+  - text: 支店
+  - combobox "支店":
+    - option "すべて" [selected]
+    - option "本社"
+    - option "支店 1"
+  - text: 種別
+  - combobox "種別":
+    - option "すべて" [selected]
+    - option "協力会社管理者"
+    - option "職長"
+  - button "検索":
+    - text: 検索
+  - button "詳細検索"
+  - button "クリア"
+  - button "新規作成"
+  - button "企業管理者申請"
+  - button "表示データをCSV出力"
+  - button "職長の初期パスワードを再発行"
+  - generic "支店"
+  - generic "氏名"
+  - generic "ユーザーID・メールアドレス"
+  - generic "種別"
+  - generic "サービス権限"
+  - generic "登録日"
+  - generic "更新日"
+  - generic "本社"
+  - text: さんぷる ゆーざー 1
+  - text: サンプルユーザー 1
+  - generic "user1@example.test"
+  - generic "協力会社管理者"
+  - generic "ECO"
+  - generic "2025/01/01"
+  - generic "2026/01/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 2
+  - text: サンプルユーザー 2
+  - generic "user2@example.test"
+  - generic "協力会社管理者"
+  - generic "ECO"
+  - generic "2025/02/01"
+  - generic "2026/02/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 3
+  - text: サンプルユーザー 3
+  - generic "user3@example.test"
+  - generic "協力会社管理者"
+  - generic "ECO"
+  - generic "2025/03/01"
+  - generic "2026/03/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 4
+  - text: サンプルユーザー 4
+  - generic "user4@example.test"
+  - generic "職長"
+  - generic "ECO"
+  - generic "2025/04/01"
+  - generic "2026/04/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 5
+  - text: サンプルユーザー 5
+  - generic "user5@example.test"
+  - generic "職長"
+  - generic "ECO"
+  - generic "2025/05/01"
+  - generic "2026/05/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 6
+  - text: サンプルユーザー 6
+  - generic "user6@example.test"
+  - generic "職長"
+  - generic "ECO"
+  - generic "2025/06/01"
+  - generic "2026/06/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 7
+  - text: サンプルユーザー 7
+  - generic "user7@example.test"
+  - generic "職長"
+  - generic "ECO"
+  - generic "2025/07/01"
+  - generic "2026/07/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 8
+  - text: サンプルユーザー 8
+  - generic "user8@example.test"
+  - generic "職長"
+  - generic "ECO"
+  - generic "2025/08/01"
+  - generic "2026/08/15"
+  - button "確認"
+  - generic "本社"
+  - text: さんぷる ゆーざー 9
+  - text: サンプルユーザー 9
+  - generic "user9@example.test"
+  - generic "職長"
+  - generic "ECO"
+  - generic "2025/09/01"
+  - generic "2026/09/15"
+  - button "確認"
+  - button "前のページ" [disabled]:
+  - button "1" [disabled]
+  - button "次のページ" [disabled]:

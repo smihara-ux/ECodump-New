@@ -22,3 +22,14 @@ app/tmp/
 app/ui-improvement-kit/
 app/test-results/
 app/playwright-report/
+
+# Isolated local API/PostgreSQL validation only
+app/server/.local/
+app/.local-data/
+
+# Local review artifacts and private environment files
+/tmp/
+/test-results/
+.env
+.env.local
+.env.*.local

@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-09-25T06:01:25.092Z",
+  "base": "http://127.0.0.1:4178",
+  "day": "2055-01-23",
+  "results": [
+    {
+      "role": "construction",
+      "account": "narita-construction",
+      "width": 1440,
+      "file": "construction-pc.png",
+      "overflow": false
+    },
+    {
+      "role": "receiving",
+      "account": "narita-receiver-tochigi",
+      "width": 820,
+      "file": "receiving-tablet.png",
+      "overflow": false
+    },
+    {
+      "role": "driver",
+      "account": "narita-driver-aoki",
+      "width": 390,
+      "file": "driver-smartphone.png",
+      "overflow": false
+    }
+  ],
+  "consoleErrors": []
+}

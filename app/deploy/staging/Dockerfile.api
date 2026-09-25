@@ -1,0 +1,8 @@
+FROM node:22-alpine
+WORKDIR /srv/ecodump
+COPY server/package.json server/package-lock.json ./
+RUN npm ci --omit=dev
+COPY server ./server
+COPY deploy/staging ./deploy/staging
+USER node
+CMD ["node", "server/index.mjs"]

@@ -1,0 +1,97 @@
+.direct-workflow {
+  margin: 18px;
+  padding: 18px;
+  border: 1px solid
+    color-mix(in srgb, var(--accent, #bfd52b) 55%, var(--line, #49665f));
+  border-radius: 14px;
+  background: color-mix(
+    in srgb,
+    var(--panel, #103f38) 92%,
+    var(--accent, #bfd52b)
+  );
+  color: var(--text, #edf5f1);
+  display: grid;
+  gap: 14px;
+}
+.direct-workflow header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.direct-workflow h2 {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+.direct-workflow header span,
+.direct-workflow small {
+  color: var(--muted, #a9bbb5);
+}
+.direct-workflow button {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 9px;
+  border: 1px solid var(--line, #49665f);
+  background: var(--surface, #fff);
+  color: var(--ink, #17312b);
+  font-weight: 700;
+}
+.direct-workflow .workflow-primary {
+  background: var(--accent, #c5df20);
+  color: #10231e;
+  border-color: var(--accent, #c5df20);
+}
+.workflow-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+}
+.workflow-status > b,
+.workflow-trip b {
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: #c5df20;
+  color: #10231e;
+}
+.workflow-trip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.workflow-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.workflow-error {
+  color: #ffb4a7;
+}
+.workflow-success,
+.workflow-complete {
+  color: #d9f45a;
+  font-weight: 700;
+}
+.workflow-complete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.workflow-complete p {
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .direct-workflow {
+    margin: 10px;
+    padding: 14px;
+  }
+  .direct-workflow header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .workflow-actions button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,76 @@
+- region "iPhone表示 ドライバーアプリ":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー
+  - button "ライト表示に切り替え":
+  - text: 試作・API未接続
+  - generic: すべて匿名サンプル
+  - main:
+    - region "直接予約の共通API連携":
+      - text: 旧SQLite検証 · 共通PostgreSQLとは別データ
+      - heading "マッチングを経由しない運搬" [level=2]
+      - button "再取得"
+      - paragraph:
+        - text: 今回の試験運用確認は
+        - link "共通PostgreSQLの運搬画面":
+          - /url: /?data=isolated&role=driver
+        - text: を使用してください。この旧検証パネルの記録は共有されません。
+      - alert: 隔離APIに接続できません。ローカル統合環境で確認してください。
+      - paragraph: 施工側からの予約登録を待っています。
+      - generic: 更新ごとに冪等キーとversionを検証します。結果不明時は同じ更新を再送せず処理結果照会APIを使用します。
+    - generic: 9月25日(金)
+    - heading "今日の運行" [level=1]
+    - paragraph: サンプル運転者 01 さん、お疲れさまです。
+    - generic: 3 本日の便
+    - generic: 0 荷下ろし下書き
+    - button "次の運行 ／ 1往復目 配車済み 08:30 現場指定 09:15 受入指定 A サンプル現場 A B サンプル受入場所 B サンプル車両 01 · 7 m³":
+      - text: 次の運行
+      - generic: ／ 1往復目
+      - generic: 配車済み
+      - text: 08:30
+      - text: 現場指定
+      - text: 09:15 受入指定
+      - generic: A
+      - strong: サンプル現場 A
+      - generic: B
+      - strong: サンプル受入場所 B
+      - text: サンプル車両 01 · 7 m³
+    - heading "本日のスケジュール" [level=2]
+    - generic: 同じ車両 · 3往復
+    - button "2便目 ／ 2往復目 配車済み 10:30 現場指定 11:15 受入指定 A サンプル現場 A B サンプル受入場所 B サンプル車両 01 · 7 m³":
+      - text: 2便目
+      - generic: ／ 2往復目
+      - generic: 配車済み
+      - text: 10:30
+      - text: 現場指定
+      - text: 11:15 受入指定
+      - generic: A
+      - strong: サンプル現場 A
+      - generic: B
+      - strong: サンプル受入場所 B
+      - text: サンプル車両 01 · 7 m³
+    - button "3便目 ／ 3往復目 配車済み 13:30 現場指定 14:15 受入指定 A サンプル現場 A B サンプル受入場所 B サンプル車両 01 · 7 m³":
+      - text: 3便目
+      - generic: ／ 3往復目
+      - generic: 配車済み
+      - text: 13:30
+      - text: 現場指定
+      - text: 14:15 受入指定
+      - generic: A
+      - strong: サンプル現場 A
+      - generic: B
+      - strong: サンプル受入場所 B
+      - text: サンプル車両 01 · 7 m³
+    - button "端末内の未送信 0件 API接続後の送信機能は未実装です":
+      - text: 端末内の未送信 0件
+      - generic: API接続後の送信機能は未実装です
+  - navigation "下部メニュー":
+    - button "今日の運行" [active]:
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ

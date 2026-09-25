@@ -1,0 +1,97 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定" [active]:
+      - generic: 取引先・基本設定
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "取引先・基本設定" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - note:
+    - generic: 受入側の操作試作 · API未接続
+    - generic: 変更はこの画面を開いている間だけ保持されます。再読込でリセットされ、相手への送信・DB保存は行いません。
+  - heading "取引先・基本設定" [level=2]
+  - paragraph: 既存取引先への直接予約と、共通の基本台帳を利用します。
+  - article:
+    - heading "既存取引先（匿名サンプル）" [level=3]
+    - text: サンプル施工会社 A
+    - paragraph: 条件合意・書類確認後に、マッチングを経由せず予約します。
+    - button "直接予約を試す"
+    - text: サンプル施工会社 B
+    - paragraph: 条件合意・書類確認後に、マッチングを経由せず予約します。
+    - button "直接予約を試す"
+  - article:
+    - heading "共通の基本台帳" [level=3]
+    - paragraph: 既存画面につながります。既存台帳の登録・編集もAPI保存は未接続です。
+    - button "会社情報":
+      - text: 会社情報
+    - button "ユーザー一覧":
+      - text: ユーザー一覧
+    - button "車両一覧":
+      - text: 車両一覧
+    - button "代行先一覧":
+      - text: 代行先一覧
+    - button "代行登録申請":
+      - text: 代行登録申請
+    - button "自社の代行元一覧":
+      - text: 自社の代行元一覧
+    - button "入退場管理":
+      - text: 入退場管理
+  - article:
+    - heading "権限・通知・事業切替" [level=3]
+    - paragraph: 施工側／受入側は、それぞれの管理画面入口から利用します。実際の会社・ユーザー・場所別の認可や通知送信は未接続です。

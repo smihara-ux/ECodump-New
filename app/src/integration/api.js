@@ -1,0 +1,3 @@
+export async function call(token,path,{method='GET',body,key,signal}={}){const r=await fetch('/api/direct'+path,{method,signal,headers:{...(token?{Authorization:`Bearer ${token}`} : {}),...(body?{'Content-Type':'application/json'}:{}),...(key?{'Idempotency-Key':key}:{})},body:body?JSON.stringify(body):undefined});const data=await r.json();if(!r.ok)throw Object.assign(new Error(data.error||'通信に失敗しました。'),{status:r.status});return data;}
+export const names={assigned:'配車済み',site_arrived:'現場到着',in_transit:'積込完了・出発',receiver_arrived:'受入先到着',unloaded:'荷下ろし完了',cancelled:'取消済み',refused:'受入不可'};
+export const next={assigned:'site_arrived',site_arrived:'in_transit',in_transit:'receiver_arrived',receiver_arrived:'unloaded'};

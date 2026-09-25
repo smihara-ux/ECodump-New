@@ -1,0 +1,18 @@
+{
+  "evidence": [
+    {
+      "scenario": "通常画面でマッチ下書き保存・再読込",
+      "title": "受入条件・通常画面試験 1790306793135",
+      "result": "PASS"
+    },
+    {
+      "scenario": "受入ホーム・予約・マッチを既存シェル内で共通API接続",
+      "result": "PASS"
+    },
+    {
+      "scenario": "PC・タブレット・スマートフォンのメニュー移動",
+      "result": "PASS"
+    }
+  ],
+  "errors": []
+}

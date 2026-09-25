@@ -1,0 +1,171 @@
+- banner:
+  - button "施工メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - button "2026-08-26（水）":
+    - generic: 2026-08-26（水）
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: WINNERS建設 配車担当〈検証用〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "施工側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "施工側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "施工側 管理":
+      - generic: 施工側
+      - generic: 管理
+    - button "総合 インフォメーション （管理）":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: （管理）
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "施工管理" [level=2]
+    - button "搬出管理":
+      - generic: 搬出管理
+    - button "現場管理":
+      - generic: 現場管理
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - button "配車・運行管理":
+      - generic: 配車・運行管理
+    - heading "現場サービス" [level=2]
+    - button "労務安全":
+      - generic: 労務安全
+    - button "入退場管理":
+      - generic: 入退場管理
+    - button "調整会議":
+      - generic: 調整会議
+    - heading "実績管理" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - heading "基本台帳" [level=2]
+    - button "会社情報":
+      - generic: 会社情報
+    - button "ユーザー":
+      - generic: ユーザー
+    - button "車両・運転手":
+      - generic: 車両・運転手
+    - heading "関係会社" [level=2]
+    - button "協力会社":
+      - generic: 協力会社
+    - button "登録申請":
+      - generic: 登録申請
+    - button "元請会社":
+      - generic: 元請会社
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - complementary:
+    - generic: 労務安全
+    - button "書類状況一覧"
+    - button "└ 新規入場時等教育実施報告書":
+      - generic: └
+      - text: 新規入場時等教育実施報告書
+    - button "└ 【元請会社】新規入場者調査票":
+      - generic: └
+      - text: 【元請会社】新規入場者調査票
+    - button "└ その他の安全書類":
+      - generic: └
+      - text: その他の安全書類
+    - button "元請帳票の確認"
+    - button "配下協力会社検索"
+    - button "配下作業員検索（送り出し教育）" [active]
+    - button "是正依頼内容の確認・返信"
+    - button "書類一括出力"
+    - button "共通メニュー"
+    - button "現場掲示板"
+  - heading "配下作業員検索（送り出し教育）" [level=2]
+  - paragraph: 現場に登録された作業員情報と送り出し教育の状況を検索します。
+  - generic: 検索結果：2件
+  - button "検索条件"
+  - button "作業員の送り出し"
+  - generic: 作業員検索
+  - button:
+  - text: 一次協力会社
+  - combobox "一次協力会社":
+    - option "すべて" [selected]
+    - option "サンプル建設株式会社"
+  - text: 作業員氏名
+  - textbox "作業員氏名":
+    - /placeholder: 入力してください
+  - text: 所属会社
+  - textbox "所属会社":
+    - /placeholder: 会社名を入力
+  - text: 職種
+  - combobox "職種":
+    - option "すべて" [selected]
+    - option "土工"
+  - generic: 保険・健康情報
+  - checkbox "社会保険未加入"
+  - text: 社会保険未加入
+  - checkbox "健康診断期限超過"
+  - text: 健康診断期限超過
+  - checkbox "高血圧基準該当"
+  - text: 高血圧基準該当
+  - checkbox "年齢条件を指定"
+  - text: 年齢条件を指定
+  - button "キャンセル"
+  - button "検索":
+    - text: 検索
+  - table:
+    - rowgroup:
+      - row "氏名 次数 所属会社 作業内容 職種 役割 生年月日 年齢 健康診断日 血圧 入場日 教育実施日":
+        - columnheader "氏名"
+        - columnheader "次数"
+        - columnheader "所属会社"
+        - columnheader "作業内容"
+        - columnheader "職種"
+        - columnheader "役割"
+        - columnheader "生年月日"
+        - columnheader "年齢"
+        - columnheader "健康診断日"
+        - columnheader "血圧"
+        - columnheader "入場日"
+        - columnheader "教育実施日"
+    - rowgroup:
+      - row "サンプル作業員 1 1次 サンプル協力会社A 躯体工事 土工 職長 1985/01/01 41 2026/04/01 120/75 2026/04/10 2026/04/05":
+        - cell "サンプル作業員 1"
+        - cell "1次"
+        - cell "サンプル協力会社A"
+        - cell "躯体工事"
+        - cell "土工"
+        - cell "職長"
+        - cell "1985/01/01"
+        - cell "41"
+        - cell "2026/04/01"
+        - cell "120/75"
+        - cell "2026/04/10"
+        - cell "2026/04/05"
+      - row "サンプル作業員 2 2次 サンプル協力会社B 躯体工事 土工 作業員 1985/01/01 41 2026/04/01 120/75 2026/04/10 2026/04/05":
+        - cell "サンプル作業員 2"
+        - cell "2次"
+        - cell "サンプル協力会社B"
+        - cell "躯体工事"
+        - cell "土工"
+        - cell "作業員"
+        - cell "1985/01/01"
+        - cell "41"
+        - cell "2026/04/01"
+        - cell "120/75"
+        - cell "2026/04/10"
+        - cell "2026/04/05"

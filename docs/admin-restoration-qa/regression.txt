@@ -1,0 +1,121 @@
+[WebServer] (node:28704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 78 tests using 9 workers
+
+(node:28707) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28713) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28709) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28706) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28714) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28711) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:28710) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/78] tests/ui/app-shell.spec.mjs:25:5 › control renders without overflow in light mode
+[2/78] tests/ui/app-shell.spec.mjs:25:5 › labor renders without overflow in light mode
+[3/78] tests/ui/app-shell.spec.mjs:25:5 › fields renders without overflow in light mode
+[4/78] tests/ui/app-shell.spec.mjs:25:5 › users renders without overflow in light mode
+[5/78] tests/ui/app-shell.spec.mjs:25:5 › transport renders without overflow in light mode
+[6/78] tests/ui/app-shell.spec.mjs:25:5 › conference renders without overflow in light mode
+[7/78] tests/ui/app-shell.spec.mjs:25:5 › gatekeeper renders without overflow in light mode
+[8/78] tests/ui/app-shell.spec.mjs:25:5 › matching renders without overflow in light mode
+[9/78] tests/ui/app-shell.spec.mjs:25:5 › company renders without overflow in light mode
+[10/78] tests/ui/app-shell.spec.mjs:25:5 › vehicles renders without overflow in light mode
+[11/78] tests/ui/app-shell.spec.mjs:25:5 › agencies renders without overflow in light mode
+[12/78] tests/ui/app-shell.spec.mjs:25:5 › agency-request renders without overflow in light mode
+[13/78] tests/ui/app-shell.spec.mjs:25:5 › prime-contractors renders without overflow in light mode
+[14/78] tests/ui/app-shell.spec.mjs:25:5 › dispatch renders without overflow in light mode
+[15/78] tests/ui/app-shell.spec.mjs:25:5 › results renders without overflow in light mode
+[16/78] tests/ui/app-shell.spec.mjs:25:5 › settings renders without overflow in light mode
+[17/78] tests/ui/app-shell.spec.mjs:25:5 › field&fieldId=32182 renders without overflow in light mode
+[18/78] tests/ui/app-shell.spec.mjs:25:5 › fields renders without overflow in dark mode
+[19/78] tests/ui/app-shell.spec.mjs:25:5 › matching renders without overflow in dark mode
+[20/78] tests/ui/app-shell.spec.mjs:25:5 › control renders without overflow in dark mode
+[21/78] tests/ui/app-shell.spec.mjs:25:5 › labor renders without overflow in dark mode
+[22/78] tests/ui/app-shell.spec.mjs:25:5 › gatekeeper renders without overflow in dark mode
+[23/78] tests/ui/app-shell.spec.mjs:25:5 › conference renders without overflow in dark mode
+[24/78] tests/ui/app-shell.spec.mjs:25:5 › transport renders without overflow in dark mode
+[25/78] tests/ui/app-shell.spec.mjs:25:5 › company renders without overflow in dark mode
+[26/78] tests/ui/app-shell.spec.mjs:25:5 › users renders without overflow in dark mode
+[27/78] tests/ui/app-shell.spec.mjs:25:5 › vehicles renders without overflow in dark mode
+[28/78] tests/ui/app-shell.spec.mjs:25:5 › agencies renders without overflow in dark mode
+[29/78] tests/ui/app-shell.spec.mjs:25:5 › agency-request renders without overflow in dark mode
+[30/78] tests/ui/app-shell.spec.mjs:25:5 › prime-contractors renders without overflow in dark mode
+[31/78] tests/ui/app-shell.spec.mjs:25:5 › dispatch renders without overflow in dark mode
+[32/78] tests/ui/app-shell.spec.mjs:25:5 › results renders without overflow in dark mode
+[33/78] tests/ui/app-shell.spec.mjs:25:5 › settings renders without overflow in dark mode
+[34/78] tests/ui/app-shell.spec.mjs:25:5 › field&fieldId=32182 renders without overflow in dark mode
+[35/78] tests/ui/app-shell.spec.mjs:49:5 › fields keeps primary UI reachable on tablet
+[36/78] tests/ui/app-shell.spec.mjs:49:5 › control keeps primary UI reachable on tablet
+[37/78] tests/ui/app-shell.spec.mjs:49:5 › field&fieldId=32182 keeps primary UI reachable on tablet
+[38/78] tests/ui/app-shell.spec.mjs:49:5 › fields keeps primary UI reachable on phone
+[39/78] tests/ui/app-shell.spec.mjs:49:5 › control keeps primary UI reachable on phone
+[40/78] tests/ui/app-shell.spec.mjs:49:5 › field&fieldId=32182 keeps primary UI reachable on phone
+[41/78] tests/ui/app-shell.spec.mjs:69:1 › login validation identifies and focuses the first invalid field
+[42/78] tests/ui/app-shell.spec.mjs:78:1 › demo login and theme toggle complete the primary entry flow
+[43/78] tests/ui/app-shell.spec.mjs:86:1 › field table is keyboard reachable
+[44/78] tests/ui/app-shell.spec.mjs:94:1 › list data exports CSV
+[45/78] tests/ui/app-shell.spec.mjs:102:1 › notification read state persists after reload
+[46/78] tests/ui/app-shell.spec.mjs:111:1 › release metadata and manifest are exposed
+[47/78] tests/ui/app-shell.spec.mjs:119:1 › construction mode opens field-based home and role menus
+[48/78] tests/ui/app-shell.spec.mjs:132:1 › construction dispatch makes only a local prototype assignment
+[49/78] tests/ui/app-shell.spec.mjs:140:1 › detail search is keyboard-contained and closes with Escape
+[50/78] tests/ui/app-shell.spec.mjs:151:3 › fields does not clip the document at compact desktop width
+[51/78] tests/ui/app-shell.spec.mjs:151:3 › matching does not clip the document at compact desktop width
+[52/78] tests/ui/app-shell.spec.mjs:151:3 › control does not clip the document at compact desktop width
+[53/78] tests/ui/app-shell.spec.mjs:151:3 › labor does not clip the document at compact desktop width
+[54/78] tests/ui/app-shell.spec.mjs:151:3 › gatekeeper does not clip the document at compact desktop width
+[55/78] tests/ui/app-shell.spec.mjs:151:3 › conference does not clip the document at compact desktop width
+[56/78] tests/ui/app-shell.spec.mjs:151:3 › transport does not clip the document at compact desktop width
+[57/78] tests/ui/app-shell.spec.mjs:151:3 › company does not clip the document at compact desktop width
+[58/78] tests/ui/app-shell.spec.mjs:151:3 › users does not clip the document at compact desktop width
+[59/78] tests/ui/app-shell.spec.mjs:151:3 › vehicles does not clip the document at compact desktop width
+[60/78] tests/ui/app-shell.spec.mjs:151:3 › agencies does not clip the document at compact desktop width
+[61/78] tests/ui/app-shell.spec.mjs:151:3 › agency-request does not clip the document at compact desktop width
+[62/78] tests/ui/app-shell.spec.mjs:151:3 › prime-contractors does not clip the document at compact desktop width
+[63/78] tests/ui/app-shell.spec.mjs:151:3 › dispatch does not clip the document at compact desktop width
+[64/78] tests/ui/app-shell.spec.mjs:151:3 › results does not clip the document at compact desktop width
+[65/78] tests/ui/app-shell.spec.mjs:151:3 › settings does not clip the document at compact desktop width
+[66/78] tests/ui/app-shell.spec.mjs:151:3 › field&fieldId=32182 does not clip the document at compact desktop width
+[67/78] tests/ui/receiving-actual-form.spec.mjs:4:3 › 実績数量・単位・差異理由を確認してから送信 1440px
+[68/78] tests/ui/receiving-actual-form.spec.mjs:4:3 › 実績数量・単位・差異理由を確認してから送信 820px
+[69/78] tests/ui/receiving.spec.mjs:10:3 › PC: 承認から受付・実績確定、再読込で試作リセット
+[70/78] tests/ui/receiving.spec.mjs:10:3 › tablet: 承認から受付・実績確定、再読込で試作リセット
+[71/78] tests/ui/receiving.spec.mjs:10:3 › tablet-portrait: 承認から受付・実績確定、再読込で試作リセット
+[72/78] tests/ui/receiving.spec.mjs:75:1 › 公開範囲のプレビューと場所編集を反映
+[73/78] tests/ui/receiving.spec.mjs:97:1 › 従来サンプルの搬出候補から申請、直接予約も申請止まり
+[74/78] tests/ui/receiving.spec.mjs:128:1 › 変更依頼・再申請・受入不可・取消と検索
+[75/78] tests/ui/receiving.spec.mjs:149:3 › PC・タブレット全6画面表示 light
+[76/78] tests/ui/receiving.spec.mjs:149:3 › PC・タブレット全6画面表示 dark
+[77/78] tests/ui/receiving.spec.mjs:186:1 › ホーム絞込・翌日・役割別URLで受入と施工の文脈を保持
+[78/78] tests/ui/trial-save-feedback.spec.mjs:2:1 › 旧SQLiteパネルは再取得失敗を保存・再取得成功と表示しない
+  78 passed (9.5s)

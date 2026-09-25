@@ -1,0 +1,35 @@
+- region "iPhone表示 API接続ドライバー":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー / DB接続検証
+  - button "明暗表示を切替":
+  - main:
+    - text: 検証用DBに接続
+    - generic: 本番ではありません
+    - text: 青木太郎〈架空〉
+    - generic: 最終取得 17:15:36
+    - button "再取得":
+      - text: 再取得
+    - heading "マイページ" [level=1]
+    - text: 今日の担当・出発前に確認
+    - paragraph: 青木太郎〈架空〉
+    - paragraph: モデル運送〈架空〉
+    - paragraph: 車番：成田100を01-01
+    - generic "車両・担当が違う／管理者に確認"
+    - heading "青木太郎〈架空〉" [level=2]
+    - paragraph: 役割：ドライバー
+    - paragraph: 担当：自分に割り当てられた便のみ
+    - paragraph: 保存先：接続先の隔離PostgreSQL
+    - paragraph: 検証用アカウント認証。本番Supabase Authとは別です。
+    - paragraph: GPSは運行詳細で端末内確認のみ利用できます。管理側への位置共有とPush通知は未接続です。
+    - button "ログアウト"
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ" [active]:
+      - generic: マイページ

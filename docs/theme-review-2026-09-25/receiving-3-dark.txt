@@ -1,0 +1,225 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付" [active]:
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "搬入予約・受付" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - note:
+    - generic: 受入側の操作試作 · API未接続
+    - generic: 変更はこの画面を開いている間だけ保持されます。再読込でリセットされ、相手への送信・DB保存は行いません。
+  - heading "搬入予約・受付" [level=2]
+  - paragraph: 予約承認から到着、受入内容の確認、実績確定までを1便ずつ確認します。
+  - button "既存取引先へ直接予約（試作）"
+  - generic: 予約・受付状態
+  - combobox "予約・受付状態":
+    - option "すべて" [selected]
+    - option "申請中"
+    - option "変更依頼"
+    - option "予約確定"
+    - option "待機"
+    - option "受入中"
+    - option "内容確認待ち"
+    - option "完了"
+    - option "受入不可"
+    - option "取消"
+  - generic: 予約を検索
+  - textbox "予約を検索":
+    - /placeholder: 便ID・予約ID・現場・車両
+  - generic "便一覧（横スクロール可）":
+    - table:
+      - rowgroup:
+        - row "便・予約 到着予定 / 現場 受入場所 車両 / 便順 予定数量 予約 / 受付 詳細":
+          - columnheader "便・予約"
+          - columnheader "到着予定 / 現場"
+          - columnheader "受入場所"
+          - columnheader "車両 / 便順"
+          - columnheader "予定数量"
+          - columnheader "予約 / 受付"
+          - columnheader "詳細"
+      - rowgroup:
+        - row "T-001 R-001 09:00 サンプル搬出現場 A サンプル受入ヤード A サンプル車両 01 車両 第1便 8 m³ 申請中 未到着 T-001の予約詳細":
+          - cell "T-001 R-001":
+            - text: T-001
+            - generic: R-001
+          - cell "09:00 サンプル搬出現場 A":
+            - text: 09:00
+            - generic: サンプル搬出現場 A
+          - cell "サンプル受入ヤード A"
+          - cell "サンプル車両 01 車両 第1便":
+            - text: サンプル車両 01
+            - generic: 車両 第1便
+          - cell "8 m³"
+          - cell "申請中 未到着":
+            - generic: 申請中
+            - generic: 未到着
+          - cell "T-001の予約詳細":
+            - button "T-001の予約詳細":
+              - text: 詳細
+        - row "T-002 R-002 11:00 サンプル搬出現場 A サンプル受入ヤード A サンプル車両 01 車両 第2便 8 m³ 予約確定 未到着 T-002の予約詳細":
+          - cell "T-002 R-002":
+            - text: T-002
+            - generic: R-002
+          - cell "11:00 サンプル搬出現場 A":
+            - text: 11:00
+            - generic: サンプル搬出現場 A
+          - cell "サンプル受入ヤード A"
+          - cell "サンプル車両 01 車両 第2便":
+            - text: サンプル車両 01
+            - generic: 車両 第2便
+          - cell "8 m³"
+          - cell "予約確定 未到着":
+            - generic: 予約確定
+            - generic: 未到着
+          - cell "T-002の予約詳細":
+            - button "T-002の予約詳細":
+              - text: 詳細
+        - row "T-003 R-003 09:30 サンプル搬出現場 C サンプル受入ヤード A サンプル車両 02 車両 第1便 8 m³ 予約確定 待機 T-003の予約詳細":
+          - cell "T-003 R-003":
+            - text: T-003
+            - generic: R-003
+          - cell "09:30 サンプル搬出現場 C":
+            - text: 09:30
+            - generic: サンプル搬出現場 C
+          - cell "サンプル受入ヤード A"
+          - cell "サンプル車両 02 車両 第1便":
+            - text: サンプル車両 02
+            - generic: 車両 第1便
+          - cell "8 m³"
+          - cell "予約確定 待機":
+            - generic: 予約確定
+            - generic: 待機
+          - cell "T-003の予約詳細":
+            - button "T-003の予約詳細":
+              - text: 詳細
+        - row "T-004 R-004 09:45 サンプル搬出現場 D サンプル受入ヤード A サンプル車両 03 車両 第1便 8 m³ 予約確定 受入中 T-004の予約詳細":
+          - cell "T-004 R-004":
+            - text: T-004
+            - generic: R-004
+          - cell "09:45 サンプル搬出現場 D":
+            - text: 09:45
+            - generic: サンプル搬出現場 D
+          - cell "サンプル受入ヤード A"
+          - cell "サンプル車両 03 車両 第1便":
+            - text: サンプル車両 03
+            - generic: 車両 第1便
+          - cell "8 m³"
+          - cell "予約確定 受入中":
+            - generic: 予約確定
+            - generic: 受入中
+          - cell "T-004の予約詳細":
+            - button "T-004の予約詳細":
+              - text: 詳細
+        - row "T-005 R-005 10:00 サンプル搬出現場 E サンプル受入ヤード A サンプル車両 04 車両 第1便 8 m³ 予約確定 内容確認待ち T-005の予約詳細":
+          - cell "T-005 R-005":
+            - text: T-005
+            - generic: R-005
+          - cell "10:00 サンプル搬出現場 E":
+            - text: 10:00
+            - generic: サンプル搬出現場 E
+          - cell "サンプル受入ヤード A"
+          - cell "サンプル車両 04 車両 第1便":
+            - text: サンプル車両 04
+            - generic: 車両 第1便
+          - cell "8 m³"
+          - cell "予約確定 内容確認待ち":
+            - generic: 予約確定
+            - generic: 内容確認待ち
+          - cell "T-005の予約詳細":
+            - button "T-005の予約詳細":
+              - text: 詳細
+        - row "T-006 R-006 10:30 サンプル搬出現場 F サンプル受入ヤード B サンプル車両 05 車両 第1便 8 m³ 予約確定 完了 T-006の予約詳細":
+          - cell "T-006 R-006":
+            - text: T-006
+            - generic: R-006
+          - cell "10:30 サンプル搬出現場 F":
+            - text: 10:30
+            - generic: サンプル搬出現場 F
+          - cell "サンプル受入ヤード B"
+          - cell "サンプル車両 05 車両 第1便":
+            - text: サンプル車両 05
+            - generic: 車両 第1便
+          - cell "8 m³"
+          - cell "予約確定 完了":
+            - generic: 予約確定
+            - generic: 完了
+          - cell "T-006の予約詳細":
+            - button "T-006の予約詳細":
+              - text: 詳細
+        - row "T-007 R-007 13:00 サンプル搬出現場 G サンプル受入ヤード B サンプル車両 06 車両 第1便 8 m³ 予約確定 未到着 T-007の予約詳細":
+          - cell "T-007 R-007":
+            - text: T-007
+            - generic: R-007
+          - cell "13:00 サンプル搬出現場 G":
+            - text: 13:00
+            - generic: サンプル搬出現場 G
+          - cell "サンプル受入ヤード B"
+          - cell "サンプル車両 06 車両 第1便":
+            - text: サンプル車両 06
+            - generic: 車両 第1便
+          - cell "8 m³"
+          - cell "予約確定 未到着":
+            - generic: 予約確定
+            - generic: 未到着
+          - cell "T-007の予約詳細":
+            - button "T-007の予約詳細":
+              - text: 詳細

@@ -1,0 +1,309 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ダークモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 管制 太郎
+  - generic: 管制センター
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理":
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: デモデータで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "発生土マッチ" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: サンプル表示 · 保存する場合は検証環境へログインしてください
+  - button "ログインして保存を利用"
+  - note: 操作プレビュー：変更は保存・送信されません。適合度・距離・件数はサンプルです。
+  - text: SOIL CIRCULATION MATCHING
+  - heading "建設発生土マッチング" [level=2]
+  - paragraph: 搬出時期・土量・土質・距離・受入条件を確認する共通画面です。施工側は受入候補、受入側は搬出案件を確認できます。
+  - button "新しい案件を登録" [active]:
+    - text: 新しい案件を登録
+  - article:
+    - generic: 公開中の搬出案件
+    - generic: 18件
+    - generic: 総量 48,600m³
+  - article:
+    - generic: 受入可能案件
+    - generic: 12件
+    - generic: 総余力 92,400m³
+  - article:
+    - generic: 条件調整中
+    - generic: 5件
+    - generic: 今週 +2件
+  - article:
+    - generic: 成立済み
+    - generic: 9件
+    - generic: 再利用率 68%
+  - button "現場から探す"
+  - button "受入れから探す"
+  - text: キーワード
+  - textbox "キーワード":
+    - /placeholder: 搬出現場・地域・土質
+  - text: 並び順
+  - combobox "並び順":
+    - option "適合度順" [selected]
+    - option "距離順"
+  - button "詳細条件を開く":
+    - text: 詳細条件
+  - generic: マッチング候補
+  - generic: 3件のサンプル候補
+  - generic: 受入側：搬出案件と自社の条件を確認
+  - button "94 適合度 SOIL-EXPORT-1 サンプル搬出現場 A サンプル地域 1（架空） 第2種建設発生土 2026/09/01〜2027/03/31 18.4km 約38分 搬出予定（サンプル）":
+    - generic: "94"
+    - generic: 適合度
+    - text: SOIL-EXPORT-1
+    - heading "サンプル搬出現場 A" [level=3]
+    - paragraph: サンプル地域 1（架空）
+    - generic: 第2種建設発生土
+    - generic: 2026/09/01〜2027/03/31
+    - generic: 18.4km
+    - generic: 約38分
+    - generic: 搬出予定（サンプル）
+  - button "86 適合度 SOIL-EXPORT-2 サンプル搬出現場 B サンプル地域 2（架空） 第2・第3種建設発生土 2026/08/20〜2027/06/30 31.2km 約54分 搬出予定（サンプル）":
+    - generic: "86"
+    - generic: 適合度
+    - text: SOIL-EXPORT-2
+    - heading "サンプル搬出現場 B" [level=3]
+    - paragraph: サンプル地域 2（架空）
+    - generic: 第2・第3種建設発生土
+    - generic: 2026/08/20〜2027/06/30
+    - generic: 31.2km
+    - generic: 約54分
+    - generic: 搬出予定（サンプル）
+  - button "72 適合度 SOIL-EXPORT-3 サンプル搬出現場 C サンプル地域 3（架空） 第1・第2種建設発生土 2026/10/01〜2027/02/28 42.8km 約71分 搬出予定（サンプル）":
+    - generic: "72"
+    - generic: 適合度
+    - text: SOIL-EXPORT-3
+    - heading "サンプル搬出現場 C" [level=3]
+    - paragraph: サンプル地域 3（架空）
+    - generic: 第1・第2種建設発生土
+    - generic: 2026/10/01〜2027/02/28
+    - generic: 42.8km
+    - generic: 約71分
+    - generic: 搬出予定（サンプル）
+  - complementary:
+    - text: SOIL-EXPORT-1
+    - heading "サンプル搬出現場 A" [level=3]
+    - paragraph: サンプル地域 1（架空）
+    - generic "サンプル適合度 94点":
+      - generic: "94"
+      - generic: 点
+      - generic: サンプル適合度
+    - img "適合度の項目別サンプルグラフ":
+      - generic: 適合条件バランス
+      - generic: 0〜100のサンプル評価・実計算ではありません
+      - generic: "100"
+      - generic: 土質
+      - generic: "96"
+      - generic: 期間
+      - generic: "92"
+      - generic: 受入余力
+      - generic: "80"
+      - generic: 必要書類
+      - list:
+        - generic: 土質
+        - generic: "100"
+        - generic: 期間
+        - generic: "96"
+        - generic: 受入余力
+        - generic: "92"
+        - generic: 必要書類
+        - generic: "80"
+    - generic "マッチング進行状況":
+      - generic: "1"
+      - text: 候補
+      - generic: "2"
+      - text: 事前相談
+      - generic: "3"
+      - text: 条件調整
+      - generic: "4"
+      - text: 書類審査
+      - generic: "5"
+      - text: 条件合意
+    - generic: 搬出元
+    - generic: サンプル搬出現場 A
+    - generic: 運搬
+    - generic: 18.4km
+    - emphasis: 約38分
+    - generic: 受入先
+    - generic: サンプル受入ヤード A
+    - region "容量・予約状況":
+      - strong: 自社受入場所の容量表示案
+      - generic: 架空データ・画面案
+      - heading "容量・予約状況" [level=3]
+      - combobox "容量グラフの年":
+        - option "2025年"
+        - option "2026年" [selected]
+        - option "2027年"
+      - combobox "容量グラフの期間":
+        - option "年間" [selected]
+        - option "1月"
+        - option "2月"
+        - option "3月"
+        - option "4月"
+        - option "5月"
+        - option "6月"
+        - option "7月"
+        - option "8月"
+        - option "9月"
+        - option "10月"
+        - option "11月"
+        - option "12月"
+      - combobox "容量グラフの単位":
+        - option "m³" [selected]
+        - option "t"
+      - generic: 9月の搬入済み
+      - strong: 280m³
+      - generic: 予約済み
+      - strong: 380m³
+      - generic: 空き
+      - strong: 340m³
+      - paragraph:
+        - text: 2026年・月別
+        - generic: 棒を選ぶと内訳を確認できます
+      - generic: m³
+      - generic: "0"
+      - generic: "500"
+      - generic: 1,000
+      - generic: 上限 1,000
+      - generic: 1,500
+      - button "1月 搬入済み280、予約済み380、空き340、超過0m³の内訳":
+        - generic: 1月
+      - button "2月 搬入済み330、予約済み330、空き340、超過0m³の内訳":
+        - generic: 2月
+      - button "3月 搬入済み360、予約済み780、空き0、超過140m³の内訳":
+        - text: 超過
+        - text: "140"
+        - generic: 3月
+      - button "4月 搬入済み420、予約済み220、空き360、超過0m³の内訳":
+        - generic: 4月
+      - button "5月 搬入済み280、予約済み380、空き340、超過0m³の内訳":
+        - generic: 5月
+      - button "6月 搬入済み440、予約済み240、空き320、超過0m³の内訳":
+        - generic: 6月
+      - button "7月 搬入済み460、予約済み660、空き0、超過120m³の内訳":
+        - text: 超過
+        - text: "120"
+        - generic: 7月
+      - button "8月 搬入済み350、予約済み280、空き370、超過0m³の内訳":
+        - generic: 8月
+      - button "9月 搬入済み280、予約済み380、空き340、超過0m³の内訳" [pressed]:
+        - generic: 9月
+      - button "10月 搬入済み360、予約済み300、空き340、超過0m³の内訳":
+        - generic: 10月
+      - button "11月 搬入済み400、予約済み220、空き380、超過0m³の内訳":
+        - generic: 11月
+      - button "12月 搬入済み330、予約済み200、空き470、超過0m³の内訳":
+        - generic: 12月
+      - generic: 搬入済み
+      - generic: 予約済み
+      - generic: 空き
+      - generic: 上限
+      - generic: 超過
+      - heading "9月の内訳" [level=4]
+      - text: 搬入済み
+      - generic: 280 m³
+      - text: 予約済み
+      - generic: 380 m³
+      - text: 空き
+      - generic: 340 m³
+      - button "予約内訳を見る →"
+      - generic "集計の考え方"
+      - generic: 検証用データです。実際の空き容量ではありません。
+    - term: 搬出予定土質
+    - definition: 第2種建設発生土
+    - term: 搬出予定量
+    - definition: 6400 m³
+    - term: 日別上限
+    - definition: 120台/日
+    - term: 搬出期間
+    - definition: 2026/09/01〜2027/03/31
+    - term: 参考単価
+    - definition: 条件協議（サンプル）
+    - text: 判定内容
+    - text: 土質適合
+    - text: 工期一致
+    - text: 日量余裕あり
+    - text: 必要書類4/5
+    - button "この搬出案件から予約下書きへ"
+    - button "必要書類を確認"
+    - button "事前相談を開始"
+  - form "マッチング案件登録":
+    - heading "マッチング案件登録" [level=2]
+    - text: 案件区分
+    - combobox "案件区分":
+      - option "建設発生土を搬出したい" [selected]
+      - option "受け入れたい"
+    - text: 現場
+    - combobox "現場":
+      - option "サンプル現場A" [selected]
+      - option "サンプル現場B"
+    - text: 土質区分
+    - combobox "土質区分":
+      - option "第2種建設発生土" [selected]
+      - option "第3種建設発生土"
+      - option "第4種建設発生土"
+    - text: 総土量（m³）
+    - spinbutton "総土量（m³）": "6400"
+    - text: 開始日
+    - textbox "開始日": 2026-09-01
+    - text: 終了日
+    - textbox "終了日": 2027-01-31
+    - text: 1日の予定台数
+    - spinbutton "1日の予定台数": "24"
+    - text: 最大運搬距離（km）
+    - spinbutton "最大運搬距離（km）": "50"
+    - button "キャンセル"
+    - button "登録して候補を計算"

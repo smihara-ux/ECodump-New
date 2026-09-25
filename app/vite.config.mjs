@@ -17,6 +17,11 @@ export default defineConfig({
     warmup: {
       clientFiles: ["./src/main.jsx"],
     },
+    proxy: {
+      "/api/match": process.env.MATCH_API_PROXY_TARGET || "http://127.0.0.1:6103",
+      "/api/direct": process.env.MATCH_API_PROXY_TARGET || "http://127.0.0.1:6103",
+      "/api": process.env.WORKFLOW_API_PROXY_TARGET || "http://127.0.0.1:4180",
+    },
   },
   plugins: [react()],
 });

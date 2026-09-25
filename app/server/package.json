@@ -1,0 +1,1 @@
+{"name":"ecodump-isolated-api","private":true,"type":"module","scripts":{"setup":"node setup.mjs","start":"node index.mjs","test":"node --test tests/integration.test.mjs"},"dependencies":{"pg":"8.16.3"}}

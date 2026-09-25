@@ -1,0 +1,106 @@
+- banner:
+  - button "受入メインへ戻る":
+    - img "ECO DUMP"
+    - generic: TRANSPORT CONTROL TOWER
+    - generic: 建設循環物流オペレーション
+  - button "首都圏サンプルプロジェクト":
+    - generic: 首都圏サンプルプロジェクト
+  - generic: 受入側 · 当日／翌日
+  - textbox "全体検索":
+    - /placeholder: 現場名・車両・運転手で検索
+  - button "ライトモードに切り替え":
+  - button "通知":
+  - button "ヘルプ":
+  - generic: 栃木モデル 受入担当〈架空〉
+  - generic: ログイン中
+  - button "ログアウト":
+- complementary:
+  - button "受入側管理ホームへ戻る":
+    - img "ECO DUMP"
+  - navigation "受入側機能切替":
+    - button "発生土マッチ":
+      - generic: 発生土
+      - generic: マッチ
+    - button "受入側 管理":
+      - generic: 受入側
+      - generic: 管理
+    - button "総合 インフォメーション (管理)":
+      - generic: 総合
+      - generic: インフォメーション
+      - generic: (管理)
+  - button "サイドバーを閉じる" [expanded]:
+  - navigation:
+    - heading "受入業務" [level=2]
+    - button "受入管理":
+      - generic: 受入管理
+    - button "受入場所管理" [active]:
+      - generic: 受入場所管理
+    - button "搬入予約・受付":
+      - generic: 搬入予約・受付
+    - heading "運行管理" [level=2]
+    - button "運行ダッシュボード":
+      - generic: 運行ダッシュボード
+    - heading "実績・設定" [level=2]
+    - button "実績・帳票":
+      - generic: 実績・帳票
+    - button "取引先・基本設定":
+      - generic: 取引先・基本設定
+  - status:
+    - generic: 共通データで表示中
+    - generic: 本番データは使用していません
+  - button "通知":
+    - generic: 通知
+  - button "ヘルプ":
+    - generic: ヘルプ
+  - generic: お客様番号：0000-0000
+  - generic: Copyright © ECODUMP. All Rights Reserved.
+- main:
+  - heading "受入場所管理" [level=1]
+  - button "はじめてガイド":
+    - text: はじめてガイド
+  - button "ヘルプ":
+    - text: ヘルプ
+  - button "管制画面へ":
+    - text: 管制画面へ
+  - generic: 栃木モデル 受入担当〈架空〉 · 共通データを利用（検証環境）
+  - button "ログアウト"
+  - heading "受入場所と条件" [level=2]
+  - paragraph: 共通DB · 担当受入場所のみ · 架空の検証用条件
+  - button "再取得"
+  - status
+  - text: 受入場所
+  - combobox "受入場所":
+    - option "栃木モデル採石場〈架空〉" [selected]
+  - text: 確認日
+  - textbox "確認日": 2026-09-25
+  - heading "栃木モデル採石場〈架空〉" [level=3]
+  - term: 受入会社
+  - definition: 栃木モデル受入会社〈架空〉
+  - term: 土質 / 単位
+  - definition: 第2種建設発生土 / m³
+  - term: 営業日
+  - definition: 月・火・水・木・金・土
+  - term: 営業時間
+  - definition: 08:00 ～ 17:00（Asia/Tokyo）
+  - term: 日別受入枠
+  - definition: 300 m³（検証用設定）
+  - term: 版
+  - definition: "10"
+  - heading "2026-09-25 の予約・実績" [level=3]
+  - text: 予約数量
+  - generic: 20 m³
+  - text: 確定実績数量
+  - generic: 0 m³
+  - text: 確定した空き容量
+  - generic: 未算出
+  - figure "予約数量と確定実績を独立して比較。積み上げや空き容量の計算はしません。":
+    - generic: 日別枠 300 m³
+    - generic: 20 m³
+    - generic: 予約数量
+    - generic: 0 m³
+    - generic: 確定実績
+    - generic: 予約・実績を別々に表示しています。重なりがあるため積み上げ・合算はしません。
+  - paragraph: 予約枠の確定ルールは未確定です。確定空き容量として使用しないでください。 予約と実績を画面で加算・控除しません。物理的容量とは別の設定です。
+  - button "受入条件を編集"
+  - generic "受入条件の変更履歴（9件）"
+  - paragraph: 営業時間・営業日の予約承認時の自動判定は未接続です。条件変更時は既存の予約への影響を別途確認してください。所在地・入口・公開範囲の編集は未接続です。

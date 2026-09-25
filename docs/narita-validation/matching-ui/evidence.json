@@ -1,0 +1,36 @@
+{
+  "environment": "dgx-staging",
+  "base": "https://life-id.tailbe6181.ts.net:9462",
+  "production": false,
+  "formalEndToEndExecuted": false,
+  "checks": [
+    {
+      "role": "construction",
+      "account": "narita-construction",
+      "width": 1440,
+      "expectedTitle": "栃木モデル採石場・受入案件〈架空〉",
+      "sidebarStyle": {
+        "width": "336px",
+        "flex": "0 1 auto",
+        "minWidth": "0px",
+        "maxWidth": "none"
+      },
+      "documentOverflow": false,
+      "pageErrors": []
+    },
+    {
+      "role": "receiving",
+      "account": "narita-receiver-tochigi",
+      "width": 820,
+      "expectedTitle": "成田モデルA工区・搬出案件〈検証用〉",
+      "sidebarStyle": {
+        "width": "336px",
+        "flex": "0 0 336px",
+        "minWidth": "336px",
+        "maxWidth": "none"
+      },
+      "documentOverflow": false,
+      "pageErrors": []
+    }
+  ]
+}

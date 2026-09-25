@@ -1,0 +1,368 @@
+[
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "搬出管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "現場管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "運行ダッシュボード",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "配車・運行管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "労務安全",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "入退場管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "調整会議",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "実績・帳票",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "会社情報",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "ユーザー",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "車両・運転手",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "協力会社",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "登録申請",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "元請会社",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "発生土マッチ",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "dark",
+    "page": "総合 インフォメーション （管理）",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "搬出管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "現場管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "運行ダッシュボード",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "配車・運行管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "労務安全",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "入退場管理",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "調整会議",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "実績・帳票",
+    "low": [
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "指定日時 / 予約・便"
+      },
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "搬出現場 → 受入先"
+      },
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "予約 / 便予定"
+      },
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "予約"
+      },
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "運行"
+      },
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "受入実績"
+      },
+      {
+        "bg": [
+          228,
+          235,
+          224
+        ],
+        "cls": "",
+        "fg": "rgb(96, 115, 108)",
+        "ratio": 4.14,
+        "text": "操作"
+      }
+    ]
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "会社情報",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "ユーザー",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "車両・運転手",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "協力会社",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "登録申請",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "元請会社",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "発生土マッチ",
+    "low": []
+  },
+  {
+    "role": "construction",
+    "mode": "light",
+    "page": "総合 インフォメーション （管理）",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "受入管理",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "受入場所管理",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "搬入予約・受付",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "運行ダッシュボード",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "実績・帳票",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "取引先・基本設定",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "発生土マッチ",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "dark",
+    "page": "総合 インフォメーション (管理)",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "受入管理",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "受入場所管理",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "搬入予約・受付",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "運行ダッシュボード",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "実績・帳票",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "取引先・基本設定",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "発生土マッチ",
+    "low": []
+  },
+  {
+    "role": "receiving",
+    "mode": "light",
+    "page": "総合 インフォメーション (管理)",
+    "low": []
+  }
+]

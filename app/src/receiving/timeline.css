@@ -1,0 +1,20 @@
+.receiving-timeline-shortcuts{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.control-app-shell .receiving-timeline-shortcuts button{min-height:44px;padding:10px 16px;border:1px solid var(--ui-line);border-radius:8px;background:var(--ui-panel);color:var(--ui-text)}
+.control-app-shell .receiving-timeline-shortcuts button[aria-pressed=true]{background:#c4de20;color:#12342c}
+.receiving-track-dialog{position:fixed;inset:20px;margin:auto;width:min(1100px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 40px);overflow:auto;border-radius:14px;border:1px solid var(--ui-line);background:var(--ui-panel,#fff);color:var(--ui-text,#143b34);padding:20px}
+.receiving-track-dialog::backdrop{background:#092b32a8}
+.receiving-track-dialog header{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.receiving-track-dialog h2{margin:4px 0;font-size:21px}.receiving-track-dialog p{font-size:13px;line-height:1.7}
+.receiving-track-dialog header button{min-height:44px;padding:10px 16px;background:var(--ui-panel);color:var(--ui-text);border:1px solid var(--ui-line);border-radius:8px}
+.receiving-track-status{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.receiving-track-status b{color:var(--ui-text);border-left:4px solid #b4ce19;padding-left:10px}
+.receiving-track-map{height:clamp(300px,48vh,560px);width:100%;border-radius:10px;z-index:0;background:#e8efeb}
+.receiving-track-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;margin-top:10px}
+.receiving-track-note{padding:10px;border:1px solid var(--ui-line);border-radius:8px}
+.receiving-track-dialog button:focus-visible,.receiving-timeline-shortcuts button:focus-visible{outline:3px solid #95ad00;outline-offset:3px}
+.role-receiving .timeline-panel>header>b,.role-receiving .timeline-panel>header>div>b{white-space:normal;overflow:visible}
+.role-receiving .timeline-list>button>b small{display:block;white-space:normal;font-size:10px;font-weight:normal}
+@media(max-width:900px){.role-receiving .control-workspace.timeline-expanded .timeline-list>button{grid-template-columns:55px 110px 80px minmax(180px,1fr) 65px}.role-receiving .timeline-list{overflow:auto}.role-receiving .timeline-list>button{min-width:570px}.receiving-track-dialog{padding:14px}.receiving-track-dialog header{flex-wrap:wrap}}
+.role-receiving .timeline-primary-guide b{color:var(--ui-text,#143b34)}
+.role-receiving .timeline-primary-guide small{color:var(--ui-muted,#53716a)}
+.role-receiving .timeline-primary-guide>svg{color:#7a9200}
+.role-receiving .control-tower-page>.control-toolbar,.role-receiving .control-tower-page>.receiving-timeline-shortcuts,.role-receiving .control-tower-page>.control-summary{flex-shrink:0}

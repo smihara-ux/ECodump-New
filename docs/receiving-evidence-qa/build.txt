@@ -1,0 +1,26 @@
+
+> app@0.0.0 build
+> vite build && node scripts/prepare-sites-build.mjs
+
+vite v6.4.3 building for production...
+transforming...
+✓ 1892 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/index.html                                 1.13 kB │ gzip:  0.59 kB
+dist/client/assets/DirectWorkflowPanel-B6I73yl_.css    1.51 kB │ gzip:  0.58 kB
+dist/client/assets/ConnectedApp-CBTRhiP_.css          10.08 kB │ gzip:  2.44 kB
+dist/client/assets/leaflet-CIGW-MKW.css               15.61 kB │ gzip:  6.46 kB
+dist/client/assets/driver-d40wSSpT.css                18.55 kB │ gzip:  4.51 kB
+dist/client/assets/AdminEntry-Bi8i87C-.css           233.51 kB │ gzip: 40.56 kB
+dist/client/assets/ecodumpRepository-Ckqdo3dq.js       3.06 kB │ gzip:  1.37 kB
+dist/client/assets/driver-CIaT0Ter.js                  8.24 kB │ gzip:  2.37 kB
+dist/client/assets/DirectWorkflowPanel-D8k3oU1U.js    10.10 kB │ gzip:  3.61 kB
+dist/client/assets/DriverApp-FkrIEcoN.js              29.92 kB │ gzip:  9.98 kB
+dist/client/assets/ConnectedApp-B4fqJKyu.js           49.11 kB │ gzip: 15.09 kB
+dist/client/assets/leaflet-src-BsNvORz1.js           150.05 kB │ gzip: 43.52 kB
+dist/client/assets/index-Bjp-mtS_.js                 197.47 kB │ gzip: 62.20 kB
+dist/client/assets/supabase-D8Bc1Y_7.js              227.47 kB │ gzip: 59.02 kB
+dist/client/assets/AdminEntry-CJTUEUFX.js            257.63 kB │ gzip: 69.20 kB
+✓ built in 1.09s
+Prepared Sites build: dist/server/index.js and dist/.openai/hosting.json

@@ -1,0 +1,117 @@
+- region "iPhone表示 ドライバーアプリ":
+  - generic: 9:41
+  - img "ECO DUMP"
+  - generic: ECO DUMP
+  - generic: ドライバー
+  - button "ダーク表示に切り替え":
+  - text: 試作・API未接続
+  - generic: すべて匿名サンプル
+  - main:
+    - button "今日の運行へ戻る":
+      - text: 今日の運行へ戻る
+    - generic: 2026-09-25 · 1往復目
+    - heading "運行詳細" [level=1]
+    - paragraph: TR-2026-09-25-01
+    - generic: 配車済み
+    - generic: 端末内の仮進捗
+    - heading "搬出現場" [level=2]:
+      - text: 搬出現場
+    - heading "サンプル現場 A" [level=3]
+    - paragraph: サンプル市 建設区画 A（架空住所）
+    - term: 指定時刻
+    - definition: 08:30
+    - term: 入口
+    - definition: 東側・第1ゲート
+    - term: 担当者
+    - definition: サンプル担当者 A
+    - term: 連絡先
+    - definition: 未設定（サンプル）
+    - button "電話番号未接続" [disabled]:
+      - text: 電話番号未接続
+    - paragraph: 入口で受付後、誘導員の指示に従ってください。
+    - heading "受入先" [level=2]:
+      - text: 受入先
+    - heading "サンプル受入場所 B" [level=3]
+    - paragraph: サンプル市 受入区画 B（架空住所）
+    - term: 指定時刻
+    - definition: 09:15
+    - term: 入口
+    - definition: 南側・大型車ゲート
+    - term: 担当者
+    - definition: サンプル担当者 B
+    - term: 連絡先
+    - definition: 未設定（サンプル）
+    - button "電話番号未接続" [disabled]:
+      - text: 電話番号未接続
+    - paragraph: 受付・計量後に指定ヤードへ。受入不可の場合は待機して報告してください。
+    - heading "運搬内容" [level=2]:
+      - text: 運搬内容
+    - term: 土の種類
+    - definition: 建設発生土（砂質土）
+    - term: 予定数量
+    - definition: 7 m³
+    - term: 車両
+    - definition:
+      - text: サンプル車両 01
+      - generic: DEMO-001（架空番号）
+    - heading "指定経路・注意事項" [level=2]:
+      - text: 指定経路・注意事項
+    - generic "サンプル地点の地図":
+      - button "Zoom in": +
+      - button "Zoom out": −
+      - link "Leaflet":
+        - /url: https://leafletjs.com
+        - text: Leaflet
+      - text: "| ©"
+      - link "OpenStreetMap":
+        - /url: https://www.openstreetmap.org/copyright
+    - paragraph: 地図は架空の地点例です。実際の指定経路・現在位置は未接続です。
+    - paragraph: 経路例：現場東側ゲート → 幹線道路 → 受入先南側ゲート
+    - paragraph: 経路は説明用サンプルです。大型車の通行許可・実ナビは未接続です。
+    - heading "報告の流れ" [level=2]:
+      - text: 報告の流れ
+    - list:
+      - generic: "1"
+      - text: 現場到着
+      - generic: "2"
+      - text: 積込完了・出発
+      - generic: "3"
+      - text: 受入先到着
+      - generic: "4"
+      - text: 荷下ろし完了
+    - paragraph: 荷下ろし完了は運行の完了報告です。受入実績の確定は受入側が行います。
+    - generic: 受入実績：未確定
+    - heading "この便の端末内記録" [level=2]
+    - paragraph: 報告下書きはありません。
+    - generic: 停車中に操作してください
+    - button "現場到着を報告":
+      - text: 現場到着を報告
+    - button "遅延・受入不可・問題を報告":
+      - text: 遅延・受入不可・問題を報告
+  - navigation "下部メニュー":
+    - button "今日の運行":
+      - generic: 今日の運行
+    - button "運行履歴":
+      - generic: 運行履歴
+    - button "お知らせ":
+      - generic: お知らせ
+    - button "マイページ":
+      - generic: マイページ
+- dialog "問題を報告":
+  - banner:
+    - heading "問題を報告" [level=2]
+    - button "閉じる" [active]:
+  - paragraph: 1往復目 · 管理者には未送信
+  - text: 問題の種類
+  - combobox "問題の種類":
+    - option "遅延" [selected]
+    - option "受入不可"
+    - option "その他"
+  - text: 状況メモ（必須）
+  - textbox "状況メモ（必須）":
+    - /placeholder: 状況と、管理者に確認したいことを入力
+  - text: 写真を追加
+  - button "問題報告の写真"
+  - text: 3枚まで・各5MB以下。JPEG / PNG / WebP。匿名の写真を使用してください。
+  - button "問題を下書き保存" [disabled]
+  - paragraph: 写真・メモはこのブラウザ内のみ。通信・外部保存は行いません。

@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-09-25T06:59:04.814Z",
+  "environment": "local isolated PostgreSQL",
+  "evidence": [
+    {
+      "label": "transport-pc",
+      "viewport": 1440,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "label": "transport-tablet",
+      "viewport": 820,
+      "overflow": false,
+      "emptyButtons": 0
+    },
+    {
+      "label": "sites-tablet",
+      "viewport": 820,
+      "overflow": false,
+      "emptyButtons": 0
+    }
+  ],
+  "errors": []
+}

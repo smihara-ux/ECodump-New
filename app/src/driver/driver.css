@@ -1,0 +1,1054 @@
+.driver-preview {
+  --bg: #102e2a;
+  --surface: #193b36;
+  --raised: #23473f;
+  --text: #f2f6ef;
+  --muted: #bed0c6;
+  --line: #446157;
+  --lime: #c6df22;
+  --warn: #ffd187;
+  --warning-bg: #443925;
+  background: #dce5df;
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  padding: 32px;
+  font:
+    14px/1.65 -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP",
+    sans-serif;
+  box-sizing: border-box;
+}
+.driver-preview.light {
+  --bg: #f2f5ef;
+  --surface: #fff;
+  --raised: #e4ebe0;
+  --text: #153e32;
+  --muted: #52695e;
+  --line: #bdccc0;
+  --warn: #704810;
+  --warning-bg: #fff1d6;
+}
+.driver-preview * {
+  box-sizing: border-box;
+}
+.driver-preview button,
+.driver-dialog button {
+  font: inherit;
+  cursor: pointer;
+}
+.driver-preview button:disabled,
+.driver-dialog button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.driver-preview button:focus-visible,
+.driver-dialog :focus-visible {
+  outline: 3px solid #8da61b;
+  outline-offset: 3px;
+}
+.driver-preview h1 {
+  font-size: 28px;
+  line-height: 1.3;
+  margin: 6px 0 12px;
+  letter-spacing: -0.8px;
+}
+.driver-preview h2,
+.driver-dialog h2 {
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.driver-preview h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+.driver-preview p {
+  margin: 8px 0 16px;
+}
+.driver-preview small {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.muted {
+  color: var(--muted);
+}
+.preview-caption {
+  color: #193b30;
+  max-width: 300px;
+}
+.preview-caption > img {
+  width: 66px;
+  display: block;
+  margin-bottom: 26px;
+  border-radius: 14px;
+}
+.preview-caption > span {
+  font-size: 12px;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+.preview-caption h1 {
+  font-size: 40px;
+  line-height: 1.55;
+  margin: 16px 0 22px;
+}
+.preview-caption p {
+  font-size: 15px;
+  line-height: 1.9;
+}
+.preview-caption > div {
+  border-top: 1px solid #a8bbb0;
+  padding-top: 20px;
+  font-size: 12px;
+  line-height: 1.9;
+  color: #526b5f;
+}
+.iphone-shell {
+  width: 414px;
+  height: 884px;
+  padding: 12px;
+  border-radius: 56px;
+  background: #0a1210;
+  border: 1px solid #5a6961;
+  box-shadow: 0 25px 75px #0c302d30;
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.iphone-hardware {
+  height: 40px;
+  background: var(--bg);
+  border-radius: 34px 34px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 28px 0;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+}
+.iphone-hardware i {
+  position: absolute;
+  background: #080e0b;
+  width: 116px;
+  height: 25px;
+  border-radius: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 5px;
+}
+.iphone-home {
+  height: 21px;
+  background: var(--surface);
+  border-radius: 0 0 34px 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.iphone-home span {
+  display: block;
+  width: 120px;
+  height: 4px;
+  background: var(--text);
+  border-radius: 4px;
+}
+.driver-app {
+  height: 799px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+}
+.driver-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
+  height: 69px;
+  flex: none;
+}
+.driver-header img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 9px;
+}
+.driver-header b {
+  display: block;
+  letter-spacing: 1.4px;
+  font-size: 14px;
+}
+.driver-header small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.driver-header .icon-button {
+  margin-left: auto;
+}
+.icon-button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+}
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+}
+.prototype-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: var(--raised);
+  font-size: 10px;
+  color: var(--text);
+  flex: none;
+}
+.prototype-banner > span:last-child {
+  margin-left: auto;
+  color: var(--muted);
+}
+.live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lime);
+}
+.driver-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 23px 18px 24px;
+  scrollbar-width: thin;
+}
+.page-heading p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.daily-summary {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 0 0 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.daily-summary span {
+  font-size: 10px;
+  color: var(--muted);
+}
+.daily-summary b {
+  font-size: 27px;
+  line-height: 1.2;
+  color: var(--text);
+  margin-right: 5px;
+  font-weight: 600;
+}
+.daily-summary > svg {
+  margin-left: auto;
+  color: var(--lime);
+}
+.light .daily-summary > svg {
+  color: #507006;
+}
+.trip-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 0 12px;
+}
+.trip-card.featured {
+  border: 1px solid var(--lime);
+  box-shadow: inset 3px 0 var(--lime);
+  padding: 18px;
+}
+.trip-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+.featured .trip-top > span {
+  color: var(--lime);
+  font-weight: 700;
+}
+.light .featured .trip-top > span {
+  color: #4b6413;
+}
+.driver-chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  background: var(--raised);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 2px 7px;
+  line-height: 1.6;
+}
+.driver-chip.warning {
+  background: var(--warning-bg);
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.trip-time {
+  font-size: 29px;
+  letter-spacing: -0.8px;
+  font-weight: 600;
+  margin: 12px 0;
+}
+.trip-time small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 10px;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.route-stops {
+  display: grid;
+  gap: 14px;
+  margin: 13px 0 19px;
+}
+.route-stops > div {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+}
+.route-stops strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+.point {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  color: var(--lime);
+  font-size: 10px;
+  background: var(--bg);
+}
+.light .point {
+  color: #4b6413;
+}
+.point.destination {
+  color: var(--warn);
+}
+.trip-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 10px;
+}
+.trip-footer > span {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.draft-note {
+  display: block;
+  color: var(--warn);
+  margin-top: 10px;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0 12px;
+}
+.section-title h2 {
+  font-size: 14px;
+  margin: 0;
+}
+.section-title small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.queue-link {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 10px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+}
+.queue-link span {
+  flex: 1;
+  font-size: 12px;
+}
+.queue-link small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+.driver-bottom {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  height: 68px;
+  padding: 4px 6px;
+}
+.driver-bottom button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 5px 0;
+}
+.driver-bottom button span {
+  font-size: 10px;
+}
+.driver-bottom button.active {
+  color: var(--lime);
+  background: #bdd52b0c;
+}
+.light .driver-bottom button.active {
+  color: #345606;
+  background: #e9f3c5;
+}
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  min-height: 44px;
+  padding: 0;
+  margin: -10px 0 15px;
+}
+.trip-id {
+  font-size: 11px;
+  margin-top: -5px !important;
+}
+.detail-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0 22px;
+}
+.detail-status small {
+  color: var(--muted);
+}
+.detail-section {
+  border-top: 1px solid var(--line);
+  padding: 22px 0;
+}
+.detail-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.detail-section p {
+  font-size: 13px;
+}
+.detail-section dl {
+  display: grid;
+  grid-template-columns: 95px minmax(0, 1fr);
+  gap: 10px 8px;
+  margin: 15px 0;
+  font-size: 12px;
+}
+.detail-section dt {
+  color: var(--muted);
+}
+.detail-section dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.detail-section dd small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+}
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  text-align: center;
+  line-height: 1.6;
+}
+.primary {
+  background: var(--lime);
+  color: #173320;
+  border-color: var(--lime);
+  margin: 12px 0 9px;
+}
+.secondary {
+  background: var(--surface);
+  color: var(--text);
+  margin: 8px 0;
+}
+.notice-text {
+  background: var(--warning-bg);
+  color: var(--warn);
+  padding: 12px;
+  border-left: 3px solid var(--warn);
+  border-radius: 4px;
+  font-size: 12px;
+}
+.driver-map {
+  height: 180px;
+  width: 100%;
+  border-radius: 10px;
+  z-index: 0;
+}
+.stage-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.stage-list li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+.stage-list li > span {
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+}
+.stage-list li.done {
+  color: var(--text);
+}
+.stage-list li.done > span {
+  color: #18352c;
+  background: var(--lime);
+  border-color: var(--lime);
+}
+.report-action {
+  position: sticky;
+  bottom: -24px;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  padding: 12px 0 8px;
+  margin-top: 5px;
+  z-index: 2;
+}
+.report-action > small {
+  color: var(--muted);
+  display: block;
+  text-align: center;
+  font-size: 10px;
+}
+.report-action .primary {
+  margin-top: 7px;
+  min-height: 54px;
+  font-size: 14px;
+}
+.report-action .secondary {
+  font-size: 11px;
+  min-height: 44px;
+  padding: 9px;
+}
+.completion {
+  display: flex;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.event-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.event-row > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.event-row b {
+  font-size: 12px;
+}
+.event-row > small {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.history-date {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 20px 0 8px;
+}
+.empty-state {
+  padding: 30px 12px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  margin: 16px 0;
+}
+.empty-state > svg {
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+}
+.empty-state h2 {
+  font-size: 16px;
+}
+.notification-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 22px 0;
+}
+.notification-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--raised);
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.notification-row > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.notification-row small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+}
+.notification-row b {
+  display: block;
+  font-size: 14px;
+  margin: 6px 0;
+}
+.notification-row p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0;
+}
+.profile-card h2 {
+  font-size: 16px;
+  margin: 0;
+}
+.profile-card p {
+  font-size: 12px;
+  margin: 2px 0;
+}
+.profile-card small {
+  font-size: 10px;
+  color: var(--muted);
+}
+.queue-row {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 0;
+  text-align: left;
+}
+.queue-row b {
+  font-size: 12px;
+}
+.queue-row small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+}
+.driver-toast {
+  position: absolute;
+  bottom: 77px;
+  left: 12px;
+  right: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 13px;
+  border-radius: 10px;
+  z-index: 10;
+  font-size: 12px;
+  box-shadow: 0 8px 25px #0004;
+}
+.driver-dialog {
+  --bg: #102e2a;
+  --surface: #193b36;
+  --text: #f2f6ef;
+  --muted: #bed0c6;
+  --line: #446157;
+  --lime: #c6df22;
+  --warn: #ffd187;
+  --warning-bg: #443925;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 358px;
+  max-width: calc(100vw - 28px);
+  max-height: calc(100dvh - 50px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  font:
+    14px/1.7 -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN",
+    sans-serif;
+  box-shadow: 0 22px 70px #0008;
+}
+.light .driver-dialog {
+  --bg: #f2f5ef;
+  --surface: white;
+  --text: #153e32;
+  --muted: #52695e;
+  --line: #bdccc0;
+  --warn: #704810;
+  --warning-bg: #fff1d6;
+}
+.driver-dialog::backdrop {
+  background: #001911b8;
+}
+.driver-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.driver-dialog h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.driver-dialog p {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.driver-dialog .confirm-stage {
+  font-size: 23px;
+  font-weight: 700;
+}
+.field {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 18px 0;
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 11px;
+  border-radius: 8px;
+  font: 16px/1.6 inherit;
+  font-size: 16px;
+}
+.field textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: inherit;
+}
+.photo-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 9px;
+  min-height: 52px;
+  margin: 16px 0 8px;
+  cursor: pointer;
+}
+.photo-input input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+}
+.photo-strip {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.photo-strip > div {
+  position: relative;
+}
+.photo-strip img {
+  width: 86px;
+  height: 86px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.photo-strip button {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: #102e2a;
+  color: white;
+  border: 1px solid white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+}
+.error-box {
+  background: #682e25;
+  color: #fff1e8;
+  border: 1px solid #f1aa95;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.delivery-example {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.delivery-example h3 {
+  margin: 10px 0;
+}
+.delivery-example.state-unknown {
+  border-color: var(--warn);
+}
+.spin {
+  animation: driver-spin 1.5s linear infinite;
+}
+@keyframes driver-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+  }
+}
+@media (max-width: 800px) {
+  .preview-caption {
+    display: none;
+  }
+  .driver-preview {
+    padding: 16px;
+  }
+}
+@media (max-width: 450px) {
+  .driver-preview {
+    padding: 0;
+    display: block;
+    background: var(--bg);
+    height: 100dvh;
+    min-height: 0;
+  }
+  .iphone-shell {
+    width: 100%;
+    height: 100dvh;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .iphone-hardware,
+  .iphone-home {
+    display: none;
+  }
+  .driver-app {
+    height: 100dvh;
+  }
+  .driver-header {
+    padding-top: max(10px, env(safe-area-inset-top));
+    height: auto;
+    min-height: 69px;
+  }
+  .driver-bottom {
+    height: calc(68px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .driver-dialog {
+    max-height: calc(100dvh - 28px);
+  }
+}
+/* The driver entry is independent of the admin stylesheet. */
+body:has(.driver-preview) {
+  margin: 0;
+  min-width: 320px;
+  -webkit-font-smoothing: antialiased;
+  overflow: auto;
+}
+.iphone-shell {
+  width: 416px;
+  height: 870px;
+}
+.driver-app {
+  height: 783px;
+}
+.preview-caption h1 {
+  font-size: 34px;
+  letter-spacing: -1.4px;
+}
+@media (min-width: 451px) and (max-height: 930px) {
+  .iphone-shell {
+    zoom: 0.74;
+  }
+  .driver-preview {
+    padding: 22px;
+    min-height: 100dvh;
+    gap: 60px;
+  }
+}
+@media (max-width: 450px) {
+  .iphone-shell {
+    width: 100%;
+    height: 100dvh;
+  }
+  .driver-app {
+    height: 100dvh;
+  }
+}
+
+/* User-selected reference: centered realistic black iPhone on a white canvas. */
+.driver-preview,.connected-root.driver-preview{background:#fff;padding:24px 16px;gap:0;min-height:100dvh}
+.driver-preview .preview-caption{display:none}
+.driver-preview .iphone-shell{
+  width:416px;height:870px;padding:13px;border:3px solid #383a39;border-radius:72px;
+  background:linear-gradient(110deg,#111 0%,#5b5d5c 1%,#121313 2%,#020202 48%,#515352 98%,#161717 100%);
+  box-shadow:inset 0 0 0 2px #7d7f7e,inset 0 0 0 5px #111,0 2px 3px #0004;
+  overflow:hidden;flex:none;zoom:1;
+}
+.driver-preview .iphone-hardware{
+  display:flex;flex:none;height:57px;padding:9px 27px 0;background:#fffdfa;color:#080909;
+  border-radius:53px 53px 0 0;font-size:15px;line-height:1;align-items:center;
+}
+.driver-preview .iphone-hardware .iphone-island{
+  width:120px;height:35px;top:11px;background:#000;border-radius:25px;
+  box-shadow:inset 0 0 0 1px #090909;
+}
+.iphone-island:before{content:'';position:absolute;left:8px;top:7px;width:62px;height:21px;background:#040404;border-radius:18px}
+.iphone-island b{position:absolute;right:10px;top:10px;width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 45% 45%,#223c78 0%,#0c1532 27%,#11101d 43%,#030304 70%);box-shadow:0 0 0 2px #08080b}
+.iphone-indicators{display:flex;align-items:center;gap:4px}
+.driver-preview .driver-app{height:auto;flex:1;min-height:0}
+.driver-preview .driver-header{height:69px;min-height:69px;padding:10px 18px}
+.driver-preview .driver-bottom{height:68px;padding-bottom:0;flex:none}
+.driver-preview .iphone-home{display:flex;height:17px;flex:none;background:var(--surface);border-radius:0 0 53px 53px;align-items:flex-start;padding-top:4px}
+.driver-preview .iphone-home span{width:128px;height:5px;background:var(--text);border-radius:6px}
+@media(max-height:930px){.driver-preview .iphone-shell{zoom:.84}.driver-preview,.connected-root.driver-preview{padding:16px}}
+@media(max-width:450px){.driver-preview .iphone-shell{zoom:.84}.driver-preview,.connected-root.driver-preview{padding:16px 8px}}
+@media(max-width:370px){.driver-preview .iphone-shell{zoom:.69}}
+@media(max-height:800px){.driver-preview .iphone-shell{zoom:.74}}
+@media(max-height:680px){.driver-preview .iphone-shell{zoom:.62}}
+
+/* Separate the chassis from a single clipped display, including the tab bar. */
+.driver-preview .iphone-shell{
+  padding:10px;border:3px solid #555653;border-radius:68px;overflow:visible;
+  background:#070808;
+  box-shadow:0 0 0 1px #202221,inset 0 0 0 1px #bebfba,inset 0 0 0 3px #303230,inset 0 0 0 5px #080909,0 10px 24px #0000001a,0 2px 3px #0005;
+}
+.driver-preview .iphone-shell::before,.driver-preview .iphone-shell::after{
+  content:'';position:absolute;width:4px;border-radius:3px;
+  background:linear-gradient(90deg,#151616,#858680 48%,#252625);
+}
+.driver-preview .iphone-shell::before{left:-6px;top:145px;height:27px;box-shadow:0 60px 0 #494b47,0 116px 0 #494b47}
+.driver-preview .iphone-shell::after{right:-6px;top:223px;height:81px}
+.driver-preview .iphone-display{
+  height:100%;width:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden;
+  border-radius:54px;background:var(--surface);isolation:isolate;
+  /* Force composited descendants to respect the glass corners. */
+  clip-path:inset(0 round 54px);
+}
+.driver-preview .iphone-hardware{border-radius:0;height:59px;padding:7px 28px 0;background:var(--surface);color:var(--text);font-size:16px;font-weight:650;letter-spacing:-.4px}
+.driver-preview .iphone-hardware .iphone-island{width:120px;height:34px;top:12px}
+.driver-preview .iphone-island b{width:13px;height:13px;top:10px;right:12px}
+.driver-preview .iphone-indicators{gap:5px}
+.iphone-battery{position:relative;display:block;width:23px;height:12px;border:1px solid currentColor;border-radius:3px;margin-right:2px;opacity:.9}
+.iphone-battery b{position:absolute;inset:1.5px;border-radius:1px;background:currentColor}
+.iphone-battery::after{content:'';position:absolute;width:2px;height:5px;right:-3px;top:2.5px;border-radius:0 1px 1px 0;background:currentColor;opacity:.5}
+.driver-preview .iphone-home{border-radius:0;height:23px;padding-top:7px;background:var(--surface)}
+.driver-preview .iphone-home span{width:134px;height:5px;background:var(--text)}
+.driver-preview .driver-bottom{height:63px;background:var(--surface);padding:3px 5px 0}
+.driver-preview .driver-bottom button{border-radius:0;background:transparent}
+.driver-preview .driver-bottom button.active{color:#497315;background:transparent}
+.driver-preview.dark .driver-bottom button.active{color:var(--lime)}

@@ -14,6 +14,9 @@ const routes = [
   "agencies",
   "agency-request",
   "prime-contractors",
+  "dispatch",
+  "results",
+  "settings",
   "field&fieldId=32182",
 ];
 
@@ -111,6 +114,74 @@ test("release metadata and manifest are exposed", async ({ page }) => {
   await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
   const response = await page.request.get("/manifest.webmanifest");
   expect(response.ok()).toBeTruthy();
+});
+
+test("construction mode opens field-based home and role menus", async ({ page }) => {
+  await page.goto("/?preview=app&role=construction&page=transport");
+  await expect(page.getByLabel("事業モード")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "現場別" })).toHaveClass(/active/);
+  await expect(page.getByRole("button", { name: "搬出管理", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "運行ダッシュボード", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "配車・運行管理", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "入退場管理", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "発生土マッチ", exact: true })).toHaveCount(1);
+  await expect(page.getByText("本日の予定便数")).toBeVisible();
+  await expect(page.getByLabel("運行予定の集計").getByText("実車両数")).toBeVisible();
+  await expect(page.getByLabel("運行予定の集計").getByText("伝票確認待ち")).toBeVisible();
+  await page.getByRole("button", { name: /未手配/ }).last().click();
+  await expect(page.getByLabel("運行状態")).toHaveValue("未手配");
+  await expect(page.getByRole("button", { name: "予定を作る" })).toBeVisible();
+});
+
+test("construction dispatch makes only a local prototype assignment", async ({ page }) => {
+  await page.goto("/?preview=app&role=construction&page=dispatch");
+  await expect(page.getByText("API未接続のため、割当・変更内容はこの画面を閉じると失われます。")).toBeVisible();
+  await page.getByRole("button", { name: /TR-20260820-02/ }).click();
+  await page.getByRole("button", { name: "サンプル車両を仮割当" }).click();
+  await expect(page.getByRole("dialog")).toContainText("保存されていません");
+});
+
+test("construction weekly copy requires review and remains a local draft", async ({ page }) => {
+  await page.goto("/?preview=app&role=construction&page=dispatch");
+  await page.getByRole("tab", { name: "前日・前週からコピー" }).click();
+  const apply = page.getByRole("button", { name: "確認して下書きへ反映" });
+  await expect(apply).toBeDisabled();
+  await page.getByLabel("保存対象の日付・4便を確認しました").check();
+  await apply.click();
+  await expect(page.getByRole("dialog")).toContainText("配車確定はしていません");
+});
+
+test("vehicle list opens driver information from each vehicle", async ({ page }) => {
+  await page.goto("/?preview=app&role=construction&page=vehicles");
+  await expect(page.getByRole("button", { name: "運転手情報", exact: true })).toHaveCount(3);
+  await expect(page.getByRole("button", { name: "運転手情報" }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "運転手情報" }).nth(1)).toBeVisible();
+  await expect(page.getByRole("button", { name: "運転手情報" }).nth(2)).toBeVisible();
+  await expect(page.getByRole("button", { name: "運転手情報" }).nth(3)).toHaveCount(0);
+  await expect(page.getByText("運転手情報は、各車両")).toBeVisible();
+  await page.getByRole("button", { name: "運転手情報" }).first().click();
+  await expect(page.getByRole("dialog", { name: "10t ダンプ 01の運転手情報" })).toContainText("サンプル 運転者1");
+});
+
+test("matching detail visualizes sample compatibility as a graph", async ({ page }) => {
+  await page.goto("/?preview=app&role=construction&page=matching");
+  await expect(page.getByRole("img", { name: "適合度の項目別サンプルグラフ" })).toBeVisible();
+  await expect(page.getByLabel("サンプル適合度 94点")).toBeVisible();
+  await expect(page.getByText("実計算ではありません")).toBeVisible();
+  await expect(page.getByText("土質", { exact: true }).last()).toBeVisible();
+});
+
+test("control timeline expands and draft scheduling does not claim persistence", async ({ page }) => {
+  await page.goto("/?preview=app&role=construction&page=control");
+  await expect(page.getByRole("button", { name: "地図と並べる" })).toBeVisible();
+  await expect(page.getByText("便を選ぶと走行経路を地図で表示します")).toBeVisible();
+  await page.getByRole("button", { name: /08:05 D-103/ }).click();
+  await expect(page.getByLabel("インタラクティブ運行マップ")).toBeVisible();
+  await expect(page.getByText("通過済み経路", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "タイムラインをメイン表示" })).toBeVisible();
+  await page.getByRole("button", { name: "予定を追加" }).click();
+  await page.getByRole("button", { name: "予定案を下書きへ反映" }).click();
+  await expect(page.getByRole("dialog")).toContainText("保存・確定はしていません");
 });
 
 test("detail search is keyboard-contained and closes with Escape", async ({ page }) => {

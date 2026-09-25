@@ -1,0 +1,31 @@
+✔ unauthenticated and invalid-password access rejected (249.334708ms)
+✔ real shared 7-step flow persists and is visible across roles (157.536875ms)
+✔ API denies other site, location, driver, company and unauthorized transitions (99.135833ms)
+✔ duplicate request is one row, key/body conflict and stale updates are rejected (19.470084ms)
+✔ lost response is resolved by operation lookup without a duplicate mutation (16.942917ms)
+✔ attachment bytes persist and inaccessible parties cannot read them (7.522792ms)
+✔ database RLS and mutation permissions reject access without relying on API filters (6.818625ms)
+✔ same vehicle round trips remain independent; invalid step and premature actual are denied (61.094833ms)
+✔ capacity and asset overlap are enforced under concurrent writes (6.857667ms)
+✔ membership revocation is enforced for existing authenticated sessions (1.315375ms)
+✔ a role query or actor field cannot impersonate another account (2.210375ms)
+✔ invalid quantities, wrong units, and out-of-order timestamps cannot reach actuals (16.621375ms)
+✔ raw DB projections do not expose agreement terms or audit history to a driver (32.568209ms)
+✔ lost response survives reload and can only be reconciled, never blindly replayed (1.757625ms)
+✔ storage failure prevents transmission and a different actor cannot inherit the pending operation (2.378708ms)
+✔ a rejected stale update and an uncertain server failure remain distinct (0.122375ms)
+▶ PostgreSQL shared matching acceptance
+  ✔ scoped draft creation, file persistence, invalid inputs and immutable idempotency (41.417209ms)
+  ✔ public and consultation document visibility, unit-aware search and messaging (90.152333ms)
+  ✔ editable offers, history, stale versions and renewed bilateral consent (121.073958ms)
+  ✔ agreed snapshot stays frozen after edits, transfers correct locations without confirming or dispatching (94.99425ms)
+  ✔ database denies raw private reads and out-of-scope mutations; driver cannot match (8.318458ms)
+✔ PostgreSQL shared matching acceptance (558.532833ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 759.901916

@@ -1,0 +1,11 @@
+✔ cancelled plans are not arrivals; vehicle count differs from rotations and units stay separate (0.573416ms)
+✔ pending receipt values never enter confirmed quantities (0.054083ms)
+✔ stay duration requires one confirmed entry and exit; duplicate, missing and inverse times never become fixed duration (0.502416ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.508542
