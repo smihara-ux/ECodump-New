@@ -52,3 +52,26 @@ No actionable P0, P1, or P2 differences remain. The responsive stacking at 852 p
 - P3: real identity-provider endpoints and server-side session handling remain backend integration work; the current implementation provides a complete frontend demonstration flow.
 
 final result: passed
+
+
+## 2026-09-28 — approved Deep Green Connection replacement
+
+Source: selected `exec-b2ac97ae-70bb-43f0-bed2-d54eba948b7f.png`, reattached as `codex-clipboard-52aae7d2-4dab-437a-a1cb-7996417e222f.png`.
+Implementation: `http://127.0.0.1:5203/?entry=1`. Desktop 1440×960 CSS px; mobile 390×844 CSS px. Captures at 1×. Source content cropped from the presentation board, excluding browser/device chrome; desktop normalized to1093×730, mobile390×844 for comparison. The generated board's device labels do not exactly match its content aspect ratio; match app-owned content, not its chrome.
+
+Evidence: [desktop](docs/entry-green-2026-09-28/desktop.png), [mobile](docs/entry-green-2026-09-28/mobile.png), [desktop comparison](docs/entry-green-2026-09-28/desktop-comparison.jpg), [mobile comparison](docs/entry-green-2026-09-28/mobile-comparison.jpg).
+
+Iteration 1 blocked: P2 mobile header 40px taller than reference pushed demo entry too low; P2 desktop form text was small and started too low. Corrected header to210px, enlarged desktop typography, aligned form start to96px. Recaptured and compared in paired images. One immediate post-resize desktop capture was stale mobile geometry and was discarded/replaced after verifying innerWidth1440/innerHeight960.
+
+Iteration 2:
+- Typography: native Japanese sans, bold two-line headline with lime emphasis. Labels18px desktop/15px mobile, inputs16px; no clipping. Exact rasterized source glyphs vary by platform, acceptable P3.
+- Layout: 59/41 desktop split; compact mobile hero above full form, no horizontal overflow at390px. Added small footer guide/theme controls preserve existing functionality.
+- Colors: petroleum green, lime and pale white match source; dark theme also inspected for readable fields/placeholders.
+- Images: original supplied logo retained; new generated text-free forest/interchange asset matches subject, palette and focal direction. Exact road/truck geometry is intentionally regenerated (P3), not claimed to be actual tracking.
+- Copy: approved headline and supporting line preserved. Login/register/demo disclosure and honest no-persistence notes remain actual accessible text, not raster UI.
+- Interaction: register role selection, required text inputs and confirmation; return to login; theme toggle; mobile demo expansion and driver transition checked. No new auth/DB/email behavior.
+- Controls: minimum48px primary/input/tab dimensions; visible focus outline; image decorative alt; mobile font avoids input zoom.
+
+No remaining P0/P1/P2 visual findings. This verifies browser rendering, not physical-device or production-auth acceptance.
+
+final result: passed

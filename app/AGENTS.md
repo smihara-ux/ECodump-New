@@ -75,3 +75,5 @@ The prototype must include working, separately rendered screens for every primar
 - Shared entry confirmed 2026-09-28: one public entry offers construction, receiving and driver buttons, then login/registration demonstration and role-specific demo login. Never create real accounts or transmit form data. Preserve existing role screens and provide a return-to-entry link for demo sessions.
 
 - Entry flow superseded 2026-09-28: public entry opens login/registration first, not three role cards. Registration selects role; login uses account role. Keep sample role shortcuts collapsed under デモで試す. This remains a UI demonstration without real auth, registration or email.
+
+- Approved login visual 2026-09-28: use the selected Deep Green Connection image (exec-b2ac97ae-70bb-43f0-bed2-d54eba948b7f.png). Desktop: forest/highway hero left, white form right; mobile: compact photo header then form. Preserve supplied ECO DUMP logo, lime headline, login-first/register tabs and collapsed demo entry. Generated background is decorative, not actual operational location data.
