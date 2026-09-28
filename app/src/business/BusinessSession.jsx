@@ -1,3 +1,4 @@
+import { publicDemo } from '../publicDemo.mjs';
 import { useEffect, useRef, useState } from 'react';
 import { createMutationJournal } from '../receiving/mutationJournal.mjs';
 import { call } from '../integration/api';
@@ -6,6 +7,7 @@ import './business.css';
 const keys = (role) => [`ecodump-admin-session:${role}`, `ecodump-direct-session:${role}`, `ecodump:match:session:${role}`];
 
 function read(role) {
+  if (publicDemo) return null;
   try { return JSON.parse(sessionStorage.getItem(keys(role)[0]) || 'null'); } catch { return null; }
 }
 
@@ -56,6 +58,8 @@ export function BusinessSessionBar({ role, session, save, logout: signOut }) {
     setBusy(true); setError('');
     try { await signOut(); } catch (nextError) { setError(nextError.message); } finally { setBusy(false); }
   }
+
+  if (publicDemo) return <div className="business-session-bar"><span>操作確認用デモ · ログイン不要 · 入力は共有DBに保存されません</span><a href="./review.html">確認ガイド</a></div>;
 
   return <>
     <div className="business-session-bar">

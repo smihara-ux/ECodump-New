@@ -1,11 +1,13 @@
+import { publicDemo } from "./publicDemo.mjs";
 import React from "react";
 import "./theme-accessibility.css";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./ErrorBoundary.jsx";
 
 const isDriverPreview =
-  new URLSearchParams(location.search).get("app") === "driver";
-const isConnected = new URLSearchParams(location.search).get("data") === "isolated";
+  new URLSearchParams(location.search).get("app") === "driver" ||
+  (publicDemo && new URLSearchParams(location.search).get("role") === "driver");
+const isConnected = !publicDemo && new URLSearchParams(location.search).get("data") === "isolated";
 const ConnectedApp = React.lazy(() => import("./integration/ConnectedApp.jsx"));
 const DriverApp = React.lazy(() => import("./driver/DriverApp.jsx"));
 const AdminApp = React.lazy(() => import("./AdminEntry.jsx"));

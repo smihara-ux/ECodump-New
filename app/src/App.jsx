@@ -1,3 +1,4 @@
+import { publicDemo } from "./publicDemo.mjs";
 import ReceivingLocationsConnected from './receiving/ReceivingLocationsConnected';
 import ReceivingConnected from './receiving/ReceivingConnected';
 import CapacityChart from './receiving/CapacityChart';
@@ -4019,7 +4020,7 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
       message: `${candidate.destination}への相談を試作内に表示しました。相手への送信・DB保存・条件合意は行っていません。`,
     });
   };
-  if (new URLSearchParams(location.search).get("matchingApi") === "1") {
+  if (!publicDemo && new URLSearchParams(location.search).get("matchingApi") === "1") {
     return <MatchingWorkflowPanel role={role} />;
   }
   return (
@@ -6822,7 +6823,7 @@ export function App() {
         ) : (
           <div className="control-page-surface">
             {businessPage && <BusinessSessionBar role={roleMode} {...business} />}
-            {new URLSearchParams(location.search).get("workflowApi") === "1" && connectedPages.includes(page) && <DirectWorkflowPanel role={roleMode} />}
+            {!publicDemo && new URLSearchParams(location.search).get("workflowApi") === "1" && connectedPages.includes(page) && <DirectWorkflowPanel role={roleMode} />}
             {roleMode === "receiving" && page !== "UCRマッチング" && page !== "総合インフォメーション" && !livePage && <PrototypeNotice />}{body}
           </div>
         )}

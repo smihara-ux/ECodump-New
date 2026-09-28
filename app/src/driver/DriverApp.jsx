@@ -1,3 +1,4 @@
+import { publicDemo } from '../publicDemo.mjs';
 import PhoneStatus from './PhoneStatus.jsx';
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -431,7 +432,7 @@ export default function DriverApp() {
             試作・API未接続 <span>すべて匿名サンプル</span>
           </div>
           <main ref={content} className="driver-content">
-            {tab === "today" && !selected && <DirectWorkflowPanel role="driver" />}
+            {!publicDemo && tab === "today" && !selected && <DirectWorkflowPanel role="driver" />}
             {!ready && (
               <p role="status">
                 {error || "端末内の下書きを読み込んでいます…"}

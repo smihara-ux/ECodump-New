@@ -14,6 +14,10 @@
 | 発生土マッチ | 案件検索、相談、条件提示・合意、予約への引継ぎ | [マッチング](app/src/matching/) |
 | 総合インフォメーション | 運営管理専用。業務側ボタン無効・API拒否 | [保持している実装](app/src/information/) |
 
+## 第三者への共有
+
+[画面・操作レビューの入口](https://smihara-ux.github.io/ECodump-New/review.html)を共有してください。ログイン不要で3画面を選択でき、操作項目・確認ポイント・フィードバックの記入例を掲載しています。公開デモでは共有DBへの保存や3者連動を行いません。
+
 ## 確認環境
 
 - [GitHub Pagesデモ](https://smihara-ux.github.io/ECodump-New/)：匿名サンプルの静的画面。共有API・DBは稼働しません。
