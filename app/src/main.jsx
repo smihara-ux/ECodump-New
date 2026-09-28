@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")).render(
     <ErrorBoundary>
       <React.Suspense fallback={<p>画面を読み込んでいます…</p>}>
         {showEntry ? <DemoEntry /> : <>
-          {params.get("demo") === "1" && <nav className="demo-return" aria-label="デモ共通ナビゲーション"><span>操作確認用デモ</span><a href="./?entry=1&v=20260928b">入口へ戻る・利用区分を変更</a></nav>}
+          {params.get("demo") === "1" && <nav className="demo-return" aria-label="デモ共通ナビゲーション"><span>操作確認用デモ</span><a href="./?entry=1&v=20260928c">ログイン画面に戻る</a></nav>}
           {isConnected ? <ConnectedApp /> : isDriverPreview ? <DriverApp /> : <AdminApp />}
         </>}
       </React.Suspense>

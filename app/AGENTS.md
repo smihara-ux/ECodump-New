@@ -73,3 +73,5 @@ The prototype must include working, separately rendered screens for every primar
 - Third-party UX sharing confirmed 2026-09-28: GitHub Pages is a login-free static review. Keep all three role previews available through public/review.html, remove business API login and legacy API panels on the public host, and route driver links to the sample Mobile UI. Preserve connected local/DGX behavior. Disclose sample-only edits and local draft persistence; never imply cross-role DB integration on Pages.
 
 - Shared entry confirmed 2026-09-28: one public entry offers construction, receiving and driver buttons, then login/registration demonstration and role-specific demo login. Never create real accounts or transmit form data. Preserve existing role screens and provide a return-to-entry link for demo sessions.
+
+- Entry flow superseded 2026-09-28: public entry opens login/registration first, not three role cards. Registration selects role; login uses account role. Keep sample role shortcuts collapsed under デモで試す. This remains a UI demonstration without real auth, registration or email.
