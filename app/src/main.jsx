@@ -1,9 +1,13 @@
 import { publicDemo } from "./publicDemo.mjs";
 import React from "react";
+import "./entry/entry.css";
 import "./theme-accessibility.css";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./ErrorBoundary.jsx";
 
+const params = new URLSearchParams(location.search);
+const showEntry = params.get("entry") === "1" || (publicDemo && !params.has("app") && !params.has("role") && !params.has("page") && !params.has("preview") && !params.has("data"));
+const DemoEntry = React.lazy(() => import("./entry/DemoEntry.jsx"));
 const isDriverPreview =
   new URLSearchParams(location.search).get("app") === "driver" ||
   (publicDemo && new URLSearchParams(location.search).get("role") === "driver");
@@ -16,7 +20,10 @@ createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ErrorBoundary>
       <React.Suspense fallback={<p>画面を読み込んでいます…</p>}>
-        {isConnected ? <ConnectedApp /> : isDriverPreview ? <DriverApp /> : <AdminApp />}
+        {showEntry ? <DemoEntry /> : <>
+          {params.get("demo") === "1" && <nav className="demo-return" aria-label="デモ共通ナビゲーション"><span>操作確認用デモ</span><a href="./?entry=1&v=20260928b">入口へ戻る・利用区分を変更</a></nav>}
+          {isConnected ? <ConnectedApp /> : isDriverPreview ? <DriverApp /> : <AdminApp />}
+        </>}
       </React.Suspense>
     </ErrorBoundary>
   </React.StrictMode>,
