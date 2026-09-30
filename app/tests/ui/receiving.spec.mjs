@@ -2,6 +2,15 @@ import { test, expect } from "@playwright/test";
 const entry = "/?preview=app&role=receiving";
 const nav = (page, name) =>
   page.locator(".sidebar").getByRole("button", { name, exact: true });
+const expandLocationTrips = async (page, locationName) => {
+  const card = page
+    .locator(".receiving-card")
+    .filter({ has: page.getByRole("heading", { name: locationName, exact: true }) });
+  const details = card.locator("details");
+  if (!(await details.getAttribute("open"))) {
+    await details.getByText("便一覧・従来の予約詳細").click();
+  }
+};
 for (const viewport of [
   { name: "PC", width: 1440, height: 1000 },
   { name: "tablet", width: 1024, height: 900 },
@@ -19,6 +28,7 @@ for (const viewport of [
     ).toHaveAttribute("aria-pressed", "true");
     await expect(nav(page, "労務安全")).toHaveCount(0);
     await expect(nav(page, "調整会議")).toHaveCount(0);
+    await expandLocationTrips(page, "サンプル受入ヤード A");
     await page.getByRole("button", { name: "T-001の予約詳細" }).click();
     await page
       .getByRole("button", { name: "予約を承認（試作）", exact: true })
@@ -65,6 +75,7 @@ for (const viewport of [
       ),
     ).toBe(false);
     await page.reload();
+    await expandLocationTrips(page, "サンプル受入ヤード A");
     await page.getByRole("button", { name: "T-001の予約詳細" }).click();
     await expect(
       page.getByRole("button", { name: "予約を承認（試作）" }),
@@ -100,9 +111,12 @@ test("従来サンプルの搬出候補から申請、直接予約も申請止�
   await expect(
     page.getByRole("button", { name: "現場から探す", exact: true }),
   ).toHaveClass(/active/);
-  await expect(page.locator(".match-detail h3")).toHaveText(
-    "サンプル搬出現場 A",
-  );
+  await expect(
+    page.getByRole("complementary").getByRole("heading", {
+      name: "サンプル搬出現場 A",
+      exact: true,
+    }),
+  ).toBeVisible();
   await page
     .getByRole("button", { name: "この搬出案件から予約下書きへ" })
     .click();
@@ -127,6 +141,7 @@ test("従来サンプルの搬出候補から申請、直接予約も申請止�
 });
 test("変更依頼・再申請・受入不可・取消と検索", async ({ page }) => {
   await page.goto(entry);
+  await expandLocationTrips(page, "サンプル受入ヤード A");
   await page.getByRole("button", { name: "T-001の予約詳細" }).click();
   await page.getByRole("button", { name: "変更依頼（試作）" }).click();
   await expect(page.getByRole("alert")).toContainText("理由");
@@ -140,6 +155,7 @@ test("変更依頼・再申請・受入不可・取消と検索", async ({ page 
   await expect(
     page.getByRole("button", { name: "T-001の予約詳細" }),
   ).toHaveCount(0);
+  await expandLocationTrips(page, "サンプル受入ヤード A");
   await page.getByRole("button", { name: "T-002の予約詳細" }).click();
   await page.getByLabel("判断・変更・差異の理由").fill("工事中止");
   await page.getByRole("button", { name: "予約取消（理由必須）" }).click();
@@ -186,6 +202,7 @@ for (const theme of ["light", "dark"])
 test("ホーム絞込・翌日・役割別URLで受入と施工の文脈を保持", async ({ page }) => {
   await page.goto(entry);
   await page.getByLabel("現場・受入場所・車両を検索").fill("T-002");
+  await expandLocationTrips(page, "サンプル受入ヤード A");
   await expect(
     page.getByRole("button", { name: "T-002の予約詳細" }),
   ).toBeVisible();
@@ -194,6 +211,7 @@ test("ホーム絞込・翌日・役割別URLで受入と施工の文脈を保�
   ).toHaveCount(0);
   await page.getByLabel("現場・受入場所・車両を検索").fill("");
   await page.getByRole("button", { name: /翌日 20/ }).click();
+  await expandLocationTrips(page, "サンプル受入ヤード B");
   await expect(
     page.getByRole("button", { name: "T-007の予約詳細" }),
   ).toBeVisible();
