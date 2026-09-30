@@ -1,7 +1,8 @@
-export const cancelled=t=>['取消','受入不可'].includes(t.reservation);
-export const confirmed=t=>t.receipt==='実績確定';
+export const cancelled=t=>['取消','受入不可'].includes(t.reservation)||!!(t.evidence&&(['cancelled','rejected'].includes(t.evidence.status)||['cancelled','refused'].includes(t.evidence.trip?.status)));
+export const confirmed=t=>t.evidence?t.evidence.receiptRecord?.status==='confirmed'&&!!t.evidence.actual:t.receipt==='実績確定';
 export const filters={
- '予定':t=>!cancelled(t), '実績':t=>!cancelled(t)&&confirmed(t),
+ '有効予定':t=>!cancelled(t), '未到着':t=>!cancelled(t)&&t.reception==='未到着', '受入完了':t=>confirmed(t), '残予定量':t=>!cancelled(t)&&!confirmed(t),
+ '予定':t=>!cancelled(t), '実績':t=>confirmed(t),
  '未着':t=>!cancelled(t)&&t.reception==='未到着', '取消':t=>t.reservation==='取消',
  '差分':t=>!cancelled(t)&&!confirmed(t),
  '未確認伝票':t=>!cancelled(t)&&(t.evidence?t.evidence.receiptRecord?.status!=='confirmed':!confirmed(t)),
@@ -11,7 +12,7 @@ export const filters={
 };
 export function summarize(rows){
  const active=rows.filter(t=>!cancelled(t));
- const quantities=['m³','t'].map(unit=>({unit,planned:active.filter(t=>t.unit===unit).reduce((n,t)=>n+Number(t.planned||0),0),confirmed:active.filter(t=>confirmed(t)&&(!t.evidence||t.evidence.receiptRecord?.status==='confirmed')&&(t.actualUnit||t.unit)===unit).reduce((n,t)=>n+Number(t.actual||0),0),pending:active.filter(t=>!confirmed(t)&&t.evidence?.receiptRecord?.status==='pending'&&(t.evidence.receiptRecord.unit==='m3'?'m³':t.evidence.receiptRecord.unit)===unit).reduce((n,t)=>n+Number(t.evidence.receiptRecord.quantity),0)}));
+ const quantities=['m³','t'].map(unit=>({unit,remaining:active.filter(t=>!confirmed(t)&&t.unit===unit).reduce((n,t)=>n+Number(t.planned||0),0),planned:active.filter(t=>t.unit===unit).reduce((n,t)=>n+Number(t.planned||0),0),confirmed:rows.filter(t=>confirmed(t)&&(!t.evidence||t.evidence.receiptRecord?.status==='confirmed')&&(t.actualUnit||t.unit)===unit).reduce((n,t)=>n+Number(t.actual||0),0),pending:active.filter(t=>!confirmed(t)&&t.evidence?.receiptRecord?.status==='pending'&&(t.evidence.receiptRecord.unit==='m3'?'m³':t.evidence.receiptRecord.unit)===unit).reduce((n,t)=>n+Number(t.evidence.receiptRecord.quantity),0)}));
  return {vehicles:new Set(active.map(t=>t.vehicleId||t.vehicle).filter(v=>v&&v!=='未配車')).size,rotations:active.length,quantities};
 }
 export function stayMinutes(records){

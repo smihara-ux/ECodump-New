@@ -4,7 +4,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import pg from 'pg';
 const config=JSON.parse(await readFile(new URL('../.local/config.json',import.meta.url))),credentials=JSON.parse(await readFile(new URL('../.local/credentials.json',import.meta.url)));
-const tokens={},base='http://127.0.0.1:6103/api/direct';
+const tokens={},base=process.env.RECEIVING_TEST_API||'http://127.0.0.1:6103/api/direct';
 async function request(who,path,body,key=randomUUID(),extra={}){const r=await fetch(base+path,{method:body?'POST':'GET',headers:{Authorization:`Bearer ${tokens[who]||''}`,'Content-Type':'application/json','Idempotency-Key':key,...extra},body:body?JSON.stringify(body):undefined});return {status:r.status,data:await r.json()};}
 const act=(who,action,body,key,extra)=>request(who,`/actions/${action}`,body,key,extra);
 async function booking(who,id){return (await request(who,'/bookings')).data.bookings.find(b=>b.id===id);}
@@ -65,6 +65,6 @@ test('receiving evidence: persisted original, review, correction, gate, isolatio
  }
  const api=new pg.Client(config.api);await api.connect();try{await api.query('BEGIN');await api.query("SELECT set_config('request.jwt.claim.sub',$1,true)",[credentials.accounts.find(a=>a.name==='outsider').id]);for(const table of ['receipts','receipt_history','gate_records','gate_history'])assert.equal((await api.query(`SELECT * FROM direct.${table}`)).rowCount,0);await assert.rejects(api.query('DELETE FROM direct.receipts'),e=>e.code==='42501');await api.query('ROLLBACK');}finally{await api.end();}
  });
- await writeFile(new URL('../../../docs/receiving-evidence-qa/fixture.json',import.meta.url),JSON.stringify({day,bookingId:id,attachmentId:attachment.attachmentId},null,2));
+ await writeFile(new URL(process.env.RECEIVING_TEST_FIXTURE||'../../../docs/receiving-evidence-qa/fixture.json',import.meta.url),JSON.stringify({day,bookingId:id,attachmentId:attachment.attachmentId},null,2));
  }finally{await db.end();}
 });
