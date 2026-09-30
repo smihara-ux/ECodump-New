@@ -955,6 +955,7 @@ export default function SharedMatching({ role, account=null, embedded=false, onR
                             </div>
                           ))}
                         </details>
+                        {!a.bookingId && role === "receiving" && <p role="status">予約申請は施工側がこの合意から作成します。作成後、搬入予約・受付で内容を確認して承認してください。現在は予約未作成・配車未手配です。</p>}
                         {a.bookingId ? (
                           <>
                             <p>
@@ -976,7 +977,13 @@ export default function SharedMatching({ role, account=null, embedded=false, onR
                           </>
                         ) : (
                           role === "construction" && (
-                            <>
+                            <details className="matching-reservation-review">
+                              <summary>予約への引継ぎ内容を確認</summary>
+                              <p>合意ID：{a.id} · 第{a.snapshot.revision}版</p>
+                              <p>{a.snapshot.source.title} → {a.snapshot.target.title}</p>
+                              <p>{a.snapshot.terms.soil} · {a.snapshot.terms.quantity} {unitLabel(a.snapshot.terms.unit)} · {a.snapshot.terms.start}〜{a.snapshot.terms.end}</p>
+                              <p>引き継ぐ条件：{a.snapshot.terms.conditions || "記載なし"}</p>
+                              <p>作成するのは予約申請です。受入承認と車両・ドライバーの配車は別途必要です。</p>
                               <Field label="搬入予定日時（日本時間）">
                                 <input
                                   type="datetime-local"
@@ -1015,7 +1022,7 @@ export default function SharedMatching({ role, account=null, embedded=false, onR
                               >
                                 搬出予定・搬入予約を作成
                               </button>
-                            </>
+                            </details>
                           )
                         )}
                       </article>

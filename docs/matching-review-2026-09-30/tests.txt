@@ -1,0 +1,12 @@
+✔ business information routes deny access before reading data or request bodies (1.00675ms)
+✔ review fixtures persist shared snapshots, isolate nonparties and preserve reruns without reservations (228.755042ms)
+✔ agreement comparison retains quantity, unit, period and receiving condition differences (1.2185ms)
+✔ missing private fields and extra hidden keys are not rendered (0.05525ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 309.282708
