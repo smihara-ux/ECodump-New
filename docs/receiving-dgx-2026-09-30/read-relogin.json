@@ -1,0 +1,19 @@
+{
+  "environment": "DGX dedicated staging",
+  "checkedAt": "2026-09-30T14:34:45.863Z",
+  "scopedRows": true,
+  "reloginSameIds": true,
+  "tochigiRows": 2,
+  "ibarakiRows": 2,
+  "originalAttachmentCheck": "Not verified: no Narita original-photo fixture",
+  "ids": [
+    {
+      "bookingId": "151a7079-2bd3-4850-85ed-443eaad6e0bf",
+      "tripId": "42ef07b8-8252-4efe-983e-36b38e208064"
+    },
+    {
+      "bookingId": "cd714dba-459b-4f46-b6e5-f03d0299f077",
+      "tripId": "0811d3a0-57d1-4185-b9e3-9883338f6f6b"
+    }
+  ]
+}
