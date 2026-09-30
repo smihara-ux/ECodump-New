@@ -1,11 +1,11 @@
 {
-  "at": "2026-09-25T06:56:43.592Z",
+  "at": "2026-09-30T12:22:28.561Z",
   "boundary": "local isolated API development, not formal acceptance",
-  "bookingId": "3d8aaa0c-d21f-4d93-98fc-5b6c8298dcd4",
+  "bookingId": "c7bd50ca-9d6b-4b08-9d36-b35d0ca4d0ca",
   "tripIds": [
-    "63fb2682-0fd7-45ec-ace5-ecde977d7b42",
-    "887255c1-df78-4f5b-985e-69aef5b141c8",
-    "5c52af62-58e3-4868-95e1-5db0093efce4"
+    "00db2f79-cce6-482e-ae8d-4ef866609370",
+    "f349f1bb-f952-4852-bf50-a5a3003f4b83",
+    "a75d9cca-10de-44e6-834e-844ca6734b2f"
   ],
   "checks": [
     "own-trip projection",

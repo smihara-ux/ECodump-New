@@ -15,3 +15,5 @@ test('unacknowledged assignment survives refetch and reload; acknowledgement cle
  assert.deepEqual(reviewAssignments({...restored,'trip-1':assignmentSnapshot(changed)},[changed]).alerts,{});
  assert.deepEqual(reviewAssignments(restored,[{...changed,canReport:false}]).alerts,{});
 });
+
+test('completed missing receipts remain actionable; resubmission differs from first pending',()=>{assert.equal(driverNotifications([{...b,trip:{...b.trip,status:'unloaded'}}])[0].title,'伝票未提出');assert.equal(driverNotifications([{...b,receiptRecord:{status:'pending'},receiptHistory:[{action:'receipt_return'}]}])[0].title,'再提出後・管理側の確認待ち');});

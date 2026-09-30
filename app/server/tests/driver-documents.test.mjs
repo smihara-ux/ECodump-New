@@ -41,7 +41,7 @@ test('driver original / return / resubmit / permission / unknown outcome / recei
  for(const [i,state] of ['site_arrived','in_transit','receiver_arrived','unloaded'].entries())assert.equal((await act('driver','report',{bookingId:id,expectedVersion:i+1,state,reportedAt:new Date().toISOString()})).status,200);
  assert.equal((await act('driver','receipt_confirm',{bookingId:id,expectedVersion:3,quantity:12.4,unit:'t',originalChecked:true,reason:'確認'})).status,403);
  assert.equal((await act('receiver','receipt_confirm',{bookingId:id,expectedVersion:3,quantity:12.4,unit:'t',originalChecked:true,reason:'原票 t のまま照合'})).status,200);
- for(const who of ['construction','receiver','driver']){b=(await rows(who)).find(b=>b.id===id);assert.equal(Number(b.actual.quantity),12.4);assert.equal(b.actual.unit,'t');}
+ for(const who of ['construction','receiver','driver']){b=(await rows(who)).find(b=>b.id===id);assert.equal(b.trip.id,assigned.trip.id);assert.equal(b.events.length,4);assert.equal(b.receiptHistory.length,4);assert.equal(Number(b.actual.quantity),12.4);assert.equal(b.actual.unit,'t');}
  await admin.query('BEGIN');await admin.query('SET LOCAL ROLE ecodump_api');await admin.query("SELECT set_config('request.jwt.claim.sub',$1,true)",[cred.accounts.find(a=>a.name==='driver-other').id]);assert.equal((await admin.query('SELECT * FROM direct.driver_document_fields WHERE booking_id=$1',[id])).rowCount,0);await admin.query('ROLLBACK');
  const dbCount=await admin.query('SELECT count(*) FROM direct.driver_document_fields WHERE booking_id=$1',[id]);assert.equal(Number(dbCount.rows[0].count),2);
  await writeFile(new URL('../.local/driver-documents-test.json',import.meta.url),JSON.stringify({bookingId:id,date:day,checks:21}));

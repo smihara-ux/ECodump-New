@@ -1052,3 +1052,8 @@ body:has(.driver-preview) {
 .driver-preview .driver-bottom button{border-radius:0;background:transparent}
 .driver-preview .driver-bottom button.active{color:#497315;background:transparent}
 .driver-preview.dark .driver-bottom button.active{color:var(--lime)}
+.driver-day-controls{margin:16px 0;padding:12px;border:1px solid var(--line,#9caf9f);border-radius:12px;overflow-wrap:anywhere}.driver-day-controls label{display:grid;gap:6px;margin:8px 0}.driver-day-controls input{min-width:0;max-width:100%;width:100%;box-sizing:border-box;padding:10px;font-size:16px;min-height:44px}.driver-day-actions{display:flex;gap:8px}.driver-day-actions button{flex:1;min-height:44px}.driver-day-controls p{line-height:1.7}.driver-day-controls small{display:block;line-height:1.7}
+
+.demo-receipt form{display:grid;gap:12px}.demo-receipt label{display:grid;gap:6px}.demo-receipt input,.demo-receipt select{width:100%;min-width:0;max-width:100%;box-sizing:border-box;min-height:44px;font-size:16px}.demo-receipt button{min-height:44px;white-space:normal}.demo-receipt{overflow-wrap:anywhere}
+
+.driver-day-actions button{color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px}.driver-day-controls p{margin:8px 0}.driver-day-controls small{font-size:12px}
