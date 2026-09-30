@@ -125,12 +125,13 @@ test("construction mode opens field-based home and role menus", async ({ page })
   await expect(page.getByRole("button", { name: "配車・運行管理", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "入退場管理", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "発生土マッチ", exact: true })).toHaveCount(1);
-  await expect(page.getByText("本日の予定便数")).toBeVisible();
-  await expect(page.getByLabel("運行予定の集計").getByText("実車両数")).toBeVisible();
-  await expect(page.getByLabel("運行予定の集計").getByText("伝票確認待ち")).toBeVisible();
-  await page.getByRole("button", { name: /未手配/ }).last().click();
-  await expect(page.getByLabel("運行状態")).toHaveValue("未手配");
-  await expect(page.getByRole("button", { name: "予定を作る" })).toBeVisible();
+  await expect(page.getByLabel("搬出管理の対象日")).toHaveValue(/\d{4}-\d{2}-\d{2}/);
+  await expect(page.getByRole("button", { name: /有効な予定便/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /搬出済み・受入未完了/ })).toBeVisible();
+  await expect(page.getByText("数量基準が未設定のため算出していません。")).toBeVisible();
+  await page.getByRole("button", { name: /未搬出便/ }).click();
+  await expect(page.locator(".construction-progress-grid").getByRole("button", { name: /未搬出便/ })).toHaveClass(/active/);
+  await expect(page.getByRole("button", { name: "搬出実績を見る" })).toBeVisible();
 });
 
 test("construction dispatch makes only a local prototype assignment", async ({ page }) => {

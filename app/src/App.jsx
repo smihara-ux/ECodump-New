@@ -9,6 +9,7 @@ import { ReceivingWorkspace, useReceivingWorkspace, receivingPages, PrototypeNot
 import { databaseMode } from "./lib/databaseConfig";
 import {BusinessSessionBar,useBusinessSession} from "./business/BusinessSession.jsx";
 import ConstructionSitesConnected from "./business/ConstructionSitesConnected.jsx";
+import { ConstructionResultsPage, ConstructionTransportPage } from "./construction/ConstructionOperations.jsx";
 import ReceivingLiveHome from "./business/ReceivingLiveHome.jsx";
 import ConnectedApp from "./integration/ConnectedApp.jsx";
 import DirectWorkflowPanel from "./workflow/DirectWorkflowPanel.jsx";
@@ -6551,7 +6552,9 @@ export function App() {
   else if (page === "車両一覧")
     body = <VehiclePage {...{ query, setQuery, setDetailOpen, setConfirm }} />;
   else if (page === "搬出・受入スケジュール")
-    body = (
+    body = roleMode === "construction" ? (
+      <ConstructionTransportPage plans={transportPlans} {...{ navigate }} />
+    ) : (
       <TransportSchedulePage
         {...{ setConfirm, navigate, role: roleMode }}
         initialView={roleMode === "construction" ? "現場別" : "受入場所別"}
@@ -6560,7 +6563,7 @@ export function App() {
   else if (page === "配車・運行管理")
     body = <DispatchManagementPage {...{ navigate, setConfirm }} />;
   else if (page === "実績・帳票")
-    body = <ResultsReportsPage setConfirm={setConfirm} />;
+    body = <ConstructionResultsPage plans={transportPlans} navigate={navigate} />;
   else if (page === "関係会社・基本設定")
     body = <SettingsHubPage navigate={navigate} />;
   else if (page === "UCRマッチング")
@@ -6598,7 +6601,7 @@ export function App() {
     else if (roleMode === "receiving" && page === "搬出・受入スケジュール") body = <ReceivingLiveHome session={business.session} navigate={navigate} onOpen={openBusinessBooking} />;
     else if (roleMode === "receiving" && page === "受入場所管理") body = <ReceivingLocationsConnected key={business.session.userId} session={business.session}/>;
     else if (roleMode === "construction" && page === "現場一覧") body = <ConstructionSitesConnected key={business.session.userId} session={business.session} onOpen={id=>{setSelected(id);navigate("現場詳細");}}/>;
-    else if (roleMode === "receiving") body = <ReceivingConnected key={`${page}:${business.session.userId}`} session={business.session} view={page.includes("実績")?"results":"home"} bookingId={page.includes("実績")?null:businessBooking}/>;
+    else if (roleMode === "receiving") body = <ReceivingConnected navigate={navigate} key={`${page}:${business.session.userId}`} session={business.session} view={page.includes("実績")?"results":"home"} bookingId={page.includes("実績")?null:businessBooking}/>;
     else body = <ConnectedApp key={`${roleMode}:${page}:${business.session.userId}`} embedded account={business.session} role={roleMode} theme={theme} view={page.includes("実績") ? "results" : "home"} bookingId={page.includes("実績") ? null : businessBooking} />;
   }
   if (page === "総合インフォメーション") body = <section className="information-restricted" role="status"><h2>運営管理画面専用です</h2><p>総合インフォメーションは、施工側・受入側の画面からは閲覧できません。</p><button type="button" onClick={()=>navigate("搬出・受入スケジュール")}>管理画面へ戻る</button></section>;

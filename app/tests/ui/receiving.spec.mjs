@@ -210,7 +210,7 @@ test("ホーム絞込・翌日・役割別URLで受入と施工の文脈を保�
     page.getByRole("button", { name: "T-001の予約詳細" }),
   ).toHaveCount(0);
   await page.getByLabel("現場・受入場所・車両を検索").fill("");
-  await page.getByRole("button", { name: /翌日 20/ }).click();
+  await page.getByRole("button", { name: "翌日", exact: true }).click();
   await expandLocationTrips(page, "サンプル受入ヤード B");
   await expect(
     page.getByRole("button", { name: "T-007の予約詳細" }),
