@@ -10,7 +10,7 @@
 |受入3b|予約量/確定量の独立表示|残量を推測せず算定停止|業務仕様の決定待ち|日次枠の消化時点、部分受入、取消、訂正、同時予約、契約枠/物理容量が未確定|[条件](http://127.0.0.1:5204/?preview=app&role=receiving&page=receiving-locations)|受入可能残量・新規予約可能量のAPI計算は未実装。推奨案はREPORT.md|
 |受入4|受付・入退場・原票・数量確定、担当範囲|到着順の便表/モバイルカード、会社/車番/運転手/時刻/数量/伝票状態|実装・確認済み|既存vehicleCompany使用。10m³/原票9.5m³/未確定、原本画像・同じ便IDの詳細を確認。隔離DBで原票/入退場/権限試験|[受付](http://127.0.0.1:5204/?preview=app&role=receiving&page=receiving-reservations)|実GPS未接続。実機試験は未実施|
 |受入5|試作CSV、確定実績集計|共通writerの実体XLSX、集計/便別明細、期間・場所・搬出元フィルター|実装・確認済み|ブラウザ保存したデモ1行/API2行を読み直し、数量・単位・未確定と一致。訂正/取消のExcel試験。CSV維持|[実績](http://127.0.0.1:5204/?preview=app&role=receiving&page=receiving-results)|Microsoft Excel実機開封未確認|
-|共有公開|既存GitHub Pages入口とデモ|統合担当へ受入差分を引継ぎ|実装済み・検証未完了|この担当は公開処理を実行していない|[既存Pages](https://smihara-ux.github.io/ECodump-New/)|統合担当が3画面照合→origin/main→Pages公開→入口/ログイン/デモ3役割/入口復帰を確認|
+|共有公開|既存GitHub Pages入口とデモ|統合版7fa9a12を共通担当が公開|実装・確認済み|run36716044032成功、公開後に当担当でも入口/ログイン/デモ3役割/入口復帰を操作確認|[Pages](https://smihara-ux.github.io/ECodump-New/)|公開デモはAPI未接続。DGX・本番認証・実機は別工程|
 
 ## 画面とAPI確認を分離
 - **共有デモ**：DB保存なし。翌日の日付・場所引継ぎ、1便のExcelダウンロードを確認。
@@ -39,3 +39,10 @@
 - app/AGENTS.md：末尾Receiving 1–5 refinementの1行。
 - app/tests/ui/receiving.spec.mjs：他担当による翌日ボタンの期待値変更を含めない。
 他担当のステージ済み内容を取り込まず限定コミットする。統合担当の完了報告があるまではPages共有完了としない。
+
+## 公開後確認（追記）
+- 受入コミット：98798dd。統合・公開版：7fa9a1238e28379f226fc3ec8c7d4fd4640b5330。origin/mainと一致を確認。
+- GitHub Pages run [36716044032](https://github.com/smihara-ux/ECodump-New/actions/runs/36716044032)：success、2026-09-30 21:39:49 JSTに更新完了。公開操作は施工・共通担当に集約。
+- 公開後に当担当がブラウザで、共通入口のログイン画面→デモで試す→受入・施工・ドライバー各画面→ログイン画面に戻る、を全役割で確認。
+- 受入ホームに前日/今日/翌日/カレンダー、実績入口、残予定量、算定条件未設定が表示されることを確認。証跡：pages-receiving.jpg。
+- この確認は匿名の共有デモ。共有DBへの保存や本番認証を成功扱いにしない。実API保存・拒否の証拠は上記の隔離ローカル試験。
