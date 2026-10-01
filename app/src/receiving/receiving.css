@@ -478,3 +478,12 @@
 .control-app-shell .receiving-home .schedule-switches>button,.control-app-shell .receiving-home .view-switch button{min-height:44px;height:44px;padding:8px 16px;white-space:nowrap}
 .control-app-shell .receiving-home .schedule-switches>.receiving-quota-note{flex:1 1 100%;max-width:none;order:4;background:var(--ui-panel)}
 .control-app-shell .receiving-home .view-switch{height:44px}
+/* Date controls must not inherit a 440px vertical flex basis on phones. */
+@media(max-width:760px){
+.control-app-shell .receiving-home .schedule-switches{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+.control-app-shell .receiving-home .schedule-switches>.receiving-toolbar{flex:0 0 auto;width:100%;height:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end}
+.control-app-shell .receiving-home .schedule-switches>.receiving-toolbar label{grid-column:1/-1;min-width:0}
+.control-app-shell .receiving-home .schedule-switches>.receiving-toolbar label input{width:100%;min-width:0}
+.control-app-shell .receiving-home .schedule-switches>.receiving-toolbar>span{display:none}
+.control-app-shell .receiving-home .schedule-switches>.receiving-quota-note{flex:0 0 auto}
+}

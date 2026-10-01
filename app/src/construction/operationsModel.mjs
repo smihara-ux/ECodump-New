@@ -5,7 +5,7 @@ export function todayJst(now = new Date()) {
 }
 
 export function addDays(date, amount) {
-  const value = new Date(`${date}T12:00:00Z`);
+  const value = new Date(`${date || todayJst()}T12:00:00Z`);
   value.setUTCDate(value.getUTCDate() + amount);
   return value.toISOString().slice(0, 10);
 }
@@ -63,8 +63,11 @@ export function summarizeTrips(rows) {
     const unitRows = rows.filter((row) => isActiveTrip(row) && row.unit === unit);
     const planned = unitRows.reduce((sum, row) => sum + row.planned, 0);
     const reported = unitRows.reduce((sum, row) => sum + (row.reported || 0), 0);
-    const confirmed = unitRows.reduce((sum, row) => sum + (row.confirmed || 0), 0);
-    return { unit, planned, reported, confirmed, remaining: planned - confirmed };
+    const confirmedRows = rows.filter(row => row.unit === unit && row.confirmed != null);
+    const confirmed = confirmedRows.reduce((sum, row) => sum + row.confirmed, 0);
+    const remaining = unitRows.filter(row => row.confirmed == null).reduce((sum, row) => sum + row.planned, 0);
+    const variance = confirmedRows.reduce((sum, row) => sum + row.confirmed - row.planned, 0);
+    return { unit, planned, reported, confirmed, remaining, variance };
   });
   return values;
 }

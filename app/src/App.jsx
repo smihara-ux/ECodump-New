@@ -5598,8 +5598,6 @@ function ControlTopBar({
   ];
   const [projectOpen, setProjectOpen] = useState(false);
   const [project, setProject] = useState(projects[0][0]);
-  const dates = ["2026-08-25（火）", "2026-08-26（水）", "2026-08-27（木）"];
-  const [dateIndex, setDateIndex] = useState(1);
   const [globalQuery, setGlobalQuery] = useState("");
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [unread, setUnread] = useState(() => {
@@ -5682,34 +5680,7 @@ function ControlTopBar({
             ))}
           </div>
         )}
-        {roleMode === "receiving" ? (
-          <div className="control-date"><CalendarDays /><span>受入側 · 当日／翌日</span></div>
-        ) : (
-        <button
-          className="control-date"
-          onClick={() =>
-            showAppNotice(
-              "基準日を選択",
-              "日付切替は前後ボタン、または日付選択から変更できます。",
-            )
-          }
-        >
-          <CalendarDays />
-          <span>{dates[dateIndex]}</span>
-          <ChevronLeft
-            onClick={(event) => {
-              event.stopPropagation();
-              setDateIndex((value) => Math.max(0, value - 1));
-            }}
-          />
-          <ChevronRight
-            onClick={(event) => {
-              event.stopPropagation();
-              setDateIndex((value) => Math.min(dates.length - 1, value + 1));
-            }}
-          />
-        </button>
-        )}
+        <div className="control-date"><CalendarDays /><span>{roleMode === "receiving" ? "受入側" : "施工側"} · 対象日は各画面で選択</span></div>
         <label className="control-search">
           <Search />
           <input

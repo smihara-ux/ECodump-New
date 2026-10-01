@@ -58,6 +58,7 @@ export default function ReceivingConnected({
     try {
       await downloadTransportWorkbook(transportRows(list), {
         context: "受入",
+        filters: {受入場所: rows.find(b=>b.location.id===screen.locationId)?.location.name || screen.locationId, 搬出元: rows.find(b=>b.site.id===source)?.site.name || source || "すべて", 検索: search || "指定なし", 予約: reservation || "すべて", 集計区分: group},
         period:
           period === "range"
             ? date + "～" + end

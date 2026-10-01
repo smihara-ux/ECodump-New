@@ -83,12 +83,13 @@ export function reportTotals(rows) {
 }
 function workbookOptions(
   rows,
-  { context = "受入", period = "", sample = false } = {},
+  { context = "受入", period = "", sample = false, filters = {} } = {},
 ) {
   return {
     title: `ECO DUMP ${context}実績`,
     conditions: {
       対象期間: period,
+      ...filters,
       データ: sample ? "試作データ・API未接続" : "共通API取得データ",
       取消: "有効予定・報告から除外。保存済み確定実績は保持。",
       訂正: "訂正後の受入確定値を集計。履歴件数を明細に表示。",

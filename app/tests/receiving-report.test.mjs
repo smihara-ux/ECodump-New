@@ -25,3 +25,5 @@ test('real XLSX round-trip has exactly visible rows, separate units, corrected c
  assert.equal(detail.length,rows.length+1);assert.equal(detail[2][18],9.4);
  assert.equal(detail[3][18],undefined);assert.equal(detail[4][18],1);
 });
+
+test("export records the same named filters as the visible receiving list",()=>{const wb=transportWorkbook(transportRows([base]),{period:"2026-10-01",filters:{受入場所:"栃木",搬出元:"A",検索:"01",実績確定状態:"未確定"}});const text=JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets["集計"],{header:1}));for(const value of ["栃木","搬出元","検索","未確定"])assert.ok(text.includes(value));});

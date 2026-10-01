@@ -16,7 +16,7 @@ test("construction progress excludes cancelled trips and separates quantities", 
   assert.equal(summary.cancelled, 1);
   assert.equal(rows.filter((row) => matchesTripState(row, "搬出済み・受入未完了")).length, 3);
   assert.deepEqual(summary.quantities.map((row) => row.unit), ["m³", "t"]);
-  assert.equal(summary.quantities.find((row) => row.unit === "m³").remaining, 14.2);
+  assert.equal(summary.quantities.find((row) => row.unit === "m³").remaining, 14);
 });
 
 test("Excel workbook contains real summary and trip-detail sheets", () => {
@@ -30,3 +30,7 @@ test("Excel workbook contains real summary and trip-detail sheets", () => {
   assert.deepEqual(parsed.SheetNames, ["集計", "便別明細"]);
   assert.equal(XLSX.utils.sheet_to_json(parsed.Sheets["便別明細"], { header: 1 }).length, 3);
 });
+
+test("completed short delivery is variance, never an unfinished plan",()=>{const q=summarizeTrips([{booking:"有効",unit:"m³",planned:10,reported:9.5,confirmed:9.5}]).quantities[0];assert.equal(q.remaining,0);assert.equal(q.variance,-0.5);});
+
+test("cancellation removes future plans but retains recorded confirmed quantities",()=>{const q=summarizeTrips([{booking:"取消",unit:"m³",planned:10,confirmed:9.5}]).quantities[0];assert.equal(q.planned,0);assert.equal(q.remaining,0);assert.equal(q.confirmed,9.5);});

@@ -94,3 +94,11 @@ body:has(.entry-auth) { margin: 0; }
 
 .entry-hero-footer span { border-top: 0; padding-top: 0; }
 .entry-hero-footer span::before { content: ""; display: block; width: 34px; border-top: 3px solid #bde961; margin-bottom: 16px; }
+/* The shared return bar reserves space for the fixed admin sidebar. */
+body:has(.demo-return){--demo-nav-height:52px}
+body:has(.demo-return) .control-app-shell{height:calc(100dvh - var(--demo-nav-height));min-height:0}
+body:has(.demo-return) .control-app-shell>.content{height:calc(100dvh - var(--demo-nav-height) - 74px)}
+body:has(.demo-return) .control-app-shell>.sidebar{top:calc(74px + var(--demo-nav-height));height:calc(100dvh - 74px - var(--demo-nav-height))}
+.demo-return{height:52px;box-sizing:border-box;flex-wrap:nowrap;gap:12px;white-space:nowrap;font-size:12px}
+
+@media(max-width:760px){body:has(.demo-return) .control-app-shell>.sidebar{top:110px;height:calc(100dvh - 110px)}body:has(.demo-return) .control-app-shell>.content{height:calc(100dvh - 110px)}body:has(.demo-return) .control-app-shell>.mobile-menu{top:122px}}

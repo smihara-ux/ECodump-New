@@ -8,7 +8,7 @@ test("施工の対象日・進捗・詳細・実績条件を一つの流れで�
   const date = await page.getByLabel("搬出管理の対象日").inputValue();
   await expect(page.getByRole("button", { name: /有効な予定便 5便/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /取消便 1便/ })).toBeVisible();
-  await expect(page.getByText("残予定").first()).toBeVisible();
+  await expect(page.getByText("未完了の残予定").first()).toBeVisible();
   await page.getByRole("button", { name: "運行詳細" }).first().click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText("時系列・報告");
@@ -56,3 +56,20 @@ for (const theme of ["light", "dark"]) {
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
   });
 }
+
+
+test("未搬出の状態と検索を実績へ引き継ぎ、空の日付で壊れない", async ({page})=>{
+ await page.goto(entry);
+ await page.getByRole("button",{name:/未搬出便 1便/}).click();
+ await page.getByRole("textbox",{name:"検索",exact:true}).fill("34-56");
+ await page.getByRole("button",{name:"搬出実績を見る",exact:true}).click();
+ await expect(page.getByRole("combobox",{name:"状態",exact:true})).toHaveValue("未搬出");
+ await expect(page.getByRole("textbox",{name:"検索",exact:true})).toHaveValue("34-56");
+ await expect(page.locator(".construction-kpis article").first()).toContainText("1");
+ await page.getByRole("button",{name:"搬出管理へ戻る",exact:true}).click();
+ const date=await page.getByLabel("搬出管理の対象日").inputValue();
+ await page.getByLabel("搬出管理の対象日").fill("");
+ await expect(page.getByLabel("搬出管理の対象日")).toHaveValue(date);
+ await page.getByRole("button",{name:"翌日",exact:true}).click();
+ await expect(page.getByRole("heading",{name:"搬出管理",exact:true})).toBeVisible();
+});
