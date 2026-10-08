@@ -1,3 +1,8 @@
+import VehicleWorkspace from './demo/VehicleWorkspace.jsx';
+import DispatchWorkspace from './demo/DispatchWorkspace.jsx';
+import LaborWorkspace,{ParticipationWorkspace,ActionRequired} from './demo/LaborWorkspace.jsx';
+import {useDemoTrips, demoNotice} from './demo/store.jsx';
+import {demoSites,demoVehicles,demoDrivers,demoCompany,asControl,demoDay} from './demo/model.mjs';
 import { publicDemo } from "./publicDemo.mjs";
 import ReceivingLocationsConnected from './receiving/ReceivingLocationsConnected';
 import ReceivingConnected from './receiving/ReceivingConnected';
@@ -509,6 +514,7 @@ const fields = Array.from({ length: 23 }, (_, i) => ({
   start: `2026/${String((i % 9) + 1).padStart(2, "0")}/01`,
   end: `2027/${String((i % 9) + 1).padStart(2, "0")}/28`,
 }));
+fields.slice(0,2).forEach((field,i)=>Object.assign(field,{databaseId:demoSites[i].id,field:demoSites[i].name,company:demoCompany,address:'千葉県成田市 モデル区画（架空）'}));
 const formatDatabaseDate = (value) =>
   value ? String(value).replaceAll("-", "/") : "—";
 const normalizeSiteRecord = (site) => ({
@@ -564,7 +570,7 @@ const vehicles = [
     status: "点検予定",
   },
 ];
-const drivers = [
+const legacyDrivers = [
   {
     name: "サンプル 運転者1",
     phone: "090-0000-0001",
@@ -587,6 +593,7 @@ const drivers = [
     status: "配車可能",
   },
 ];
+const drivers=demoDrivers.map((d,i)=>({...legacyDrivers[i],...d}));
 const subcontractorHierarchy = [
   {
     id: "SC-02-01",
@@ -1749,7 +1756,7 @@ function TransportSchedulePage({
               </div>
               <div className="destination-count">
                 <b>{item.count}台</b>
-                <span>予定延べ台数</span>
+                <span>予定便数</span>
               </div>
               <span
                 className={`traffic-status ${item.status === "混雑" ? "busy" : item.status === "やや混雑" ? "medium" : "open"}`}
@@ -1774,7 +1781,7 @@ function TransportSchedulePage({
                 <button className="text" onClick={() => navigate?.("現場詳細", fields.find((item) => item.field === total.field)?.id)}>現場詳細</button>
                 <div className="field-total-count">
                   <b>{total.trips.length}台</b>
-                  <span>予定延べ台数</span>
+                  <span>予定便数</span>
                 </div>
                 <div className="field-total-vehicles">
                   <b>{total.vehicles.size}台</b>
@@ -1903,7 +1910,7 @@ function PrototypeBanner() {
   return (
     <div className="prototype-banner" role="status">
       <TriangleAlert />
-      <span><b>画面試作</b> API未接続のため、割当・変更内容はこの画面を閉じると失われます。</span>
+      <span><b>画面試作</b> {demoNotice}</span>
     </div>
   );
 }
@@ -2021,11 +2028,11 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
       : role === "construction" ? "概要" : "運行マップ",
   );
   const [expandedContractor, setExpandedContractor] = useState("SC-02-01");
-  const fieldPlans = transportPlans.filter(
-    (plan) => plan.departure === field.field && plan.day === "当日",
-  );
+  const allFieldTrips=useDemoTrips();
+  const selectedDate=(()=>{try{return JSON.parse(sessionStorage.getItem('ecodump-construction-schedule-filters')||'{}').date||demoDay();}catch{return demoDay();}})();
+  const fieldPlans=allFieldTrips.filter(t=>t.departure===field.field&&t.date===selectedDate);
   const tabs = role === "construction"
-    ? ["概要", "搬出条件", "搬出予定", "車両・運転手", "運行状況", "入退場・写真・伝票", "数量実績", "書類", "協力会社"]
+    ? ["概要", "搬出条件", "搬出予定", "車両・運転手", "運行状況", "搬出入記録・写真・伝票", "数量実績", "書類", "協力会社"]
     : ["運行マップ", "概要", "協力会社", "搬出・受入", "車両・運転手"];
   return (
     <section className="field-detail-page">
@@ -2061,7 +2068,7 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           field={field}
           navigate={navigate}
           setConfirm={setConfirm}
-          onShowSchedule={() => setTab("搬出・受入")}
+          onShowSchedule={() => setTab(role==="construction"?"搬出予定":"搬出・受入")}
         />
       )}
       {tab === "搬出条件" && (
@@ -2069,27 +2076,27 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           <PrototypeBanner />
           <div className="field-kpis">
             <article><span>土質区分</span><b>第2種建設発生土</b></article>
-            <article><span>搬出予定量</span><b>6,400m³</b></article>
-            <article><span>日量上限</span><b>120m³/日</b></article>
+            <article><span>総搬出計画量（検証用）</span><b>{demoSites.find(s=>s.name===field.field)?`${demoSites.find(s=>s.name===field.field).planned.toLocaleString()} ${demoSites.find(s=>s.name===field.field).unit}`:"未設定"}</b></article>
+            <article><span>日量上限</span><b>未設定（業務定義待ち）</b></article>
             <article><span>大型車条件</span><b>10tダンプ</b></article>
           </div>
           <div className="gf-purpose"><b>受入条件照合</b><span>土質試験、最大粒径、含水、有害物質、搬出期間を予約時点の条件版と照合します。現在は匿名サンプルです。</span></div>
         </div>
       )}
       {tab === "搬出予定" && (
-        <TransportSchedulePage {...{ setConfirm, navigate, role }} initialField={field.field} initialView="現場別" />
+        <ConstructionTransportPage navigate={navigate} initialField={field.field} embedded />
       )}
-      {tab === "数量実績" && <ResultsReportsPage setConfirm={setConfirm} />}
+      {tab === "数量実績" && <ConstructionResultsPage navigate={navigate} initialField={field.field} embedded />}
       {tab === "車両・運転手" && (
         <div className="field-dashboard construction-field-panel">
           <PrototypeBanner />
-          <div className="results-table-wrap"><table className="service-table"><thead><tr><th>便番号</th><th>車両</th><th>運転手</th><th>往復</th><th>割当状態</th><th>変更履歴</th></tr></thead><tbody>{fieldPlans.map((plan, index) => <tr key={plan.id}><td>{plan.id}</td><td>{plan.vehicle}</td><td>{plan.driver}</td><td>{index + 1}便目</td><td>{plan.vehicle ? "割当済み" : "未割当"}</td><td><button className="text" onClick={() => setConfirm({ title: `${plan.id} 変更履歴`, message: "変更前後・適用時点・操作者は共有API接続後に記録します。現在は変更履歴なしの匿名サンプルです。" })}>確認</button></td></tr>)}</tbody></table></div>
+          <div className="results-table-wrap"><table className="service-table"><thead><tr><th>便番号</th><th>車両</th><th>運転手</th><th>車両の当日便順</th><th>割当状態</th><th>変更履歴</th></tr></thead><tbody>{fieldPlans.map((plan, index) => <tr key={plan.id}><td>{plan.id}</td><td>{plan.vehicle}</td><td>{plan.driver}</td><td>{plan.tripNo}</td><td>{plan.vehicleId ? "割当済み" : "未割当"}</td><td><button className="text" onClick={() => setConfirm({ title: `${plan.id} 変更履歴`, message: plan.history.length ? plan.history.map(h=>typeof h==="string"?h:`${h.at} ${h.message}`).join("\n") : "成田モデル：変更履歴なし。APIへの送信は行いません。" })}>確認</button></td></tr>)}</tbody></table></div>
         </div>
       )}
-      {tab === "入退場・写真・伝票" && (
+      {tab === "搬出入記録・写真・伝票" && (
         <div className="field-dashboard construction-field-panel">
           <PrototypeBanner />
-          <div className="settings-grid">{[[DoorOpen, "入退場履歴", "ゲート通過時刻と滞在時間"], [Camera, "現場写真", "運行IDに紐づく写真"], [FileText, "原本伝票", "計量票・受入票"], [ClipboardList, "状態報告", "出発・到着・荷下ろし完了"]].map(([Icon, label, description]) => <button key={label} onClick={() => setConfirm({ title: label, message: `${description}を同一運行IDで参照します。外部Storage未接続のため現在は匿名サンプルです。` })}><Icon /><span><b>{label}</b><small>{description}</small></span><ChevronRight /></button>)}</div>
+          <div className="settings-grid">{[[DoorOpen, "搬出入履歴", "ゲート通過時刻と滞在時間"], [Camera, "現場写真", "運行IDに紐づく写真"], [FileText, "原本伝票", "計量票・受入票"], [ClipboardList, "状態報告", "出発・到着・荷下ろし完了"]].map(([Icon, label, description]) => <button key={label} onClick={() => setConfirm({ title: label, message: `${description}を同一運行IDで参照します。外部Storage未接続のため現在は匿名サンプルです。` })}><Icon /><span><b>{label}</b><small>{description}</small></span><ChevronRight /></button>)}</div>
         </div>
       )}
       {tab === "書類" && (
@@ -2107,11 +2114,11 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           <div className="field-kpis">
             <div>
               <span>本日の車両</span>
-              <b>{Math.max(fieldPlans.length, 2)}台</b>
+              <b>{new Set(fieldPlans.filter(t=>t.vehicleId&&t.booking!=="取消").map(t=>t.vehicleId)).size}台</b>
             </div>
             <div>
-              <span>予定延べ台数</span>
-              <b>{fieldPlans.length}台</b>
+              <span>予定便数</span>
+              <b>{fieldPlans.length}便</b>
             </div>
             <div>
               <span>未確認のお知らせ</span>
@@ -2127,7 +2134,7 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
               </span>
               <ChevronRight />
             </button>
-            {role === "construction" && <button onClick={() => setTab("入退場・写真・伝票")}>
+            {role === "construction" && <button onClick={() => setTab("搬出入記録・写真・伝票")}>
               <FileText />
               <span><b>運行記録・写真・伝票</b><small>車両の到着・出発と原本伝票を確認</small></span>
               <ChevronRight />
@@ -2258,43 +2265,9 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
         </div>
       )}
       {tab === "搬出・受入" && (
-        <TransportSchedulePage
-          setConfirm={setConfirm}
-          initialField={field.field}
-        />
+        <ConstructionTransportPage navigate={navigate} initialField={field.field} embedded />
       )}
-      {tab === "車両・運転手" && (
-        <div className="field-section">
-          <div className="section-heading">
-            <div>
-              <h2>本日の配車</h2>
-              <p>この現場に割り当てられた車両と運転手です。</p>
-            </div>
-            <button className="primary" onClick={() => navigate("車両一覧")}>
-              車両一覧を開く
-            </button>
-          </div>
-          <GridTable
-            headers={["車両", "車両番号", "運転手", "出発予定", "配車状況"]}
-            rows={[
-              [
-                vehicles[0].name,
-                vehicles[0].number,
-                drivers[0].name,
-                "08:30",
-                "配車確定",
-              ],
-              [
-                vehicles[1].name,
-                vehicles[1].number,
-                drivers[1].name,
-                "13:00",
-                "配車確定",
-              ],
-            ]}
-          />
-        </div>
-      )}
+
     </section>
   );
 }
@@ -3069,173 +3042,7 @@ function GreenDocumentList({ title, setConfirm }) {
   );
 }
 
-function GreenfilePage({ setConfirm }) {
-  const [menu, setMenu] = useState("書類状況一覧");
-  const [driverQuery, setDriverQuery] = useState("");
-  const [filter, setFilter] = useState(false);
-  const [category, setCategory] = useState("一括提出書類");
-  const [comment, setComment] = useState(false);
-  const statusRows = [
-    ["1次", "サンプル建設株式会社", "受領済"],
-    ["2次", "サンプル協力会社A", "提出済"],
-    ["3次", "サンプル協力会社B", "未提出"],
-  ];
-  const docMenus = ["元請帳票の確認"];
-  let panel;
-  if (menu === "書類状況一覧")
-    panel = (
-      <section className="gf-page">
-        <h2>書類状況一覧</h2>
-        <p className="gf-lead">
-          協力会社から提出された安全書類の提出状況を一覧で確認します。
-        </p>
-        <div className="gf-alert">
-          未確認・差戻しの書類がある場合は、内容を確認して受領操作を行ってください。
-        </div>
-        <div className="gf-toolbar">
-          <b>検索結果：3件</b>
-          <button
-            className="text-button"
-            onClick={() => {
-              setFilter(false);
-              setCategory("一括提出書類");
-            }}
-          >検索条件をクリア</button>
-          <button className="outline" onClick={() => setFilter((v) => !v)}>
-            検索で絞り込む
-          </button>
-          <button
-            className="outline"
-            onClick={() => setConfirm({ title: "この画面の使い方" })}
-          >
-            この画面の使い方
-          </button>
-        </div>
-        {filter && (
-          <GfFilter
-            onClose={() => setFilter(false)}
-            onSearch={() => setFilter(false)}
-          />
-        )}
-        <div className="gf-tabs">
-          {[
-            "一括提出書類",
-            "個別提出書類",
-            "許可情報",
-            "契約情報",
-            "保険加入証明書",
-            "主任技術者",
-          ].map((x) => (
-            <button
-              key={x}
-              className={category === x ? "active" : ""}
-              onClick={() => setCategory(x)}
-            >
-              {x}
-            </button>
-          ))}
-        </div>
-        <div className="gf-matrix-wrap">
-          <table className="gf-table gf-matrix">
-            <thead>
-              <tr>
-                {[
-                  "提出状況",
-                  "次数",
-                  "会社名",
-                  "コメント",
-                  "提出操作",
-                  "施工体制台帳",
-                  "再下請負通知書",
-                  "作業員名簿",
-                ].map((x) => (
-                  <th key={x}>{x}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {statusRows.map((r, i) => (
-                <tr key={r[1]}>
-                  <td>
-                    <span className={`gf-status s${i}`}>{r[2]}</span>
-                  </td>
-                  <td>{r[0]}</td>
-                  <td>{r[1]}</td>
-                  <td>
-                    <button
-                      className="text-button"
-                      onClick={() => setComment(true)}
-                    >
-                      確認{i === 1 && "（1）"}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="outline"
-                      onClick={() =>
-                        setConfirm({
-                          title: i === 2 ? "書類提出" : "提出書類の取下げ確認",
-                        })
-                      }
-                    >
-                      {i === 2 ? "提出" : "取下げ"}
-                    </button>
-                  </td>
-                  {[0, 1, 2].map((n) => (
-                    <td key={n}>{i === 2 ? "—" : "確認済"}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {comment && (
-          <aside className="gf-comment">
-            <div>
-              <b>コメント</b>
-              <button onClick={() => setComment(false)}>
-                <X />
-              </button>
-            </div>
-            <p>提出書類についての確認コメントを表示します。</p>
-            <textarea placeholder="返信を入力" />
-            <button
-              className="primary"
-              onClick={() => {
-                setComment(false);
-                setConfirm({ title: "コメントを送信しました" });
-              }}
-            >
-              返信
-            </button>
-          </aside>
-        )}
-      </section>
-    );
-  else if (docMenus.includes(menu))
-    panel = <GreenDocumentList title={menu} setConfirm={setConfirm} />;
-  else if (menu.includes("協力会社検索"))
-    panel = <SearchServicePage setConfirm={setConfirm} />;
-  else if (menu === "ドライバー検索")
-    panel = <DriverSearchPage query={driverQuery} setQuery={setDriverQuery} setConfirm={setConfirm} />;
-  return (
-    <div className="service-shell">
-      <aside className="service-menu">
-        <b>労務安全</b>
-        {greenMenus.map((x) => (
-          <button
-            key={x}
-            className={menu === x ? "active" : ""}
-            onClick={() => setMenu(x)}
-          >
-            {x}
-          </button>
-        ))}
-      </aside>
-      <div className="service-main">{panel}</div>
-    </div>
-  );
-}
+function GreenfilePage({setConfirm}) {return <LaborWorkspace renderDocuments={()=> <GreenDocumentList title="元請帳票の確認" setConfirm={setConfirm}/>} renderDrivers={(query,setQuery)=> <DriverSearchPage query={query} setQuery={setQuery} setConfirm={setConfirm}/>}/>;}
 
 function SearchServicePage({ setConfirm }) {
   const [filter, setFilter] = useState(true);
@@ -4428,10 +4235,10 @@ function OperationsMap({
           </span>
         </div>
         <span className="map-tracking-status">
-          現在位置：{selectedTripData?.status}／車両を追跡中
+          位置表示例：{selectedTripData?.status}／実GPS未接続
         </span>
         <span className={selectedTripData?.status === "待機中" ? "map-location-stale" : "map-location-fresh"}>
-          位置最終更新：{selectedTripData?.status === "待機中" ? "13:54（38分停止・要確認）" : "14:32（更新中）"}
+          位置最終更新：実測データなし（描画例）
         </span>
         <dl className="map-load-details">
           <div>
@@ -4520,7 +4327,7 @@ function OperationsMap({
       </div>
       <div className="map-updated">
         <Truck />
-        交通情報　14:32更新
+        交通情報未接続・時刻はサンプル
       </div>
     </div>
   );
@@ -4532,20 +4339,12 @@ function FieldOperationsDashboard({
   setConfirm,
   onShowSchedule,
 }) {
-  const fieldIndex = Math.max(
-    0,
-    fields.findIndex((item) => item.id === field.id),
-  );
-  const siteCode = `S-${String((fieldIndex % 5) + 1).padStart(2, "0")}`;
-  const sourceTrips = controlTrips.filter(
-    (trip) => mapLocationCode(trip.from) === siteCode,
-  );
-  const fieldTrips = sourceTrips.map((trip) => ({
-    ...trip,
-    from: `${siteCode} ${field.field}`,
-  }));
-  const trips = fieldTrips.length ? fieldTrips : [controlTrips[0]];
-  const [selectedTrip, setSelectedTrip] = useState(trips[0].id);
+  const sharedTrips=useDemoTrips();
+  const fieldIndex=demoSites.findIndex(s=>s.name===field.field);
+  const siteCode=`S-0${fieldIndex+1}`;
+  const date=(()=>{try{return JSON.parse(sessionStorage.getItem('ecodump-construction-schedule-filters')||'{}').date||demoDay();}catch{return demoDay();}})();
+  const trips=sharedTrips.filter(t=>t.departure===field.field&&t.date===date).map(asControl);
+  const [selectedTrip, setSelectedTrip] = useState(trips[0]?.id);
   const selectedTripData =
     trips.find((trip) => trip.id === selectedTrip) || trips[0];
   const locations = useMemo(
@@ -4569,12 +4368,13 @@ function FieldOperationsDashboard({
   ).length;
   const completedCount = trips.filter((trip) => trip.status === "完了").length;
   const [vehicleProjection, setVehicleProjection] = useState(null);
+  if(!trips.length)return <div className="empty-state">選択した現場・対象日に運行予定はありません。<button onClick={onShowSchedule}>搬出予定へ</button></div>;
 
   return (
     <section className="field-operations-dashboard">
       <header className="field-operations-heading">
         <div>
-          <span>現場別リアルタイム運行</span>
+          <span>現場別運行 · 成田モデル</span>
           <h2>{field.field} 運行ダッシュボード</h2>
           <p>搬出現場から受入場所までの道路ルートと車両状況を確認できます。</p>
         </div>
@@ -4597,8 +4397,8 @@ function FieldOperationsDashboard({
         <div className="large-dump-route-title">
           <Truck />
           <span>
-            <b>大型ダンプ専用ルート</b>
-            <small>車検証情報と道路規制を照合して運行経路を判定</small>
+            <b>経路の表示例（走行用ではありません）</b>
+            <small>道路規制・車検証との自動照合は未接続です</small>
           </span>
         </div>
         <dl>
@@ -4725,6 +4525,7 @@ function FieldOperationsDashboard({
             </dl>
             <button
               className="timeline-detail-action"
+              disabled={!selectedTripData}
               onClick={() =>
                 setConfirm({
                   title: `${selectedTripData.id} 運行詳細`,
@@ -5079,27 +4880,7 @@ function ControlTopBar({
               </div>
               <button onClick={() => setUnread(0)}>すべて既読</button>
             </header>
-            {[
-              ["D-103が25分遅延しています", "2分前", "warning"],
-              ["湾岸第2受入ヤードから回答が届きました", "18分前", "match"],
-              ["サンプル現場Bの受入枠が更新されました", "42分前", "info"],
-            ].map(([message, time, tone], index) => (
-              <button
-                className={tone}
-                key={message}
-                onClick={() => {
-                  setUnread((value) => Math.max(0, value - 1));
-                  setNotificationOpen(false);
-                  setConfirm({ title: "通知詳細", message });
-                }}
-              >
-                <i />
-                <span>
-                  <b>{message}</b>
-                  <small>{time}</small>
-                </span>
-              </button>
-            ))}
+            {[['TR-20260820-02 の遅延・担当を確認','配車・運行管理','TR-20260820-02'],['受入条件・日次枠を確認','受入場所管理',null],['必要書類の提出・確認待ち','労務安全',null]].map(([message,target,id])=><button key={message} onClick={()=>{setNotificationOpen(false);setUnread(v=>Math.max(0,v-1));if(id)sessionStorage.setItem(roleMode==='receiving'?'ecodump-receiving-focus':'ecodump-dispatch-focus',id);navigate(roleMode==='receiving'&&id?'搬入予約・受付':target);}}><i/><span><b>{message}</b><small>成田モデル・デモの確認入口</small></span></button>)}
           </div>
         )}
         <button
@@ -5321,10 +5102,13 @@ function ControlOperationModal({ mode, onClose, onSave }) {
 
 function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleMode }) {
   const [tripFilter, setTripFilter] = useState("すべてのステータス");
+  const [date,setDate]=useState(()=>{try{return JSON.parse(sessionStorage.getItem(roleMode==='receiving'?'ecodump-receiving-view:demo':'ecodump-construction-schedule-filters')||'{}').date||demoDay();}catch{return demoDay();}});
   const [siteFilter, setSiteFilter] = useState("すべての現場");
   const [cargoFilter, setCargoFilter] = useState("すべての荷種");
-  const [selectedTrip, setSelectedTrip] = useState("D-103");
-  const [trips, setTrips] = useState(controlTrips);
+  const [selectedTrip, setSelectedTrip] = useState("TR-20260820-02");
+  const sharedTrips=useDemoTrips();
+  const trips=sharedTrips.filter(t=>t.date===date).map(asControl);
+  const setTrips=()=>setConfirm({title:"地図からの更新は未送信",message:"搬出管理・配車から同じ便を編集してください。"});
   const [operationMode, setOperationMode] = useState(null);
   const [mapTrip, setMapTrip] = useState(null);
   const [timelineExpanded, setTimelineExpanded] = useState(true);
@@ -5339,18 +5123,11 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
     siteFilter !== "すべての現場" ||
     cargoFilter !== "すべての荷種";
   const selectedTripData =
-    trips.find((trip) => trip.id === selectedTrip) || trips[0];
-  const summaries = roleMode === "receiving" ? [[ClipboardList,"予定総便数",trips.length,"便"],[Truck,"配車済み",trips.length,"便"],[Navigation,"運行中",trips.filter(t=>t.status==="運行中").length,"便"],[TriangleAlert,"遅延",trips.filter(t=>t.status==="遅延").length,"便","warning"],[Clock3,"待機中",trips.filter(t=>t.status==="待機中").length,"便"],[ShieldCheck,"受入完了",trips.filter(t=>t.status==="完了").length,"便","complete"]] : [
-    [ClipboardList, "予定総便数", "68", "便"],
-    [Truck, "配車済み", "53", "便"],
-    [Navigation, "運行中", "28", "便"],
-    [TriangleAlert, "遅延", "3", "便", "warning"],
-    [Clock3, "待機中", "6", "便"],
-    [ShieldCheck, "受入完了", "22", "便", "complete"],
-  ];
+    visibleTrips.find((trip) => trip.id === selectedTrip) || visibleTrips[0];
+  const summaries=[[ClipboardList,'予定総便数',visibleTrips.length,'便'],[Truck,'配車済み',visibleTrips.filter(t=>t.vehicleId&&t.booking!=="取消").length,'便'],[Navigation,'運行中',visibleTrips.filter(t=>t.status==='運行中').length,'便'],[TriangleAlert,'遅延',visibleTrips.filter(t=>t.status==='遅延').length,'便','warning'],[Clock3,'待機中',visibleTrips.filter(t=>t.status==='待機中').length,'便'],[ShieldCheck,'受入完了',visibleTrips.filter(t=>t.status==='完了').length,'便','complete']];
   return (
     <div className="control-tower-page">
-      <p className="control-sample-note" role="note">地図・位置・運行状況はサンプル表示です。保存済みの予約・実績は受入管理から確認できます。</p>
+      <p className="control-sample-note" role="note">成田モデルの便一覧です。地図の経路・現在位置は描画例であり、成田〜採石場の実走行経路やGPS実測ではありません。<label className="control-review-date">対象日<input aria-label="運行ダッシュボードの対象日" type="date" value={date} onChange={e=>{if(!e.target.value)return;setDate(e.target.value);setTimelineExpanded(true);setMapTrip(null);const k=roleMode==='receiving'?'ecodump-receiving-view:demo':'ecodump-construction-schedule-filters';try{sessionStorage.setItem(k,JSON.stringify({...JSON.parse(sessionStorage.getItem(k)||'{}'),date:e.target.value}));}catch{}}}/></label></p>
       <section className="control-toolbar">
         <button
           className={`toolbar-menu-trigger ${!collapsed ? "active" : ""}`}
@@ -5362,13 +5139,13 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
         </button>
         <button
           className="dispatch-primary"
-          onClick={() => roleMode === "receiving" ? navigate("搬入予約・受付") : setOperationMode("dispatch")}
+          onClick={() => navigate(roleMode === "receiving" ? "搬入予約・受付" : "配車・運行管理")}
         >
           <Truck />
           <span>{roleMode === "receiving" ? "搬入予約・受付" : "配車を組む"}</span>
           <ChevronRight />
         </button>
-        {roleMode !== "receiving" && <button onClick={() => setOperationMode("schedule")}>
+        {roleMode !== "receiving" && <button onClick={() => navigate("配車・運行管理")}>
           <CalendarDays />
           予定を追加
         </button>}
@@ -5379,8 +5156,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             onChange={(event) => setSiteFilter(event.target.value)}
           >
             <option>すべての現場</option>
-            <option>サンプル現場A</option>
-            <option>サンプル現場B</option>
+            {demoSites.map(site=><option key={site.id}>{site.name}</option>)}
           </select>
         </label>
         <label>
@@ -5423,7 +5199,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
       {roleMode === "receiving" && <div className="receiving-timeline-shortcuts">{[['すべてのステータス','すべての便'],['向かっているダンプ','向かっているダンプ'],['待機中','現場で待機中'],['受入中','受入先で受入中']].map(([value,label])=><button key={value} aria-pressed={tripFilter===value} onClick={()=>setTripFilter(value)}>{label}</button>)}<span>便をタップして車両の経路・状況を確認（サンプル）</span></div>}
       {mapTrip && <ReceivingTripMap trip={mapTrip} from={controlMapLocations[mapLocationCode(mapTrip.from)]} to={controlMapLocations[mapLocationCode(mapTrip.to)]} route={controlRoadRoutes[`${mapLocationCode(mapTrip.from)}:${mapLocationCode(mapTrip.to)}`]} onClose={()=>setMapTrip(null)}/>}
       <section className={`control-workspace ${timelineExpanded ? "timeline-expanded" : ""}`}>
-        {!timelineExpanded && (
+        {!timelineExpanded && selectedTripData && (
           <OperationsMap
             visibleTrips={visibleTrips}
             selectedTripData={selectedTripData}
@@ -5440,23 +5216,24 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             <dl>
               <div>
                 <dt>計画</dt>
-                <dd>{roleMode === "receiving" ? `${trips.length}便` : "68台"}</dd>
+                <dd>{`${visibleTrips.length}便`}</dd>
               </div>
               <div>
                 <dt>運行中</dt>
-                <dd>{roleMode === "receiving" ? `${trips.filter(t=>t.status==="運行中").length}便` : "28台"}</dd>
+                <dd>{`${visibleTrips.filter(t=>t.status==="運行中").length}便`}</dd>
               </div>
               <div>
                 <dt>遅延</dt>
-                <dd>{roleMode === "receiving" ? `${trips.filter(t=>t.status==="遅延").length}便` : "3台"}</dd>
+                <dd>{`${visibleTrips.filter(t=>t.status==="遅延").length}便`}</dd>
               </div>
               <div>
                 <dt>完了</dt>
-                <dd>{roleMode === "receiving" ? `${trips.filter(t=>t.status==="完了").length}便` : "22台"}</dd>
+                <dd>{`${visibleTrips.filter(t=>t.status==="完了").length}便`}</dd>
               </div>
             </dl>
             <button
               className="timeline-detail-action"
+              disabled={!selectedTripData}
               onClick={() => roleMode === "receiving" ? setMapTrip(selectedTripData) :
                 setConfirm({
                   title: `${selectedTripData.id} 運行詳細`,
@@ -5520,14 +5297,14 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             className="all-trips"
             onClick={() => navigate("搬出・受入スケジュール")}
           >
-            {roleMode === "receiving" ? "受入管理で予定・実績を確認" : "すべての運行（68台）を表示"} <ChevronRight />
+            {roleMode === "receiving" ? "受入管理で予定・実績を確認" : `すべての運行（${trips.length}便）を表示`} <ChevronRight />
           </button>
         </div>
       </section>
       <section className="control-summary">
         <div className="summary-title">
           <b>本日の運行サマリー</b>
-          <small>{roleMode === "receiving" ? "サンプル10便の集計" : "最終更新 14:32"}</small>
+          <small>{`対象日 ${date}・成田モデル`}</small>
         </div>
         {summaries.map(([Icon, label, value, unit, tone]) => (
           <button
@@ -5731,6 +5508,7 @@ export function App() {
     return () => tabletQuery.removeEventListener("change", syncNavigation);
   }, []);
   const navigate = (p, fieldId) => {
+    if(fieldId)setSelected(fieldId);
     setBusinessBooking(null);
     setPage(p);
     setQuery("");
@@ -5844,10 +5622,10 @@ export function App() {
   else if (page === "ドライバー検索")
     body = <DriverSearchPage {...{ query, setQuery, setConfirm }} />;
   else if (page === "車両一覧")
-    body = <VehiclePage {...{ query, setQuery, setDetailOpen, setConfirm }} />;
+    body = <VehicleWorkspace query={query} setQuery={setQuery}/>;
   else if (page === "搬出・受入スケジュール")
     body = roleMode === "construction" ? (
-      <ConstructionTransportPage plans={transportPlans} {...{ navigate }} />
+      <ConstructionTransportPage {...{ navigate }} />
     ) : (
       <TransportSchedulePage
         {...{ setConfirm, navigate, role: roleMode }}
@@ -5855,9 +5633,9 @@ export function App() {
       />
     );
   else if (page === "配車・運行管理")
-    body = <DispatchManagementPage {...{ navigate, setConfirm }} />;
+    body = <DispatchWorkspace navigate={navigate}/>;
   else if (page === "実績・帳票")
-    body = <ConstructionResultsPage plans={transportPlans} navigate={navigate} />;
+    body = <ConstructionResultsPage navigate={navigate} />;
   else if (page === "関係会社・基本設定")
     body = <SettingsHubPage navigate={navigate} />;
   else if (page === "UCRマッチング")
@@ -5876,7 +5654,7 @@ export function App() {
     );
   else
     body = (
-      <AgencyPage
+      roleMode === "construction" ? <ParticipationWorkspace navigate={navigate}/> : <AgencyPage
         type={page}
         {...{ query, setQuery, setDetailOpen, setConfirm }}
       />
@@ -6105,7 +5883,7 @@ export function App() {
           <div className="control-page-surface">
             {businessPage && <BusinessSessionBar role={roleMode} {...business} />}
             {!publicDemo && new URLSearchParams(location.search).get("workflowApi") === "1" && connectedPages.includes(page) && <DirectWorkflowPanel role={roleMode} />}
-            {roleMode === "receiving" && page !== "UCRマッチング" && page !== "総合インフォメーション" && !livePage && <PrototypeNotice />}{body}
+            {roleMode === "receiving" && page !== "UCRマッチング" && page !== "総合インフォメーション" && !livePage && <PrototypeNotice />}{!livePage&&roleMode==="construction"&&page==="搬出・受入スケジュール"&&<ActionRequired navigate={navigate}/>}{body}
           </div>
         )}
       </main>

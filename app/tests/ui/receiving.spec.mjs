@@ -7,7 +7,7 @@ const expandLocationTrips = async (page, locationName) => {
     .locator(".receiving-card")
     .filter({ has: page.getByRole("heading", { name: locationName, exact: true }) });
   const details = card.locator("details");
-  if (!(await details.getAttribute("open"))) {
+  if ((await details.getAttribute("open")) === null) {
     await details.getByText("便一覧・従来の予約詳細").click();
   }
 };
@@ -16,7 +16,7 @@ for (const viewport of [
   { name: "tablet", width: 1024, height: 900 },
   { name: "tablet-portrait", width: 768, height: 1024 },
 ]) {
-  test(`${viewport.name}: 承認から受付・実績確定、再読込で試作リセット`, async ({
+  test(`${viewport.name}: 承認から受付・実績確定、再読込後も端末内デモを保持`, async ({
     page,
   }) => {
     const errors = [];
@@ -28,8 +28,8 @@ for (const viewport of [
     ).toHaveAttribute("aria-pressed", "true");
     await expect(nav(page, "労務安全")).toHaveCount(0);
     await expect(nav(page, "調整会議")).toHaveCount(0);
-    await expandLocationTrips(page, "サンプル受入ヤード A");
-    await page.getByRole("button", { name: "T-001の予約詳細" }).click();
+    await expandLocationTrips(page, "栃木モデル採石場〈架空〉");
+    await page.getByRole("button", { name: "TR-20260820-04の予約詳細" }).click();
     await page
       .getByRole("button", { name: "予約を承認（試作）", exact: true })
       .click();
@@ -46,7 +46,7 @@ for (const viewport of [
       "運行完了",
     );
     await expect(page.locator(".receiving-state-grid")).toContainText("未確定");
-    await page.getByLabel("実績数量（m³）", { exact: true }).fill("7.5");
+    await page.getByLabel("実績数量（t）", { exact: true }).fill("7.5");
     await page.getByRole("button", { name: "受入内容を確認（試作）" }).click();
     await expect(page.getByRole("alert")).toContainText("差異理由");
     await page.getByLabel("判断・変更・差異の理由").fill("現地実測による差");
@@ -60,8 +60,8 @@ for (const viewport of [
     ).toBeVisible();
     await nav(page, "実績・帳票").click();
     await expect(
-      page.getByRole("row").filter({ hasText: "T-001" }),
-    ).toContainText("7.5 m³");
+      page.getByRole("row").filter({ hasText: "TR-20260820-04" }),
+    ).toContainText("7.5 t");
     const download = page.waitForEvent("download");
     await page.getByRole("button", { name: "試作CSVを出力" }).click();
     expect((await download).suggestedFilename()).toContain("試作");
@@ -75,11 +75,9 @@ for (const viewport of [
       ),
     ).toBe(false);
     await page.reload();
-    await expandLocationTrips(page, "サンプル受入ヤード A");
-    await page.getByRole("button", { name: "T-001の予約詳細" }).click();
-    await expect(
-      page.getByRole("button", { name: "予約を承認（試作）" }),
-    ).toBeVisible();
+    await expandLocationTrips(page, "栃木モデル採石場〈架空〉");
+    await page.getByRole("button", { name: "TR-20260820-04の予約詳細" }).click();
+    await expect(page.getByRole("heading", {name:"実績確定（試作）"})).toBeVisible();
     expect(errors).toEqual([]);
   });
 }
@@ -98,11 +96,11 @@ test("公開範囲のプレビューと場所編集を反映", async ({ page }) 
   await page.getByRole("button", { name: "場所・条件を編集" }).click();
   await page
     .getByLabel("場所名", { exact: true })
-    .fill("サンプル受入ヤード B 更新");
+    .fill("茨城モデル採石場〈架空〉 更新");
   await page.getByRole("button", { name: "試作に反映（保存なし）" }).click();
   await nav(page, "受入管理").click();
   await expect(
-    page.getByRole("heading", { name: "サンプル受入ヤード B 更新" }),
+    page.getByRole("heading", { name: "茨城モデル採石場〈架空〉 更新" }),
   ).toBeVisible();
 });
 test("従来サンプルの搬出候補から申請、直接予約も申請止まり", async ({ page }) => {
@@ -141,8 +139,8 @@ test("従来サンプルの搬出候補から申請、直接予約も申請止�
 });
 test("変更依頼・再申請・受入不可・取消と検索", async ({ page }) => {
   await page.goto(entry);
-  await expandLocationTrips(page, "サンプル受入ヤード A");
-  await page.getByRole("button", { name: "T-001の予約詳細" }).click();
+  await expandLocationTrips(page, "栃木モデル採石場〈架空〉");
+  await page.getByRole("button", { name: "TR-20260820-04の予約詳細" }).click();
   await page.getByRole("button", { name: "変更依頼（試作）" }).click();
   await expect(page.getByRole("alert")).toContainText("理由");
   await page.getByLabel("判断・変更・差異の理由").fill("時間変更");
@@ -153,10 +151,10 @@ test("変更依頼・再申請・受入不可・取消と検索", async ({ page 
   await expect(page.locator(".receiving-state-grid")).toContainText("受入不可");
   await nav(page, "受入管理").click();
   await expect(
-    page.getByRole("button", { name: "T-001の予約詳細" }),
+    page.getByRole("button", { name: "TR-20260820-04の予約詳細" }),
   ).toHaveCount(0);
-  await expandLocationTrips(page, "サンプル受入ヤード A");
-  await page.getByRole("button", { name: "T-002の予約詳細" }).click();
+  await expandLocationTrips(page, "茨城モデル採石場〈架空〉");
+  await page.getByRole("button", { name: "TR-20260820-02の予約詳細" }).click();
   await page.getByLabel("判断・変更・差異の理由").fill("工事中止");
   await page.getByRole("button", { name: "予約取消（理由必須）" }).click();
   await expect(page.locator(".receiving-state-grid")).toContainText("取消");
@@ -201,19 +199,19 @@ for (const theme of ["light", "dark"])
 
 test("ホーム絞込・翌日・役割別URLで受入と施工の文脈を保持", async ({ page }) => {
   await page.goto(entry);
-  await page.getByLabel("現場・受入場所・車両を検索").fill("T-002");
-  await expandLocationTrips(page, "サンプル受入ヤード A");
+  await page.getByLabel("現場・受入場所・車両を検索").fill("TR-20260820-02");
+  await expandLocationTrips(page, "茨城モデル採石場〈架空〉");
   await expect(
-    page.getByRole("button", { name: "T-002の予約詳細" }),
+    page.getByRole("button", { name: "TR-20260820-02の予約詳細" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "T-001の予約詳細" }),
+    page.getByRole("button", { name: "TR-20260820-04の予約詳細" }),
   ).toHaveCount(0);
   await page.getByLabel("現場・受入場所・車両を検索").fill("");
   await page.getByRole("button", { name: "翌日", exact: true }).click();
-  await expandLocationTrips(page, "サンプル受入ヤード B");
+  await expandLocationTrips(page, "茨城モデル採石場〈架空〉");
   await expect(
-    page.getByRole("button", { name: "T-007の予約詳細" }),
+    page.getByRole("button", { name: "TR-20260821-01の予約詳細" }),
   ).toBeVisible();
   await expect(page.getByLabel("事業モード", { exact: true })).toHaveCount(0);
   await page.goto("/?preview=app&role=construction&page=transport");

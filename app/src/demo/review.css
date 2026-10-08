@@ -1,0 +1,204 @@
+.review-note {
+  padding: 12px 16px;
+  border: 1px solid var(--border, #c6d3d1);
+  border-radius: 10px;
+  color: var(--muted, #526962);
+  font-size: 13px;
+  background: var(--panel, #fff);
+}
+.review-filter {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: end;
+  padding: 14px 0;
+}
+.review-filter label,
+.review-dialog > label {
+  display: grid;
+  gap: 6px;
+}
+.review-filter fieldset {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.review-filter fieldset label {
+  display: flex;
+  align-items: center;
+}
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+}
+.review-dialog {
+  width: min(850px, calc(100vw - 28px));
+  max-height: 85dvh;
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel, #fff);
+  color: var(--text, #163a32);
+}
+.review-dialog::backdrop {
+  background: #001f2599;
+}
+.review-dialog header {
+  display: flex;
+  gap: 10px;
+  align-items: start;
+  justify-content: space-between;
+}
+.review-dialog input,
+.review-dialog textarea {
+  background: var(--panel);
+  color: inherit;
+  border: 1px solid var(--border);
+  padding: 10px;
+}
+.review-dialog textarea {
+  min-height: 85px;
+}
+.review-check {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+}
+.review-blockers {
+  padding: 16px;
+  border: 1px solid var(--border, #cad8d4);
+  border-left: 4px solid #d8ac43;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  background: var(--panel, #fff);
+}
+.review-blockers h2 {
+  font-size: 17px;
+  margin: 0;
+}
+.review-blockers button {
+  max-width: 100%;
+  text-align: left;
+}
+.review-steps {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.review-actions button {
+  min-height: 44px;
+}
+.review-dialog small,
+.gf-table small {
+  display: block;
+}
+.daily-capacity dl {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 2fr;
+  gap: 10px;
+}
+.daily-capacity dd {
+  margin: 0;
+}
+.driver-confirmation strong {
+  font-size: 24px;
+}
+.driver-confirmation button {
+  margin: 8px 8px 0 0;
+}
+.driver-confirmation small {
+  display: block;
+  margin-top: 14px;
+}
+@media (max-width: 700px) {
+  .review-filter label {
+    width: 100%;
+  }
+  .review-dialog {
+    padding: 16px;
+  }
+  .review-dialog h2 {
+    font-size: 18px;
+    overflow-wrap: anywhere;
+  }
+  .review-blockers .review-actions {
+    display: grid;
+  }
+  .daily-capacity dl {
+    display: block;
+  }
+  .daily-capacity dd {
+    margin-bottom: 12px;
+  }
+}
+.control-page-surface .review-dialog {
+  color: var(--ui-text);
+  border-color: var(--ui-line);
+  background: var(--ui-panel);
+}
+.control-page-surface .review-note,
+.control-page-surface .review-blockers {
+  color: var(--ui-text);
+  border-color: var(--ui-line);
+  background: var(--ui-panel);
+}
+.control-page-surface .review-filter input,
+.control-page-surface .review-filter select,
+.control-page-surface .review-filter textarea,
+.control-page-surface .review-dialog input,
+.control-page-surface .review-dialog select,
+.control-page-surface .review-dialog textarea {
+  max-width: 100%;
+  min-height: 44px;
+  background: var(--ui-panel);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-line);
+  border-radius: 6px;
+  padding: 10px;
+}
+.review-filter {
+  min-width: 0;
+}
+.review-filter input[type="checkbox"],
+.review-dialog input[type="checkbox"] {
+  min-height: 18px;
+  width: 18px;
+  accent-color: #327255;
+}
+.review-dialog form {
+  min-width: 0;
+}
+.review-filter label {
+  max-width: 100%;
+  min-width: 0;
+}
+.control-page-surface .gf-tabs {
+  flex-wrap: wrap;
+}
+.control-page-surface .gf-matrix-wrap {
+  max-width: 100%;
+  overflow: auto;
+}
+
+.control-review-date {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 16px;
+  max-width: 100%;
+}
+.control-review-date input {
+  min-width: 0;
+  max-width: 100%;
+  background: var(--ui-panel);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-line);
+  padding: 6px;
+  border-radius: 6px;
+}

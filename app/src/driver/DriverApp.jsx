@@ -1,3 +1,6 @@
+import {useDemoTrips,updateDemoTrip} from '../demo/store.jsx';
+import {asDriver,demoDrivers,demoCarrier} from '../demo/model.mjs';
+import DriverConfirmation from './DriverConfirmation.jsx';
 import DemoInbox from './DemoInbox.jsx';
 import DemoReceipt, {DemoReceiptSummary} from './DemoReceipt.jsx';
 import DayControls from './DayControls.jsx';
@@ -156,10 +159,14 @@ const navs = [
 ];
 
 export default function DriverApp() {
-  const [trips] = useState(makeTrips);
+  const sharedTrips=useDemoTrips();
+  const trips=sharedTrips.map(asDriver);
+  const [acknowledgements,setAcknowledgements]=useState(()=>{try{return JSON.parse(localStorage.getItem("ecodump-driver-confirmations-v1")||"{}");}catch{return {};}});
+  const confirmed=(t)=>Boolean(acknowledgements[`${t.date}:${t.id}:${t.driverId}:${t.vehicleId}:${t.assignmentVersion}`]);
   const [date,setDate]=useState(businessDate);
   const [endDate,setEndDate]=useState(businessDate);
-  const [events, setEvents] = useState([]);
+  const [allEvents, setEvents] = useState([]);
+  const events=allEvents.filter(e=>trips.some(t=>t.id===e.tripId&&(e.businessDay||businessDate(new Date(e.at)))===t.date));
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -187,7 +194,7 @@ export default function DriverApp() {
   const trip = trips.filter(t=>t.driverId===DEMO_DRIVER).find((t) => t.id === selected);
   const ownTrips=trips.filter(t=>t.driverId===DEMO_DRIVER);
   const todays = ownTrips.filter(t=>t.date===date);
-  const dayItems=todays.map(t=>({id:t.id,sequence:t.sequence,status:t.cancelled?'cancelled':isHeld(t.id,events)?'refused':['assigned','site_arrived','in_transit','receiver_arrived','unloaded'][tripStage(t,events)],actual:null}));
+  const dayItems=todays.map(t=>({id:t.id,sequence:t.sequence,status:t.cancelled?'cancelled':isHeld(t.id,events)?'refused':['assigned','site_arrived','in_transit','receiver_arrived','unloaded'][tripStage(t,events)],actual:t.confirmed!=null?{quantity:t.confirmed}:null,receiptStatus:t.slip==='確認済み'?'confirmed':'pending'}));
   const nextChoice=nextAssignment(dayItems);
   const next=ownTrips.find(t=>t.id===nextChoice.trip?.id);
   const currentStage = trip ? tripStage(trip, events) : 0;
@@ -233,8 +240,12 @@ export default function DriverApp() {
     setBusy(true);
     setError("");
     try {
-      const updated = [...events, event];
-      await saveDrafts(updated, events.length);
+      const source=trips.find(t=>t.id===event.tripId);
+      const datedEvent={...event,businessDay:source?.date||businessDate(new Date(event.at))};
+      const updated = [...allEvents, datedEvent];
+      await saveDrafts(updated, allEvents.length);
+      if(source){const nextStage=tripStage(source,updated.filter(e=>(e.businessDay||businessDate(new Date(e.at)))===source.date));const at=new Date(event.at).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});updateDemoTrip(source.id,t=>({...t,driverInitialStage:t.driverInitialStage??source.baseStage,driverStage:nextStage,departed:['stage','correction'].includes(event.kind)?(nextStage>=2?(nextStage===2?at:t.departed):null):t.departed,unloaded:['stage','correction'].includes(event.kind)?(nextStage>=4?at:null):t.unloaded,reception:['stage','correction'].includes(event.kind)?(nextStage>=4?'内容確認待ち':nextStage>=3?'受入中':'未到着'):t.reception,operation:['stage','correction'].includes(event.kind)?(nextStage>=4?'報告済み':nextStage>=2?'運行中':'配車済み'):t.operation,history:[...t.history,{at:event.at,message:`ドライバー端末内 ${event.kind==='stage'?stages[event.stage]:event.kind==='issue'?event.issueType:event.kind==='time'?event.timeLabel:'訂正'}（未送信）`}]}),source.assignmentVersion);}
+
       setEvents(updated);
       setDialog(null);
       setPhotos([]);
@@ -250,6 +261,8 @@ export default function DriverApp() {
   };
   const saveStage = () => {
     try {
+      if(trip.reservation!=="予約確定")throw new Error("予約変更は受入側の確認待ちです。");
+      if(!confirmed(trip))throw new Error("本人・対象便の車両を確認してください。");
       if (trip.id !== next?.id)
         throw new Error("先に現在の運行を確認してください。");
       persist(appendStage(trip, events, currentStage + 1));
@@ -351,7 +364,7 @@ export default function DriverApp() {
         <div className="trip-top">
           <span>
             {featured ? "次の運行" : `${item.sequence}便目`}{" "}
-            <span className="muted">／ {item.rotation}往復目</span>
+            <span className="muted">／ 本人の当日{item.sequence}便目</span>
           </span>
           <Chip warning={isHeld(item.id, events)}>
             {item.cancelled ? "取消" : isHeld(item.id, events) ? "受入不可・保留" : stages[stage]}
@@ -373,7 +386,7 @@ export default function DriverApp() {
             <strong>{item.to}</strong>
           </div>
         </div>
-        <small>サンプル運送会社 A · 条件は運行詳細で確認</small>
+        <small>{item.id} · {item.carrier}</small>
         <div className="trip-footer">
           <span>
             <Truck size={16} />
@@ -381,7 +394,7 @@ export default function DriverApp() {
           </span>
           <ChevronRight size={20} />
         </div>
-        {tab === "history" && <><DemoReceiptSummary tripId={item.id}/>{activeEvents(events,item.id).filter(e=>e.kind==='stage').map(e=><small key={e.id}>{stages[e.stage]} / {new Date(e.at).toLocaleString('ja-JP')}（端末内）</small>)}</>}
+        {tab === "history" && <><DemoReceiptSummary tripId={item.id} date={item.date} confirmed={item.confirmed} unit={item.unit}/>{activeEvents(events,item.id).filter(e=>e.kind==='stage').map(e=><small key={e.id}>{stages[e.stage]} / {new Date(e.at).toLocaleString('ja-JP')}（端末内）</small>)}</>}
         {stage > 0 && item.baseStage === 0 && (
           <small className="draft-note">端末内の仮進捗・管理者には未送信</small>
         )}
@@ -466,7 +479,7 @@ export default function DriverApp() {
                   {tab === "history" ? "運行履歴" : "今日の運行"}へ戻る
                 </button>
                 <div className="eyebrow">
-                  {trip.date} · {trip.rotation}往復目
+                  {trip.date} · 本人の当日{trip.sequence}便目
                 </div>
                 <h1>運行詳細</h1>
                 <p className="muted trip-id">{trip.id}</p>
@@ -482,7 +495,8 @@ export default function DriverApp() {
                       : "端末内の仮進捗"}
                   </small>
                 </div>
-                {currentStage<4&&trip.baseStage===0&&<button className="primary" disabled={!ready||busy||trip.cancelled||next?.id!==trip.id} onClick={()=>setDialog('stage')}>次の操作：{stages[currentStage+1]}を報告</button>}
+                <DriverConfirmation trip={trip} acknowledged={confirmed(trip)} onConfirm={()=>{const key=`${trip.date}:${trip.id}:${trip.driverId}:${trip.vehicleId}:${trip.assignmentVersion}`;try{const next={...acknowledgements,[key]:true};localStorage.setItem('ecodump-driver-confirmations-v1',JSON.stringify(next));setAcknowledgements(next);}catch{setError('確認状態を端末に保存できません。');}}} onMismatch={()=>{setIssueType('その他');setMemo('本人・車両・行先が割当内容と異なります。');setDialog('issue');}}/>
+                {currentStage<4&&trip.baseStage===0&&<button className="primary" disabled={!ready||busy||trip.cancelled||next?.id!==trip.id||!confirmed(trip)||trip.reservation!=="予約確定"} onClick={()=>setDialog('stage')}>次の操作：{stages[currentStage+1]}を報告</button>}
                 <section className="detail-section">
                   <h2>
                     <MapPin size={18} />
@@ -584,7 +598,7 @@ export default function DriverApp() {
                   <p className="muted">
                     荷下ろし完了は運行の完了報告です。受入実績の確定は受入側が行います。
                   </p>
-                  <Chip warning>受入実績：未確定</Chip>
+                  <Chip warning={trip.confirmed==null}>受入実績：{trip.confirmed==null?"未確定":`${trip.confirmed} ${trip.unit}（デモ）`}</Chip>
                 </section>
                 <section className="detail-section">
                   <h2>この便の端末内記録</h2>
@@ -601,7 +615,7 @@ export default function DriverApp() {
                                 ? stages[e.stage]
                                 : e.kind === "issue"
                                   ? e.issueType
-                                  : "報告の訂正"}
+                                  : e.kind === "time" ? e.timeLabel : "報告の訂正"}
                             </b>
                             <Chip warning>未送信</Chip>
                           </div>
@@ -642,9 +656,9 @@ export default function DriverApp() {
                     </button>
                   )}
                 </section>
-                <DemoReceipt key={trip.id} trip={trip}/>
-                {trip.baseStage === 0 && (
-                  <div className="report-action">
+                <section className="detail-section"><h2>待機・作業時刻の記録（端末内）</h2><p>停車中の手入力記録です。GPS・燃料の実測値とは別です。</p>{['待機開始','呼出し確認','荷下ろし開始'].map(label=><button className="secondary" key={label} disabled={!ready||busy||!confirmed(trip)} onClick={()=>persist({id:newId(),operationId:newId(),tripId:trip.id,kind:'time',timeLabel:label,at:new Date().toISOString(),delivery:'unsent'})}>{label}を記録</button>)}</section><DemoReceipt key={trip.id} trip={trip}/>
+                {currentStage < 4 && (
+                  <div className={`report-action ${confirmed(trip)?"":"unconfirmed"}`}>
                     <small>停車中に操作してください</small>
                     {isHeld(trip.id, events) ? (
                       <p className="notice-text">
@@ -653,7 +667,7 @@ export default function DriverApp() {
                     ) : currentStage < 4 ? (
                       <button
                         className="primary"
-                        disabled={!ready || busy || trip.cancelled || next?.id !== trip.id}
+                        disabled={!ready || busy || trip.cancelled || next?.id !== trip.id || !confirmed(trip) || trip.reservation!=="予約確定"}
                         onClick={() => setDialog("stage")}
                       >
                         {stages[currentStage + 1]}を報告
@@ -698,7 +712,7 @@ export default function DriverApp() {
                     }).format(new Date(`${date}T12:00:00+09:00`))}
                   </div>
                   <h1>{date===businessDate()?'今日の運行':'指定日の運行'}</h1>
-                  <p>サンプル運転者 01 さん、お疲れさまです。</p>
+                  <p>{demoDrivers[0].name} さん、お疲れさまです。</p>
                 </div>
                 <DayControls date={date} onDate={setDate} items={dayItems}/>
                 <p className="muted">進捗は端末内の表示例です。実API・受入側には未送信です。</p>
@@ -713,7 +727,7 @@ export default function DriverApp() {
                 )}
                 <div className="section-title">
                   <h2>{date===businessDate()?'本日のスケジュール':'指定日のスケジュール'}</h2>
-                  <small>同じ車両 · {todays.length}往復</small>
+                  <small>実車両 {new Set(todays.filter(t=>!t.cancelled).map(t=>t.vehicleId)).size}台 · 本人の当日{todays.length}便</small>
                 </div>
                 {todays
                   .filter((t) => t.id !== next?.id)
@@ -805,14 +819,14 @@ export default function DriverApp() {
                 <section className="profile-card">
                   <UserRound size={30} />
                   <div>
-                    <h2>サンプル運転者 01</h2>
+                    <h2>{demoDrivers[0].name}</h2>
                     <p>サンプル運送会社 A</p>
                     <small>本人割当の表示例・認証未接続</small>
                   </div>
                 </section>
                 <section className="detail-section">
                   <h2>利用車両</h2>
-                  <p>サンプル車両 01 · DEMO-001</p>
+                  <p>{demoCarrier} · 車両は各便で確認します</p>
                 </section>
                 <section className="detail-section">
                   <h2>接続状況</h2>
@@ -930,7 +944,7 @@ export default function DriverApp() {
               <p>
                 {trip.from} → {trip.to}
                 <br />
-                {trip.rotation}往復目 · {trip.id}
+                本人の当日{trip.sequence}便目 · {trip.id}
               </p>
               <p className="notice-text">
                 停車中に、実際の状況を確認してください。この試作では端末内に下書きを保存し、管理者へは送信しません。
@@ -964,7 +978,7 @@ export default function DriverApp() {
                 });
               }}
             >
-              <p className="muted">{trip.rotation}往復目 · 管理者には未送信</p>
+              <p className="muted">本人の当日{trip.sequence}便目 · 管理者には未送信</p>
               <label className="field">
                 問題の種類
                 <select

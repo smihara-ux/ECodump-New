@@ -45,12 +45,8 @@ GRANT USAGE ON SCHEMA validation TO ecodump_auth;
 GRANT SELECT ON validation.accounts TO ecodump_auth;
 GRANT SELECT,INSERT,DELETE ON validation.sessions TO ecodump_auth;`);
 export const ids={orgC:'10000000-0000-4000-8000-000000000001',orgR:'10000000-0000-4000-8000-000000000002',orgX:'10000000-0000-4000-8000-000000000003',site:'20000000-0000-4000-8000-000000000001',siteOther:'20000000-0000-4000-8000-000000000002',location:'20000000-0000-4000-8000-000000000003',locationOther:'20000000-0000-4000-8000-000000000004',vehicle:'30000000-0000-4000-8000-000000000001',vehicleOther:'30000000-0000-4000-8000-000000000002',driver:'40000000-0000-4000-8000-000000000001',driverOther:'40000000-0000-4000-8000-000000000002'};
-export const naritaIds={
- orgConstruction:'11000000-0000-4000-8000-000000000001',orgTochigi:'11000000-0000-4000-8000-000000000002',orgIbaraki:'11000000-0000-4000-8000-000000000003',orgCarrier:'11000000-0000-4000-8000-000000000004',
- siteA:'21000000-0000-4000-8000-000000000001',siteB:'21000000-0000-4000-8000-000000000002',locationTochigi:'21000000-0000-4000-8000-000000000003',locationIbaraki:'21000000-0000-4000-8000-000000000004',
- vehicle01:'31000000-0000-4000-8000-000000000001',vehicle02:'31000000-0000-4000-8000-000000000002',vehicle03:'31000000-0000-4000-8000-000000000003',
- driverAoki:'41000000-0000-4000-8000-000000000001',driverSato:'41000000-0000-4000-8000-000000000002',driverSuzuki:'41000000-0000-4000-8000-000000000003'
-};
+export {naritaIds} from '../src/demo/naritaIds.mjs';
+import {naritaIds} from '../src/demo/naritaIds.mjs';
 const names=['construction','receiver','driver','construction-other','receiver-other','driver-other','outsider'];
 const credentialsFile=path.join(local,'credentials.json');
 const credentials=existsSync(credentialsFile)?JSON.parse(await readFile(credentialsFile,'utf8')):{password:`Local-${randomBytes(12).toString('base64url')}!`,accounts:names.map((name,i)=>({name,email:`${name}@sample.invalid`,id:`50000000-0000-4000-8000-${String(i+1).padStart(12,'0')}`}))};

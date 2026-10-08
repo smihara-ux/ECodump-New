@@ -487,3 +487,4 @@
 .control-app-shell .receiving-home .schedule-switches>.receiving-toolbar>span{display:none}
 .control-app-shell .receiving-home .schedule-switches>.receiving-quota-note{flex:0 0 auto}
 }
+.receiving-sticky-controls{position:sticky;top:0;z-index:12;background:var(--ui-panel);padding:8px;border-radius:8px;box-shadow:0 5px 8px #00000008}.receiving-sticky-controls .receiving-toolbar{margin-bottom:0}.receiving-sticky-controls .schedule-switches{flex-wrap:wrap}.control-app-shell .receiving-workspace .daily-capacity form input,.control-app-shell .daily-capacity select{min-height:44px;max-width:100%}@media(max-width:760px){.receiving-sticky-controls{max-height:190px;overflow:auto}.receiving-sticky-controls .receiving-quota-note{display:none}}

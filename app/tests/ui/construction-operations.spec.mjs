@@ -61,10 +61,10 @@ for (const theme of ["light", "dark"]) {
 test("未搬出の状態と検索を実績へ引き継ぎ、空の日付で壊れない", async ({page})=>{
  await page.goto(entry);
  await page.getByRole("button",{name:/未搬出便 1便/}).click();
- await page.getByRole("textbox",{name:"検索",exact:true}).fill("34-56");
+ await page.getByRole("textbox",{name:"検索",exact:true}).fill("TR-20260820-04");
  await page.getByRole("button",{name:"搬出実績を見る",exact:true}).click();
  await expect(page.getByRole("combobox",{name:"状態",exact:true})).toHaveValue("未搬出");
- await expect(page.getByRole("textbox",{name:"検索",exact:true})).toHaveValue("34-56");
+ await expect(page.getByRole("textbox",{name:"検索",exact:true})).toHaveValue("TR-20260820-04");
  await expect(page.locator(".construction-kpis article").first()).toContainText("1");
  await page.getByRole("button",{name:"搬出管理へ戻る",exact:true}).click();
  const date=await page.getByLabel("搬出管理の対象日").inputValue();

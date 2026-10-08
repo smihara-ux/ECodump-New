@@ -26,7 +26,7 @@ export function constructionTrips(plans, baseDate = todayJst()) {
     return {
       ...plan,
       date: addDays(baseDate, offset),
-      tripNo: `${index + 1}便目`,
+      tripNo: `${plans.slice(0,index+1).filter(p=>p.vehicle&&p.vehicle===plan.vehicle&&p.day===plan.day).length}便目`,
       carrier: index % 2 ? "モデル運送 B〈架空〉" : "モデル運送 A〈架空〉",
       siteScheduledAt: plan.departAt,
       receivingScheduledAt: plan.arriveAt,
@@ -62,7 +62,7 @@ export function summarizeTrips(rows) {
   values.quantities = ["m³", "t"].map((unit) => {
     const unitRows = rows.filter((row) => isActiveTrip(row) && row.unit === unit);
     const planned = unitRows.reduce((sum, row) => sum + row.planned, 0);
-    const reported = unitRows.reduce((sum, row) => sum + (row.reported || 0), 0);
+    const reported = rows.filter(row=>isActiveTrip(row)&&(row.reportedUnit||row.unit)===unit).reduce((sum,row)=>sum+(row.reported||0),0);
     const confirmedRows = rows.filter(row => row.unit === unit && row.confirmed != null);
     const confirmed = confirmedRows.reduce((sum, row) => sum + row.confirmed, 0);
     const remaining = unitRows.filter(row => row.confirmed == null).reduce((sum, row) => sum + row.planned, 0);

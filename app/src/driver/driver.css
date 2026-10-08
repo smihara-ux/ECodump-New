@@ -1057,3 +1057,7 @@ body:has(.driver-preview) {
 .demo-receipt form{display:grid;gap:12px}.demo-receipt label{display:grid;gap:6px}.demo-receipt input,.demo-receipt select{width:100%;min-width:0;max-width:100%;box-sizing:border-box;min-height:44px;font-size:16px}.demo-receipt button{min-height:44px;white-space:normal}.demo-receipt{overflow-wrap:anywhere}
 
 .driver-day-actions button{color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px}.driver-day-controls p{margin:8px 0}.driver-day-controls small{font-size:12px}
+
+.driver-confirmation strong{display:block;font-size:24px;line-height:1.4}.driver-confirmation .primary,.driver-confirmation .secondary{width:100%;min-height:48px;white-space:normal;margin-top:10px}.driver-confirmation small{display:block;line-height:1.6;margin-top:10px}
+
+.report-action.unconfirmed{position:static;bottom:auto}

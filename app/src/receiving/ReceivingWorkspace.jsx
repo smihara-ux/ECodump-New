@@ -1,9 +1,12 @@
+import {useDemoTrips,writeDemoTrips,demoNotice} from '../demo/store.jsx';
+import {asReceiving,mergeReceiving,demoLocations,demoSites,demoCompany} from '../demo/model.mjs';
+import DailyCapacity from './DailyCapacity.jsx';
 import TripList,{demoReportRows,transportRows} from './TripList';
 import {downloadTransportWorkbook,reportTotals} from '../reports/transportReport.mjs';
 import DateControls from './DateControls';
 import {useReceivingView,useListPosition} from './viewState';
 import CapacityChart from './CapacityChart';
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import HomeDrilldown, {SiteSummary, QuantitySummary} from "./HomeDrilldown";
 import {filters} from "./receivingSummary.mjs";
 import {
@@ -36,9 +39,16 @@ export const receivingPages = [
 ];
 export function useReceivingWorkspace() {
   const [locations, setLocations] = useState(() =>
-    structuredClone(seedLocations),
+    seedLocations.slice(0,2).map((l,i)=>({...structuredClone(l),...demoLocations[i]})),
   );
-  const [trips, setTrips] = useState(createDemoTrips);
+  const sharedTrips=useDemoTrips();
+  const trips=sharedTrips.map(asReceiving);
+  const setTrips=(update)=>writeDemoTrips(previous=>{
+    const before=previous.map(asReceiving),next=typeof update==='function'?update(before):update;
+    return next.map(r=>{const old=previous.find(t=>t.id===r.id);if(old)return mergeReceiving(old,r);
+      const site=demoSites.find(s=>s.name===r.site),location=demoLocations.find(l=>l.id===r.locationId);
+      return {...r,siteId:site?.id||r.site,departure:r.site,destination:location?.name||'未設定',company:r.partner||demoCompany,driverId:r.driverId||'',vehicleId:r.vehicleId||'',departAt:r.departAt||'08:30',arriveAt:r.eta,booking:'有効',reported:null,confirmed:null,received:null,slip:'未提出',material:r.soil,assignmentVersion:1,operation:'未手配',issue:'なし',correctionHistory:'訂正なし',history:r.history||[]};});
+  });
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState("Y-01");
   const [reservationDraft, setReservationDraft] = useState(null);
@@ -63,7 +73,7 @@ export function PrototypeNotice() {
     <div className="receiving-prototype" role="note">
       <b>受入側の操作試作 · API未接続</b>
       <span>
-        変更はこの画面を開いている間だけ保持されます。再読込でリセットされ、相手への送信・DB保存は行いません。
+        {demoNotice}
       </span>
     </div>
   );
@@ -113,7 +123,7 @@ export function ReceivingWorkspace({ page, model: m, navigate }) {
           newReservation={newReservation}
         />
       )}
-      {page === "受入場所管理" && <><div className="receiving-prototype" role="note">容量の定義は未確定です。以下の数量設定はサンプルで、物理容量・月間処理能力・契約枠の空き容量を示しません。</div><Locations m={m} /></>}
+      {page === "受入場所管理" && <><div className="receiving-prototype" role="note">容量の定義は未確定です。以下の数量設定はサンプルで、物理容量・月間処理能力・契約枠の空き容量を示しません。</div><Locations m={m} /><DailyCapacity locations={m.locations} trips={m.trips}/></>}
       {page === "搬入予約・受付" && (
         <Reservations
           m={m}
@@ -160,7 +170,7 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
   const counts = ['有効予定','未到着','待機','受入中','受入完了','取消','未確認伝票'].map(label=>[label,filtered.filter(filters[label]).length,Truck]);
   return (
     <div className="transport-page receiving-home" ref={homeRef}>
-      <div className="schedule-switches">
+      <div className="receiving-sticky-controls"><div className="schedule-switches">
         <DateControls value={day} onChange={setDay} todayValue={baseDate}/>
         <button onClick={()=>navigate('受入実績・帳票')}>受入実績を見る</button><details className="receiving-quota-note"><summary>受入枠と残量：算定条件未設定</summary><p>日次枠は受入場所管理で確認できます。契約枠・物理容量とは別です。未消化予約、部分受入、取消・訂正の消化ルールと同時予約の制御は決定待ちのため、受入可能残量・新規予約可能量は算出していません。</p><button onClick={()=>navigate('受入場所管理')}>受入条件・日次枠の設定を見る</button></details>
         <div className="view-switch">
@@ -210,7 +220,7 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
           直接予約を試す
         </button>}
       </div>
-      <div className="receiving-kpis">
+      </div>      <div className="receiving-kpis">
         {counts.map(([label, count, Icon]) => (
           <article key={label}><button onClick={()=>show(filtered,label)} aria-label={`${label}の明細`}>
             <span>
@@ -451,7 +461,7 @@ function Locations({ m }) {
                 onChange={(e) => change("capacity", Number(e.target.value))}
               />
             </Field>
-            <Field label="1予約枠の上限（台）">
+            <Field label="1予約枠の上限（便）">
               <input
                 type="number"
                 min="1"
@@ -510,7 +520,7 @@ function Locations({ m }) {
                   ["休業日", location.holidays],
                   ["受入可能土質", location.soil],
                   ["受入可能数量", `${location.capacity} m³`],
-                  ["予約枠", `${location.slots}（各${location.slotLimit}台）`],
+                  ["予約枠", `${location.slots}（各${location.slotLimit}便）`],
                   ["公開注意事項", location.notes],
                 ].map(([k, v]) => (
                   <div key={k}>
@@ -557,6 +567,7 @@ function Locations({ m }) {
 function Reservations({ m, openTrip, newReservation }) {
   const [filter, setFilter] = useState("すべて");
   const [query, setQuery] = useState("");
+  useEffect(()=>{const id=sessionStorage.getItem('ecodump-receiving-focus');if(id){sessionStorage.removeItem('ecodump-receiving-focus');m.setSelectedTrip(id);}},[]);
   const selected = m.trips.find((t) => t.id === m.selectedTrip);
   const list = m.trips.filter(
     (t) =>
@@ -1016,7 +1027,7 @@ function Results({m,openTrip,navigate}){
  const csv=()=>{const url=URL.createObjectURL(new Blob([receiptCsv(trips)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='ECO_DUMP_受入実績_試作.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
  const trips=m.trips.filter(t=>(receiptState==='すべて'||t.receipt===receiptState)&&t.date>=screen.date&&t.date<=end&&(screen.locationId==='すべて'||t.locationId===screen.locationId)&&(!source||t.site===source)&&`${t.id}${t.site}${t.vehicle}${m.locations.find(l=>l.id===t.locationId)?.name}`.includes(screen.query||''));
  const rows=demoReportRows(trips,m.locations);
- return <section ref={root}><button onClick={()=>navigate('搬出・受入スケジュール')}>受入管理へ戻る</button><h2>受入実績・帳票（共有デモ）</h2><p>画面とExcelは同じ対象便。予定・報告・受入確定数量を分離。確定合計は受入確定値のみ、取消後の確定実績は保持。tとm³は別集計です。</p><div className="receiving-toolbar"><DateControls value={screen.date} onChange={date=>{update({date});setEnd(date);}} todayValue={demoDate}/><label>期間終了<input type="date" min={screen.date} value={end} onChange={e=>e.target.value&&setEnd(e.target.value<screen.date?screen.date:e.target.value)}/></label><label>受入場所<select value={screen.locationId} onChange={e=>update({locationId:e.target.value})}><option>すべて</option>{m.locations.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</select></label><label>搬出元<select value={source} onChange={e=>setSource(e.target.value)}><option value="">すべて</option>{[...new Set(m.trips.map(t=>t.site))].map(s=><option key={s}>{s}</option>)}</select></label><label>検索<input value={screen.query} onChange={e=>update({query:e.target.value})}/></label><label>実績確定状態<select value={receiptState} onChange={e=>update({receiptState:e.target.value})}>{['すべて','未確定','内容確認済み','実績確定'].map(s=><option key={s}>{s}</option>)}</select></label><button onClick={csv}>試作CSVを出力</button><button disabled={busy} onClick={async()=>{setBusy(true);try{await downloadTransportWorkbook(rows,{context:'受入',period:`${screen.date}〜${end}`,sample:true,filters:{受入場所:m.locations.find(l=>l.id===screen.locationId)?.name||screen.locationId,搬出元:source||'すべて',検索:screen.query||'指定なし',実績確定状態:receiptState}});}catch(e){setError(e.message);}finally{setBusy(false);}}}>{busy?'作成中…':'Excel帳票を出力'}</button></div>{error&&<p role="alert">{error}</p>}{reportTotals(rows).map(t=><p key={t.unit}>{t.unit}：対象{t.count}件 / {t.vehicles}台 / 有効予定{t.planned} / 報告{t.reported} / 受入確定{t.confirmed} / 未確定{t.pending}件 / 取消・受入不可{t.cancelled}件</p>)}<TripList rows={rows} onOpen={openTrip}/></section>;
+ return <section ref={root}><button onClick={()=>navigate('搬出・受入スケジュール')}>受入管理へ戻る</button><h2>受入実績・帳票（共有デモ）</h2><p>画面とExcelは同じ対象便。予定・報告・受入確定数量を分離。確定合計は受入確定値のみ、取消後の確定実績は保持。tとm³は別集計です。</p><div className="receiving-toolbar receiving-sticky-controls"><DateControls value={screen.date} onChange={date=>{update({date});setEnd(date);}} todayValue={demoDate}/><label>期間終了<input type="date" min={screen.date} value={end} onChange={e=>e.target.value&&setEnd(e.target.value<screen.date?screen.date:e.target.value)}/></label><label>受入場所<select value={screen.locationId} onChange={e=>update({locationId:e.target.value})}><option>すべて</option>{m.locations.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</select></label><label>搬出元<select value={source} onChange={e=>setSource(e.target.value)}><option value="">すべて</option>{[...new Set(m.trips.map(t=>t.site))].map(s=><option key={s}>{s}</option>)}</select></label><label>検索<input value={screen.query} onChange={e=>update({query:e.target.value})}/></label><label>実績確定状態<select value={receiptState} onChange={e=>update({receiptState:e.target.value})}>{['すべて','未確定','内容確認済み','実績確定'].map(s=><option key={s}>{s}</option>)}</select></label><button onClick={csv}>試作CSVを出力</button><button disabled={busy} onClick={async()=>{setBusy(true);try{await downloadTransportWorkbook(rows,{context:'受入',period:`${screen.date}〜${end}`,sample:true,filters:{受入場所:m.locations.find(l=>l.id===screen.locationId)?.name||screen.locationId,搬出元:source||'すべて',検索:screen.query||'指定なし',実績確定状態:receiptState}});}catch(e){setError(e.message);}finally{setBusy(false);}}}>{busy?'作成中…':'Excel帳票を出力'}</button></div>{error&&<p role="alert">{error}</p>}{reportTotals(rows).map(t=><p key={t.unit}>{t.unit}：対象{t.count}件 / {t.vehicles}台 / 有効予定{t.planned} / 報告{t.reported} / 受入確定{t.confirmed} / 未確定{t.pending}件 / 取消・受入不可{t.cancelled}件</p>)}<TripList rows={rows} onOpen={openTrip}/></section>;
 }
 
 function Settings({ navigate, newReservation }) {

@@ -19,17 +19,17 @@ export function demoReportRows(trips, locations) {
     site: t.site,
     soil: t.soil || "未登録",
     vehicle: t.vehicle,
-    vehicleId: t.vehicle === "未配車" ? "" : t.vehicle,
+    vehicleId: t.vehicleId || (t.vehicle === "未配車" ? "" : t.vehicle),
     driver: t.driver || "未登録",
     carrier: t.carrier || "未登録",
     plannedAt: `${t.date}T${t.eta}:00+09:00`,
     planned: Number(t.planned),
     unit: t.unit,
     reported:
-      t.driverReport && t.actual != null && t.actual !== ""
-        ? Number(t.actual)
+      t.reported != null && t.reported !== ""
+        ? Number(t.reported)
         : null,
-    reportedUnit: t.unit,
+    reportedUnit: t.reportedUnit || t.unit,
     confirmed: t.receipt === "実績確定" ? Number(t.actual) : null,
     confirmedUnit: t.unit,
     cancelled: ["取消", "受入不可"].includes(t.reservation),

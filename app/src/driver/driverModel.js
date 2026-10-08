@@ -1,3 +1,6 @@
+import {naritaIds} from '../demo/naritaIds.mjs';
+import {createNaritaDemo} from '../demo/model.mjs';
+import {asDriver} from '../demo/model.mjs';
 // UUID fallback also supports local LAN HTTP previews.
 export function newId() {
   if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
@@ -9,7 +12,7 @@ export function newId() {
     .join("");
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
-export const DEMO_DRIVER = "demo-driver-01";
+export const DEMO_DRIVER = naritaIds.driverAoki;
 export const stages = [
   "配車済み",
   "現場到着",
@@ -41,46 +44,7 @@ export function businessDate(date = new Date()) {
     day: "2-digit",
   }).format(date);
 }
-export function makeTrips() {
-  const today = businessDate();
-  const yesterday = businessDate(new Date(Date.now() - 86400000));
-  return [
-    ...["08:30", "10:30", "13:30"].map((time, i) => ({
-      id: `TR-${today}-0${i + 1}`,
-      driverId: DEMO_DRIVER,
-      date: today,
-      sequence: i + 1,
-      rotation: i + 1,
-      time,
-      arrival: ["09:15", "11:15", "14:15"][i],
-      from: "サンプル現場 A",
-      to: "サンプル受入場所 B",
-      vehicle: "サンプル車両 01",
-      registration: "DEMO-001",
-      soil: "建設発生土（砂質土）",
-      quantity: 7,
-      unit: "m³",
-      baseStage: 0,
-    })),
-    {
-      id: `TR-${yesterday}-01`,
-      driverId: DEMO_DRIVER,
-      date: yesterday,
-      sequence: 1,
-      rotation: 1,
-      time: "09:00",
-      arrival: "09:45",
-      from: "サンプル現場 A",
-      to: "サンプル受入場所 B",
-      vehicle: "サンプル車両 01",
-      registration: "DEMO-001",
-      soil: "建設発生土（砂質土）",
-      quantity: 7,
-      unit: "m³",
-      baseStage: 4,
-    },
-  ];
-}
+export function makeTrips() {return createNaritaDemo().map(asDriver);}
 export function activeEvents(events, tripId) {
   const cancelled = new Set(
     events
