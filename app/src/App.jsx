@@ -3,7 +3,7 @@ import ReceivingLocationsConnected from './receiving/ReceivingLocationsConnected
 import ReceivingConnected from './receiving/ReceivingConnected';
 import CapacityChart from './receiving/CapacityChart';
 import ReceivingTripMap from './receiving/ReceivingTripMap';
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { ReceivingWorkspace, useReceivingWorkspace, receivingPages, PrototypeNotice } from "./receiving/ReceivingWorkspace.jsx";
 import { databaseMode } from "./lib/databaseConfig";
@@ -91,11 +91,7 @@ const constructionNavGroups = [
   },
   {
     title: "現場サービス",
-    items: [
-      [FileText, "労務安全", "労務安全"],
-      [DoorOpen, "入退場管理", "入退場管理"],
-      [CalendarDays, "調整会議", "調整会議"],
-    ],
+    items: [[FileText, "労務安全", "労務安全"]],
   },
   {
     title: "実績管理",
@@ -109,6 +105,7 @@ const constructionNavGroups = [
       [Building2, "会社情報", "会社情報"],
       [UserRound, "ユーザー", "ユーザー一覧"],
       [BusFront, "車両・運転手", "車両一覧"],
+      [UsersRound, "ドライバー検索", "ドライバー検索"],
     ],
   },
   {
@@ -132,9 +129,8 @@ const routeKeys = {
   現場詳細: "field",
   "搬出・受入スケジュール": "transport",
   車両一覧: "vehicles",
+  ドライバー検索: "drivers",
   労務安全: "labor",
-  入退場管理: "gatekeeper",
-  調整会議: "conference",
   会社情報: "company",
   ユーザー一覧: "users",
   代行先一覧: "agencies",
@@ -147,7 +143,9 @@ const routeKeys = {
 };
 
 const pageFromLocation = () => {
-  const target = new URLSearchParams(location.search).get("page");
+  const params = new URLSearchParams(location.search);
+  const target = params.get("page");
+  if (target === "labor" && params.get("role") === "receiving") return "搬出・受入スケジュール";
   return (
     Object.entries(routeKeys).find(([, key]) => key === target)?.[0] ||
     "搬出・受入スケジュール"
@@ -772,7 +770,6 @@ function FieldList({
   navigate,
   onOperatorSelect,
 }) {
-  const [serviceFilter, setServiceFilter] = useState("すべて");
   const [includeEnded, setIncludeEnded] = useState(false);
   const filtered = useMemo(
     () =>
@@ -781,7 +778,7 @@ function FieldList({
           .toLowerCase()
           .includes(query.toLowerCase()),
       ),
-    [query, records, serviceFilter, includeEnded],
+    [query, records, includeEnded],
   );
   return (
     <>
@@ -792,19 +789,6 @@ function FieldList({
         placeholder="現場名/IDを入力"
         extra={
           <>
-            <label>
-              利用サービス{" "}
-              <select
-                value={serviceFilter}
-                onChange={(event) => setServiceFilter(event.target.value)}
-                aria-label="利用サービス"
-              >
-                <option>すべて</option>
-                <option>書類</option>
-                <option>入退場</option>
-                <option>会議</option>
-              </select>
-            </label>
             <label className="check">
               <input
                 type="checkbox"
@@ -818,7 +802,6 @@ function FieldList({
         onDetail={() => setDetailOpen(true)}
         onClear={() => {
           setQuery("");
-          setServiceFilter("すべて");
           setIncludeEnded(false);
         }}
       />
@@ -855,7 +838,7 @@ function FieldList({
           role="region"
           aria-label="現場一覧。横方向にスクロールできます"
         >
-          <table className="field-list-table">
+          <table className="field-list-table field-list-transport-only">
             <colgroup>
               <col className="field-col-company" />
               <col className="field-col-branch" />
@@ -864,7 +847,6 @@ function FieldList({
               <col className="field-col-date" />
               <col className="field-col-date" />
               <col className="field-col-status" />
-              <col className="field-col-services" />
             </colgroup>
             <thead>
               <tr>
@@ -876,7 +858,6 @@ function FieldList({
                   "着工日",
                   "竣工日",
                   "ステータス",
-                  "利用中のサービス",
                 ].map((x) => (
                   <th key={x}>{x}</th>
                 ))}
@@ -939,46 +920,6 @@ function FieldList({
                   <td>{r.end}</td>
                   <td>
                     <span className="field-status">稼働中</span>
-                  </td>
-                  <td>
-                    <div className="service-strip">
-                      <a
-                        href="?page=labor"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSelected(r.id);
-                          navigate("労務安全");
-                        }}
-                        aria-label="労務安全を開く"
-                      >
-                        <FileText />
-                        <span>書類</span>
-                      </a>
-                      <a
-                        href="?page=gatekeeper"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSelected(r.id);
-                          navigate("入退場管理");
-                        }}
-                        aria-label="入退場管理を開く"
-                      >
-                        <DoorOpen />
-                        <span>入退場</span>
-                      </a>
-                      <a
-                        href="?page=conference"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSelected(r.id);
-                          navigate("調整会議");
-                        }}
-                        aria-label="調整会議を開く"
-                      >
-                        <CalendarDays />
-                        <span>会議</span>
-                      </a>
-                    </div>
                   </td>
                 </tr>
               ))}
@@ -1294,6 +1235,33 @@ function CreateRecordModal({ type, onClose, onSave }) {
     </div>
   );
 }
+function DriverSearchPage({ query, setQuery, setConfirm }) {
+  const visible = drivers.filter((driver) =>
+    Object.values(driver).join(" ").includes(query.trim()),
+  );
+  return (
+    <section className="driver-search-page">
+      <p>ドライバーの氏名・電話番号・免許区分・配車状況から検索できます。</p>
+      <form className="action-strip" onSubmit={(event) => event.preventDefault()}>
+        <label>検索<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="ドライバーの氏名・電話番号などを入力" /></label>
+        <button className="primary" type="submit"><Search />検索</button>
+        <button className="outline" type="button" onClick={() => setQuery("")}>クリア</button>
+      </form>
+      <p role="status">検索結果：{visible.length}件</p>
+      <GridTable
+        headers={["ドライバー名", "電話番号", "免許区分", "免許期限", "配車状況", "詳細"]}
+        rows={visible.map((driver) => [driver.name, driver.phone, driver.license, driver.expires, driver.status, "__confirm"])}
+        confirmLabel="ドライバー情報"
+        onConfirm={(index) => {
+          const driver = visible[index];
+          setConfirm({ title: driver.name, message: `電話番号：${driver.phone}／免許区分：${driver.license}／免許期限：${driver.expires}／配車状況：${driver.status}` });
+        }}
+      />
+      {!visible.length && <p>該当するドライバーがいません。検索条件を変更してください。</p>}
+    </section>
+  );
+}
+
 function VehiclePage({ query, setQuery, setDetailOpen, setConfirm }) {
   const [createOpen, setCreateOpen] = useState(false);
   const [vehicleRows, setVehicleRows] = useState(vehicles);
@@ -2058,7 +2026,7 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
   );
   const tabs = role === "construction"
     ? ["概要", "搬出条件", "搬出予定", "車両・運転手", "運行状況", "入退場・写真・伝票", "数量実績", "書類", "協力会社"]
-    : ["運行マップ", "概要", "協力会社", "入退場", "搬出・受入", "車両・運転手"];
+    : ["運行マップ", "概要", "協力会社", "搬出・受入", "車両・運転手"];
   return (
     <section className="field-detail-page">
       <div className="field-detail-hero">
@@ -2138,10 +2106,6 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
         <div className="field-dashboard">
           <div className="field-kpis">
             <div>
-              <span>本日の入場者</span>
-              <b>18名</b>
-            </div>
-            <div>
               <span>本日の車両</span>
               <b>{Math.max(fieldPlans.length, 2)}台</b>
             </div>
@@ -2163,14 +2127,11 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
               </span>
               <ChevronRight />
             </button>
-            <button onClick={() => setTab(role === "construction" ? "入退場・写真・伝票" : "入退場")}>
-              <DoorOpen />
-              <span>
-                <b>入退場</b>
-                <small>作業員・車両の入退場状況</small>
-              </span>
+            {role === "construction" && <button onClick={() => setTab("入退場・写真・伝票")}>
+              <FileText />
+              <span><b>運行記録・写真・伝票</b><small>車両の到着・出発と原本伝票を確認</small></span>
               <ChevronRight />
-            </button>
+            </button>}
             <button onClick={() => setTab(role === "construction" ? "搬出予定" : "搬出・受入")}>
               <Truck />
               <span>
@@ -2184,14 +2145,6 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
               <span>
                 <b>車両・運転手</b>
                 <small>配車情報と担当者</small>
-              </span>
-              <ChevronRight />
-            </button>
-            <button onClick={() => navigate("調整会議")}>
-              <CalendarDays />
-              <span>
-                <b>現場掲示板</b>
-                <small>予定・連絡事項を確認</small>
               </span>
               <ChevronRight />
             </button>
@@ -2304,27 +2257,6 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           </div>
         </div>
       )}
-      {tab === "入退場" && (
-        <div className="field-section">
-          <div className="section-heading">
-            <div>
-              <h2>本日の入退場</h2>
-              <p>この現場に入場している作業員と車両を確認できます。</p>
-            </div>
-            <button className="primary" onClick={() => navigate("入退場管理")}>
-              入退場管理を開く
-            </button>
-          </div>
-          <GridTable
-            headers={["区分", "氏名／車両", "入場時刻", "退場時刻", "状態"]}
-            rows={[
-              ["作業員", "サンプル 作業員1", "07:48", "—", "入場中"],
-              ["車両", "10t ダンプ 01", "08:22", "09:58", "退場済み"],
-              ["作業員", "サンプル 作業員2", "08:05", "—", "入場中"],
-            ]}
-          />
-        </div>
-      )}
       {tab === "搬出・受入" && (
         <TransportSchedulePage
           setConfirm={setConfirm}
@@ -2367,8 +2299,44 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
   );
 }
 function CompanyPage({ setConfirm }) {
-  const [tab, setTab] = useState("本社情報"),
-    [editing, setEditing] = useState(false);
+  const [tab, setTab] = useState("本社情報");
+  const [editingTabs, setEditingTabs] = useState({});
+  const [savedValues, setSavedValues] = useState({});
+  const [draftValues, setDraftValues] = useState({});
+  const [feedback, setFeedback] = useState("");
+  const detailRef = useRef(null);
+  const scrollPositions = useRef({});
+  const editing = !!editingTabs[tab];
+  useLayoutEffect(() => {
+    if (detailRef.current) detailRef.current.scrollTop = scrollPositions.current[tab] || 0;
+  }, [tab]);
+  const changeTab = nextTab => {
+    scrollPositions.current[tab] = detailRef.current?.scrollTop || 0;
+    setFeedback("");
+    setTab(nextTab);
+  };
+  const startEditing = () => {
+    setDraftValues(values => ({ ...values, [tab]: { ...savedValues[tab] } }));
+    setEditingTabs(tabs => ({ ...tabs, [tab]: true }));
+    setFeedback("");
+  };
+  const cancelEditing = () => {
+    setEditingTabs(tabs => ({ ...tabs, [tab]: false }));
+    setFeedback("編集をキャンセルしました。");
+  };
+  const saveEditing = event => {
+    event.preventDefault();
+    if (!editing) return;
+    setSavedValues(values => ({ ...values, [tab]: { ...draftValues[tab] } }));
+    setEditingTabs(tabs => ({ ...tabs, [tab]: false }));
+    setFeedback("この画面に反映しました。ページを離れると変更はリセットされます。");
+  };
+  const renderValue = (key, label, original) => {
+    const value = (editing ? draftValues : savedValues)[tab]?.[key] ?? original;
+    return editing ? <input aria-label={label} required value={value}
+      onChange={event => setDraftValues(values => ({ ...values,
+        [tab]: { ...values[tab], [key]: event.target.value } }))} /> : value;
+  };
   const infoRows = [
     ["種別", "法人"],
     ["会社名", "サンプル株式会社"],
@@ -2440,12 +2408,29 @@ function CompanyPage({ setConfirm }) {
     ["外国人就労者情報", [["外国人就労者受入有無", "受入なし"]]],
   ];
   return (
-    <>
-      <div className="company-tabs">
+    <section className="company-workspace" aria-label="会社情報の内容">
+      <div className="company-tabs" role="tablist" aria-label="会社情報の項目">
         {["本社情報", "CCUS連携情報", "労務安全項目", "支店情報"].map((x) => (
           <button
+            type="button"
             className={tab === x ? "active" : ""}
-            onClick={() => setTab(x)}
+            role="tab"
+            id={`company-tab-${x}`}
+            aria-selected={tab === x}
+            aria-controls="company-details"
+            tabIndex={tab === x ? 0 : -1}
+            onKeyDown={event => {
+              const tabs = Array.from(event.currentTarget.parentElement.querySelectorAll('[role="tab"]'));
+              const index = tabs.indexOf(event.currentTarget);
+              const next = event.key === "ArrowRight" ? (index + 1) % tabs.length
+                : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length
+                : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
+              if (next === null) return;
+              event.preventDefault();
+              tabs[next].focus();
+              tabs[next].click();
+            }}
+            onClick={() => changeTab(x)}
             key={x}
           >
             {x}
@@ -2454,21 +2439,30 @@ function CompanyPage({ setConfirm }) {
       </div>
       {tab !== "CCUS連携情報" && tab !== "支店情報" && (
         <div className="company-actions">
-          <button className="primary" onClick={() => setEditing((v) => !v)}>
-            {editing ? "保存" : "編集"}
-          </button>
+          <div className="company-edit-controls">
+            {editing ? <>
+              <button className="primary" type="submit" form="company-details-form">保存</button>
+              <button className="outline" type="button" onClick={cancelEditing}>キャンセル</button>
+            </> : <button className="primary" type="button" onClick={startEditing}>編集</button>}
+            <small role="status">{feedback || (editing ? "画面内の編集です。サーバーへは保存されません。" : "")}</small>
+          </div>
           <span>
             更新した情報を労務安全書類に反映するには書類の更新が必要です。
           </span>
         </div>
       )}
+      <form id="company-details-form" className="company-details-scroll" ref={detailRef}
+        onSubmit={saveEditing} onScroll={event => { scrollPositions.current[tab] = event.currentTarget.scrollTop; }}
+        onInvalid={event => event.target.scrollIntoView({ block: "center" })}
+        aria-label="会社情報の詳細" tabIndex={0}>
+      <div id="company-details" role="tabpanel" aria-labelledby={`company-tab-${tab}`}>
       {tab === "本社情報" && (
         <section className="company-card">
           <h3>基本情報</h3>
           {infoRows.map(([a, b]) => (
             <div className="info-row" key={a}>
               <b>{a}</b>
-              <span>{editing ? <input defaultValue={b} /> : b}</span>
+              <span>{renderValue(a, a, b)}</span>
             </div>
           ))}
         </section>
@@ -2490,6 +2484,7 @@ function CompanyPage({ setConfirm }) {
           </div>
           <div className="sub-actions">
             <button
+            type="button"
               key="ccus-admin-edit"
               className="outline"
               onClick={() => setConfirm({ title: "CCUS基本情報を編集" })}
@@ -2497,6 +2492,7 @@ function CompanyPage({ setConfirm }) {
               基本情報を編集
             </button>
             <button
+            type="button"
               className="outline"
               onClick={() => setConfirm({ title: "連携ユーザーを編集" })}
             >
@@ -2524,6 +2520,7 @@ function CompanyPage({ setConfirm }) {
                 "サンプル管理者",
                 "未登録",
                 <button
+            type="button"
                   key="ccus-row-edit"
                   className="outline"
                   onClick={() => setConfirm({ title: "管理者情報を編集" })}
@@ -2534,6 +2531,7 @@ function CompanyPage({ setConfirm }) {
             ]}
           />
           <button
+            type="button"
             className="primary"
             onClick={() => setConfirm({ title: "CCUS管理者ID追加" })}
           >
@@ -2549,7 +2547,7 @@ function CompanyPage({ setConfirm }) {
               {rows.map(([a, b]) => (
                 <div className="info-row" key={a}>
                   <b>{a}</b>
-                  <span>{editing ? <input defaultValue={b} /> : b}</span>
+                  <span>{renderValue(`${title}:${a}`, `${title} ${a}`, b)}</span>
                 </div>
               ))}
             </div>
@@ -2563,6 +2561,7 @@ function CompanyPage({ setConfirm }) {
           <p>支店の新規作成・編集・停止は企業管理者が行えます。</p>
           <p>企業管理者の権限を持つユーザーが設定されていません。</p>
           <button
+            type="button"
             className="primary"
             onClick={() =>
               setConfirm({
@@ -2575,7 +2574,9 @@ function CompanyPage({ setConfirm }) {
           </button>
         </section>
       )}
-    </>
+      </div>
+      </form>
+    </section>
   );
 }
 function OrganizationPage() {
@@ -2777,25 +2778,13 @@ function AgencyPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
   );
 }
 
-const greenMenus = [
-  "書類状況一覧",
-  "新規入場時等教育実施報告書",
-  "【元請会社】新規入場者調査票",
-  "その他の安全書類",
-  "元請帳票の確認",
-  "配下協力会社検索",
-  "配下作業員検索（送り出し教育）",
-  "是正依頼内容の確認・返信",
-  "書類一括出力",
-  "共通メニュー",
-  "現場掲示板",
-];
+const greenMenus = ["書類状況一覧", "元請帳票の確認", "配下協力会社検索", "ドライバー検索"];
 
 function GfFilter({ worker = false, onClose, onSearch }) {
   return (
     <div className="gf-filter">
       <div className="gf-filter-head">
-        <b>{worker ? "作業員検索" : "協力会社検索"}</b>
+        <b>{worker ? "ドライバー検索" : "協力会社検索"}</b>
         <button onClick={onClose}>
           <X />
         </button>
@@ -2809,7 +2798,7 @@ function GfFilter({ worker = false, onClose, onSearch }) {
           </select>
         </label>
         <label>
-          {worker ? "作業員氏名" : "会社名（部分一致）"}
+          {worker ? "ドライバー氏名" : "会社名（部分一致）"}
           <input placeholder="入力してください" />
         </label>
         {worker && (
@@ -2894,9 +2883,9 @@ function GfFilter({ worker = false, onClose, onSearch }) {
 function GreenDocumentList({ title, setConfirm }) {
   const [filter, setFilter] = useState(false);
   const [otherTab, setOtherTab] = useState("書類の確認・提出");
-  const isSurvey = title.includes("新規入場者調査票");
-  const isOther = title === "その他の安全書類";
-  const isReport = title.includes("教育実施報告書");
+  const isSurvey = false;
+  const isOther = false;
+  const isReport = false;
   const isOwner = title === "元請帳票の確認";
   const columns = isOther
     ? ["会社名", "一次協力会社名", "工期", "操作"]
@@ -3082,6 +3071,7 @@ function GreenDocumentList({ title, setConfirm }) {
 
 function GreenfilePage({ setConfirm }) {
   const [menu, setMenu] = useState("書類状況一覧");
+  const [driverQuery, setDriverQuery] = useState("");
   const [filter, setFilter] = useState(false);
   const [category, setCategory] = useState("一括提出書類");
   const [comment, setComment] = useState(false);
@@ -3090,7 +3080,7 @@ function GreenfilePage({ setConfirm }) {
     ["2次", "サンプル協力会社A", "提出済"],
     ["3次", "サンプル協力会社B", "未提出"],
   ];
-  const docMenus = greenMenus.slice(1, 5);
+  const docMenus = ["元請帳票の確認"];
   let panel;
   if (menu === "書類状況一覧")
     panel = (
@@ -3225,65 +3215,19 @@ function GreenfilePage({ setConfirm }) {
   else if (docMenus.includes(menu))
     panel = <GreenDocumentList title={menu} setConfirm={setConfirm} />;
   else if (menu.includes("協力会社検索"))
-    panel = <SearchServicePage worker={false} setConfirm={setConfirm} />;
-  else if (menu.includes("作業員検索"))
-    panel = <SearchServicePage worker setConfirm={setConfirm} />;
-  else if (menu.includes("是正依頼"))
-    panel = (
-      <section className="gf-page">
-        <h2>是正依頼内容の確認・返信</h2>
-        <p className="gf-lead">
-          元請会社からの是正依頼と返信状況を確認できます。
-        </p>
-        <div className="gf-toolbar">
-          <b>検索結果：1件</b>
-          <button className="outline" onClick={() => setFilter((value) => !value)}>検索で絞り込む</button>
-        </div>
-        <table className="gf-table">
-          <thead>
-            <tr>
-              <th>受付日</th>
-              <th>対象書類</th>
-              <th>依頼内容</th>
-              <th>ステータス</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>2026/08/18</td>
-              <td>作業員名簿</td>
-              <td>記載内容をご確認ください</td>
-              <td>未返信</td>
-              <td>
-                <button
-                  className="primary"
-                  onClick={() => setConfirm({ title: "是正依頼への返信" })}
-                >
-                  確認・返信
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    );
-  else if (menu === "共通メニュー")
-    panel = <CommonMenuPage onOpenBoard={() => setMenu("現場掲示板")} />;
-  else if (menu === "現場掲示板")
-    panel = <BulletinBoard setConfirm={setConfirm} />;
-  else panel = <BatchOutput setConfirm={setConfirm} />;
+    panel = <SearchServicePage setConfirm={setConfirm} />;
+  else if (menu === "ドライバー検索")
+    panel = <DriverSearchPage query={driverQuery} setQuery={setDriverQuery} setConfirm={setConfirm} />;
   return (
     <div className="service-shell">
       <aside className="service-menu">
         <b>労務安全</b>
-        {greenMenus.map((x, i) => (
+        {greenMenus.map((x) => (
           <button
             key={x}
             className={menu === x ? "active" : ""}
             onClick={() => setMenu(x)}
           >
-            {i > 0 && i < 4 ? <span>└</span> : null}
             {x}
           </button>
         ))}
@@ -3293,643 +3237,18 @@ function GreenfilePage({ setConfirm }) {
   );
 }
 
-function SearchServicePage({ worker, setConfirm }) {
+function SearchServicePage({ setConfirm }) {
   const [filter, setFilter] = useState(true);
-  const cols = worker
-    ? [
-        "氏名",
-        "次数",
-        "所属会社",
-        "作業内容",
-        "職種",
-        "役割",
-        "生年月日",
-        "年齢",
-        "健康診断日",
-        "血圧",
-        "入場日",
-        "教育実施日",
-      ]
-    : ["会社名", "一次協力会社", "作業内容", "工期", "操作"];
-  return (
-    <section className="gf-page">
-      <h2>{worker ? "配下作業員検索（送り出し教育）" : "配下協力会社検索"}</h2>
-      <p className="gf-lead">
-        {worker
-          ? "現場に登録された作業員情報と送り出し教育の状況を検索します。"
-          : "現場に登録された配下協力会社を検索します。"}
-      </p>
-      <div className="gf-toolbar">
-        <b>検索結果：{worker ? 2 : 3}件</b>
-        <button className="outline" onClick={() => setFilter((v) => !v)}>
-          検索条件
-        </button>
-        {worker && (
-          <button
-            className="primary"
-            onClick={() =>
-              setConfirm({
-                title: "作業員の送り出し",
-                message: "選択した作業員の送り出し教育画面を開きました。",
-              })
-            }
-          >
-            作業員の送り出し
-          </button>
-        )}
-      </div>
-      {filter && (
-        <GfFilter
-          worker={worker}
-          onClose={() => setFilter(false)}
-          onSearch={() => setFilter(false)}
-        />
-      )}
-      <div className="gf-matrix-wrap">
-        <table className="gf-table">
-          <thead>
-            <tr>
-              {cols.map((x) => (
-                <th key={x}>{x}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {[0, 1].map((i) => (
-              <tr key={i}>
-                {worker ? (
-                  <>
-                    <td>サンプル作業員 {i + 1}</td>
-                    <td>{i + 1}次</td>
-                    <td>サンプル協力会社{String.fromCharCode(65 + i)}</td>
-                    <td>躯体工事</td>
-                    <td>土工</td>
-                    <td>{i ? "作業員" : "職長"}</td>
-                    <td>1985/01/01</td>
-                    <td>41</td>
-                    <td>2026/04/01</td>
-                    <td>120/75</td>
-                    <td>2026/04/10</td>
-                    <td>2026/04/05</td>
-                  </>
-                ) : (
-                  <>
-                    <td>サンプル協力会社{String.fromCharCode(65 + i)}</td>
-                    <td>サンプル建設株式会社</td>
-                    <td>躯体工事</td>
-                    <td>2026/04/01〜2027/03/31</td>
-                    <td>
-                      <button
-                        className="text-button"
-                        onClick={() => setConfirm({ title: "協力会社詳細" })}
-                      >
-                        確認
-                      </button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  );
-}
-
-function BatchOutput({ setConfirm }) {
-  const [only, setOnly] = useState(false);
-  return (
-    <section className="gf-page">
-      <h2>書類一括出力</h2>
-      <p className="gf-lead">
-        協力会社が提出した書類を会社単位でまとめて出力できます。
-      </p>
-      <div className="gf-filter static">
-        <div className="gf-form-grid">
-          <label>
-            次数
-            <select>
-              <option>すべて</option>
-            </select>
-          </label>
-          <label>
-            会社名
-            <input placeholder="会社名を入力" />
-          </label>
-        </div>
-        <div className="gf-checks">
-          <label>
-            <input
-              type="checkbox"
-              checked={only}
-              onChange={(e) => setOnly(e.target.checked)}
-            />{" "}
-            出力可能な会社のみ
-          </label>
-          <label>
-            <input type="checkbox" /> 前回出力後に更新された会社のみ
-          </label>
-          <button
-            className="primary"
-            onClick={() => setConfirm({ title: "検索完了", message: "指定した条件で対象会社を絞り込みました。" })}
-          >
-            <Search />
-            検索
-          </button>
-        </div>
-      </div>
-      <div className="gf-alert">
-        出力予約後、処理が完了するとダウンロードできます。
-      </div>
-      <div className="gf-toolbar">
-        <b>検索結果：3件</b>
-        <button
-          className="primary"
-          onClick={() =>
-            setConfirm({
-              title: "一括出力予約",
-              message: "対象の書類を一括出力予約しました。",
-            })
-          }
-        >
-          一括出力予約
-        </button>
-      </div>
-      <table className="gf-table">
-        <thead>
-          <tr>
-            <th>会社名</th>
-            <th>作業内容</th>
-            <th>工期</th>
-            <th>出力状況</th>
-            <th>予約日時／予約者</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>サンプル協力会社A</td>
-            <td>躯体工事</td>
-            <td>2026/04/01〜2027/03/31</td>
-            <td>
-              <b className="gf-unoutput">未出力あり</b>
-            </td>
-            <td>—</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  );
-}
-
-const gateMenus = [
-  "ダッシュボード",
-  "入退場実績",
-  "作業員設定状況一覧",
-  "共通メニュー",
-  "現場掲示板",
-];
-const conferenceMenus = [
-  "ダッシュボード",
-  "作業予定一覧",
-  "他社予定確認",
-  "作業実績一覧",
-  "入場人数との差異",
-  "ゲート予定",
-  "揚重機予定",
-  "機材予定",
-  "現場配置計画",
-  "巡回記録/各種連絡",
-  "帳票印刷",
-  "共通メニュー",
-  "現場掲示板",
-];
-
-function ServiceFrame({ brand, menus, active, setActive, children, notice }) {
-  return (
-    <div className="service-product">
-      <div className="product-top">
-        <b>{brand}</b>
-        <span>サンプル現場 A</span>
-        <button
-          className="help"
-          onClick={() => showAppNotice(`${brand}ヘルプ`, "現在表示している機能の操作方法を確認できます。")}
-        >？ ヘルプ</button>
-      </div>
-      {notice && (
-        <div className="product-notice">
-          あなたへの重要なお知らせが1件あります
-        </div>
-      )}
-      <div className="product-body">
-        <aside className="product-menu">
-          <h2>機能一覧</h2>
-          {menus.slice(0, -2).map((m) => (
-            <button
-              key={m}
-              className={active === m ? "active" : ""}
-              onClick={() => setActive(m)}
-            >
-              <span>{m}</span>
-            </button>
-          ))}
-          <h3>共通メニュー</h3>
-          <button
-            className={active === "共通メニュー" ? "active" : ""}
-            onClick={() => setActive("共通メニュー")}
-          >
-            <span>共通メニュー</span>
-          </button>
-          <button
-            className={active === menus.at(-1) ? "active" : ""}
-            onClick={() => setActive(menus.at(-1))}
-          >
-            <span>{menus.at(-1)}</span>
-          </button>
-        </aside>
-        <main className="product-main">{children}</main>
-      </div>
-    </div>
-  );
-}
-
-function ServiceDashboard({ gate }) {
-  return (
-    <>
-      <h1>ダッシュボード</h1>
-      <div className="dashboard-cols">
-        <section>
-          <h3>現場詳細</h3>
-          <dl className="detail-list">
-            <dt>現場名</dt>
-            <dd>サンプル現場 A</dd>
-            <dt>{gate ? "着工 - 竣工予定日" : "現場住所"}</dt>
-            <dd>
-              {gate
-                ? "2026/04/20(月) - 2027/03/31(水)"
-                : "東京都中央区 サンプル1-1"}
-            </dd>
-            <dt>{gate ? "現場所在地" : "着工 - 竣工予定日"}</dt>
-            <dd>
-              {gate
-                ? "東京都中央区 サンプル1-1"
-                : "2026/04/20(月) - 2027/03/31(水)"}
-            </dd>
-          </dl>
-        </section>
-        <section>
-          <h3>{gate ? "入退場実績" : "人工（人）"}</h3>
-          {gate ? (
-            <table className="service-table">
-              <tbody>
-                <tr>
-                  <td>08/18(火)</td>
-                  <td>入場者数</td>
-                  <td>0人</td>
-                </tr>
-                <tr>
-                  <td>08/19(水)</td>
-                  <td>入場者数</td>
-                  <td>0人</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>退場者数</td>
-                  <td>0人</td>
-                </tr>
-              </tbody>
-            </table>
-          ) : (
-            <div className="labor-count">
-              <span>
-                予定<b>--</b>
-              </span>
-              <span>
-                実績<b>--</b>
-              </span>
-            </div>
-          )}
-        </section>
-      </div>
-    </>
-  );
-}
-
-function GatekeeperPage({ setConfirm }) {
-  const [active, setActive] = useState("ダッシュボード");
-  const [face, setFace] = useState(false);
-  let content;
-  if (active === "ダッシュボード") content = <ServiceDashboard gate />;
-  else if (active === "入退場実績")
-    content = (
-      <ServiceList
-        title={active}
-        columns={[
-          "日付",
-          "所属会社",
-          "氏名",
-          "入場時刻",
-          "退場時刻",
-          "滞在時間",
-        ]}
-      />
-    );
-  else if (active === "作業員設定状況一覧")
-    content = (
-      <>
-        <h1>作業員設定状況一覧</h1>
-        <div className="product-actions">
-          <label>
-            <input
-              type="checkbox"
-              checked={face}
-              onChange={(e) => setFace(e.target.checked)}
-            />{" "}
-            一覧に顔写真を表示する
-          </label>
-          <button
-            className="outline"
-            onClick={() => {
-              downloadCsv("作業員設定状況.csv", ["所属会社", "氏名", "ステータス"], Array.from({ length: 5 }, (_, index) => ["サンプル協力会社", `サンプル作業員 ${index + 1}`, "稼働中"]));
-              setConfirm({ title: "CSV出力完了", message: "作業員設定状況をダウンロードしました。" });
-            }}
-          >CSV出力</button>
-        </div>
-        <div className="service-filter">
-          <b>検索条件（検索結果5件）</b>
-          <input placeholder="作業員名を入力" />
-          <label>
-            <input type="checkbox" /> 稼働中
-          </label>
-          <label>
-            <input type="checkbox" /> 登録あり
-          </label>
-          <button className="primary" onClick={() => setConfirm({ title: "検索完了", message: "作業員設定状況を絞り込みました。" })}>検索</button>
-        </div>
-        <table className="service-table">
-          <thead>
-            <tr>
-              {[
-                "所属会社",
-                "一次協力会社",
-                "氏名",
-                "ステータス",
-                "顔写真",
-                "顔写真送信",
-                "送信対象外理由",
-                "エラー状況",
-                "詳細",
-              ].map((x) => (
-                <th key={x}>{x}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {[1, 2, 3, 4, 5].map((x, i) => (
-              <tr key={x}>
-                <td>サンプル協力会社</td>
-                <td>サンプル協力会社</td>
-                <td>
-                  {face && (
-                    <span className="face-placeholder">
-                      <Camera />
-                    </span>
-                  )}
-                  サンプル作業員 {x}
-                </td>
-                <td>稼働中</td>
-                <td>{i === 4 ? "登録なし" : "登録あり"}</td>
-                <td>{i === 4 ? "送信対象外" : "送信済み"}</td>
-                <td>{i === 4 ? "顔写真がありません。" : "—"}</td>
-                <td>—</td>
-                <td>
-                  <button
-                    className="outline"
-                    onClick={() => setConfirm({ title: "作業員設定詳細" })}
-                  >
-                    確認
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </>
-    );
-  else if (active === "共通メニュー")
-    content = <CommonMenuPage onOpenBoard={() => setActive("現場掲示板")} />;
-  else content = <BulletinBoard setConfirm={setConfirm} />;
-  return (
-    <ServiceFrame
-      brand="入退場管理"
-      menus={gateMenus}
-      active={active}
-      setActive={setActive}
-      notice
-    >
-      {content}
-    </ServiceFrame>
-  );
-}
-
-function ServiceList({ title, columns }) {
-  const [query, setQuery] = useState("");
-  const [appliedQuery, setAppliedQuery] = useState("");
-  const visibleRows = [1, 2, 3].filter((index) =>
-    `${title} サンプル協力会社 サンプル ${index}`.includes(appliedQuery),
-  );
-  return (
-    <>
-      <h1>{title}</h1>
-      <div className="service-filter">
-        <b>検索条件</b>
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="キーワードを入力"
-        />
-        <input type="date" />
-        <button className="primary" onClick={() => setAppliedQuery(query.trim())}>検索</button>
-        <button className="text" onClick={() => { setQuery(""); setAppliedQuery(""); }}>
-          検索条件クリア
-        </button>
-      </div>
-      <table className="service-table">
-        <thead>
-          <tr>
-            {columns.map((x) => (
-              <th key={x}>{x}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {visibleRows.map((i) => (
-            <tr key={i}>
-              {columns.map((x, j) => (
-                <td key={x}>
-                  {j === 0
-                    ? `2026/08/${18 + i}`
-                    : j === 1
-                      ? "サンプル協力会社"
-                      : j === 2
-                        ? `サンプル ${i}`
-                        : "—"}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {!visibleRows.length && (
-        <div className="empty-state" role="status">
-          条件に一致するデータがありません。検索条件を変更してください。
-        </div>
-      )}
-    </>
-  );
-}
-
-function BulletinBoard({ setConfirm }) {
-  return (
-    <>
-      <h1>現場掲示板</h1>
-      <div className="product-actions">
-        <p>現場内で共有するお知らせを確認できます。</p>
-        <button
-          className="primary"
-          onClick={() => setConfirm({ title: "掲示板へ新規投稿" })}
-        >
-          新規投稿
-        </button>
-      </div>
-      <table className="service-table">
-        <thead>
-          <tr>
-            <th>掲載期間</th>
-            <th>タイトル</th>
-            <th>投稿者</th>
-            <th>添付</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2026/08/19〜08/31</td>
-            <td>サンプルのお知らせ</td>
-            <td>現場管理者</td>
-            <td>—</td>
-            <td>
-              <button
-                className="outline"
-                onClick={() => setConfirm({ title: "掲示内容" })}
-              >
-                確認
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </>
-  );
-}
-
-function CommonMenuPage({ onOpenBoard }) {
-  return (
-    <>
-      <h1>共通メニュー</h1>
-      <p className="common-menu-lead">
-        現場と各サービスで共通して利用する機能を確認できます。
-      </p>
-      <div className="common-menu-grid">
-        <button onClick={onOpenBoard}>
-          <ClipboardList />
-          <span>
-            <b>現場掲示板</b>
-            <small>現場内のお知らせを確認・共有します</small>
-          </span>
-          <ChevronRight />
-        </button>
-      </div>
-    </>
-  );
-}
-
-function ConferencePage({ setConfirm }) {
-  const [active, setActive] = useState("ダッシュボード");
-  const configs = {
-    作業予定一覧: [
-      "日付",
-      "会社名",
-      "作業内容",
-      "作業場所",
-      "人数",
-      "安全指示",
-      "承認",
-    ],
-    他社予定確認: [
-      "会社名",
-      "作業内容",
-      "作業場所",
-      "人数",
-      "重機・機材",
-      "確認",
-    ],
-    作業実績一覧: [
-      "日付",
-      "会社名",
-      "作業内容",
-      "予定人数",
-      "実績人数",
-      "操作",
-    ],
-    入場人数との差異: ["会社名", "予定人数", "入場人数", "差異", "確認"],
-    ゲート予定: ["時間", "ゲート", "搬入会社", "車両", "搬入物", "誘導員"],
-    揚重機予定: ["時間", "揚重機", "使用会社", "作業内容", "場所", "状態"],
-    機材予定: ["時間", "機材", "使用会社", "用途", "場所", "状態"],
-    "巡回記録/各種連絡": ["種別", "日時", "件名", "登録者", "状態", "確認"],
-    帳票印刷: ["帳票名", "対象日", "更新日時", "作成者", "出力"],
-  };
-  let content;
-  if (active === "ダッシュボード") content = <ServiceDashboard />;
-  else if (active === "現場配置計画")
-    content = (
-      <>
-        <h1>現場配置計画</h1>
-        <div className="plan-canvas">
-          <MapPinned />
-          <b>配置計画図</b>
-          <p>図面上で重機・資材・立入禁止区域を配置できます。</p>
-          <button
-            className="primary"
-            onClick={() => setConfirm({ title: "配置計画を編集" })}
-          >
-            編集
-          </button>
-        </div>
-      </>
-    );
-  else if (active === "共通メニュー")
-    content = <CommonMenuPage onOpenBoard={() => setActive("現場掲示板")} />;
-  else if (active === "現場掲示板")
-    content = <BulletinBoard setConfirm={setConfirm} />;
-  else
-    content = (
-      <ServiceList
-        title={active}
-        columns={configs[active] || ["項目", "内容", "状態", "操作"]}
-      />
-    );
-  return (
-    <ServiceFrame
-      brand="調整会議"
-      menus={conferenceMenus}
-      active={active}
-      setActive={setActive}
-      notice
-    >
-      {content}
-    </ServiceFrame>
-  );
+  return <section className="gf-page">
+    <h2>配下協力会社検索</h2>
+    <p className="gf-lead">現場に登録された配下協力会社を検索します。</p>
+    <div className="gf-toolbar"><b>検索結果：2件</b><button className="outline" onClick={() => setFilter((value) => !value)}>検索条件</button></div>
+    {filter && <GfFilter onClose={() => setFilter(false)} onSearch={() => setFilter(false)} />}
+    <div className="gf-matrix-wrap"><table className="gf-table">
+      <thead><tr>{["会社名", "一次協力会社", "作業内容", "工期", "操作"].map((label) => <th key={label}>{label}</th>)}</tr></thead>
+      <tbody>{[0, 1].map((index) => <tr key={index}><td>サンプル協力会社{String.fromCharCode(65 + index)}</td><td>サンプル建設株式会社</td><td>躯体工事</td><td>2026/04/01〜2027/03/31</td><td><button className="text-button" onClick={() => setConfirm({title: "協力会社詳細"})}>確認</button></td></tr>)}</tbody>
+    </table></div>
+  </section>;
 }
 
 const matchingCandidates = [
@@ -6520,6 +5839,10 @@ export function App() {
         {...{ query, setQuery, setDetailOpen, setConfirm }}
       />
     );
+  else if (page === "労務安全")
+    body = <GreenfilePage setConfirm={setConfirm} />;
+  else if (page === "ドライバー検索")
+    body = <DriverSearchPage {...{ query, setQuery, setConfirm }} />;
   else if (page === "車両一覧")
     body = <VehiclePage {...{ query, setQuery, setDetailOpen, setConfirm }} />;
   else if (page === "搬出・受入スケジュール")
@@ -6551,12 +5874,6 @@ export function App() {
         initialMode={roleMode === "construction" ? "受入先を探す" : "搬出案件を探す"}
       />
     );
-  else if (page === "労務安全")
-    body = <GreenfilePage setConfirm={setConfirm} />;
-  else if (page === "入退場管理")
-    body = <GatekeeperPage setConfirm={setConfirm} />;
-  else if (page === "調整会議")
-    body = <ConferencePage setConfirm={setConfirm} />;
   else
     body = (
       <AgencyPage
@@ -6685,7 +6002,7 @@ export function App() {
               {!collapsed && <h2>{g.title}</h2>}
               {g.items.map(([Icon, displayLabel, routeLabel]) => (
                 <button
-                  className={page === routeLabel || (roleMode === "receiving" && routeLabel === "取引先・基本設定" && ["会社情報","ユーザー一覧","車両一覧","代行先一覧","代行登録申請","自社の代行元一覧","入退場管理"].includes(page)) ? "active" : ""}
+                  className={page === routeLabel || (roleMode === "receiving" && routeLabel === "取引先・基本設定" && ["会社情報","ユーザー一覧","車両一覧","代行先一覧","代行登録申請","自社の代行元一覧"].includes(page)) ? "active" : ""}
                   aria-current={page === routeLabel ? "page" : undefined}
                   onClick={() => navigate(routeLabel)}
                   key={routeLabel}
@@ -6759,18 +6076,8 @@ export function App() {
           )}
         </div>
       </aside>
-      <main className="content">
-        {["労務安全", "入退場管理", "調整会議"].includes(page) && (
-          <button
-            className="module-menu-trigger"
-            onClick={() => setCollapsed((value) => !value)}
-            aria-expanded={!collapsed}
-          >
-            <LayoutGrid />
-            メニュー
-          </button>
-        )}
-        {!["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) && (
+      <main className={`content ${page === "会社情報" ? "company-content" : ""}`}>
+        {page !== "運行管制" && (
           <Header
             title={
               page === "搬出・受入スケジュール"
@@ -6792,7 +6099,7 @@ export function App() {
             onMenu={() => setCollapsed((value) => !value)}
           />
         )}
-        {["運行管制", "労務安全", "入退場管理", "調整会議"].includes(page) ? (
+        {page === "運行管制" ? (
           body
         ) : (
           <div className="control-page-surface">

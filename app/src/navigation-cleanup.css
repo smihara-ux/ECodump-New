@@ -1,0 +1,66 @@
+/* Keep field search and the remaining seven columns balanced after service removal. */
+.control-page-surface:has(.field-list-transport-only) .search-panel {
+  flex-wrap: wrap;
+  gap: 12px;
+  height: auto;
+  min-height: 74px;
+}
+.control-page-surface:has(.field-list-transport-only) .search-line {
+  flex: 1 1 480px;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.control-page-surface:has(.field-list-transport-only) .search-actions {
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.control-page-surface:has(.field-list-transport-only) .search-actions button {
+  flex-shrink: 0;
+  white-space: nowrap;
+  width: auto;
+}
+.control-page-surface:has(.field-list-transport-only) .search-actions .primary { min-width: 120px; }
+.control-page-surface:has(.field-list-transport-only) .search-line .check {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  gap: 6px;
+}
+@media (min-width: 761px) {
+  .control-app-shell .control-page-surface .field-list-transport-only {
+    width: 100%;
+    min-width: 1000px;
+  }
+  .control-app-shell .control-page-surface .field-list-transport-only tr {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr) minmax(0, 2.1fr) minmax(0, 1.6fr) 112px 112px 112px;
+  }
+  .control-app-shell .control-page-surface .field-list-transport-only :is(th, td) {
+    width: auto !important;
+    min-width: 0;
+    padding-inline: 12px !important;
+  }
+}
+@media (max-width: 760px) {
+  .control-page-surface:has(.field-list-transport-only) .search-line {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    white-space: normal;
+  }
+  .control-page-surface:has(.field-list-transport-only) .search-line > label:not(.check) {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+}
+
+.control-page-surface .driver-search-page .action-strip { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px; }
+.control-page-surface .driver-search-page .action-strip label { display: flex; align-items: center; gap: 12px; flex: 1 1 280px; min-width: 0; white-space: nowrap; }
+.driver-search-page .action-strip input { width: 100%; min-width: 0; }
+.control-page-surface .driver-search-page .action-strip button { flex: 0 0 auto; width: auto; }

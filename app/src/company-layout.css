@@ -1,0 +1,73 @@
+/* Company details are the sole vertical scroll area on this route. */
+.control-app-shell > .company-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+.company-content > .page-header { flex: 0 0 auto; }
+.company-content > .control-page-surface {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 12px;
+}
+.company-content .control-page-surface > :not(.company-workspace) { flex-shrink: 0; }
+.company-workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  gap: 12px;
+}
+.company-workspace > .company-tabs,
+.company-workspace > .company-actions {
+  flex: 0 0 auto;
+  width: min(100%, 1560px);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.company-workspace > .company-tabs { flex-wrap: wrap; align-items: center; }
+.company-workspace .company-edit-controls { flex: 1; display: flex; flex-wrap: wrap; gap: 8px; }
+.company-workspace .company-edit-controls > .primary { flex: 1; }
+.company-workspace .company-edit-controls > small { flex-basis: 100%; color: var(--theme-muted); }
+.company-workspace .company-edit-controls > small:empty { display: none; }
+.company-workspace .company-actions > span { flex: 0 1 350px; }
+.company-details-scroll {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 0 4px 16px;
+  overflow-anchor: none;
+}
+.company-workspace .company-card {
+  width: min(100%, 850px);
+  max-height: none;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible;
+}
+.company-workspace .info-row { grid-template-columns: minmax(140px, 27%) minmax(0, 1fr); }
+.company-workspace .info-row > span { min-width: 0; overflow-wrap: anywhere; }
+.company-workspace .info-row input { width: 100%; min-width: 0; box-sizing: border-box; }
+.company-details-scroll:focus-visible { outline: 2px solid var(--theme-accent); outline-offset: -2px; }
+@media (max-width: 760px) {
+  .company-content > .control-page-surface { padding: 8px; }
+  .company-workspace { gap: 8px; }
+  .company-workspace > .company-tabs { gap: 4px; }
+  .company-content .company-tabs button { flex: 1 1 calc(50% - 4px); padding: 0 6px; }
+  .company-content .company-actions { padding: 8px; gap: 6px; flex-wrap: wrap; }
+  .company-workspace .company-actions > span { flex: 1 1 100%; font-size: 11px; }
+  .company-workspace .company-card { padding: 12px; }
+  .company-workspace .info-row { grid-template-columns: minmax(100px, 38%) minmax(0, 1fr); }
+  .company-workspace .info-row > b,
+  .company-workspace .info-row > span { padding: 8px; }
+}
+@media print {
+  .company-content, .company-workspace, .company-details-scroll { display: block !important; height: auto !important; overflow: visible !important; }
+}

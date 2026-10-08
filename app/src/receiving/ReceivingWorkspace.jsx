@@ -1048,7 +1048,7 @@ function Settings({ navigate, newReservation }) {
           既存画面につながります。既存台帳の登録・編集もAPI保存は未接続です。
         </p>
         <div className="receiving-actions">
-          {["会社情報", "ユーザー一覧", "車両一覧", "代行先一覧", "代行登録申請", "自社の代行元一覧", "入退場管理"].map(
+          {["会社情報", "ユーザー一覧", "車両一覧", "代行先一覧", "代行登録申請", "自社の代行元一覧"].map(
             (name) => (
               <button key={name} onClick={() => navigate(name)}>
                 {name}

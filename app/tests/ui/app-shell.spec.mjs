@@ -4,9 +4,6 @@ const routes = [
   "fields",
   "matching",
   "control",
-  "labor",
-  "gatekeeper",
-  "conference",
   "transport",
   "company",
   "users",
@@ -123,7 +120,9 @@ test("construction mode opens field-based home and role menus", async ({ page })
   await expect(page.getByRole("button", { name: "搬出管理", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "運行ダッシュボード", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "配車・運行管理", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "入退場管理", exact: true })).toBeVisible();
+  for (const name of ["入退場管理", "調整会議"]) {
+    await expect(page.getByRole("button", { name, exact: true })).toHaveCount(0);
+  }
   await expect(page.getByRole("button", { name: "発生土マッチ", exact: true })).toHaveCount(1);
   await expect(page.getByLabel("搬出管理の対象日")).toHaveValue(/\d{4}-\d{2}-\d{2}/);
   await expect(page.getByRole("button", { name: /有効な予定便/ })).toBeVisible();
@@ -204,4 +203,48 @@ for (const route of routes) {
     );
     expect(overflow).toBeLessThanOrEqual(2);
   });
+}
+
+// Old bookmarks must open a usable role home rather than retired products.
+for (const role of ["construction", "receiving"]) {
+  test(`retired service bookmarks fall back to ${role} home`, async ({ page }) => {
+    for (const route of role === "receiving" ? ["labor", "gatekeeper", "conference"] : ["gatekeeper", "conference"]) {
+      await page.goto(`/?preview=app&role=${role}&page=${route}`);
+      await expect(page.locator(".page-header h1")).toHaveText(role === "construction" ? "搬出管理" : "受入管理〈ホーム〉");
+      await expect(page.locator(".service-product, .gf-page")).toHaveCount(0);
+      for (const name of ["入退場管理", "調整会議"]) {
+        await expect(page.getByRole("button", { name, exact: true })).toHaveCount(0);
+      }
+    }
+  });
+}
+
+for (const theme of ["light", "dark"]) {
+  for (const width of [1440, 390]) {
+    test(`restored labor keeps retained menus in ${theme} at ${width}`, async ({ page }) => {
+      await page.addInitScript((value) => localStorage.setItem("ecodump-theme", value), theme);
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/?preview=app&role=construction&page=labor");
+      await expect(page.locator(".page-header h1")).toHaveText("労務安全");
+      const menu = page.locator(".service-menu");
+      await expect(menu.getByRole("button")).toHaveCount(4);
+      for (const name of ["新規入場時等教育実施報告書", "【元請会社】新規入場者調査票", "その他の安全書類", "是正依頼内容の確認・返信", "書類一括出力", "共通メニュー", "現場掲示板"]) {
+        await expect(menu.getByRole("button", {name, exact: true})).toHaveCount(0);
+      }
+      for (const category of ["一括提出書類", "個別提出書類", "許可情報", "契約情報", "保険加入証明書", "主任技術者"]) {
+        await page.locator(".gf-tabs").getByRole("button", {name: category, exact:true}).click();
+        await expect(page.locator(".gf-tabs").getByRole("button", {name:category, exact:true})).toHaveClass(/active/);
+      }
+      for (const name of ["元請帳票の確認", "配下協力会社検索"]) {
+        await menu.getByRole("button", {name, exact:true}).click();
+        await expect(page.locator(".service-main h2")).toHaveText(name);
+      }
+      await menu.getByRole("button", {name:"ドライバー検索", exact:true}).click();
+      await page.getByRole("textbox", {name:"検索", exact:true}).fill("運転者2");
+      await expect(page.locator(".driver-search-page [role=status]")).toHaveText("検索結果：1件");
+      await expect(page.locator(".service-main")).not.toContainText("送り出し教育");
+      await menu.getByRole("button", {name:"書類状況一覧", exact:true}).click();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+    });
+  }
 }

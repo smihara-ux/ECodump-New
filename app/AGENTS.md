@@ -82,3 +82,11 @@ The prototype must include working, separately rendered screens for every primar
 - Receiving 1–5 refinement (2026-09-30): use shared date controls and preserve receiving date/location/query/scroll across home, reception and results. Distinguish driver arrival, verified gate entry, unloading and original-confirmed quantities; remaining planned quantity is unfinished active trips' planned amount, not capacity. Export real two-sheet XLSX through the common reports writer with scoped API rows and unit-separated confirmed values; retain prototype CSV. Undefined quota consumption stays 算定条件未設定 with concrete rules pending, never a UI-only available-capacity calculation.
 
 - Frontend scope confirmed 2026-10-01: finish requested display, calculations, filters, navigation and responsive/theme behavior, then update the shared Pages demo. Do not block or misclassify frontend completion on unrelated API, DB, real-device or business-rule readiness. Preserve honest demo boundaries.
+
+- Company information scrolling confirmed 2026-10-08: keep the command bar, sidebar, page title/help, four company tabs and edit/save/cancel toolbar visible. Only company details scroll vertically. Preserve per-tab detail scroll and drafts when switching tabs, keep edit position, and scope the layout to the company route. Preview edits are page-local and must not claim API/DB persistence.
+
+
+
+- Labor scope correction supersedes the broad removal on 2026-10-08: retain construction 労務安全 and page=labor with 書類状況一覧 (including its six category tabs), 元請帳票の確認, 配下協力会社検索 and ドライバー検索. Remove only the explicitly rejected education report, prime-company new-entrant survey, other safety documents, correction requests, batch export, common menu and board entries. Keep worker gatekeeper/conference removed. Driver search remains education-free; company scrolling and vehicle operations remain intact. Origin/main push is authorized by the user for these revisions on 2026-10-08.
+
+- Driver search confirmed 2026-10-08: use ドライバー検索 without 送り出し教育. Keep the retained labor-menu entry and the construction 基本台帳 entry at page=drivers, sharing the same anonymous driver search component.
