@@ -7,7 +7,9 @@ const roles = [
   { id: 'driver', name: 'ドライバー', title: '移動・運搬を担当', icon: '03', detail: '自分の便、行先、運行報告、伝票をスマートフォンで確認します。', company: 'サンプル運送会社', person: 'サンプル運転者' },
 ];
 export function demoDestination(role) {
-  return role === 'driver' ? './?app=driver&demo=1&review=20260928d' : `./?preview=app&role=${role}&page=transport&demo=1&review=20260928d`;
+  if (role === 'driver') return './?app=driver&demo=1&review=20261009-share';
+  const reviewedNavigation = role === 'construction' ? '&navigationReview=1' : '';
+  return `./?preview=app&role=${role}&page=transport&demo=1${reviewedNavigation}&review=20261009-share`;
 }
 export default function DemoEntry() {
   const [mode, setMode] = useState('login');
@@ -53,7 +55,7 @@ export default function DemoEntry() {
           </form>}
           <details className="entry-demo-options"><summary>デモで試す</summary><p>入力不要で、役割別のサンプルアカウントを体験できます。</p><div>{roles.map(item => <button key={item.id} onClick={() => demoLogin(item.id)}>{item.name}としてデモログイン →</button>)}</div><small>手入力で試す場合：利用区分のID（construction / receiving / driver）に @sample.invalid を付けたメールアドレス、パスワードは demo-only。</small></details>
         </section>
-        <footer className="entry-footer"><a href="./review.html?v=20260928">操作確認ガイド</a><button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>{theme === 'light' ? 'ダーク' : 'ライト'}表示に切り替え</button></footer>
+        <footer className="entry-footer"><a href="./review.html?v=20261009-share">操作確認ガイド</a><button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>{theme === 'light' ? 'ダーク' : 'ライト'}表示に切り替え</button></footer>
       </div>
     </div>
   </main>;

@@ -11,7 +11,7 @@ const root = resolve(fileURLToPath(new URL("../dist/client/", import.meta.url)))
 const prefix = "/ECodump-New/";
 const origin = "https://smihara-ux.github.io";
 const evidence = process.env.ECODUMP_PAGES_AUDIT_DIR;
-const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".webmanifest": "application/manifest+json" };
+const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg", ".svg": "image/svg+xml", ".webmanifest": "application/manifest+json" };
 const server = createServer(async (req, res) => {
   const path = new URL(req.url, "http://local").pathname;
   if (req.method !== "GET" || !path.startsWith(prefix)) { res.writeHead(404); res.end(); return; }
@@ -80,6 +80,58 @@ try {
     assert.deepEqual(errors, []);
     assert.deepEqual(api, []);
     assert.deepEqual(missing, []);
+    await context.close();
+  }
+  // A third party starts without cookies or storage, through the public login entry.
+  for (const width of [390, 1440]) for (const flow of ["shortcut", "credentials", "registration"]) for (const [role, label] of [["construction", "施工側"], ["receiving", "受入側"], ["driver", "ドライバー"]]) {
+    const context = await browser.newContext({viewport:{width,height:width === 390 ? 844 : 1000}});
+    const errors = [], api = [], missing = [];
+    await context.route(`${origin}/**`, async route => {
+      const request = route.request(), path = new URL(request.url()).pathname;
+      if (request.method() !== "GET" || path.includes("/api/")) { api.push(request.url()); await route.abort(); return; }
+      const response = await context.request.get(local + path);
+      if (!response.ok()) missing.push(path);
+      await route.fulfill({response});
+    });
+    const page = await context.newPage();
+    page.on("pageerror", error => errors.push(error.message));
+    await page.goto(`${origin}${prefix}${flow === "shortcut" ? "" : "?entry=1&v=20261009-share"}`);
+    await page.locator(".demo-entry").waitFor();
+    assert.equal(await page.locator(".entry-demo-options").getAttribute("open"), null, "preserve the collapsed demo entry design");
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth <= 2), "entry must fit its viewport");
+    await page.waitForFunction(() => [...document.querySelectorAll(".demo-entry img")].every(img => img.complete && img.naturalWidth > 0));
+    if (flow === "shortcut") {
+      await page.getByText("デモで試す", {exact:true}).click();
+      if (role === "construction" && evidence) {
+        await mkdir(evidence, {recursive:true});
+        await page.screenshot({path:resolve(evidence, `login-demo-${width}.png`),fullPage:true});
+      }
+      await page.getByRole("button", {name:`${label}としてデモログイン →`,exact:true}).click();
+    } else if (flow === "credentials") {
+      await page.getByLabel("メールアドレス", {exact:true}).fill(`${role}@sample.invalid`);
+      await page.getByLabel("パスワード", {exact:true}).fill("demo-only");
+      await page.locator("form").getByRole("button", {name:"ログイン",exact:true}).click();
+    } else {
+      await page.getByRole("button", {name:"新規会員登録",exact:true}).click();
+      await page.getByRole("combobox", {name:/^利用区分/}).selectOption(role);
+      await page.getByLabel("会社名", {exact:true}).fill("共有確認用サンプル会社");
+      await page.getByLabel("お名前", {exact:true}).fill("サンプル担当者");
+      await page.getByLabel("メールアドレス", {exact:true}).fill("share-check@sample.invalid");
+      await page.getByLabel("パスワード", {exact:true}).fill("demo-only");
+      await page.getByRole("button", {name:"登録内容を確認する",exact:true}).click();
+      await page.getByText("デモのため、アカウント作成・確認メール送信は行っていません。", {exact:true}).waitFor();
+      await page.getByRole("button", {name:`${label}の画面を試す`,exact:true}).click();
+    }
+    await page.locator(role === "driver" ? ".driver-app" : ".app-shell").waitFor();
+    assert.equal(await page.locator(".navigation-review").count(), role === "construction" ? 1 : 0);
+    if (role === "construction") assert.equal(await page.locator(".review-site-row").count(),23);
+    if (role === "receiving") assert.equal(await page.locator(".role-receiving").count(),1);
+    await page.getByRole("link", {name:"ログイン画面に戻る",exact:true}).click();
+    await page.locator(".demo-entry").waitFor();
+    assert.deepEqual(errors, []);
+    assert.deepEqual(api, []);
+    assert.deepEqual(missing, []);
+    results.push({role,width,entryFlow:flow,anonymous:true,passed:true});
     await context.close();
   }
   const context = await browser.newContext();
