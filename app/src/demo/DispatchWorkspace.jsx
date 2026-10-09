@@ -24,12 +24,21 @@ const context = () => {
     return {};
   }
 };
-export default function DispatchWorkspace({ navigate }) {
+export default function DispatchWorkspace({
+  navigate,
+  navigationReview = false,
+  siteOptions,
+}) {
   const all = useDemoTrips(),
     saved = context(),
     [date, setDate] = useState(saved.date || demoDay()),
     [site, setSite] = useState(saved.field || "すべて"),
     [mode, setMode] = useState("日単位の予定・割当"),
+    [adding, setAdding] = useState(() => {
+      const value = sessionStorage.getItem("ecodump-dispatch-add") === "1";
+      sessionStorage.removeItem("ecodump-dispatch-add");
+      return value;
+    }),
     [selected, setSelected] = useState(() => {
       const id = sessionStorage.getItem("ecodump-dispatch-focus");
       sessionStorage.removeItem("ecodump-dispatch-focus");
@@ -40,6 +49,13 @@ export default function DispatchWorkspace({ navigate }) {
     [copyDate, setCopyDate] = useState(dayOffset(demoDay(), 1)),
     [sourceDate, setSourceDate] = useState(demoDay()),
     [copyConfirmed, setCopyConfirmed] = useState(false);
+  useEffect(() => {
+    if (navigationReview)
+      sessionStorage.setItem(
+        "ecodump-construction-schedule-filters",
+        JSON.stringify({ ...context(), date, field: site }),
+      );
+  }, [date, site, navigationReview]);
   const rows = all.filter(
     (t) => t.date === date && (site === "すべて" || t.departure === site),
   );
@@ -196,13 +212,38 @@ export default function DispatchWorkspace({ navigate }) {
           現場
           <select value={site} onChange={(e) => setSite(e.target.value)}>
             <option>すべて</option>
-            {demoSites.map((s) => (
-              <option key={s.id}>{s.name}</option>
+            {(siteOptions || demoSites.map(s => s.name)).map(name => (
+              <option key={name}>{name}</option>
             ))}
           </select>
         </label>
       </div>
-      <div className="dispatch-mode-switch">
+      {navigationReview && (
+        <div className="review-actions">
+          <button
+            className="primary"
+            onClick={() => {
+              setMode("日単位の予定・割当");
+              setAdding(!adding);
+            }}
+          >
+            {adding ? "予定追加を閉じる" : "予定を追加"}
+          </button>
+          <button
+            className="outline"
+            onClick={() =>
+              setMode(
+                mode === "前日・前週からコピー"
+                  ? "日単位の予定・割当"
+                  : "前日・前週からコピー",
+              )
+            }
+          >
+            前日・前週からコピー
+          </button>
+        </div>
+      )}
+      <div className="dispatch-mode-switch" hidden={navigationReview}>
         {["日単位の予定・割当", "前日・前週からコピー"].map((m) => (
           <button
             role="tab"
@@ -216,7 +257,11 @@ export default function DispatchWorkspace({ navigate }) {
         ))}
       </div>
       {mode === "日単位の予定・割当" ? (
-        <form className="daily-plan-form" onSubmit={create}>
+        <form
+          className="daily-plan-form"
+          hidden={navigationReview && !adding}
+          onSubmit={create}
+        >
           <label>
             搬出元
             <select name="site">
@@ -379,29 +424,29 @@ export default function DispatchWorkspace({ navigate }) {
           <tbody>
             {rows.map((t) => (
               <tr key={t.id}>
-                <td>
+                <td data-label="便ID・状態">
                   {t.id}
                   <small>
                     {t.operation}／{t.tripNo}
                   </small>
                 </td>
-                <td>
+                <td data-label="現場／受入先">
                   {t.departure}
                   <small>{t.destination}</small>
                 </td>
-                <td>
+                <td data-label="車番・担当">
                   {t.vehicle}
                   <small>{t.driver}</small>
                 </td>
-                <td>
+                <td data-label="指定時刻">
                   {t.departAt} → {t.arriveAt}
                 </td>
-                <td>
+                <td data-label="操作">
                   <button
                     className="outline"
                     onClick={() => setSelected({ ...t })}
                   >
-                    割当・変更・取消・履歴
+                    {navigationReview ? "詳細・操作" : "割当・変更・取消・履歴"}
                   </button>
                 </td>
               </tr>
@@ -412,6 +457,7 @@ export default function DispatchWorkspace({ navigate }) {
       </div>
       {selected && (
         <AssignmentEditor
+          navigationReview={navigationReview}
           original={selected}
           current={all.find((t) => t.id === selected.id)}
           vehicles={vehicles}
@@ -421,8 +467,16 @@ export default function DispatchWorkspace({ navigate }) {
     </section>
   );
 }
-function AssignmentEditor({ original, current, vehicles, close }) {
+function AssignmentEditor({
+  original,
+  current,
+  vehicles,
+  close,
+  navigationReview = false,
+}) {
   const ref = useRef(null),
+    [action, setAction] = useState("概要"),
+    [cancelConfirmed, setCancelConfirmed] = useState(false),
     [draft, setDraft] = useState({ ...original, reason: "" }),
     [error, setError] = useState("");
   useEffect(() => {
@@ -524,7 +578,12 @@ function AssignmentEditor({ original, current, vehicles, close }) {
     }
   }
   return (
-    <dialog ref={ref} className="review-dialog" onCancel={close}>
+    <dialog
+      ref={ref}
+      className="review-dialog"
+      aria-label={`${original.id} 配車操作`}
+      onCancel={close}
+    >
       <header>
         <h2>{original.id} 割当・変更・履歴</h2>
         <button onClick={close} aria-label="割当編集を閉じる">
@@ -535,38 +594,88 @@ function AssignmentEditor({ original, current, vehicles, close }) {
         配車版 {original.assignmentVersion} ／ 予定 {original.date}{" "}
         {original.departAt}
       </p>
+      {navigationReview && (
+        <>
+          <div
+            className="review-detail-tabs"
+            role="tablist"
+            aria-label="便の操作"
+          >
+            {[
+              "概要",
+              current.vehicleId ? "担当変更" : "割当",
+              "取消",
+              "履歴",
+            ].map((x) => (
+              <button
+                key={x}
+                role="tab"
+                aria-selected={action === x}
+                className={action === x ? "active" : ""}
+                onClick={() => {
+                  setAction(x);
+                  setCancelConfirmed(false);
+                }}
+              >
+                {x}
+              </button>
+            ))}
+          </div>
+          {action === "概要" && (
+            <dl className="review-company-facts">
+              <dt>現場</dt>
+              <dd>{current.departure}</dd>
+              <dt>受入先</dt>
+              <dd>{current.destination}</dd>
+              <dt>車両・ドライバー</dt>
+              <dd>
+                {current.vehicle}／{current.driver}
+              </dd>
+              <dt>状態</dt>
+              <dd>{current.operation}</dd>
+            </dl>
+          )}
+        </>
+      )}
       {locked ? (
         <p>
           確定実績・取消済み便はここで変更できません。訂正権限の業務ルールは別途決定します。
         </p>
       ) : (
-        <form onSubmit={save}>
+        <form
+          onSubmit={save}
+          hidden={
+            navigationReview && !["割当", "担当変更", "取消"].includes(action)
+          }
+        >
           <div className="review-filter">
             {[
               ["siteId", "搬出現場", demoSites],
               ["locationId", "受入先", demoLocations],
               ["vehicleId", "車両", vehicles],
               ["driverId", "ドライバー", demoDrivers],
-            ].map(([key, label, list]) => (
-              <label key={key}>
-                {label}
-                <select
-                  aria-label={label}
-                  required
-                  value={draft[key]}
-                  onChange={(e) =>
-                    setDraft({ ...draft, [key]: e.target.value })
-                  }
-                >
-                  <option value="">選択してください</option>
-                  {list.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.number || v.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
+            ]
+              .filter(() => !navigationReview || action !== "取消")
+              .map(([key, label, list]) => (
+                <label key={key}>
+                  {label}
+                  <select
+                    aria-label={label}
+                    required
+                    value={draft[key]}
+                    onChange={(e) =>
+                      setDraft({ ...draft, [key]: e.target.value })
+                    }
+                  >
+                    <option value="">選択してください</option>
+                    {list.map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.number || v.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
             <label>
               変更・取消理由
               <textarea
@@ -580,22 +689,49 @@ function AssignmentEditor({ original, current, vehicles, close }) {
             仮変更は同じブラウザの3画面に反映します。変更後は受入側の再確認とドライバーの配車版確認が必要です。実通知は送信しません。
           </p>
           <div className="review-actions">
-            <button className="primary">変更をデモ内に反映（未送信）</button>
-            <button type="button" className="outline" onClick={cancel}>
-              取消をデモ内に反映
-            </button>
+            {(!navigationReview || action !== "取消") && (
+              <button className="primary">変更をデモ内に反映（未送信）</button>
+            )}
+            {(!navigationReview || action === "取消") && (
+              <button
+                type="button"
+                className="outline"
+                onClick={() => {
+                  if (navigationReview && !cancelConfirmed) {
+                    if (!draft.reason.trim()) {
+                      setError("取消理由を入力してください。");
+                      return;
+                    }
+                    setCancelConfirmed(true);
+                    return;
+                  }
+                  cancel();
+                }}
+              >
+                {navigationReview && cancelConfirmed
+                  ? "この便の取消を確定する（デモ）"
+                  : "取消をデモ内に反映"}
+              </button>
+            )}
+            {navigationReview && cancelConfirmed && (
+              <p role="alert">
+                この便を取り消します。理由と対象便を確認して、もう一度ボタンを押してください。
+              </p>
+            )}
           </div>
         </form>
       )}
       {error && <p role="alert">{error}</p>}
-      <h3>変更前後・適用日時</h3>
-      {current.history.length ? (
-        current.history.map((h, i) => (
-          <p key={i}>{typeof h === "string" ? h : `${h.at} ${h.message}`}</p>
-        ))
-      ) : (
-        <p>変更なし</p>
-      )}
+      <section hidden={navigationReview && action !== "履歴"}>
+        <h3>変更前後・適用日時</h3>
+        {current.history.length ? (
+          current.history.map((h, i) => (
+            <p key={i}>{typeof h === "string" ? h : `${h.at} ${h.message}`}</p>
+          ))
+        ) : (
+          <p>変更なし</p>
+        )}
+      </section>
     </dialog>
   );
 }

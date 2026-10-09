@@ -34,6 +34,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run test:sites
+      - run: node --test tests/compliance-context.test.mjs
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/check-pages-navigation.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

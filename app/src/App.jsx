@@ -1,20 +1,38 @@
-import VehicleWorkspace from './demo/VehicleWorkspace.jsx';
-import DispatchWorkspace from './demo/DispatchWorkspace.jsx';
-import LaborWorkspace,{ParticipationWorkspace,ActionRequired} from './demo/LaborWorkspace.jsx';
-import {useDemoTrips, demoNotice} from './demo/store.jsx';
-import {demoSites,demoVehicles,demoDrivers,demoCompany,asControl,demoDay} from './demo/model.mjs';
+import VehicleWorkspace from "./demo/VehicleWorkspace.jsx";
+import {
+  ReviewSidebar,
+  ReviewWorkspace,
+  ReviewRelations,
+  ReviewCompanyDetail,
+  reviewModuleFor,
+  reviewModules,
+} from "./review/NavigationReview.jsx";
+import ReviewOperations from "./review/ReviewOperations.jsx";
+import ReviewSiteCompanies from "./review/ReviewSiteCompanies.jsx";
+import { readReviewContext, writeReviewContext } from "./review/reviewContext.mjs";
+import DispatchWorkspace from "./demo/DispatchWorkspace.jsx";
+import LaborWorkspace, {
+  ParticipationWorkspace,
+  ActionRequired,
+} from "./demo/LaborWorkspace.jsx";
+import { useDemoTrips, demoNotice } from "./demo/store.jsx";
+import {demoLocations,demoSites,demoVehicles,demoDrivers,demoCompany,asControl,demoDay,
+} from "./demo/model.mjs";
 import { publicDemo } from "./publicDemo.mjs";
-import ReceivingLocationsConnected from './receiving/ReceivingLocationsConnected';
-import ReceivingConnected from './receiving/ReceivingConnected';
-import CapacityChart from './receiving/CapacityChart';
-import ReceivingTripMap from './receiving/ReceivingTripMap';
+import ReceivingLocationsConnected from "./receiving/ReceivingLocationsConnected";
+import ReceivingConnected from "./receiving/ReceivingConnected";
+import CapacityChart from "./receiving/CapacityChart";
+import ReceivingTripMap from "./receiving/ReceivingTripMap";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
-import { ReceivingWorkspace, useReceivingWorkspace, receivingPages, PrototypeNotice } from "./receiving/ReceivingWorkspace.jsx";
+import { ReceivingWorkspace, useReceivingWorkspace, receivingPages, PrototypeNotice,
+} from "./receiving/ReceivingWorkspace.jsx";
 import { databaseMode } from "./lib/databaseConfig";
-import {BusinessSessionBar,useBusinessSession} from "./business/BusinessSession.jsx";
+import {BusinessSessionBar,useBusinessSession,
+} from "./business/BusinessSession.jsx";
 import ConstructionSitesConnected from "./business/ConstructionSitesConnected.jsx";
-import { ConstructionResultsPage, ConstructionTransportPage } from "./construction/ConstructionOperations.jsx";
+import { ConstructionResultsPage, ConstructionTransportPage,
+} from "./construction/ConstructionOperations.jsx";
 import ReceivingLiveHome from "./business/ReceivingLiveHome.jsx";
 import ConnectedApp from "./integration/ConnectedApp.jsx";
 import DirectWorkflowPanel from "./workflow/DirectWorkflowPanel.jsx";
@@ -71,12 +89,14 @@ const receivingNavGroups = [
     [Truck, "受入管理", "搬出・受入スケジュール"],
     [MapPinned, "受入場所管理", "受入場所管理"],
     [ClipboardList, "搬入予約・受付", "搬入予約・受付"],
-  ] },
+  ],
+  },
   { title: "運行管理", items: [[Route, "運行ダッシュボード", "運行管制"]] },
   { title: "実績・設定", items: [
     [FileText, "実績・帳票", "受入実績・帳票"],
     [Settings, "取引先・基本設定", "取引先・基本設定"],
-  ] },
+  ],
+  },
 ];
 
 const constructionNavGroups = [
@@ -101,8 +121,7 @@ const constructionNavGroups = [
   {
     title: "実績管理",
     items: [
-      [ClipboardList, "実績・帳票", "実績・帳票"],
-    ],
+      [ClipboardList, "実績・帳票", "実績・帳票"]],
   },
   {
     title: "基本台帳",
@@ -124,8 +143,8 @@ const constructionNavGroups = [
 ];
 
 const routeKeys = {
-  "総合インフォメーション": "information",
-  "受入場所管理": "receiving-locations",
+  総合インフォメーション: "information",
+  受入場所管理: "receiving-locations",
   "搬入予約・受付": "receiving-reservations",
   "受入実績・帳票": "receiving-results",
   "取引先・基本設定": "receiving-settings",
@@ -173,7 +192,9 @@ const downloadBlob = (filename, content, type = "text/plain;charset=utf-8") => {
 
 const downloadCsv = (filename, headers, rows) => {
   const escape = (value) =>
-    `"${String(value ?? "").replaceAll('"', '""').replace(/<[^>]+>/g, "")}"`;
+    `"${String(value ?? "")
+      .replaceAll('"', '""')
+      .replace(/<[^>]+>/g, "")}"`;
   const content = [headers, ...rows]
     .map((row) => row.map(escape).join(","))
     .join("\r\n");
@@ -194,7 +215,10 @@ const downloadExcel = (filename, title, headers, rows) => {
     .map(
       (row, rowIndex) =>
         `<tr>${row
-          .map((cell) => `<${rowIndex ? "td" : "th"}>${cell ?? ""}</${rowIndex ? "td" : "th"}>`)
+          .map(
+            (cell) =>
+              `<${rowIndex ? "td" : "th"}>${cell ?? ""}</${rowIndex ? "td" : "th"}>`,
+          )
           .join("")}</tr>`,
     )
     .join("");
@@ -298,7 +322,8 @@ function LoginScreen({ theme, toggleTheme, onLogin, isDemoMode }) {
     try {
       await onLogin(remember, form);
     } catch (error) {
-      setNotice(error.message || "ログインできませんでした。入力内容をご確認ください。");
+      setNotice(error.message || "ログインできませんでした。入力内容をご確認ください。",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -383,7 +408,9 @@ function LoginScreen({ theme, toggleTheme, onLogin, isDemoMode }) {
               aria-invalid={Boolean(errors.company)}
               aria-describedby={errors.company ? "login-company-error" : undefined}
             />
-            {errors.company && <small id="login-company-error" role="alert">{errors.company}</small>}
+            {errors.company && (
+              <small id="login-company-error" role="alert">{errors.company}</small>
+            )}
           </label>
           <label className={errors.email ? "has-error" : ""}>
             <span>メールアドレス</span>
@@ -399,7 +426,9 @@ function LoginScreen({ theme, toggleTheme, onLogin, isDemoMode }) {
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? "login-email-error" : undefined}
             />
-            {errors.email && <small id="login-email-error" role="alert">{errors.email}</small>}
+            {errors.email && (
+              <small id="login-email-error" role="alert">{errors.email}</small>
+            )}
           </label>
           <label className={errors.password ? "has-error" : ""}>
             <span>パスワード</span>
@@ -425,7 +454,9 @@ function LoginScreen({ theme, toggleTheme, onLogin, isDemoMode }) {
             >
               {showPassword ? <EyeOff /> : <Eye />}
             </button>
-            {errors.password && <small id="login-password-error" role="alert">{errors.password}</small>}
+            {errors.password && (
+              <small id="login-password-error" role="alert">{errors.password}</small>
+            )}
           </label>
           <label className="remember-check">
             <input
@@ -514,7 +545,9 @@ const fields = Array.from({ length: 23 }, (_, i) => ({
   start: `2026/${String((i % 9) + 1).padStart(2, "0")}/01`,
   end: `2027/${String((i % 9) + 1).padStart(2, "0")}/28`,
 }));
-fields.slice(0,2).forEach((field,i)=>Object.assign(field,{databaseId:demoSites[i].id,field:demoSites[i].name,company:demoCompany,address:'千葉県成田市 モデル区画（架空）'}));
+fields.slice(0,2).forEach((field,i)=>Object.assign(field,{databaseId:demoSites[i].id,field:demoSites[i].name,company:demoCompany,address: "千葉県成田市 モデル区画（架空）",
+    }),
+  );
 const formatDatabaseDate = (value) =>
   value ? String(value).replaceAll("-", "/") : "—";
 const normalizeSiteRecord = (site) => ({
@@ -721,7 +754,8 @@ function SearchBar({
     </section>
   );
 }
-function GridTable({ headers, rows, empty = false, onConfirm, confirmLabel = "確認" }) {
+function GridTable({ headers, rows, empty = false, onConfirm, confirmLabel = "確認",
+}) {
   return (
     <div className="generic-table-wrap">
       <div className="generic-table" style={{ "--cols": headers.length }}>
@@ -737,6 +771,7 @@ function GridTable({ headers, rows, empty = false, onConfirm, confirmLabel = "�
             {r.map((cell, j) => (
               <div
                 key={j}
+                data-label={headers[j]}
                 title={
                   typeof cell === "string" && cell !== "__confirm"
                     ? cell
@@ -1046,7 +1081,9 @@ function ListPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
       downloadCsv(
         `${type}-${new Date().toISOString().slice(0, 10)}.csv`,
         config.headers.filter(Boolean),
-        filtered.map((row) => row.filter((cell) => typeof cell === "string" && cell !== "__confirm")),
+        filtered.map((row) => row.filter((cell) => typeof cell === "string" && cell !== "__confirm",
+          ),
+        ),
       );
       setConfirm({
         title: "CSV出力完了",
@@ -1256,15 +1293,20 @@ function DriverSearchPage({ query, setQuery, setConfirm }) {
       </form>
       <p role="status">検索結果：{visible.length}件</p>
       <GridTable
-        headers={["ドライバー名", "電話番号", "免許区分", "免許期限", "配車状況", "詳細"]}
-        rows={visible.map((driver) => [driver.name, driver.phone, driver.license, driver.expires, driver.status, "__confirm"])}
+        headers={["ドライバー名", "電話番号", "免許区分", "免許期限", "配車状況", "詳細",
+        ]}
+        rows={visible.map((driver) => [driver.name, driver.phone, driver.license, driver.expires, driver.status, "__confirm",
+        ])}
         confirmLabel="ドライバー情報"
         onConfirm={(index) => {
           const driver = visible[index];
-          setConfirm({ title: driver.name, message: `電話番号：${driver.phone}／免許区分：${driver.license}／免許期限：${driver.expires}／配車状況：${driver.status}` });
+          setConfirm({ title: driver.name, message: `電話番号：${driver.phone}／免許区分：${driver.license}／免許期限：${driver.expires}／配車状況：${driver.status}`,
+          });
         }}
       />
-      {!visible.length && <p>該当するドライバーがいません。検索条件を変更してください。</p>}
+      {!visible.length && (
+        <p>該当するドライバーがいません。検索条件を変更してください。</p>
+      )}
     </section>
   );
 }
@@ -1328,8 +1370,10 @@ function VehiclePage({ query, setQuery, setDetailOpen, setConfirm }) {
         </p>
       </div>
       <GridTable
-        headers={["車両名", "車両番号", "種別", "最大積載量", "利用状況", "運転手"]}
-        rows={visible.map((item) => [item.name, item.number, item.kind, item.capacity, item.status, "__confirm"])}
+        headers={["車両名", "車両番号", "種別", "最大積載量", "利用状況", "運転手",
+        ]}
+        rows={visible.map((item) => [item.name, item.number, item.kind, item.capacity, item.status, "__confirm",
+        ])}
         confirmLabel="運転手情報"
         onConfirm={(index) => {
           const vehicle = visible[index];
@@ -1517,22 +1561,28 @@ function TransportSchedulePage({
 }) {
   const savedFilters = (() => {
     try {
-      return JSON.parse(sessionStorage.getItem("ecodump-construction-schedule-filters") || "{}");
+      return JSON.parse(sessionStorage.getItem("ecodump-construction-schedule-filters") || "{}",
+      );
     } catch {
       return {};
     }
   })();
   const [status, setStatus] = useState(savedFilters.status || "すべて");
-  const [operationStatus, setOperationStatus] = useState(savedFilters.operationStatus || "すべて");
-  const [destination, setDestination] = useState(savedFilters.destination || "すべて");
+  const [operationStatus, setOperationStatus] = useState(savedFilters.operationStatus || "すべて",
+  );
+  const [destination, setDestination] = useState(savedFilters.destination || "すべて",
+  );
   const [keyword, setKeyword] = useState(savedFilters.keyword || "");
   const [day, setDay] = useState(savedFilters.day || "当日");
   const [view, setView] = useState(savedFilters.view || initialView);
-  const [field, setField] = useState(initialField !== "すべて" ? initialField : savedFilters.field || initialField);
+  const [field, setField] = useState(initialField !== "すべて" ? initialField : savedFilters.field || initialField,
+  );
   const [expandedField, setExpandedField] = useState(null);
   const planOperationStatus = (plan) => {
     const current = transportPlans.indexOf(plan);
-    return ["受入確認済み", "遅延", "運行中", "未手配", "報告済み", "未出発"][current] || "未出発";
+    return (
+      ["受入確認済み", "遅延", "運行中", "未手配", "報告済み", "未出発"][current] || "未出発"
+    );
   };
   const summaryMatches = (plan, selectedStatus) => {
     const current = planOperationStatus(plan);
@@ -1542,7 +1592,9 @@ function TransportSchedulePage({
   };
   useEffect(() => {
     if (role !== "construction") return;
-    sessionStorage.setItem("ecodump-construction-schedule-filters", JSON.stringify({ status, operationStatus, destination, keyword, day, view, field }));
+    sessionStorage.setItem("ecodump-construction-schedule-filters", JSON.stringify({ status, operationStatus, destination, keyword, day, view, field,
+      }),
+    );
   }, [status, operationStatus, destination, keyword, day, view, field, role]);
   const visiblePlans = transportPlans.filter(
     (plan) =>
@@ -1642,7 +1694,9 @@ function TransportSchedulePage({
           >
             <option>すべて</option>
             {[...new Set(transportPlans.map((plan) => plan.destination))].map(
-              (name) => <option key={name}>{name}</option>,
+              (name) => (
+                <option key={name}>{name}</option>
+              ),
             )}
           </select>
         </label>
@@ -1661,7 +1715,8 @@ function TransportSchedulePage({
             <option>受入確認済み</option>
           </select>
         </label>
-        {role === "receiving" && <label>
+        {role === "receiving" && (
+          <label>
           混雑状況
           <select
             value={status}
@@ -1672,7 +1727,8 @@ function TransportSchedulePage({
             <option>やや混雑</option>
             <option>混雑</option>
           </select>
-        </label>}
+        </label>
+        )}
         <label className="transport-keyword">
           現場・受入場所・車両
           <input
@@ -1695,27 +1751,33 @@ function TransportSchedulePage({
         </button>
         <button type="button" className={operationStatus === "受入確認済み" ? "active" : ""} onClick={() => setOperationStatus("受入確認済み")}>
           <span>完了便数</span>
-          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "受入確認済み")).length}便</b>
+          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "受入確認済み"),
+              ).length}便</b>
         </button>
         <button type="button" className={operationStatus === "未手配" ? "active" : ""} onClick={() => setOperationStatus("未手配")}>
           <span>未手配</span>
-          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "未手配")).length}便</b>
+          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "未手配"),
+              ).length}便</b>
         </button>
         <button type="button" className={operationStatus === "未出発" ? "active" : ""} onClick={() => setOperationStatus("未出発")}>
           <span>未出発</span>
-          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "未出発")).length}便</b>
+          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "未出発"),
+              ).length}便</b>
         </button>
         <button type="button" onClick={() => setOperationStatus("すべて")}>
           <span>未完了</span>
-          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "未完了")).length}便</b>
+          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "未完了"),
+              ).length}便</b>
         </button>
         <button type="button" className={operationStatus === "報告済み" ? "active" : ""} onClick={() => setOperationStatus("報告済み")}>
           <span>伝票確認待ち</span>
-          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "伝票確認待ち")).length}便</b>
+          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "伝票確認待ち"),
+              ).length}便</b>
         </button>
         <button type="button" className={operationStatus === "遅延" ? "active" : ""} onClick={() => setOperationStatus("遅延")}>
           <span>遅延</span>
-          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "遅延")).length}便</b>
+          <b>{transportPlans.filter((x) => x.day === day && summaryMatches(x, "遅延"),
+              ).length}便</b>
         </button>
         <button type="button" onClick={() => setOperationStatus("すべて")}>
           <span>実車両数</span>
@@ -1778,7 +1840,8 @@ function TransportSchedulePage({
                     {total.destinations.size}か所
                   </p>
                 </div>
-                <button className="text" onClick={() => navigate?.("現場詳細", fields.find((item) => item.field === total.field)?.id)}>現場詳細</button>
+                <button className="text" onClick={() => navigate?.("現場詳細", fields.find((item) => item.field === total.field)?.id,
+                    )}>現場詳細</button>
                 <div className="field-total-count">
                   <b>{total.trips.length}台</b>
                   <span>予定便数</span>
@@ -1900,10 +1963,14 @@ function TransportSchedulePage({
 }
 
 const dispatchDemoTrips = [
-  { id: "TR-20260820-01", rotation: "1便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", time: "08:30", vehicle: "品川 100 あ 12-34", driver: "サンプル 運転者1", state: "割当済み" },
-  { id: "TR-20260820-02", rotation: "1便目", site: "サンプル現場 B", destination: "中央中間処理施設", time: "09:10", vehicle: "未割当", driver: "未割当", state: "未割当" },
-  { id: "TR-20260820-05", rotation: "2便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", time: "10:40", vehicle: "品川 100 あ 12-34", driver: "サンプル 運転者1", state: "割当済み" },
-  { id: "TR-20260820-06", rotation: "2便目", site: "サンプル現場 B", destination: "中央中間処理施設", time: "12:15", vehicle: "未割当", driver: "未割当", state: "未割当" },
+  { id: "TR-20260820-01", rotation: "1便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", time: "08:30", vehicle: "品川 100 あ 12-34", driver: "サンプル 運転者1", state: "割当済み",
+  },
+  { id: "TR-20260820-02", rotation: "1便目", site: "サンプル現場 B", destination: "中央中間処理施設", time: "09:10", vehicle: "未割当", driver: "未割当", state: "未割当",
+  },
+  { id: "TR-20260820-05", rotation: "2便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", time: "10:40", vehicle: "品川 100 あ 12-34", driver: "サンプル 運転者1", state: "割当済み",
+  },
+  { id: "TR-20260820-06", rotation: "2便目", site: "サンプル現場 B", destination: "中央中間処理施設", time: "12:15", vehicle: "未割当", driver: "未割当", state: "未割当",
+  },
 ];
 
 function PrototypeBanner() {
@@ -1920,8 +1987,10 @@ function DispatchManagementPage({ navigate, setConfirm }) {
   const [tab, setTab] = useState("未割当");
   const [selectedId, setSelectedId] = useState(dispatchDemoTrips[1].id);
   const [draftAssignments, setDraftAssignments] = useState({});
-  const [dailyDraft, setDailyDraft] = useState({ date: "2026-08-20", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", vehicle: "品川 100 あ 12-34", driver: "サンプル 運転者1", trips: "2", quantity: "7.0", unit: "m³", source: "既存取引先への直接予約" });
-  const [copyDraft, setCopyDraft] = useState({ source: "前週", targetDate: "2026-08-27", confirmed: false });
+  const [dailyDraft, setDailyDraft] = useState({ date: "2026-08-20", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", vehicle: "品川 100 あ 12-34", driver: "サンプル 運転者1", trips: "2", quantity: "7.0", unit: "m³", source: "既存取引先への直接予約",
+  });
+  const [copyDraft, setCopyDraft] = useState({ source: "前週", targetDate: "2026-08-27", confirmed: false,
+  });
   const visible = dispatchDemoTrips.filter((trip) => {
     const assigned = draftAssignments[trip.id] || trip.state === "割当済み";
     return tab === "未割当" ? !assigned : assigned;
@@ -1941,36 +2010,55 @@ function DispatchManagementPage({ navigate, setConfirm }) {
         <button className="outline" onClick={() => navigate("運行管制")}><MapPinned /> 運行地図を開く</button>
       </div>
       <div className="dispatch-mode-switch" role="tablist" aria-label="予定編集方法">
-        {["日単位の予定・割当", "前日・前週からコピー"].map((item) => <button type="button" role="tab" aria-selected={workspaceMode === item} className={workspaceMode === item ? "active" : ""} onClick={() => setWorkspaceMode(item)} key={item}>{item}</button>)}
+        {["日単位の予定・割当", "前日・前週からコピー"].map((item) => (
+          <button type="button" role="tab" aria-selected={workspaceMode === item} className={workspaceMode === item ? "active" : ""} onClick={() => setWorkspaceMode(item)} key={item}>{item}</button>))}
       </div>
       {workspaceMode === "日単位の予定・割当" ? (
-        <form className="daily-plan-form" onSubmit={(event) => { event.preventDefault(); setConfirm({ title: "日単位予定を下書きへ反映しました", message: "API未接続のため保存・確定はしていません。共有API接続後は Idempotency-Key と更新版番号を付けて保存します。" }); }}>
-          {[["date", "日付", "date"], ["site", "搬出元", "text"], ["destination", "受入先", "text"], ["vehicle", "車両", "text"], ["driver", "運転手", "text"], ["trips", "予定回数", "number"], ["quantity", "1便の数量", "number"]].map(([key, label, type]) => <label key={key}>{label}<input type={type} value={dailyDraft[key]} onChange={(event) => setDailyDraft((current) => ({ ...current, [key]: event.target.value }))} /></label>)}
-          <label>単位<select value={dailyDraft.unit} onChange={(event) => setDailyDraft((current) => ({ ...current, unit: event.target.value }))}><option>m³</option><option>t</option></select></label>
-          <label>登録経路<select value={dailyDraft.source} onChange={(event) => setDailyDraft((current) => ({ ...current, source: event.target.value }))}><option>既存取引先への直接予約</option><option>発生土マッチの条件合意から作成</option></select></label>
+        <form className="daily-plan-form" onSubmit={(event) => { event.preventDefault(); setConfirm({ title: "日単位予定を下書きへ反映しました", message: "API未接続のため保存・確定はしていません。共有API接続後は Idempotency-Key と更新版番号を付けて保存します。",
+            }); }}>
+          {[["date", "日付", "date"], ["site", "搬出元", "text"], ["destination", "受入先", "text"], ["vehicle", "車両", "text"], ["driver", "運転手", "text"], ["trips", "予定回数", "number"], ["quantity", "1便の数量", "number"],
+          ].map(([key, label, type]) => (
+            <label key={key}>{label}<input type={type} value={dailyDraft[key]} onChange={(event) => setDailyDraft((current) => ({ ...current, [key]: event.target.value,
+                  }))
+                }
+              />
+            </label>
+          ))}
+          <label>単位<select value={dailyDraft.unit} onChange={(event) => setDailyDraft((current) => ({ ...current, unit: event.target.value,
+                }))}><option>m³</option><option>t</option></select></label>
+          <label>登録経路<select value={dailyDraft.source} onChange={(event) => setDailyDraft((current) => ({ ...current, source: event.target.value,
+                }))}><option>既存取引先への直接予約</option><option>発生土マッチの条件合意から作成</option></select></label>
           <button className="primary" type="submit">下書きへ反映</button>
           <p className="form-disclaimer">車両台帳と運転手台帳は別管理です。通常の組合せを候補表示しますが、固定の1対1にはしません。</p>
         </form>
       ) : (
         <section className="weekly-copy-panel">
           <div className="weekly-copy-fields">
-            <label>コピー元<select value={copyDraft.source} onChange={(event) => setCopyDraft((current) => ({ ...current, source: event.target.value, confirmed: false }))}><option>前日</option><option>前週</option></select></label>
-            <label>保存対象日<input type="date" value={copyDraft.targetDate} onChange={(event) => setCopyDraft((current) => ({ ...current, targetDate: event.target.value, confirmed: false }))} /></label>
+            <label>コピー元<select value={copyDraft.source} onChange={(event) => setCopyDraft((current) => ({ ...current, source: event.target.value, confirmed: false,
+                  }))}><option>前日</option><option>前週</option></select></label>
+            <label>保存対象日<input type="date" value={copyDraft.targetDate} onChange={(event) => setCopyDraft((current) => ({ ...current, targetDate: event.target.value, confirmed: false,
+                  }))} /></label>
             <strong>対象 4便・実車両 2台</strong>
           </div>
           <ul className="copy-validation-list"><li className="ok">休業日・受入不可日：該当なし</li><li className="warning">車両・運転手の重複：1件を確認</li><li className="warning">変更された行先・担当：1件を確認</li><li className="ok">運行しない車両：除外済み</li></ul>
-          <label className="copy-confirm"><input type="checkbox" checked={copyDraft.confirmed} onChange={(event) => setCopyDraft((current) => ({ ...current, confirmed: event.target.checked }))} />保存対象の日付・4便を確認しました</label>
-          <button className="primary" disabled={!copyDraft.confirmed} onClick={() => setConfirm({ title: "コピー内容を下書きへ反映しました", message: "配車確定はしていません。API未接続のためサーバーには保存されず、既存実績・提出済み伝票も変更していません。" })}>確認して下書きへ反映</button>
+          <label className="copy-confirm"><input type="checkbox" checked={copyDraft.confirmed} onChange={(event) => setCopyDraft((current) => ({ ...current, confirmed: event.target.checked,
+                }))} />保存対象の日付・4便を確認しました</label>
+          <button className="primary" disabled={!copyDraft.confirmed} onClick={() => setConfirm({ title: "コピー内容を下書きへ反映しました", message: "配車確定はしていません。API未接続のためサーバーには保存されず、既存実績・提出済み伝票も変更していません。",
+              })}>確認して下書きへ反映</button>
         </section>
       )}
       <div className="construction-kpis">
         <article><span>予定便</span><b>{dispatchDemoTrips.length}<small>便</small></b></article>
-        <article className="warning"><span>未割当</span><b>{dispatchDemoTrips.filter((x) => !(draftAssignments[x.id] || x.state === "割当済み")).length}<small>便</small></b></article>
-        <article><span>割当済み</span><b>{dispatchDemoTrips.filter((x) => draftAssignments[x.id] || x.state === "割当済み").length}<small>便</small></b></article>
+        <article className="warning"><span>未割当</span><b>{dispatchDemoTrips.filter((x) => !(draftAssignments[x.id] || x.state === "割当済み"),
+              ).length}<small>便</small></b></article>
+        <article><span>割当済み</span><b>{dispatchDemoTrips.filter((x) => draftAssignments[x.id] || x.state === "割当済み",
+              ).length}<small>便</small></b></article>
         <article><span>実車両数</span><b>2<small>台</small></b></article>
       </div>
       <div className="dispatch-tabs" role="tablist">
-        {["未割当", "割当済み"].map((item) => <button role="tab" aria-selected={tab === item} className={tab === item ? "active" : ""} onClick={() => setTab(item)} key={item}>{item}</button>)}
+        {["未割当", "割当済み"].map((item) => (
+          <button role="tab" aria-selected={tab === item} className={tab === item ? "active" : ""} onClick={() => setTab(item)} key={item}>{item}</button>
+        ))}
       </div>
       <div className="dispatch-workspace">
         <div className="dispatch-list">
@@ -1981,19 +2069,31 @@ function DispatchManagementPage({ navigate, setConfirm }) {
               <i className={tab === "未割当" ? "warning" : "complete"}>{tab}</i>
             </button>
           ))}
-          {!visible.length && <div className="empty-state">対象の便はありません。</div>}
+          {!visible.length && (
+            <div className="empty-state">対象の便はありません。</div>
+          )}
         </div>
         {dispatchDemoTrips.filter((x) => x.id === selectedId).map((trip) => {
           const assigned = draftAssignments[trip.id] || trip.state === "割当済み";
-          return <aside className="dispatch-detail" key={trip.id}>
+          return (
+              <aside className="dispatch-detail" key={trip.id}>
             <span>選択中の便</span><h3>{trip.id} <small>{trip.rotation}</small></h3>
-            <dl><div><dt>搬出現場</dt><dd>{trip.site}</dd></div><div><dt>受入先</dt><dd>{trip.destination}</dd></div><div><dt>出発予定</dt><dd>{trip.time}</dd></div><div><dt>車両</dt><dd>{assigned ? (trip.vehicle === "未割当" ? "足立 100 か 56-78" : trip.vehicle) : "未割当"}</dd></div><div><dt>ドライバー</dt><dd>{assigned ? (trip.driver === "未割当" ? "サンプル 運転者2" : trip.driver) : "未割当"}</dd></div></dl>
+            <dl><div><dt>搬出現場</dt><dd>{trip.site}</dd></div><div><dt>受入先</dt><dd>{trip.destination}</dd></div><div><dt>出発予定</dt><dd>{trip.time}</dd></div><div><dt>車両</dt><dd>{assigned ? trip.vehicle === "未割当" ? "足立 100 か 56-78" : trip.vehicle
+                        : "未割当"}</dd></div><div><dt>ドライバー</dt><dd>{assigned ? trip.driver === "未割当" ? "サンプル 運転者2" : trip.driver
+                        : "未割当"}</dd></div></dl>
             <div className="dispatch-actions">
-              {!assigned && <button className="primary" onClick={() => assign(trip)}><Truck /> サンプル車両を仮割当</button>}
-              {assigned && <button className="outline" onClick={() => setConfirm({ title: `${trip.id} 代車・代走の記録`, message: `変更前：${trip.vehicle}／${trip.driver}\n変更後・適用時点を入力する画面へ接続予定です。権限が未確定のため保存操作は実装していません。` })}>代車・代走を記録</button>}
-              <button className="outline" onClick={() => setConfirm({ title: `${trip.id} 運行詳細`, message: "便ごとの経路、状態イベント、到着予定を表示します。現在は匿名デモです。" })}>運行詳細</button>
+              {!assigned && (
+                    <button className="primary" onClick={() => assign(trip)}><Truck /> サンプル車両を仮割当</button>
+                  )}
+                  {assigned && (
+                    <button className="outline" onClick={() => setConfirm({ title: `${trip.id} 代車・代走の記録`, message: `変更前：${trip.vehicle}／${trip.driver}\n変更後・適用時点を入力する画面へ接続予定です。権限が未確定のため保存操作は実装していません。`,
+                        })}>代車・代走を記録</button>
+                  )}
+              <button className="outline" onClick={() => setConfirm({ title: `${trip.id} 運行詳細`, message: "便ごとの経路、状態イベント、到着予定を表示します。現在は匿名デモです。",
+                      })}>運行詳細</button>
             </div>
-          </aside>;
+          </aside>
+            );
         })}
       </div>
     </section>
@@ -2002,41 +2102,81 @@ function DispatchManagementPage({ navigate, setConfirm }) {
 
 function ResultsReportsPage({ setConfirm }) {
   const rows = [
-    { id: "TR-20260820-01", rotation: "1便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", planned: "7.0m³", reported: "6.9m³", confirmed: "6.8m³", status: "受入確認済み", slip: "計量票 W-0820-01" },
-    { id: "TR-20260820-05", rotation: "2便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", planned: "7.0m³", reported: "6.7m³", confirmed: "—", status: "報告済み・確認待ち", slip: "計量票 W-0820-05" },
-    { id: "TR-20260820-02", rotation: "1便目", site: "サンプル現場 B", destination: "中央中間処理施設", planned: "8.0t", reported: "—", confirmed: "—", status: "運行中", slip: "未提出" },
+    { id: "TR-20260820-01", rotation: "1便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", planned: "7.0m³", reported: "6.9m³", confirmed: "6.8m³", status: "受入確認済み", slip: "計量票 W-0820-01",
+    },
+    { id: "TR-20260820-05", rotation: "2便目", site: "（仮称）サンプル現場 A", destination: "湾岸リサイクルセンター", planned: "7.0m³", reported: "6.7m³", confirmed: "—", status: "報告済み・確認待ち", slip: "計量票 W-0820-05",
+    },
+    { id: "TR-20260820-02", rotation: "1便目", site: "サンプル現場 B", destination: "中央中間処理施設", planned: "8.0t", reported: "—", confirmed: "—", status: "運行中", slip: "未提出",
+    },
   ];
-  const csvRows = rows.map((row) => [row.id, row.rotation, row.site, row.destination, row.planned, row.reported, row.confirmed, row.status, row.slip]);
-  return <section className="construction-page results-page">
+  const csvRows = rows.map((row) => [row.id, row.rotation, row.site, row.destination, row.planned, row.reported, row.confirmed, row.status, row.slip,
+  ]);
+  return (
+    <section className="construction-page results-page">
     <PrototypeBanner />
-    <div className="construction-hero"><div><span>RESULTS & REPORTS</span><h2>実績・帳票</h2><p>予定、ドライバー報告、受入確認済みを分け、原本伝票まで便単位で追跡します。</p></div><button className="outline" onClick={() => downloadCsv("搬出実績_匿名サンプル.csv", ["便番号", "往復", "現場", "受入先", "予定量", "報告量", "受入確認量", "状態", "原本"], csvRows)}>CSV出力</button></div>
+    <div className="construction-hero"><div><span>RESULTS & REPORTS</span><h2>実績・帳票</h2><p>予定、ドライバー報告、受入確認済みを分け、原本伝票まで便単位で追跡します。</p></div><button className="outline" onClick={() => downloadCsv("搬出実績_匿名サンプル.csv", ["便番号", "往復", "現場", "受入先", "予定量", "報告量", "受入確認量", "状態", "原本",
+              ],
+              csvRows,
+            )}>CSV出力</button></div>
     <div className="construction-kpis"><article><span>受入確認済み</span><b>1<small>便</small></b></article><article className="warning"><span>伝票確認待ち</span><b>1<small>便</small></b></article><article><span>確認済み合計（容積）</span><b>6.8<small>m³</small></b></article><article><span>確認済み合計（重量）</span><b>0.0<small>t</small></b></article></div>
     <p className="results-accounting-note">確認待ち数量は確認済み合計に含めません。t と m³ は換算せず別集計です。</p>
-    <div className="results-table-wrap"><table className="service-table"><thead><tr>{["便番号", "往復", "現場", "受入先", "予定", "報告済み", "受入確認済み", "状態", "原本伝票", "操作"].map((x) => <th key={x}>{x}</th>)}</tr></thead><tbody>{rows.map((row) => <tr key={row.id}>{[row.id, row.rotation, row.site, row.destination, row.planned, row.reported, row.confirmed, row.status].map((cell) => <td key={cell}>{cell}</td>)}<td><button className="text" onClick={() => setConfirm({ title: row.slip, message: row.slip === "未提出" ? "原本伝票はまだ提出されていません。" : "Storage未接続の匿名サンプルです。原本ファイルはまだ開けません。" })}>{row.slip}</button></td><td><button className="outline" onClick={() => setConfirm({ title: `${row.id} 実績詳細`, message: "同じ運行IDのドライバー報告と受入確認結果を表示しています。現在は匿名サンプルで、APIへ保存していません。" })}>確認</button></td></tr>)}</tbody></table></div>
-  </section>;
+    <div className="results-table-wrap"><table className="service-table"><thead><tr>{["便番号", "往復", "現場", "受入先", "予定", "報告済み", "受入確認済み", "状態", "原本伝票", "操作",
+              ].map((x) => (
+                <th key={x}>{x}</th>
+              ))}</tr></thead><tbody>{rows.map((row) => (
+              <tr key={row.id}>{[row.id, row.rotation, row.site, row.destination, row.planned, row.reported, row.confirmed, row.status,
+                ].map((cell) => (
+                  <td key={cell}>{cell}</td>
+                ))}<td><button className="text" onClick={() => setConfirm({ title: row.slip, message: row.slip === "未提出" ? "原本伝票はまだ提出されていません。" : "Storage未接続の匿名サンプルです。原本ファイルはまだ開けません。",
+                      })}>{row.slip}</button></td><td><button className="outline" onClick={() => setConfirm({ title: `${row.id} 実績詳細`, message: "同じ運行IDのドライバー報告と受入確認結果を表示しています。現在は匿名サンプルで、APIへ保存していません。",
+                      })}>確認</button></td></tr>))}</tbody></table></div>
+  </section>
+  );
 }
 
 function SettingsHubPage({ navigate }) {
-  const links = [[Building2, "会社情報", "会社情報"], [UserRound, "ユーザー", "ユーザー一覧"], [BusFront, "車両・運転手", "車両一覧"], [Network, "協力会社", "代行先一覧"]];
-  return <section className="construction-page settings-hub"><div className="construction-hero"><div><span>PARTNERS & SETTINGS</span><h2>関係会社・基本設定</h2><p>既存の会社・ユーザー・車両・関係会社機能をまとめています。</p></div></div><div className="settings-grid">{links.map(([Icon, label, route]) => <button onClick={() => navigate(route)} key={route}><Icon /><span><b>{label}</b><small>既存画面を開く</small></span><ChevronRight /></button>)}</div></section>;
+  const links = [[Building2, "会社情報", "会社情報"], [UserRound, "ユーザー", "ユーザー一覧"], [BusFront, "車両・運転手", "車両一覧"], [Network, "協力会社", "代行先一覧"],
+  ];
+  return (
+    <section className="construction-page settings-hub"><div className="construction-hero"><div><span>PARTNERS & SETTINGS</span><h2>関係会社・基本設定</h2><p>既存の会社・ユーザー・車両・関係会社機能をまとめています。</p></div></div><div className="settings-grid">{links.map(([Icon, label, route]) => (
+          <button onClick={() => navigate(route)} key={route}><Icon /><span><b>{label}</b><small>既存画面を開く</small></span><ChevronRight /></button>))}
+      </div>
+    </section>
+  );
 }
 
-function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
-  const [tab, setTab] = useState(() =>
+function FieldDetailPage({ field, navigate, setConfirm, role = "receiving",
+  integrated = false,
+  onSchedule,
+}) {
+  const contextKey = `ecodump-review-field:${field.id}`;
+  const [tab, setTab] = useState(() => integrated ? readReviewContext(contextKey, {}).tab || "概要" :
     new URLSearchParams(location.search).get("section") === "contractors"
       ? "協力会社"
       : role === "construction" ? "概要" : "運行マップ",
   );
+  useEffect(() => {
+    if (integrated) writeReviewContext(contextKey, {...readReviewContext(contextKey, {}), tab});
+  }, [tab, integrated, contextKey]);
   const [expandedContractor, setExpandedContractor] = useState("SC-02-01");
   const allFieldTrips=useDemoTrips();
-  const selectedDate=(()=>{try{return JSON.parse(sessionStorage.getItem('ecodump-construction-schedule-filters')||'{}').date||demoDay();}catch{return demoDay();}})();
-  const fieldPlans=allFieldTrips.filter(t=>t.departure===field.field&&t.date===selectedDate);
+  const selectedDate=(()=>{try{return (
+        JSON.parse(
+          sessionStorage.getItem("ecodump-construction-schedule-filters") ||
+            "{}",
+        ).date || demoDay()
+      );}catch{return demoDay();}})();
+  const fieldPlans=allFieldTrips.filter(
+    (t) =>t.departure===field.field&&t.date===selectedDate,
+  );
   const tabs = role === "construction"
-    ? ["概要", "搬出条件", "搬出予定", "車両・運転手", "運行状況", "搬出入記録・写真・伝票", "数量実績", "書類", "協力会社"]
+    ? ["概要", "搬出条件", "搬出予定", "車両・運転手", "運行状況", "搬出入記録・写真・伝票", "数量実績", "書類", "協力会社",
+        ]
     : ["運行マップ", "概要", "協力会社", "搬出・受入", "車両・運転手"];
   return (
     <section className="field-detail-page">
-      <div className="field-detail-hero">
+      {!integrated && (
+        <div className="field-detail-hero">
         <button
           className="text back-to-fields"
           onClick={() => navigate("現場一覧")}
@@ -2052,7 +2192,18 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           </p>
         </div>
       </div>
-      <nav className="field-subnav" aria-label="現場内メニュー">
+      )}
+      {integrated ? (
+        <label className="review-category-select">
+          現場の詳細項目
+          <select value={tab} onChange={(e) => setTab(e.target.value)}>
+            {tabs.map((label) => (
+              <option key={label}>{label}</option>
+            ))}
+          </select>
+        </label>
+      ) : (
+        <nav className="field-subnav" aria-label="現場内メニュー">
         {tabs.map((label) => (
           <button
             className={tab === label ? "active" : ""}
@@ -2063,40 +2214,60 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           </button>
         ))}
       </nav>
+      )}
       {(tab === "運行マップ" || tab === "運行状況") && (
         <FieldOperationsDashboard
           field={field}
+          navigationReview={integrated}
           navigate={navigate}
           setConfirm={setConfirm}
           onShowSchedule={() => setTab(role==="construction"?"搬出予定":"搬出・受入")}
         />
+      )}
+      {integrated && tab === "搬出予定" && (
+        <button className="outline" onClick={onSchedule}>
+          この現場の搬出予定一覧へ
+        </button>
       )}
       {tab === "搬出条件" && (
         <div className="field-dashboard construction-field-panel">
           <PrototypeBanner />
           <div className="field-kpis">
             <article><span>土質区分</span><b>第2種建設発生土</b></article>
-            <article><span>総搬出計画量（検証用）</span><b>{demoSites.find(s=>s.name===field.field)?`${demoSites.find(s=>s.name===field.field).planned.toLocaleString()} ${demoSites.find(s=>s.name===field.field).unit}`:"未設定"}</b></article>
+            <article><span>総搬出計画量（検証用）</span><b>{demoSites.find((s) =>s.name===field.field)? `${demoSites.find((s) => s.name === field.field).planned.toLocaleString()} ${demoSites.find((s) => s.name === field.field).unit}`
+                  :"未設定"}</b></article>
             <article><span>日量上限</span><b>未設定（業務定義待ち）</b></article>
             <article><span>大型車条件</span><b>10tダンプ</b></article>
           </div>
           <div className="gf-purpose"><b>受入条件照合</b><span>土質試験、最大粒径、含水、有害物質、搬出期間を予約時点の条件版と照合します。現在は匿名サンプルです。</span></div>
         </div>
       )}
-      {tab === "搬出予定" && (
+      {tab === "搬出予定" && !integrated && (
         <ConstructionTransportPage navigate={navigate} initialField={field.field} embedded />
       )}
-      {tab === "数量実績" && <ConstructionResultsPage navigate={navigate} initialField={field.field} embedded />}
+      {tab === "数量実績" && (
+        <ConstructionResultsPage navigate={navigate} initialField={field.field} embedded />
+      )}
       {tab === "車両・運転手" && (
         <div className="field-dashboard construction-field-panel">
           <PrototypeBanner />
-          <div className="results-table-wrap"><table className="service-table"><thead><tr><th>便番号</th><th>車両</th><th>運転手</th><th>車両の当日便順</th><th>割当状態</th><th>変更履歴</th></tr></thead><tbody>{fieldPlans.map((plan, index) => <tr key={plan.id}><td>{plan.id}</td><td>{plan.vehicle}</td><td>{plan.driver}</td><td>{plan.tripNo}</td><td>{plan.vehicleId ? "割当済み" : "未割当"}</td><td><button className="text" onClick={() => setConfirm({ title: `${plan.id} 変更履歴`, message: plan.history.length ? plan.history.map(h=>typeof h==="string"?h:`${h.at} ${h.message}`).join("\n") : "成田モデル：変更履歴なし。APIへの送信は行いません。" })}>確認</button></td></tr>)}</tbody></table></div>
+          <div className="results-table-wrap"><table className="service-table"><thead><tr><th>便番号</th><th>車両</th><th>運転手</th><th>車両の当日便順</th><th>割当状態</th><th>変更履歴</th></tr></thead><tbody>{fieldPlans.map((plan, index) => (
+                  <tr key={plan.id}><td>{plan.id}</td><td>{plan.vehicle}</td><td>{plan.driver}</td><td>{plan.tripNo}</td><td>{plan.vehicleId ? "割当済み" : "未割当"}</td><td><button className="text" onClick={() => setConfirm({ title: `${plan.id} 変更履歴`, message: plan.history.length ? plan.history.map((h) =>typeof h==="string"?h:`${h.at} ${h.message}`,
+                                  )
+                                  .join("\n")
+                              : "成田モデル：変更履歴なし。APIへの送信は行いません。",
+                          })}>確認</button></td></tr>
+                ))}</tbody></table></div>
         </div>
       )}
       {tab === "搬出入記録・写真・伝票" && (
         <div className="field-dashboard construction-field-panel">
           <PrototypeBanner />
-          <div className="settings-grid">{[[DoorOpen, "搬出入履歴", "ゲート通過時刻と滞在時間"], [Camera, "現場写真", "運行IDに紐づく写真"], [FileText, "原本伝票", "計量票・受入票"], [ClipboardList, "状態報告", "出発・到着・荷下ろし完了"]].map(([Icon, label, description]) => <button key={label} onClick={() => setConfirm({ title: label, message: `${description}を同一運行IDで参照します。外部Storage未接続のため現在は匿名サンプルです。` })}><Icon /><span><b>{label}</b><small>{description}</small></span><ChevronRight /></button>)}</div>
+          <div className="settings-grid">{[[DoorOpen, "搬出入履歴", "ゲート通過時刻と滞在時間"], [Camera, "現場写真", "運行IDに紐づく写真"], [FileText, "原本伝票", "計量票・受入票"], [ClipboardList, "状態報告", "出発・到着・荷下ろし完了"],
+            ].map(([Icon, label, description]) => (
+              <button key={label} onClick={() => setConfirm({ title: label, message: `${description}を同一運行IDで参照します。外部Storage未接続のため現在は匿名サンプルです。`,
+                  })}><Icon /><span><b>{label}</b><small>{description}</small></span><ChevronRight /></button>
+            ))}</div>
         </div>
       )}
       {tab === "書類" && (
@@ -2104,8 +2275,10 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           <PrototypeBanner />
           <div className="settings-grid">
             {["土質試験結果", "搬入承認書", "計量票", "運行記録"].map((documentName) => (
-              <button key={documentName} onClick={() => setConfirm({ title: documentName, message: "Storage未接続のため、現在は匿名サンプルの配置確認のみです。" })}><FileText /><span><b>{documentName}</b><small>未接続・サンプル</small></span><ChevronRight /></button>
-            ))}
+              <button key={documentName} onClick={() => setConfirm({ title: documentName, message: "Storage未接続のため、現在は匿名サンプルの配置確認のみです。",
+                    })}><FileText /><span><b>{documentName}</b><small>未接続・サンプル</small></span><ChevronRight /></button>
+            ),
+            )}
           </div>
         </div>
       )}
@@ -2114,7 +2287,8 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           <div className="field-kpis">
             <div>
               <span>本日の車両</span>
-              <b>{new Set(fieldPlans.filter(t=>t.vehicleId&&t.booking!=="取消").map(t=>t.vehicleId)).size}台</b>
+              <b>{new Set(fieldPlans.filter((t) =>t.vehicleId&&t.booking!=="取消").map((t) => t.vehicleId),
+                  ).size}台</b>
             </div>
             <div>
               <span>予定便数</span>
@@ -2134,11 +2308,13 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
               </span>
               <ChevronRight />
             </button>
-            {role === "construction" && <button onClick={() => setTab("搬出入記録・写真・伝票")}>
+            {role === "construction" && (
+              <button onClick={() => setTab("搬出入記録・写真・伝票")}>
               <FileText />
               <span><b>運行記録・写真・伝票</b><small>車両の到着・出発と原本伝票を確認</small></span>
               <ChevronRight />
-            </button>}
+            </button>
+            )}
             <button onClick={() => setTab(role === "construction" ? "搬出予定" : "搬出・受入")}>
               <Truck />
               <span>
@@ -2158,7 +2334,8 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
           </div>
         </div>
       )}
-      {tab === "協力会社" && (
+      {tab === "協力会社" && integrated && <ReviewSiteCompanies siteId={field.databaseId || field.id} siteName={field.field} navigate={navigate}/>}
+      {tab === "協力会社" && !integrated && (
         <div className="field-section contractor-section">
           <div className="section-heading">
             <div>
@@ -2271,8 +2448,48 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving" }) {
     </section>
   );
 }
-function CompanyPage({ setConfirm }) {
-  const [tab, setTab] = useState("本社情報");
+function ReviewFieldContext({
+  fieldName,
+  records,
+  changeField,
+  navigate,
+  setConfirm,
+}) {
+  const field = records.find((r) => r.field === fieldName);
+  if (!field) return null;
+  return (
+    <section className="review-field-context">
+      <header>
+        <div>
+          <p>
+            {field.address} · {field.start}〜{field.end}
+          </p>
+        </div>
+        <span>現場ID：{field.id}</span>
+      </header>
+      <details open={readReviewContext(`ecodump-review-field:${field.id}`, {}).expanded || false}
+        onToggle={e => writeReviewContext(`ecodump-review-field:${field.id}`, {...readReviewContext(`ecodump-review-field:${field.id}`, {}), expanded:e.currentTarget.open})}>
+        <summary>現場概要・搬出条件・関連情報を確認</summary>
+        <FieldDetailPage
+          key={field.id}
+          field={field}
+          role="construction"
+          integrated
+          navigate={navigate}
+          setConfirm={setConfirm}
+          onSchedule={() =>
+            document
+              .querySelector(`[data-field-name="${field.field}"] .construction-trip-table`)
+              ?.scrollIntoView({ block: "start" })
+          }
+        />
+      </details>
+    </section>
+  );
+}
+function CompanyPage({ setConfirm, reviewTab, navigationReview = false }) {
+  const [localTab, setTab] = useState("本社情報");
+  const tab = navigationReview ? reviewTab : localTab;
   const [editingTabs, setEditingTabs] = useState({});
   const [savedValues, setSavedValues] = useState({});
   const [draftValues, setDraftValues] = useState({});
@@ -2282,33 +2499,46 @@ function CompanyPage({ setConfirm }) {
   const editing = !!editingTabs[tab];
   useLayoutEffect(() => {
     if (detailRef.current) detailRef.current.scrollTop = scrollPositions.current[tab] || 0;
+    return () => {
+      if (detailRef.current)
+        scrollPositions.current[tab] = detailRef.current.scrollTop;
+    };
   }, [tab]);
-  const changeTab = nextTab => {
+  const changeTab = (nextTab) => {
     scrollPositions.current[tab] = detailRef.current?.scrollTop || 0;
     setFeedback("");
     setTab(nextTab);
   };
   const startEditing = () => {
-    setDraftValues(values => ({ ...values, [tab]: { ...savedValues[tab] } }));
-    setEditingTabs(tabs => ({ ...tabs, [tab]: true }));
+    setDraftValues((values) => ({ ...values, [tab]: { ...savedValues[tab] } }));
+    setEditingTabs((tabs) => ({ ...tabs, [tab]: true }));
     setFeedback("");
   };
   const cancelEditing = () => {
-    setEditingTabs(tabs => ({ ...tabs, [tab]: false }));
+    setEditingTabs((tabs) => ({ ...tabs, [tab]: false }));
     setFeedback("編集をキャンセルしました。");
   };
-  const saveEditing = event => {
+  const saveEditing = (event) => {
     event.preventDefault();
     if (!editing) return;
-    setSavedValues(values => ({ ...values, [tab]: { ...draftValues[tab] } }));
-    setEditingTabs(tabs => ({ ...tabs, [tab]: false }));
-    setFeedback("この画面に反映しました。ページを離れると変更はリセットされます。");
+    setSavedValues((values) => ({ ...values, [tab]: { ...draftValues[tab] } }));
+    setEditingTabs((tabs) => ({ ...tabs, [tab]: false }));
+    setFeedback("この画面に反映しました。ページを離れると変更はリセットされます。",
+    );
   };
   const renderValue = (key, label, original) => {
     const value = (editing ? draftValues : savedValues)[tab]?.[key] ?? original;
-    return editing ? <input aria-label={label} required value={value}
-      onChange={event => setDraftValues(values => ({ ...values,
-        [tab]: { ...values[tab], [key]: event.target.value } }))} /> : value;
+    return editing ? (
+      <input aria-label={label} required value={value}
+      onChange={(event) =>
+          setDraftValues((values) => ({ ...values,
+        [tab]: { ...values[tab], [key]: event.target.value },
+          }))
+        }
+      />
+    ) : (
+      value
+    );
   };
   const infoRows = [
     ["種別", "法人"],
@@ -2382,7 +2612,8 @@ function CompanyPage({ setConfirm }) {
   ];
   return (
     <section className="company-workspace" aria-label="会社情報の内容">
-      <div className="company-tabs" role="tablist" aria-label="会社情報の項目">
+      {!navigationReview && (
+        <div className="company-tabs" role="tablist" aria-label="会社情報の項目">
         {["本社情報", "CCUS連携情報", "労務安全項目", "支店情報"].map((x) => (
           <button
             type="button"
@@ -2392,8 +2623,10 @@ function CompanyPage({ setConfirm }) {
             aria-selected={tab === x}
             aria-controls="company-details"
             tabIndex={tab === x ? 0 : -1}
-            onKeyDown={event => {
-              const tabs = Array.from(event.currentTarget.parentElement.querySelectorAll('[role="tab"]'));
+            onKeyDown={(event) => {
+              const tabs = Array.from(event.currentTarget.parentElement.querySelectorAll('[role="tab"]',
+                  ),
+                );
               const index = tabs.indexOf(event.currentTarget);
               const next = event.key === "ArrowRight" ? (index + 1) % tabs.length
                 : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length
@@ -2410,13 +2643,19 @@ function CompanyPage({ setConfirm }) {
           </button>
         ))}
       </div>
+      )}
+      {navigationReview && <h2 className="review-section-title">{tab}</h2>}
       {tab !== "CCUS連携情報" && tab !== "支店情報" && (
         <div className="company-actions">
           <div className="company-edit-controls">
-            {editing ? <>
+            {editing ? (
+              <>
               <button className="primary" type="submit" form="company-details-form">保存</button>
               <button className="outline" type="button" onClick={cancelEditing}>キャンセル</button>
-            </> : <button className="primary" type="button" onClick={startEditing}>編集</button>}
+            </>
+            ) : (
+              <button className="primary" type="button" onClick={startEditing}>編集</button>
+            )}
             <small role="status">{feedback || (editing ? "画面内の編集です。サーバーへは保存されません。" : "")}</small>
           </div>
           <span>
@@ -2425,10 +2664,12 @@ function CompanyPage({ setConfirm }) {
         </div>
       )}
       <form id="company-details-form" className="company-details-scroll" ref={detailRef}
-        onSubmit={saveEditing} onScroll={event => { scrollPositions.current[tab] = event.currentTarget.scrollTop; }}
-        onInvalid={event => event.target.scrollIntoView({ block: "center" })}
+        onSubmit={saveEditing} onScroll={(event) => { scrollPositions.current[tab] = event.currentTarget.scrollTop; }}
+        onInvalid={(event) => event.target.scrollIntoView({ block: "center" })}
         aria-label="会社情報の詳細" tabIndex={0}>
-      <div id="company-details" role="tabpanel" aria-labelledby={`company-tab-${tab}`}>
+      <div id="company-details" role={navigationReview ? "region" : "tabpanel"}
+          aria-label={navigationReview ? tab : undefined}
+          aria-labelledby={navigationReview ? undefined : `company-tab-${tab}`}>
       {tab === "本社情報" && (
         <section className="company-card">
           <h3>基本情報</h3>
@@ -2732,8 +2973,10 @@ function AgencyPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
           <button
             className="outline"
             onClick={() => {
-              downloadWord("代行登録申請書.doc", "代行登録申請書", [["会社名", "住所", "電話番号"], ["サンプル運輸株式会社", "東京都中央区", "00-0000-1001"]]);
-              setConfirm({ title: "Word出力完了", message: "匿名サンプル申請書をダウンロードしました。" });
+              downloadWord("代行登録申請書.doc", "代行登録申請書", [["会社名", "住所", "電話番号"], ["サンプル運輸株式会社", "東京都中央区", "00-0000-1001"],
+              ]);
+              setConfirm({ title: "Word出力完了", message: "匿名サンプル申請書をダウンロードしました。",
+              });
             }}
           >Word</button>
           <button className="outline" onClick={() => window.print()}>PDF</button>
@@ -2751,7 +2994,8 @@ function AgencyPage({ type, query, setQuery, setDetailOpen, setConfirm }) {
   );
 }
 
-const greenMenus = ["書類状況一覧", "元請帳票の確認", "配下協力会社検索", "ドライバー検索"];
+const greenMenus = ["書類状況一覧", "元請帳票の確認", "配下協力会社検索", "ドライバー検索",
+];
 
 function GfFilter({ worker = false, onClose, onSearch }) {
   return (
@@ -2977,7 +3221,8 @@ function GreenDocumentList({ title, setConfirm }) {
                 downloadWord(
                   "安全書類テンプレート.doc",
                   "安全書類テンプレート",
-                  [["会社名", "作業内容", "提出日"], ["", "", ""]],
+                  [["会社名", "作業内容", "提出日"], ["", "", ""],
+                  ],
                 );
                 setConfirm({
                   title: "テンプレートをダウンロードしました",
@@ -3042,20 +3287,39 @@ function GreenDocumentList({ title, setConfirm }) {
   );
 }
 
-function GreenfilePage({setConfirm}) {return <LaborWorkspace renderDocuments={()=> <GreenDocumentList title="元請帳票の確認" setConfirm={setConfirm}/>} renderDrivers={(query,setQuery)=> <DriverSearchPage query={query} setQuery={setQuery} setConfirm={setConfirm}/>}/>;}
+function GreenfilePage({setConfirm, navigationReview = false }) {
+  return (
+    <LaborWorkspace
+      navigationReview={navigationReview}
+      renderDocuments={() => (
+        <GreenDocumentList title="元請帳票の確認" setConfirm={setConfirm}/>
+      )}
+      renderDrivers={(query, setQuery) => (
+        <DriverSearchPage query={query} setQuery={setQuery} setConfirm={setConfirm}/>
+      )}
+    />
+  );}
 
 function SearchServicePage({ setConfirm }) {
   const [filter, setFilter] = useState(true);
-  return <section className="gf-page">
+  return (
+    <section className="gf-page">
     <h2>配下協力会社検索</h2>
     <p className="gf-lead">現場に登録された配下協力会社を検索します。</p>
     <div className="gf-toolbar"><b>検索結果：2件</b><button className="outline" onClick={() => setFilter((value) => !value)}>検索条件</button></div>
-    {filter && <GfFilter onClose={() => setFilter(false)} onSearch={() => setFilter(false)} />}
+    {filter && (
+        <GfFilter onClose={() => setFilter(false)} onSearch={() => setFilter(false)} />
+      )}
     <div className="gf-matrix-wrap"><table className="gf-table">
-      <thead><tr>{["会社名", "一次協力会社", "作業内容", "工期", "操作"].map((label) => <th key={label}>{label}</th>)}</tr></thead>
-      <tbody>{[0, 1].map((index) => <tr key={index}><td>サンプル協力会社{String.fromCharCode(65 + index)}</td><td>サンプル建設株式会社</td><td>躯体工事</td><td>2026/04/01〜2027/03/31</td><td><button className="text-button" onClick={() => setConfirm({title: "協力会社詳細"})}>確認</button></td></tr>)}</tbody>
+      <thead><tr>{["会社名", "一次協力会社", "作業内容", "工期", "操作"].map((label) => (
+                  <th key={label}>{label}</th>
+                ),
+              )}</tr></thead>
+      <tbody>{[0, 1].map((index) => (
+              <tr key={index}><td>サンプル協力会社{String.fromCharCode(65 + index)}</td><td>サンプル建設株式会社</td><td>躯体工事</td><td>2026/04/01〜2027/03/31</td><td><button className="text-button" onClick={() => setConfirm({title: "協力会社詳細"})}>確認</button></td></tr>))}</tbody>
     </table></div>
-  </section>;
+  </section>
+  );
 }
 
 const matchingCandidates = [
@@ -3073,7 +3337,8 @@ const matchingCandidates = [
     price: "受入 2,800円/m³",
     status: "事前相談可能",
     reasons: ["土質適合", "工期一致", "日量余裕あり", "必要書類4/5"],
-    factors: [["土質", 100], ["期間", 96], ["受入余力", 92], ["必要書類", 80]],
+    factors: [["土質", 100], ["期間", 96], ["受入余力", 92], ["必要書類", 80],
+    ],
   },
   {
     id: "MT-2026-002",
@@ -3089,7 +3354,8 @@ const matchingCandidates = [
     price: "受入 2,300円/m³",
     status: "条件確認中",
     reasons: ["土質適合", "工期一致", "総量余裕あり", "距離注意"],
-    factors: [["土質", 94], ["期間", 90], ["受入余力", 88], ["必要書類", 72]],
+    factors: [["土質", 94], ["期間", 90], ["受入余力", 88], ["必要書類", 72],
+    ],
   },
   {
     id: "MT-2026-003",
@@ -3105,11 +3371,13 @@ const matchingCandidates = [
     price: "受入 3,100円/m³",
     status: "追加試験必要",
     reasons: ["土質条件付き", "工期一部一致", "日量上限あり", "溶出試験必要"],
-    factors: [["土質", 70], ["期間", 76], ["受入余力", 68], ["必要書類", 58]],
+    factors: [["土質", 70], ["期間", 76], ["受入余力", 68], ["必要書類", 58],
+    ],
   },
 ];
 
-function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案件を探す", onPrepareReservation }) {
+function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案件を探す", onPrepareReservation,
+}) {
   const [mode, setMode] = useState(initialMode);
   const exportCandidates = matchingCandidates.map((item, index) => ({ ...item,
     id: `SOIL-EXPORT-${index + 1}`, destination: `サンプル搬出現場 ${String.fromCharCode(65 + index)}`,
@@ -3294,7 +3562,8 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
               <div className="match-connected-chart" aria-hidden="true">
                 <div className="match-chart-grid"><i /><i /><i /></div>
                 <svg viewBox="0 0 400 120" preserveAspectRatio="none">
-                  <polyline points={(selected.factors || []).map(([, value], index) => `${50 + index * 100},${110 - Math.max(0, Math.min(100, value))}`).join(" ")} />
+                  <polyline points={(selected.factors || []).map(([, value], index) => `${50 + index * 100},${110 - Math.max(0, Math.min(100, value))}`,
+                      ).join(" ")} />
                   {(selected.factors || []).map(([, value], index) => (
                     <circle key={index} cx={50 + index * 100} cy={110 - Math.max(0, Math.min(100, value))} r="6" />
                   ))}
@@ -3310,7 +3579,9 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
                 </div>
               </div>
               <ul className="match-chart-values">
-                {(selected.factors || []).map(([label, value]) => <li key={label}><span>{label}</span><b>{value}</b></li>)}
+                {(selected.factors || []).map(([label, value]) => (
+                  <li key={label}><span>{label}</span><b>{value}</b></li>
+                ))}
               </ul>
             </div>
             <div className="matching-progress" aria-label="マッチング進行状況">
@@ -3383,7 +3654,9 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
               </div>
             </div>
             <div className="match-actions">
-              {onPrepareReservation && isExport && <button className="outline" onClick={() => onPrepareReservation(selected)}>この搬出案件から予約下書きへ</button>}
+              {onPrepareReservation && isExport && (
+                <button className="outline" onClick={() => onPrepareReservation(selected)}>この搬出案件から予約下書きへ</button>
+              )}
               <button
                 className="outline"
                 onClick={() =>
@@ -3649,6 +3922,12 @@ const controlMapLocations = {
     position: [35.3812, 139.9249],
     detail: "受入中 1台",
   },
+};
+
+// Names and IDs follow the same Narita demo masters; coordinates remain illustrative.
+const reviewMapLocations = {
+  ...Object.fromEntries(demoSites.map((site,index)=>[`S-0${index+1}`, { ...controlMapLocations[`S-0${index+1}`], name:site.name,fieldId:site.alias,detail:"位置は描画例" }])),
+  ...Object.fromEntries(demoLocations.map(location=>[location.code,{ ...controlMapLocations[location.code],name:location.name,destinationKind:"受入先",detail:"位置は描画例" }])),
 };
 
 // Simplified driving geometries generated from OSRM. These are stored with the
@@ -3978,8 +4257,11 @@ function OperationsMap({
   navigate,
   setConfirm,
   locations = controlMapLocations,
+  readable = false,
 }) {
+  const LegendTag=readable?"details":"div";
   const [leaflet, setLeaflet] = useState(null);
+  const [mapZoom, setMapZoom] = useState(10);
   const elementRef = useRef(null);
   const mapRef = useRef(null);
   const routeLayerRef = useRef(null);
@@ -4008,6 +4290,13 @@ function OperationsMap({
       minZoom: 8,
       maxZoom: 18,
       zoomControl: false,
+      zoomAnimation: !readable,
+      fadeAnimation: !readable,
+      markerZoomAnimation: !readable,
+      scrollWheelZoom: !readable,
+      doubleClickZoom: !readable,
+      zoomSnap: readable ? 0.25 : 1,
+      zoomDelta: readable ? 0.5 : 1,
     });
     mapRef.current = map;
     leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -4039,7 +4328,9 @@ function OperationsMap({
         }
       });
     });
-    map.fitBounds(points, { padding: [42, 42] });
+    map.fitBounds(points, { padding: [42, 42], animate: !readable });
+    setMapZoom(map.getZoom());
+    map.on("zoomend", () => setMapZoom(map.getZoom()));
     map.on("locationfound", (event) => {
       if (locationLayerRef.current) locationLayerRef.current.remove();
       locationLayerRef.current = leaflet.layerGroup([
@@ -4104,7 +4395,7 @@ function OperationsMap({
         }).bindTooltip(
           `${trip.id} これから向かう経路／${trip.from} → ${to.destinationKind || "受入場所"} ${trip.to}${roadRoute ? `／${roadRoute.distance}・${roadRoute.duration}` : ""}`,
         );
-        if (!selected) return [routeLine];
+        if (!selected || (readable && !trip.vehicleId)) return [routeLine];
         const progressIndex = Math.min(
           routePoints.length - 1,
           Math.round((routePoints.length - 1) * tripRouteProgress(trip.status)),
@@ -4135,11 +4426,11 @@ function OperationsMap({
       })
       .filter(Boolean);
     routeLayerRef.current = leaflet.layerGroup(layers).addTo(map);
-  }, [leaflet, visibleTrips, selectedTripData, locations]);
+  }, [leaflet, visibleTrips, selectedTripData, locations, readable]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !selectedTripData) return;
+    if (!map || !selectedTripData || readable) return;
     const from = locations[mapLocationCode(selectedTripData.from)];
     const to = locations[mapLocationCode(selectedTripData.to)];
     const roadRoute =
@@ -4147,13 +4438,15 @@ function OperationsMap({
         `${mapLocationCode(selectedTripData.from)}:${mapLocationCode(selectedTripData.to)}`
       ];
     if (from && to) {
-      map.flyToBounds(roadRoute?.points || [from.position, to.position], {
+      const move = readable ? map.fitBounds.bind(map) : map.flyToBounds.bind(map);
+      move(roadRoute?.points || [from.position, to.position], {
+        animate: !readable,
         padding: [78, 78],
         maxZoom: 12,
         duration: 0.55,
       });
     }
-  }, [selectedTripData, locations]);
+  }, [selectedTripData, locations, readable]);
 
   const fitAll = () =>
     mapRef.current?.fitBounds(
@@ -4174,14 +4467,15 @@ function OperationsMap({
 
   return (
     <div
-      className="operations-map"
+      className={`operations-map ${readable ? "readable-map" : ""}`}
       aria-label="インタラクティブ運行マップ"
       style={{
         "--control-map-image": `url("${import.meta.env.BASE_URL}ecodump-control-map.png")`,
       }}
     >
       <div className="leaflet-map" ref={elementRef} />
-      <div className="map-legend">
+      <LegendTag className="map-legend">
+        {readable&&<summary>地図の凡例を表示</summary>}
         <b>大型ダンプ運行判定</b>
         <span>
           <i className="site-dot" />
@@ -4217,7 +4511,7 @@ function OperationsMap({
           <i className="restricted-route-line" />
           大型車通行不可
         </span>
-      </div>
+      </LegendTag>
       <div className="map-selection" aria-live="polite">
         <small>選択中の運行</small>
         <b>{selectedTripData?.id}</b>
@@ -4296,22 +4590,26 @@ function OperationsMap({
           </>
         )}
       </div>
+      {readable && <p className="review-map-hint">ドラッグで移動・＋／−で段階的に拡大縮小 <output aria-label="地図のズーム">{mapZoom.toFixed(2)}</output></p>}
       <div className="map-tools">
         <button
           aria-label="地図を拡大"
-          onClick={() => mapRef.current?.zoomIn()}
+          onClick={() => mapRef.current?.zoomIn(readable ? 0.5 : 1)}
         >
           ＋
         </button>
         <button
           aria-label="地図を縮小"
-          onClick={() => mapRef.current?.zoomOut()}
+          onClick={() => mapRef.current?.zoomOut(readable ? 0.5 : 1)}
         >
           −
         </button>
         <button aria-label="全地点を表示" onClick={fitAll}>
           <MapPinned />
         </button>
+        {readable && <button aria-label="選択便の経路を表示" onClick={() => {
+          if (selectedFrom && selectedTo) mapRef.current?.fitBounds(selectedRoadRoute?.points || [selectedFrom.position, selectedTo.position], {padding:[60,60], maxZoom:12, animate:false});
+        }}><Route/></button>}
         <button
           aria-label="現在地"
           onClick={() =>
@@ -4338,12 +4636,18 @@ function FieldOperationsDashboard({
   navigate,
   setConfirm,
   onShowSchedule,
+  navigationReview=false,
 }) {
   const sharedTrips=useDemoTrips();
-  const fieldIndex=demoSites.findIndex(s=>s.name===field.field);
-  const siteCode=`S-0${fieldIndex+1}`;
-  const date=(()=>{try{return JSON.parse(sessionStorage.getItem('ecodump-construction-schedule-filters')||'{}').date||demoDay();}catch{return demoDay();}})();
-  const trips=sharedTrips.filter(t=>t.departure===field.field&&t.date===date).map(asControl);
+  const fieldIndex=demoSites.findIndex((s) =>s.name===field.field);
+  const siteCode= `S-0${fieldIndex + 1}`;
+  const date=(()=>{try{return (
+        JSON.parse(
+          sessionStorage.getItem("ecodump-construction-schedule-filters") ||
+            "{}",
+        ).date || demoDay()
+      );}catch{return demoDay();}})();
+  const trips=sharedTrips.filter((t) =>t.departure===field.field&&t.date===date).map(asControl);
   const [selectedTrip, setSelectedTrip] = useState(trips[0]?.id);
   const selectedTripData =
     trips.find((trip) => trip.id === selectedTrip) || trips[0];
@@ -4368,7 +4672,11 @@ function FieldOperationsDashboard({
   ).length;
   const completedCount = trips.filter((trip) => trip.status === "完了").length;
   const [vehicleProjection, setVehicleProjection] = useState(null);
-  if(!trips.length)return <div className="empty-state">選択した現場・対象日に運行予定はありません。<button onClick={onShowSchedule}>搬出予定へ</button></div>;
+  if(navigationReview)return <ReviewOperations initialSite={field.field} navigate={navigate} renderMap={(visible,chosen)=><OperationsMap visibleTrips={visible} selectedTripData={chosen} locations={reviewMapLocations} navigate={navigate} setConfirm={setConfirm} readable/>} onDetail={trip=>setConfirm({title:`${trip.id} 運行詳細`,message:`${trip.departure} → ${trip.destination}／${trip.vehicle}／${trip.driver}／状態：${trip.status}`})}/>;
+  if (!trips.length)
+    return (
+      <div className="empty-state">選択した現場・対象日に運行予定はありません。<button onClick={onShowSchedule}>搬出予定へ</button></div>
+    );
 
   return (
     <section className="field-operations-dashboard">
@@ -4880,7 +5188,23 @@ function ControlTopBar({
               </div>
               <button onClick={() => setUnread(0)}>すべて既読</button>
             </header>
-            {[['TR-20260820-02 の遅延・担当を確認','配車・運行管理','TR-20260820-02'],['受入条件・日次枠を確認','受入場所管理',null],['必要書類の提出・確認待ち','労務安全',null]].map(([message,target,id])=><button key={message} onClick={()=>{setNotificationOpen(false);setUnread(v=>Math.max(0,v-1));if(id)sessionStorage.setItem(roleMode==='receiving'?'ecodump-receiving-focus':'ecodump-dispatch-focus',id);navigate(roleMode==='receiving'&&id?'搬入予約・受付':target);}}><i/><span><b>{message}</b><small>成田モデル・デモの確認入口</small></span></button>)}
+            {[[
+                "TR-20260820-02 の遅延・担当を確認",
+                "配車・運行管理",
+                "TR-20260820-02",
+              ],
+              ["受入条件・日次枠を確認", "受入場所管理", null],
+              ["必要書類の提出・確認待ち", "労務安全", null],
+            ].map(([message,target,id])=> (
+              <button key={message} onClick={()=>{setNotificationOpen(false);setUnread((v) =>Math.max(0,v-1));if(id)sessionStorage.setItem(roleMode=== "receiving"
+                        ? "ecodump-receiving-focus"
+                        : "ecodump-dispatch-focus",
+                      id,
+                    );
+                  navigate(
+                    roleMode === "receiving" && id ? "搬入予約・受付" : target,
+                  );}}><i/><span><b>{message}</b><small>成田モデル・デモの確認入口</small></span></button>
+            ))}
           </div>
         )}
         <button
@@ -5100,15 +5424,25 @@ function ControlOperationModal({ mode, onClose, onSave }) {
   );
 }
 
-function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleMode }) {
+function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleMode,
+  navigationReview = false,
+  siteOptions,
+}) {
   const [tripFilter, setTripFilter] = useState("すべてのステータス");
-  const [date,setDate]=useState(()=>{try{return JSON.parse(sessionStorage.getItem(roleMode==='receiving'?'ecodump-receiving-view:demo':'ecodump-construction-schedule-filters')||'{}').date||demoDay();}catch{return demoDay();}});
+  const [date,setDate]=useState(()=>{try{return (
+        JSON.parse(sessionStorage.getItem(roleMode=== "receiving"
+              ? "ecodump-receiving-view:demo"
+              : "ecodump-construction-schedule-filters",
+          ) || "{}",
+        ).date || demoDay()
+      );}catch{return demoDay();}});
   const [siteFilter, setSiteFilter] = useState("すべての現場");
   const [cargoFilter, setCargoFilter] = useState("すべての荷種");
   const [selectedTrip, setSelectedTrip] = useState("TR-20260820-02");
   const sharedTrips=useDemoTrips();
-  const trips=sharedTrips.filter(t=>t.date===date).map(asControl);
-  const setTrips=()=>setConfirm({title:"地図からの更新は未送信",message:"搬出管理・配車から同じ便を編集してください。"});
+  const trips=sharedTrips.filter((t) =>t.date===date).map(asControl);
+  const setTrips=()=>setConfirm({title:"地図からの更新は未送信",message:"搬出管理・配車から同じ便を編集してください。",
+    });
   const [operationMode, setOperationMode] = useState(null);
   const [mapTrip, setMapTrip] = useState(null);
   const [timelineExpanded, setTimelineExpanded] = useState(true);
@@ -5124,10 +5458,71 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
     cargoFilter !== "すべての荷種";
   const selectedTripData =
     visibleTrips.find((trip) => trip.id === selectedTrip) || visibleTrips[0];
-  const summaries=[[ClipboardList,'予定総便数',visibleTrips.length,'便'],[Truck,'配車済み',visibleTrips.filter(t=>t.vehicleId&&t.booking!=="取消").length,'便'],[Navigation,'運行中',visibleTrips.filter(t=>t.status==='運行中').length,'便'],[TriangleAlert,'遅延',visibleTrips.filter(t=>t.status==='遅延').length,'便','warning'],[Clock3,'待機中',visibleTrips.filter(t=>t.status==='待機中').length,'便'],[ShieldCheck,'受入完了',visibleTrips.filter(t=>t.status==='完了').length,'便','complete']];
+  const summaries=[[ClipboardList, "予定総便数", visibleTrips.length, "便"],
+    [
+      Truck,
+      "配車済み",
+      visibleTrips.filter((t) =>t.vehicleId&&t.booking!=="取消").length,
+      "便",
+    ],
+    [
+      Navigation,
+      "運行中",
+      visibleTrips.filter((t) => t.status === "運行中").length,
+      "便",
+    ],
+    [
+      TriangleAlert,
+      "遅延",
+      visibleTrips.filter((t) => t.status === "遅延").length,
+      "便",
+      "warning",
+    ],
+    [
+      Clock3,
+      "待機中",
+      visibleTrips.filter((t) => t.status === "待機中").length,
+      "便",
+    ],
+    [
+      ShieldCheck,
+      "受入完了",
+      visibleTrips.filter((t) => t.status === "完了").length,
+      "便",
+      "complete",
+    ],
+  ];
+  if (navigationReview)
+    return (
+      <ReviewOperations
+        siteOptions={siteOptions}
+        navigate={navigate}
+        renderMap={(visible, chosen) => (
+          <OperationsMap
+            visibleTrips={visible}
+            selectedTripData={chosen}
+            navigate={navigate}
+            setConfirm={setConfirm}
+            locations={reviewMapLocations}
+            readable
+          />
+        )}
+        onDetail={(trip) =>
+          setConfirm({
+            title: `${trip.id} 運行詳細`,
+            message: `${trip.departure} → ${trip.destination}／状態：${trip.status}／指定時刻：${trip.time} → ${trip.eta}／車両：${trip.vehicle}／ドライバー：${trip.driver}／予定：${trip.plannedVolume}／受入確定：${trip.actualVolume}`,
+          })
+        }
+      />
+    );
   return (
     <div className="control-tower-page">
-      <p className="control-sample-note" role="note">成田モデルの便一覧です。地図の経路・現在位置は描画例であり、成田〜採石場の実走行経路やGPS実測ではありません。<label className="control-review-date">対象日<input aria-label="運行ダッシュボードの対象日" type="date" value={date} onChange={e=>{if(!e.target.value)return;setDate(e.target.value);setTimelineExpanded(true);setMapTrip(null);const k=roleMode==='receiving'?'ecodump-receiving-view:demo':'ecodump-construction-schedule-filters';try{sessionStorage.setItem(k,JSON.stringify({...JSON.parse(sessionStorage.getItem(k)||'{}'),date:e.target.value}));}catch{}}}/></label></p>
+      <p className="control-sample-note" role="note">成田モデルの便一覧です。地図の経路・現在位置は描画例であり、成田〜採石場の実走行経路やGPS実測ではありません。<label className="control-review-date">対象日<input aria-label="運行ダッシュボードの対象日" type="date" value={date} onChange={(e) =>{if(!e.target.value)return;setDate(e.target.value);setTimelineExpanded(true);setMapTrip(null);const k=roleMode=== "receiving"
+                  ? "ecodump-receiving-view:demo"
+                  : "ecodump-construction-schedule-filters";try{sessionStorage.setItem(k,JSON.stringify({...JSON.parse(sessionStorage.getItem(k)|| "{}"),
+                    date: e.target.value,
+                  }),
+                );}catch{}}}/></label></p>
       <section className="control-toolbar">
         <button
           className={`toolbar-menu-trigger ${!collapsed ? "active" : ""}`}
@@ -5139,16 +5534,19 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
         </button>
         <button
           className="dispatch-primary"
-          onClick={() => navigate(roleMode === "receiving" ? "搬入予約・受付" : "配車・運行管理")}
+          onClick={() => navigate(roleMode === "receiving" ? "搬入予約・受付" : "配車・運行管理",
+            )}
         >
           <Truck />
           <span>{roleMode === "receiving" ? "搬入予約・受付" : "配車を組む"}</span>
           <ChevronRight />
         </button>
-        {roleMode !== "receiving" && <button onClick={() => navigate("配車・運行管理")}>
+        {roleMode !== "receiving" && (
+          <button onClick={() => navigate("配車・運行管理")}>
           <CalendarDays />
           予定を追加
-        </button>}
+        </button>
+        )}
         <label>
           現場
           <select
@@ -5156,7 +5554,9 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             onChange={(event) => setSiteFilter(event.target.value)}
           >
             <option>すべての現場</option>
-            {demoSites.map(site=><option key={site.id}>{site.name}</option>)}
+            {demoSites.map((site) => (
+              <option key={site.id}>{site.name}</option>
+            ))}
           </select>
         </label>
         <label>
@@ -5196,8 +5596,19 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
           {hasActiveFilters ? "絞込解除" : "フィルター"}
         </button>
       </section>
-      {roleMode === "receiving" && <div className="receiving-timeline-shortcuts">{[['すべてのステータス','すべての便'],['向かっているダンプ','向かっているダンプ'],['待機中','現場で待機中'],['受入中','受入先で受入中']].map(([value,label])=><button key={value} aria-pressed={tripFilter===value} onClick={()=>setTripFilter(value)}>{label}</button>)}<span>便をタップして車両の経路・状況を確認（サンプル）</span></div>}
-      {mapTrip && <ReceivingTripMap trip={mapTrip} from={controlMapLocations[mapLocationCode(mapTrip.from)]} to={controlMapLocations[mapLocationCode(mapTrip.to)]} route={controlRoadRoutes[`${mapLocationCode(mapTrip.from)}:${mapLocationCode(mapTrip.to)}`]} onClose={()=>setMapTrip(null)}/>}
+      {roleMode === "receiving" && (
+        <div className="receiving-timeline-shortcuts">
+          {[
+            ["すべてのステータス", "すべての便"],
+            ["向かっているダンプ", "向かっているダンプ"],
+            ["待機中", "現場で待機中"],
+            ["受入中", "受入先で受入中"],
+          ].map(([value,label])=> (
+            <button key={value} aria-pressed={tripFilter===value} onClick={()=>setTripFilter(value)}>{label}</button>))}<span>便をタップして車両の経路・状況を確認（サンプル）</span></div>
+      )}
+      {mapTrip && (
+        <ReceivingTripMap trip={mapTrip} from={controlMapLocations[mapLocationCode(mapTrip.from)]} to={controlMapLocations[mapLocationCode(mapTrip.to)]} route={controlRoadRoutes[`${mapLocationCode(mapTrip.from)}:${mapLocationCode(mapTrip.to)}`]} onClose={()=>setMapTrip(null)}/>
+      )}
       <section className={`control-workspace ${timelineExpanded ? "timeline-expanded" : ""}`}>
         {!timelineExpanded && selectedTripData && (
           <OperationsMap
@@ -5220,15 +5631,15 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
               </div>
               <div>
                 <dt>運行中</dt>
-                <dd>{`${visibleTrips.filter(t=>t.status==="運行中").length}便`}</dd>
+                <dd>{`${visibleTrips.filter((t) => t.status === "運行中").length}便`}</dd>
               </div>
               <div>
                 <dt>遅延</dt>
-                <dd>{`${visibleTrips.filter(t=>t.status==="遅延").length}便`}</dd>
+                <dd>{`${visibleTrips.filter((t) => t.status === "遅延").length}便`}</dd>
               </div>
               <div>
                 <dt>完了</dt>
-                <dd>{`${visibleTrips.filter(t=>t.status==="完了").length}便`}</dd>
+                <dd>{`${visibleTrips.filter((t) => t.status === "完了").length}便`}</dd>
               </div>
             </dl>
             <button
@@ -5297,7 +5708,8 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             className="all-trips"
             onClick={() => navigate("搬出・受入スケジュール")}
           >
-            {roleMode === "receiving" ? "受入管理で予定・実績を確認" : `すべての運行（${trips.length}便）を表示`} <ChevronRight />
+            {roleMode === "receiving" ? "受入管理で予定・実績を確認" : `すべての運行（${trips.length}便）を表示`}{" "}
+            <ChevronRight />
           </button>
         </div>
       </section>
@@ -5361,7 +5773,8 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             queueMicrotask(() => setConfirm({
               title: operationMode === "dispatch" ? "配車案を画面へ反映" : "予定案を画面へ反映",
               message: `${nextId} をローカル下書きとしてタイムラインへ追加しました。API未接続のため保存・確定はしていません。`,
-            }));
+            }),
+            );
           }}
         />
       )}
@@ -5371,6 +5784,42 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
 
 export function App() {
   useDialogAccessibility();
+  const navigationReview =
+    new URLSearchParams(location.search).get("navigationReview") === "1" &&
+    (["localhost", "127.0.0.1"].includes(location.hostname) || publicDemo) &&
+    new URLSearchParams(location.search).get("role") === "construction";
+  const [reviewPanel, setReviewPanel] = useState(false);
+  const [reviewCompany, setReviewCompany] = useState(() =>
+    new URLSearchParams(location.search).get("reviewCompany"),
+  );
+  const [reviewSite, setReviewSite] = useState(() => new URLSearchParams(location.search).get("reviewSite"));
+  const [companySection, setCompanySection] = useState(
+    () =>
+      ["本社情報", "CCUS連携情報", "労務安全項目", "支店情報"].includes(new URLSearchParams(location.search).get("companySection")) ? new URLSearchParams(location.search).get("companySection") : "本社情報",
+  );
+  const changeCompanySection = (tab) => {
+    setCompanySection(tab);
+    const params = new URLSearchParams(location.search);
+    params.set("companySection", tab);
+    history.replaceState(null, "", `${location.pathname}?${params}`);
+  };
+  const openReviewCompany = (id, siteId) => {
+    setReviewCompany(id);
+    setReviewSite(id ? siteId || null : null);
+    const params = new URLSearchParams(location.search);
+    if (id) params.set("reviewCompany", id);
+    else params.delete("reviewCompany");
+    if (id && siteId) params.set("reviewSite", siteId);
+    else params.delete("reviewSite");
+    history.replaceState(null, "", `${location.pathname}?${params}`);
+  };
+  const returnKey = "ecodump-review-return";
+  const [reviewReturn, setReviewReturn] = useState(() => {
+    const saved = readReviewContext(returnKey);
+    return saved?.destinationPage === pageFromLocation() ? saved : null;
+  });
+  const reviewRestore = useRef(null);
+  useEffect(() => { if (navigationReview) writeReviewContext(returnKey, reviewReturn); }, [reviewReturn, navigationReview]);
   const receivingModel = useReceivingWorkspace();
   const [page, setPage] = useState(pageFromLocation),
     [roleMode, setRoleMode] = useState(
@@ -5470,7 +5919,19 @@ export function App() {
   useEffect(() => {
     const restoreRoute = () => {
       setPage(pageFromLocation());
-      setRoleMode(new URLSearchParams(location.search).get("role") || "receiving");
+      setCompanySection(
+        ["本社情報", "CCUS連携情報", "労務安全項目", "支店情報"].includes(new URLSearchParams(location.search).get("companySection")) ? new URLSearchParams(location.search).get("companySection") : "本社情報",
+      );
+      setReviewCompany(
+        new URLSearchParams(location.search).get("reviewCompany"),
+      );
+      setReviewSite(new URLSearchParams(location.search).get("reviewSite"));
+      if (navigationReview) {
+        setReviewReturn(history.state?.reviewReturn || null);
+        reviewRestore.current = history.state?.reviewContext || null;
+      }
+      setRoleMode(new URLSearchParams(location.search).get("role") || "receiving",
+      );
       setSelected(new URLSearchParams(location.search).get("fieldId"));
       setQuery("");
       setDetailOpen(false);
@@ -5507,7 +5968,74 @@ export function App() {
     tabletQuery.addEventListener("change", syncNavigation);
     return () => tabletQuery.removeEventListener("change", syncNavigation);
   }, []);
-  const navigate = (p, fieldId) => {
+  const navigate = (p, fieldId, reviewOptions = {}) => {
+    let nextReturn = reviewReturn;
+    if (navigationReview) {
+      if (
+        !reviewOptions.menu &&
+        !reviewOptions.related &&
+        p === "代行登録申請" &&
+        ["搬出・受入スケジュール", "現場詳細"].includes(page)
+      ) {
+        setReviewPanel(true);
+        return;
+      }
+      if (reviewOptions.menu) {
+        nextReturn = null;
+        setReviewReturn(null);
+        setReviewPanel(false);
+        setReviewCompany(null);
+        setReviewSite(null);
+        sessionStorage.removeItem("ecodump-compliance-focus");
+      } else if (
+        !reviewOptions.restore &&
+        reviewModuleFor(page) &&
+        reviewModuleFor(p) &&
+        reviewModuleFor(page) !== reviewModuleFor(p)
+      ) {
+        nextReturn = {
+          page,
+          fieldId: selected,
+          scroll:
+            document.querySelector(".navigation-review-main")?.scrollTop || 0,
+          companyId: reviewCompany,
+          siteId: reviewSite,
+          panel: reviewPanel,
+          href: `${location.pathname}${location.search}`,
+          previous: reviewReturn,
+          destinationPage: p,
+        };
+        history.replaceState({...history.state, reviewContext: nextReturn, reviewReturn}, "", nextReturn.href);
+        if (page === "搬出・受入スケジュール") {
+          const key = "ecodump-construction-schedule-filters";
+          writeReviewContext(key, {...readReviewContext(key, {}), scrollTop: nextReturn.scroll});
+        }
+        setReviewReturn(nextReturn);
+      }
+      if (reviewOptions.companyId) {
+        setReviewCompany(reviewOptions.companyId);
+        setReviewSite(reviewOptions.siteId);
+        writeReviewContext(`ecodump-review-company:${reviewOptions.companyId}:${reviewOptions.siteId}`, reviewOptions.companySection || "会社情報");
+      }
+      setReviewPanel(false);
+    }
+    if (navigationReview && ["現場一覧", "現場詳細"].includes(p)) {
+      if (fieldId) {
+        const record = siteRecords.find((r) => r.id === fieldId);
+        if (record) {
+          const k = "ecodump-construction-schedule-filters";
+          let saved = {};
+          try {
+            saved = JSON.parse(sessionStorage.getItem(k) || "{}");
+          } catch {}
+          sessionStorage.setItem(
+            k,
+            JSON.stringify({ ...saved, field: record.field }),
+          );
+        }
+      }
+      p = "搬出・受入スケジュール";
+    }
     if(fieldId)setSelected(fieldId);
     setBusinessBooking(null);
     setPage(p);
@@ -5519,20 +6047,63 @@ export function App() {
     setConfirm(null);
     const params = new URLSearchParams(location.search);
     params.delete("fieldId");
+    if (navigationReview && reviewOptions.menu) {
+      params.delete("reviewCompany");params.delete("reviewSite");params.delete("documentCategory");
+    }
+    if (navigationReview && reviewOptions.companyId) {
+      params.set("reviewCompany", reviewOptions.companyId);
+      params.set("reviewSite", reviewOptions.siteId);
+    }
     if (routeKeys[p])
       params.set("page", routeKeys[p]);
     else params.delete("page");
     if (p === "現場詳細" && (fieldId || selected))
       params.set("fieldId", fieldId || selected);
     history.pushState(
-      { page: p },
+      { page: p, reviewReturn: nextReturn },
       "",
       `${location.pathname}${params.size ? `?${params}` : ""}`,
     );
     if (window.matchMedia("(max-width: 1024px)").matches) setCollapsed(true);
   };
-  const activeNavGroups =
-    roleMode === "construction" ? constructionNavGroups : receivingNavGroups;
+  const activeNavGroups = navigationReview
+    ? [
+        {
+          title: "業務メニュー",
+          items: reviewModules.map((m) => [m.icon, m.title, m.items[0][1]]),
+        },
+      ]
+    : roleMode === "construction"
+      ? constructionNavGroups
+      : receivingNavGroups;
+  useEffect(() => {
+    if (
+      !navigationReview ||
+      !reviewRestore.current ||
+      reviewRestore.current.page !== page
+    )
+      return;
+    const target = reviewRestore.current;
+    let secondFrame;
+    const id = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        document.querySelector(".navigation-review-main")?.scrollTo({ top: target.scroll });
+        reviewRestore.current = null;
+      });
+    });
+    return () => {cancelAnimationFrame(id);cancelAnimationFrame(secondFrame);};
+  }, [page, navigationReview]);
+  const returnReview = () => {
+    const target = reviewReturn;
+    if (!target) return;
+    reviewRestore.current = target;
+    setReviewReturn(target.previous || null);
+    navigate(target.page, target.fieldId, { restore: true });
+    setReviewCompany(target.companyId);
+    setReviewSite(target.siteId || null);
+    setReviewPanel(target.panel);
+    if (target.href) history.replaceState({page:target.page, reviewReturn:target.previous || null}, "", target.href);
+  };
   const copyId = async (id) => {
     await navigator.clipboard?.writeText(id);
     setCopied(id);
@@ -5569,15 +6140,18 @@ export function App() {
   };
   const business = useBusinessSession(roleMode);
   const [businessBooking,setBusinessBooking] = useState(null);
-  const openBusinessBooking = id => {navigate(roleMode === "receiving" ? "搬入予約・受付" : "配車・運行管理");setBusinessBooking(id);};
-  const connectedPages = ["搬出・受入スケジュール", "配車・運行管理", "搬入予約・受付", "実績・帳票", "受入実績・帳票"];
+  const openBusinessBooking = (id) => {navigate(roleMode === "receiving" ? "搬入予約・受付" : "配車・運行管理");setBusinessBooking(id);};
+  const connectedPages = ["搬出・受入スケジュール", "配車・運行管理", "搬入予約・受付", "実績・帳票", "受入実績・帳票",
+  ];
   const businessPage = page === "総合インフォメーション" || connectedPages.includes(page) || page === "UCRマッチング" || (roleMode === "receiving" && page === "受入場所管理") || (roleMode === "construction" && page === "現場一覧");
-  const livePage = business.session && businessPage;
+  const livePage = !navigationReview && business.session && businessPage;
   let body;
   if (page === "運行管制")
     body = (
       <ControlTowerPage
-        {...{ navigate, setConfirm, collapsed, setCollapsed, roleMode }}
+        {...{ navigate, setConfirm, collapsed, setCollapsed, roleMode,
+          navigationReview, siteOptions: siteRecords.map(r => r.field),
+        }}
       />
     );
   else if (page === "現場一覧")
@@ -5609,7 +6183,13 @@ export function App() {
         {...{ navigate, setConfirm, role: roleMode }}
       />
     );
-  else if (page === "会社情報") body = <CompanyPage setConfirm={setConfirm} />;
+  else if (page === "会社情報") body = (
+      <CompanyPage
+        setConfirm={setConfirm}
+        navigationReview={navigationReview}
+        reviewTab={companySection}
+      />
+    );
   else if (page === "ユーザー一覧")
     body = (
       <ListPage
@@ -5618,14 +6198,37 @@ export function App() {
       />
     );
   else if (page === "労務安全")
-    body = <GreenfilePage setConfirm={setConfirm} />;
+    body = (
+      <GreenfilePage
+        setConfirm={setConfirm}
+        navigationReview={navigationReview}
+      />
+    );
   else if (page === "ドライバー検索")
     body = <DriverSearchPage {...{ query, setQuery, setConfirm }} />;
   else if (page === "車両一覧")
     body = <VehicleWorkspace query={query} setQuery={setQuery}/>;
   else if (page === "搬出・受入スケジュール")
     body = roleMode === "construction" ? (
-      <ConstructionTransportPage {...{ navigate }} />
+      <ConstructionTransportPage {...{ navigate }}
+          fieldRecords={navigationReview ? siteRecords : undefined}
+          fieldOptions={
+            navigationReview ? siteRecords.map((r) => r.field) : undefined
+          }
+          renderFieldContext={
+            navigationReview
+              ? (fieldName, changeField) => (
+                  <ReviewFieldContext
+                    fieldName={fieldName}
+                    records={siteRecords}
+                    changeField={changeField}
+                    navigate={navigate}
+                    setConfirm={setConfirm}
+                  />
+                )
+              : undefined
+          }
+        />
     ) : (
       <TransportSchedulePage
         {...{ setConfirm, navigate, role: roleMode }}
@@ -5633,7 +6236,13 @@ export function App() {
       />
     );
   else if (page === "配車・運行管理")
-    body = <DispatchWorkspace navigate={navigate}/>;
+    body = (
+      <DispatchWorkspace
+        navigate={navigate}
+        navigationReview={navigationReview}
+        siteOptions={navigationReview ? siteRecords.map(r => r.field) : undefined}
+      />
+    );
   else if (page === "実績・帳票")
     body = <ConstructionResultsPage navigate={navigate} />;
   else if (page === "関係会社・基本設定")
@@ -5646,31 +6255,86 @@ export function App() {
         key={roleMode}
         onPrepareReservation={roleMode === "receiving" ? (candidate) => {
           receivingModel.setSelectedTrip(null);
-          receivingModel.setReservationDraft({ source: "発生土マッチ", site: candidate.destination, partner: "サンプル施工会社 A" });
+          receivingModel.setReservationDraft({ source: "発生土マッチ", site: candidate.destination, partner: "サンプル施工会社 A",
+                });
           navigate("搬入予約・受付");
         } : undefined}
         initialMode={roleMode === "construction" ? "受入先を探す" : "搬出案件を探す"}
       />
     );
   else
-    body = (
-      roleMode === "construction" ? <ParticipationWorkspace navigate={navigate}/> : <AgencyPage
+    body =
+      roleMode === "construction" ? (
+        <ParticipationWorkspace navigate={navigate} siteOptions={navigationReview ? siteRecords.map(r => ({id:r.databaseId || r.id, name:r.field})) : undefined}/>
+      ) : (
+        <AgencyPage
         type={page}
         {...{ query, setQuery, setDetailOpen, setConfirm }}
       />
     );
   if (roleMode === "receiving" && receivingPages.includes(page)) {
-    body = <ReceivingWorkspace key={page} page={page} model={receivingModel} navigate={navigate} />;
+    body = (
+      <ReceivingWorkspace key={page} page={page} model={receivingModel} navigate={navigate} />
+    );
   }
   if (livePage) {
-    if (page === "UCRマッチング") body = <MatchingWorkflowPanel key={`${roleMode}:${business.session.userId}`} role={roleMode} account={business.session} embedded onReservation={openBusinessBooking} onManagement={()=>navigate("搬出・受入スケジュール")} />;
-    else if (roleMode === "receiving" && page === "搬出・受入スケジュール") body = <ReceivingLiveHome session={business.session} navigate={navigate} onOpen={openBusinessBooking} />;
-    else if (roleMode === "receiving" && page === "受入場所管理") body = <ReceivingLocationsConnected key={business.session.userId} session={business.session}/>;
-    else if (roleMode === "construction" && page === "現場一覧") body = <ConstructionSitesConnected key={business.session.userId} session={business.session} onOpen={id=>{setSelected(id);navigate("現場詳細");}}/>;
-    else if (roleMode === "receiving") body = <ReceivingConnected navigate={navigate} key={`${page}:${business.session.userId}`} session={business.session} view={page.includes("実績")?"results":"home"} bookingId={page.includes("実績")?null:businessBooking}/>;
-    else body = <ConnectedApp key={`${roleMode}:${page}:${business.session.userId}`} embedded account={business.session} role={roleMode} theme={theme} view={page.includes("実績") ? "results" : "home"} bookingId={page.includes("実績") ? null : businessBooking} />;
+    if (page === "UCRマッチング") body = (
+        <MatchingWorkflowPanel key={`${roleMode}:${business.session.userId}`} role={roleMode} account={business.session} embedded onReservation={openBusinessBooking} onManagement={()=>navigate("搬出・受入スケジュール")} />
+      );
+    else if (roleMode === "receiving" && page === "搬出・受入スケジュール") body = (
+        <ReceivingLiveHome session={business.session} navigate={navigate} onOpen={openBusinessBooking} />
+      );
+    else if (roleMode === "receiving" && page === "受入場所管理") body = (
+        <ReceivingLocationsConnected key={business.session.userId} session={business.session}/>
+      );
+    else if (roleMode === "construction" && page === "現場一覧") body = (
+        <ConstructionSitesConnected key={business.session.userId} session={business.session} onOpen={(id) =>{setSelected(id);navigate("現場詳細");}}/>
+      );
+    else if (roleMode === "receiving") body = (
+        <ReceivingConnected navigate={navigate} key={`${page}:${business.session.userId}`} session={business.session} view={page.includes("実績")?"results":"home"} bookingId={page.includes("実績")?null:businessBooking}/>
+      );
+    else
+      body = (
+        <ConnectedApp key={`${roleMode}:${page}:${business.session.userId}`} embedded account={business.session} role={roleMode} theme={theme} view={page.includes("実績") ? "results" : "home"} bookingId={page.includes("実績") ? null : businessBooking} />
+      );
   }
-  if (page === "総合インフォメーション") body = <section className="information-restricted" role="status"><h2>運営管理画面専用です</h2><p>総合インフォメーションは、施工側・受入側の画面からは閲覧できません。</p><button type="button" onClick={()=>navigate("搬出・受入スケジュール")}>管理画面へ戻る</button></section>;
+  if (page === "総合インフォメーション") body = (
+      <section className="information-restricted" role="status"><h2>運営管理画面専用です</h2><p>総合インフォメーションは、施工側・受入側の画面からは閲覧できません。</p><button type="button" onClick={()=>navigate("搬出・受入スケジュール")}>管理画面へ戻る</button></section>
+    );
+  if (navigationReview && ["現場一覧", "現場詳細"].includes(page))
+    body = (
+      <ConstructionTransportPage
+        navigate={navigate}
+        initialField={
+          page === "現場詳細"
+            ? siteRecords.find((r) => r.id === selected)?.field || "すべて"
+            : "すべて"
+        }
+        fieldRecords={siteRecords}
+        fieldOptions={siteRecords.map((r) => r.field)}
+        renderFieldContext={(fieldName, changeField) => (
+          <ReviewFieldContext
+            fieldName={fieldName}
+            records={siteRecords}
+            changeField={changeField}
+            navigate={navigate}
+            setConfirm={setConfirm}
+          />
+        )}
+      />
+    );
+  if (navigationReview && ["代行先一覧", "自社の代行元一覧"].includes(page))
+    body = (
+      <ReviewRelations
+        key={page}
+        page={page}
+        navigate={navigate}
+        companyId={reviewCompany}
+        siteId={reviewSite}
+        siteOptions={siteRecords.map(r => ({id:r.databaseId || r.id, name:r.field}))}
+        onOpen={openReviewCompany}
+      />
+    );
   if (!authenticated)
     return (
       <LoginScreen
@@ -5682,7 +6346,7 @@ export function App() {
     );
   return (
     <div
-      className={`app-shell control-app-shell theme-${theme} role-${roleMode} ${collapsed ? "is-collapsed" : ""}`}
+      className={`app-shell control-app-shell theme-${theme} role-${roleMode} ${collapsed ? "is-collapsed" : ""} ${navigationReview ? "navigation-review" : ""}`}
       data-theme={theme}
     >
       <ControlTopBar
@@ -5775,12 +6439,20 @@ export function App() {
             </div>
           </>
         <nav>
-          {activeNavGroups.map((g) => (
+          {navigationReview ? (
+            <ReviewSidebar
+              page={page}
+              navigate={(p) => navigate(p, undefined, { menu: true })}
+              collapsed={collapsed}
+            />
+          ) : (
+            activeNavGroups.map((g) => (
             <section className="nav-group" key={g.title}>
               {!collapsed && <h2>{g.title}</h2>}
               {g.items.map(([Icon, displayLabel, routeLabel]) => (
                 <button
-                  className={page === routeLabel || (roleMode === "receiving" && routeLabel === "取引先・基本設定" && ["会社情報","ユーザー一覧","車両一覧","代行先一覧","代行登録申請","自社の代行元一覧"].includes(page)) ? "active" : ""}
+                  className={page === routeLabel || (roleMode === "receiving" && routeLabel === "取引先・基本設定" && ["会社情報","ユーザー一覧","車両一覧","代行先一覧","代行登録申請","自社の代行元一覧",
+                        ].includes(page)) ? "active" : ""}
                   aria-current={page === routeLabel ? "page" : undefined}
                   onClick={() => navigate(routeLabel)}
                   key={routeLabel}
@@ -5794,7 +6466,7 @@ export function App() {
                 </button>
               ))}
             </section>
-          ))}
+            )))}
         </nav>
         <div className="sidebar-footer">
           {!collapsed && (
@@ -5855,10 +6527,12 @@ export function App() {
         </div>
       </aside>
       <main className={`content ${page === "会社情報" ? "company-content" : ""}`}>
-        {page !== "運行管制" && (
+        {(page !== "運行管制" || navigationReview) && (
           <Header
             title={
-              page === "搬出・受入スケジュール"
+              navigationReview
+                ? reviewModuleFor(page)?.title || page
+                : page === "搬出・受入スケジュール"
                 ? roleMode === "construction" ? "搬出管理" : "受入管理〈ホーム〉"
                 : page === "現場一覧"
                 ? "現場管理"
@@ -5877,16 +6551,82 @@ export function App() {
             onMenu={() => setCollapsed((value) => !value)}
           />
         )}
-        {page === "運行管制" ? (
+        {navigationReview ? (
+          <div className="control-page-surface">
+            {reviewReturn && (
+              <div className="navigation-review-return">
+                <button className="outline" onClick={returnReview}>
+                  <ChevronLeft />
+                  {reviewReturn.companyId
+                    ? "会社詳細"
+                    : reviewReturn.page === "搬出・受入スケジュール"
+                      ? "現場・搬出管理"
+                      : reviewReturn.page}
+                  へ戻る
+                </button>
+              </div>
+            )}
+            <ReviewWorkspace
+              page={page}
+              navigate={(p) => navigate(p, undefined, { menu: true })}
+              companySection={companySection}
+              onCompanySection={changeCompanySection}
+            >
+              {page === "搬出・受入スケジュール" && (
+                <ActionRequired navigate={navigate} />
+              )}{" "}
+              {body}
+            </ReviewWorkspace>
+          </div>
+        ) : page === "運行管制" ? (
           body
         ) : (
           <div className="control-page-surface">
-            {businessPage && <BusinessSessionBar role={roleMode} {...business} />}
-            {!publicDemo && new URLSearchParams(location.search).get("workflowApi") === "1" && connectedPages.includes(page) && <DirectWorkflowPanel role={roleMode} />}
-            {roleMode === "receiving" && page !== "UCRマッチング" && page !== "総合インフォメーション" && !livePage && <PrototypeNotice />}{!livePage&&roleMode==="construction"&&page==="搬出・受入スケジュール"&&<ActionRequired navigate={navigate}/>}{body}
+            {businessPage && (
+              <BusinessSessionBar role={roleMode} {...business} />
+            )}
+            {!publicDemo && new URLSearchParams(location.search).get("workflowApi") === "1" && connectedPages.includes(page) && (
+                <DirectWorkflowPanel role={roleMode} />
+              )}
+            {roleMode === "receiving" && page !== "UCRマッチング" && page !== "総合インフォメーション" && !livePage && <PrototypeNotice />}{!livePage&&roleMode==="construction"&&page==="搬出・受入スケジュール"&& (
+                <ActionRequired navigate={navigate} />
+              )}{body}
           </div>
         )}
       </main>
+      {navigationReview && reviewPanel && (
+        <div className="overlay" onMouseDown={() => setReviewPanel(false)}>
+          <section
+            className="modal navigation-review-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="現場参加情報の確認"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <header>
+              <h2>現場参加情報の確認</h2>
+              <button
+                className="icon-button"
+                aria-label="参加情報を閉じる"
+                onClick={() => setReviewPanel(false)}
+              >
+                <X />
+              </button>
+            </header>
+            <ReviewCompanyDetail
+              companyId={
+                sessionStorage.getItem("ecodump-participant-focus") || "NC-03"
+              }
+              siteId={readReviewContext("ecodump-participation-scope", {}).siteId}
+              siteOptions={siteRecords.map(r => ({id:r.databaseId || r.id, name:r.field}))}
+              navigate={(p, id) => navigate(p, id, { related: true })}
+            />
+            <button className="outline" onClick={() => setReviewPanel(false)}>
+              搬出管理へ戻る
+            </button>
+          </section>
+        </div>
+      )}
       {operatorOpen && (
         <div className="overlay" onMouseDown={() => setOperatorOpen(false)}>
           <section

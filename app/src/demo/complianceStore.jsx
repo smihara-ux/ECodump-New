@@ -1,15 +1,15 @@
 import { useSyncExternalStore } from "react";
-import { initialCompliance } from "./complianceModel.mjs";
+import { initialCompliance, normalizeCompliance } from "./complianceModel.mjs";
 const key = "ecodump-compliance-demo-v1";
 let snapshot,
   listeners = new Set();
 function read() {
   try {
-    return (
+    return normalizeCompliance(
       JSON.parse(localStorage.getItem(key) || "null") || initialCompliance()
     );
   } catch {
-    return initialCompliance();
+    return normalizeCompliance(initialCompliance());
   }
 }
 function get() {

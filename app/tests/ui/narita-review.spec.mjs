@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 import { demoDay } from "../../src/demo/model.mjs";
 const construction = "/?preview=app&role=construction";
 const receiving = "/?preview=app&role=receiving";
-const evidence = fileURLToPath(
+const evidence = process.env.ECODUMP_NATIVE_AUDIT_DIR || fileURLToPath(
   new URL("../../../docs/frontend-review-2026-10-08/", import.meta.url),
 );
 
