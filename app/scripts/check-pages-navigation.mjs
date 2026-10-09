@@ -41,7 +41,7 @@ try {
     page.on("pageerror", e => errors.push(e.message));
     await page.goto(entry + "&page=transport");
     await page.locator(".navigation-review").waitFor();
-    assert.equal(await page.locator(".review-field-context").count(), 23);
+    assert.equal(await page.locator(".review-site-row").count(), 23);
     async function module(name) {
       if (width === 390) await page.locator(".mobile-menu").click();
       await page.locator(".sidebar").getByRole("button", {name, exact:true}).click();

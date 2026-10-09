@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { readReviewContext, writeReviewContext } from "./reviewContext.mjs";
 import { demoSites, demoDay, asControl } from "../demo/model.mjs";
 import { useDemoTrips } from "../demo/store.jsx";
 const savedContext = () => {
@@ -12,13 +13,14 @@ const savedContext = () => {
 };
 export default function ReviewOperations({ navigate, renderMap, onDetail, initialSite, siteOptions }) {
   const all = useDemoTrips(),
-    saved = savedContext();
+    saved = savedContext(), view = readReviewContext("ecodump-review-operations", {});
   const [date, setDate] = useState(saved.date || demoDay()),
     [site, setSite] = useState(initialSite || saved.field || "すべて"),
-    [filter, setFilter] = useState("有効予定"),
-    [cargo,setCargo]=useState("すべての荷種"),
-    [selected, setSelected] = useState(null),
+    [filter, setFilter] = useState(view.filter || "有効予定"),
+    [cargo,setCargo]=useState(view.cargo || "すべての荷種"),
+    [selected, setSelected] = useState(view.selected || null),
     [mapOnly, setMapOnly] = useState(false);
+  useEffect(() => { writeReviewContext("ecodump-review-operations", {filter,cargo,selected}); }, [filter,cargo,selected]);
   const mapSection = useRef(null);
   const timeline = useRef(null);
   const beforeExpand = useRef(0);
@@ -60,6 +62,7 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
                 ? "報告済み"
                 : asControl(t).status,
     }));
+  trips.sort((a,b) => `${a.time} ${a.id}`.localeCompare(`${b.time} ${b.id}`));
   const active = trips.filter((t) => t.booking !== "取消");
   const match = (t, key) =>
     key === "すべて" ||
@@ -84,7 +87,7 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
     if (add) sessionStorage.setItem("ecodump-dispatch-add", "1");
     if (chosen && !add)
       sessionStorage.setItem("ecodump-dispatch-focus", chosen.id);
-    navigate("配車・運行管理");
+    navigate("配車・運行管理", undefined, { related: true });
   }
   return (
     <section className={`review-operations ${mapOnly ? "review-map-expanded" : ""}`}>
@@ -133,7 +136,7 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
             key={key}
             aria-pressed={filter === key}
             className={filter === key ? "active" : ""}
-            onClick={() => setFilter(key)}
+            onClick={() => setFilter(filter === key ? "すべて" : key)}
           >
             <span>{key === "完了" ? "受入完了" : key}</span>
             <b>
@@ -154,7 +157,7 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
         </div>
       </div>
       <p className="review-metric-note">配車済みは運行中・受入完了などを含みます。実車両は重複を除いた台数です。</p>
-      <div className="review-list-heading">
+      <div className="review-list-heading"><small className="review-operation-count" role="status">{date} · {site} · 表示 {visible.length}便（時刻順）</small>
         <h2>本日の運行タイムライン</h2>
         <label>
           表示条件

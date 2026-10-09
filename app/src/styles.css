@@ -11414,3 +11414,33 @@ a:focus-visible {
     color: #3f5968;
   }
 }
+
+/* 2026-10-09: seven-column field reference; no sticky cell overlaps another column. */
+@media (min-width: 1101px) {
+  .control-app-shell .control-page-surface .field-list-table.field-list-transport-only {
+    display: table;
+    width: 100%;
+    min-width: 1040px;
+    table-layout: fixed;
+  }
+  .control-app-shell .control-page-surface .field-list-transport-only thead { display: table-header-group; position: static; }
+  .control-app-shell .control-page-surface .field-list-transport-only tbody { display: table-row-group; }
+  .control-app-shell .control-page-surface .field-list-transport-only tr { display: table-row; min-width: 0; height: auto !important; max-height: none; }
+  .control-app-shell .control-page-surface .field-list-transport-only :is(th,td) {
+    display: table-cell;
+    position: static;
+    width: auto;
+    height: auto !important;
+    min-height: 0;
+    max-height: none;
+    line-height: 1.6;
+    padding: 14px !important;
+    vertical-align: top !important;
+  }
+  .control-app-shell .control-page-surface .field-list-transport-only col.field-col-company { width: 16%; }
+  .control-app-shell .control-page-surface .field-list-transport-only col.field-col-branch { width: 12%; }
+  .control-app-shell .control-page-surface .field-list-transport-only col.field-col-name { width: 22%; }
+  .control-app-shell .control-page-surface .field-list-transport-only col.field-col-address { width: 20%; }
+  .control-app-shell .control-page-surface .field-list-transport-only col.field-col-date { width: 10%; }
+  .control-app-shell .control-page-surface .field-list-transport-only col.field-col-status { width: 10%; }
+}

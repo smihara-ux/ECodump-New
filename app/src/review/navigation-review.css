@@ -1,4 +1,4 @@
-/* Scope all layout adjustments to the local navigation review. Reuse the approved theme. */
+/* Scope layout adjustments to the explicit navigation review. Reuse the approved theme. */
 .navigation-review .content {
   overflow: hidden;
   display: flex;
@@ -47,12 +47,17 @@
 .navigation-review .review-relations-table tr { display: table-row; min-width: 0; height: auto !important; max-height: none; }
 .navigation-review .review-relations-table :is(th,td) {
   display: table-cell;
+  position: static;
+  color: var(--theme-text);
   height: auto !important;
   min-height: 0;
   max-height: none;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
+.navigation-review .review-relations-table tbody tr { background: var(--theme-surface); }
+.navigation-review .review-relations-table tbody td { background: transparent; }
+.navigation-review .review-relations-table tbody tr:hover { background: var(--theme-surface-raised); }
 .navigation-review .review-relations table {
   width: 100%;
   border-collapse: collapse;
@@ -379,6 +384,59 @@
 .navigation-review .review-relations-table :is(th,td):last-child { width: 96px; }
 .navigation-review .review-relations-table td { line-height: 1.7; }
 .navigation-review .review-company-detail .review-filter label { flex: 1 1 200px; }
+
+/* The site overview retains the reference table's seven fields and natural row heights. */
+.navigation-review .review-site-table-section { min-width: 0; }
+.navigation-review .review-site-table-hint { color: var(--theme-muted); font-size: 13px; margin: 0 0 12px; line-height: 1.6; }
+.navigation-review .review-site-table-scroll { width: 100%; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 8px; container-type: inline-size; }
+.navigation-review .review-site-table { display: table; width: 100%; min-width: 1040px; table-layout: fixed; border-collapse: collapse; color: var(--theme-text); }
+.navigation-review .review-site-table thead { display: table-header-group; position: static; }
+.navigation-review .review-site-table tbody { display: table-row-group; }
+.navigation-review .review-site-table tr { display: table-row; min-width: 0; height: auto !important; max-height: none; background: var(--theme-surface); }
+.navigation-review .review-site-table :is(th,td) { display: table-cell; position: static; width: auto; height: auto !important; min-height: 0; max-height: none; padding: 14px; line-height: 1.6; text-align: left; vertical-align: top; color: var(--theme-text); border: 1px solid var(--theme-border); overflow-wrap: anywhere; }
+.navigation-review .review-site-table th { background: var(--theme-surface-raised); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.navigation-review .review-site-table td { background: transparent; font-size: 14px; }
+.navigation-review .review-site-row > td:nth-child(5),
+.navigation-review .review-site-row > td:nth-child(6) { white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 13px; padding-inline: 10px; }
+.navigation-review .review-site-table .review-site-row:nth-of-type(even) { background: var(--theme-surface-raised); }
+.navigation-review .review-site-table .review-site-row.selected { background: var(--theme-surface-raised); }
+.navigation-review .review-site-col-company { width: 16%; }
+.navigation-review .review-site-col-branch { width: 12%; }
+.navigation-review .review-site-col-name { width: 22%; }
+.navigation-review .review-site-col-address { width: 20%; }
+.navigation-review .review-site-col-date { width: 10%; }
+.navigation-review .review-site-col-status { width: 10%; }
+.navigation-review .review-site-meta { display: flex; gap: 6px 10px; flex-wrap: wrap; align-items: center; color: var(--theme-muted); font-size: 12px; margin: 8px 0; }
+.navigation-review .review-site-meta > span { display: inline-flex; gap: 4px; align-items: center; }
+.navigation-review .review-site-meta button { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; width: 44px; padding: 4px; background: transparent; color: var(--theme-text); border: 1px solid var(--theme-border); border-radius: 6px; }
+.navigation-review .review-site-open { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 10px 12px; font-size: 13px; white-space: nowrap; }
+.navigation-review .review-site-open[aria-expanded="true"] { border-color: var(--theme-accent); }
+.navigation-review .review-site-status { display: inline-block; padding: 4px 10px; border: 1px solid var(--theme-accent); border-radius: 18px; font-size: 12px; white-space: nowrap; }
+.navigation-review .review-site-detail-row > td { padding: 12px; background: var(--theme-surface-raised); }
+.navigation-review .review-site-inline-detail { width: min(100%, calc(100cqi - 28px)); }
+.navigation-review .review-site-inline-detail .construction-trip-group { border-color: var(--theme-border); }
+.navigation-review .construction-field-panel .field-kpis > article { display: grid; align-content: start; gap: 8px; padding: 16px; border-left: 4px solid var(--theme-border); min-width: 0; }
+.navigation-review .construction-field-panel .field-kpis > article :is(span,b) { display: block; line-height: 1.5; overflow-wrap: anywhere; }
+.navigation-review .construction-field-panel .field-kpis > article b { font-size: 20px; }
+@container review-body (max-width: 1100px) {
+  .navigation-review .construction-field-panel .field-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@container review-body (max-width: 650px) {
+  .navigation-review .construction-field-panel .field-kpis { grid-template-columns: 1fr; }
+  .navigation-review .review-site-table { display: block; min-width: 0; }
+  .navigation-review .review-site-table :is(colgroup,thead) { display: none; }
+  .navigation-review .review-site-table tbody { display: block; }
+  .navigation-review .review-site-table .review-site-row { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 16px; border-bottom: 1px solid var(--theme-border); }
+  .navigation-review .review-site-table .review-site-row td { display: block; border: 0; padding: 0; min-width: 0; }
+  .navigation-review .review-site-table .review-site-row td::before { content: attr(data-label); display: block; margin-bottom: 4px; font-size: 12px; color: var(--theme-muted); }
+  .navigation-review .review-site-table .review-site-row td:nth-child(3) { grid-column: 1 / -1; grid-row: 1; }
+  .navigation-review .review-site-table .review-site-row td:nth-child(4) { grid-column: 1 / -1; }
+  .navigation-review .review-site-table .review-site-row td:last-child { grid-column: 1 / -1; }
+  .navigation-review .review-site-table .review-site-detail-row { display: block; }
+  .navigation-review .review-site-detail-row > td { display: block; padding: 8px; border: 0; }
+  .navigation-review .review-site-inline-detail { width: 100%; }
+  .navigation-review .review-site-open { width: 100%; }
+}
 @container review-body (max-width: 1100px) {
   .navigation-review .trip-head { display: none; }
   .navigation-review .trip-row { grid-template-columns: repeat(3,minmax(0,1fr)); }
@@ -405,7 +463,7 @@
   .navigation-review .review-relations-table tr { display: grid; width: 100%; min-width: 0; grid-template-columns: repeat(2,minmax(0,1fr)); padding: 12px; border-bottom: 1px solid var(--theme-border); }
   .navigation-review .review-relations-table td { display: block; border: 0; width: auto !important; padding: 8px; }
   .navigation-review .review-relations-table td:first-child,.navigation-review .review-relations-table td:nth-child(3) { grid-column: 1 / -1; }
-  .navigation-review .review-relations-table td:nth-child(4)::before { content: "参加状況"; display: block; color: var(--theme-muted); font-size: 12px; }
+  .navigation-review .review-relations-table td[data-label]::before { content: attr(data-label); display: block; color: var(--theme-muted); font-size: 12px; margin-bottom: 4px; }
   .navigation-review .review-relations-table td:last-child { justify-self: end; }
 }
 .navigation-review .review-submission-status { background: var(--theme-surface-raised); color: var(--theme-text); margin: 0; }

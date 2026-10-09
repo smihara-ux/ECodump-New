@@ -1,4 +1,5 @@
-import VehicleWorkspace from "./demo/VehicleWorkspace.jsx";
+import VehicleWorkspace, { readVehicles } from "./demo/VehicleWorkspace.jsx";
+import { DemoNotice, pageHelp } from "./review/Readability.jsx";
 import {
   ReviewSidebar,
   ReviewWorkspace,
@@ -7,6 +8,7 @@ import {
   reviewModuleFor,
   reviewModules,
 } from "./review/NavigationReview.jsx";
+import MatchingDocuments from "./review/MatchingDocuments.jsx";
 import ReviewOperations from "./review/ReviewOperations.jsx";
 import ReviewSiteCompanies from "./review/ReviewSiteCompanies.jsx";
 import { readReviewContext, writeReviewContext } from "./review/reviewContext.mjs";
@@ -24,6 +26,7 @@ import ReceivingConnected from "./receiving/ReceivingConnected";
 import CapacityChart from "./receiving/CapacityChart";
 import ReceivingTripMap from "./receiving/ReceivingTripMap";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import "leaflet/dist/leaflet.css";
 import { ReceivingWorkspace, useReceivingWorkspace, receivingPages, PrototypeNotice,
 } from "./receiving/ReceivingWorkspace.jsx";
@@ -680,10 +683,6 @@ function Header({ title, onHelp, onClose, onMenu }) {
         <h1>{title}</h1>
       </div>
       <div className="header-actions">
-        <button className="guide" onClick={onHelp}>
-          <CircleHelp />
-          はじめてガイド
-        </button>
         <button className="help" onClick={onHelp}>
           <CircleHelp />
           ヘルプ
@@ -1976,8 +1975,7 @@ const dispatchDemoTrips = [
 function PrototypeBanner() {
   return (
     <div className="prototype-banner" role="status">
-      <TriangleAlert />
-      <span><b>画面試作</b> {demoNotice}</span>
+      <DemoNotice />
     </div>
   );
 }
@@ -2148,6 +2146,7 @@ function SettingsHubPage({ navigate }) {
 function FieldDetailPage({ field, navigate, setConfirm, role = "receiving",
   integrated = false,
   onSchedule,
+  renderSchedule,
 }) {
   const contextKey = `ecodump-review-field:${field.id}`;
   const [tab, setTab] = useState(() => integrated ? readReviewContext(contextKey, {}).tab || "概要" :
@@ -2224,11 +2223,8 @@ function FieldDetailPage({ field, navigate, setConfirm, role = "receiving",
           onShowSchedule={() => setTab(role==="construction"?"搬出予定":"搬出・受入")}
         />
       )}
-      {integrated && tab === "搬出予定" && (
-        <button className="outline" onClick={onSchedule}>
-          この現場の搬出予定一覧へ
-        </button>
-      )}
+      {integrated && tab === "搬出予定" && renderSchedule?.()}
+      {integrated && tab !== "搬出予定" && <button className="outline review-field-schedule-link" onClick={() => setTab("搬出予定")}>この現場の搬出予定を見る</button>}
       {tab === "搬出条件" && (
         <div className="field-dashboard construction-field-panel">
           <PrototypeBanner />
@@ -2452,6 +2448,7 @@ function ReviewFieldContext({
   fieldName,
   records,
   changeField,
+  renderSchedule,
   navigate,
   setConfirm,
 }) {
@@ -2467,14 +2464,12 @@ function ReviewFieldContext({
         </div>
         <span>現場ID：{field.id}</span>
       </header>
-      <details open={readReviewContext(`ecodump-review-field:${field.id}`, {}).expanded || false}
-        onToggle={e => writeReviewContext(`ecodump-review-field:${field.id}`, {...readReviewContext(`ecodump-review-field:${field.id}`, {}), expanded:e.currentTarget.open})}>
-        <summary>現場概要・搬出条件・関連情報を確認</summary>
         <FieldDetailPage
           key={field.id}
           field={field}
           role="construction"
           integrated
+          renderSchedule={renderSchedule}
           navigate={navigate}
           setConfirm={setConfirm}
           onSchedule={() =>
@@ -2483,19 +2478,23 @@ function ReviewFieldContext({
               ?.scrollIntoView({ block: "start" })
           }
         />
-      </details>
     </section>
   );
 }
 function CompanyPage({ setConfirm, reviewTab, navigationReview = false }) {
   const [localTab, setTab] = useState("本社情報");
   const tab = navigationReview ? reviewTab : localTab;
-  const [editingTabs, setEditingTabs] = useState({});
-  const [savedValues, setSavedValues] = useState({});
-  const [draftValues, setDraftValues] = useState({});
+  const contextKey = "ecodump-company-edit-drafts";
+  const [editingTabs, setEditingTabs] = useState(() => readReviewContext(contextKey, {}).editingTabs || {});
+  const [savedValues, setSavedValues] = useState(() => readReviewContext(contextKey, {}).savedValues || {});
+  const [draftValues, setDraftValues] = useState(() => readReviewContext(contextKey, {}).draftValues || {});
   const [feedback, setFeedback] = useState("");
   const detailRef = useRef(null);
-  const scrollPositions = useRef({});
+  const scrollPositions = useRef(readReviewContext(contextKey, {}).scrollPositions || {});
+  useEffect(() => {
+    try { writeReviewContext(contextKey,{editingTabs,savedValues,draftValues,scrollPositions:scrollPositions.current}); }
+    catch { setFeedback("このタブに下書きを保持できません。入力は画面に残っています。ブラウザーの保存設定を確認してください。"); }
+  }, [editingTabs,savedValues,draftValues]);
   const editing = !!editingTabs[tab];
   useLayoutEffect(() => {
     if (detailRef.current) detailRef.current.scrollTop = scrollPositions.current[tab] || 0;
@@ -2523,7 +2522,7 @@ function CompanyPage({ setConfirm, reviewTab, navigationReview = false }) {
     if (!editing) return;
     setSavedValues((values) => ({ ...values, [tab]: { ...draftValues[tab] } }));
     setEditingTabs((tabs) => ({ ...tabs, [tab]: false }));
-    setFeedback("この画面に反映しました。ページを離れると変更はリセットされます。",
+    setFeedback("このタブの下書きに反映しました。API・DBへの保存は行っていません。",
     );
   };
   const renderValue = (key, label, original) => {
@@ -2664,7 +2663,7 @@ function CompanyPage({ setConfirm, reviewTab, navigationReview = false }) {
         </div>
       )}
       <form id="company-details-form" className="company-details-scroll" ref={detailRef}
-        onSubmit={saveEditing} onScroll={(event) => { scrollPositions.current[tab] = event.currentTarget.scrollTop; }}
+        onSubmit={saveEditing} onScroll={(event) => { scrollPositions.current[tab] = event.currentTarget.scrollTop; try { writeReviewContext(contextKey,{editingTabs,savedValues,draftValues,scrollPositions:scrollPositions.current}); } catch {} }}
         onInvalid={(event) => event.target.scrollIntoView({ block: "center" })}
         aria-label="会社情報の詳細" tabIndex={0}>
       <div id="company-details" role={navigationReview ? "region" : "tabpanel"}
@@ -3396,15 +3395,28 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
   const [sort, setSort] = useState("適合度順");
   const [createOpen, setCreateOpen] = useState(false);
   const [workflow, setWorkflow] = useState({});
+  const [documentsOpen,setDocumentsOpen] = useState(false), [conditionsOpen,setConditionsOpen] = useState(false);
+  const [conditions,setConditions] = useState({soil:"すべて",distance:"",start:"",end:""});
+  const [draft,setDraft] = useState(() => readReviewContext("ecodump-matching-create-draft", {kind:"建設発生土を搬出したい",site:"サンプル現場A",soil:"第2種建設発生土",volume:"6400",start:"2026-09-01",end:"2027-01-31",trips:"24",distance:"50"}));
+  const [draftError,setDraftError] = useState("");
+  const [draftStorageError,setDraftStorageError] = useState("");
+  useEffect(() => { try { writeReviewContext("ecodump-matching-create-draft",draft);setDraftStorageError(""); } catch { setDraftStorageError("下書きをこのタブに保持できません。入力は画面内に残っています。"); } },[draft]);
+  useEffect(() => {
+    if (!createOpen) return;
+    const close = e => { if(e.key === "Escape" && !document.querySelector(".help-modal")) setCreateOpen(false); };
+    window.addEventListener("keydown",close,true);return()=>window.removeEventListener("keydown",close,true);
+  },[createOpen]);
   const candidates = sourceForMode(mode)
     .filter((item) =>
       `${item.destination}${item.area}${item.soil}`.includes(query),
     )
+    .filter(item => (conditions.soil === "すべて" || item.soil.includes(conditions.soil.replace("種建設発生土",""))) && (!conditions.distance || Number.parseFloat(item.distance) <= Number(conditions.distance)) && (!conditions.start || item.period.split("〜")[1].replaceAll("/","-") >= conditions.start) && (!conditions.end || item.period.split("〜")[0].replaceAll("/","-") <= conditions.end))
     .sort((a, b) =>
       sort === "距離順"
         ? Number.parseFloat(a.distance) - Number.parseFloat(b.distance)
         : b.score - a.score,
     );
+  useEffect(() => { if(!candidates.some(c=>c.id===selected?.id)) setSelected(candidates[0] || null); }, [mode,query,conditions,sort]);
   const beginConsultation = (candidate) => {
     setWorkflow((current) => ({
       ...current,
@@ -3433,6 +3445,7 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
           <Plus /> 新しい案件を登録
         </button>
       </div>
+      <p className="matching-summary-scope">全体の表示例（集計時点・期間は未設定） · 下の検索結果とは別のサンプルです</p>
       <div className="matching-kpis">
         <article>
           <span>公開中の搬出案件</span>
@@ -3455,6 +3468,7 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
           <small>再利用率 68%</small>
         </article>
       </div>
+      <p className="matching-mode-guide">{mode === "自社の搬出案件" ? "自社の搬出案件（表示例）" : mode === "自社の受入条件" ? "自社の受入条件（表示例）" : isExport ? "相手の搬出案件を探す" : "相手の受入先を探す"}</p>
       <div className="matching-toolbar">
         <div className="matching-mode">
           {(role === "construction"
@@ -3494,17 +3508,20 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
           className="outline"
           aria-label="詳細条件を開く"
           title="詳細条件を開く"
-          onClick={() =>
-            setConfirm({
-              title: "詳細条件",
-              message:
-                "期間、総量、日量、土質区分、試験結果、対象地域、車両条件で絞り込みます。",
-            })
-          }
+          aria-expanded={conditionsOpen}
+          onClick={() => setConditionsOpen(!conditionsOpen)}
         >
           <Filter /> 詳細条件
         </button>
       </div>
+      {conditionsOpen && <div className="matching-advanced review-filter">
+        <label>土質区分<select value={conditions.soil} onChange={e=>setConditions({...conditions,soil:e.target.value})}>{["すべて","第1種建設発生土","第2種建設発生土","第3種建設発生土"].map(c=><option key={c}>{c}</option>)}</select></label>
+        <label>最大距離（km）<input type="number" min="0" value={conditions.distance} onChange={e=>setConditions({...conditions,distance:e.target.value})}/></label>
+        <label>希望開始日<input type="date" value={conditions.start} onChange={e=>setConditions({...conditions,start:e.target.value})}/></label>
+        <label>希望終了日<input type="date" min={conditions.start||undefined} value={conditions.end} onChange={e=>setConditions({...conditions,end:e.target.value})}/></label>
+        <button className="outline" onClick={()=>setConditions({soil:"すべて",distance:"",start:"",end:""})}>詳細条件をクリア</button>
+        <small>候補の土質・距離の表示例と、希望期間の重なりで絞り込みます。現時点で実計算・予約可能判定は行いません。</small>
+      </div>}
       <div className="matching-workspace">
         <div className="matching-list">
           <div className="matching-list-title">
@@ -3514,11 +3531,12 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
             </div>
             <span>{role === "receiving" ? "受入側：搬出案件と自社の条件を確認" : "施工側：受入先と自社の搬出案件を確認"}</span>
           </div>
+          {!candidates.length && <p className="empty-state">条件に一致する候補はありません。キーワード・詳細条件を変更してください。</p>}
           {candidates.map((candidate) => (
             <button
               className={`match-card ${selected?.id === candidate.id ? "selected" : ""}`}
               key={candidate.id}
-              onClick={() => setSelected(candidate)}
+              onClick={() => { setSelected(candidate); requestAnimationFrame(()=>document.querySelector(".match-detail")?.scrollIntoView({block:"start"})); }}
             >
               <div className="match-score">
                 <b>{candidate.score}</b>
@@ -3557,17 +3575,28 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
                 <small>サンプル適合度</small>
               </div>
             </div>
+            <div className="match-actions match-actions-top">
+              {onPrepareReservation && isExport && (
+                <button className="outline" onClick={() => onPrepareReservation(selected)}>この搬出案件から予約下書きへ</button>
+              )}
+              <button
+                className="outline"
+                onClick={() => setDocumentsOpen(true)}
+              >
+                必要書類を確認
+              </button>
+              <button
+                className="primary"
+                onClick={() => beginConsultation(selected)}
+              >
+                事前相談を開始
+              </button>
+            </div>
+            <button className="outline matching-back-list" onClick={()=>document.querySelector(`.match-card.selected`)?.scrollIntoView({block:"center"})}>候補一覧へ戻る</button>
             <div className="match-factor-chart" role="img" aria-label="適合度の項目別サンプルグラフ">
               <div className="match-chart-title"><b>適合条件バランス</b><small>0〜100のサンプル評価・実計算ではありません</small></div>
               <div className="match-connected-chart" aria-hidden="true">
                 <div className="match-chart-grid"><i /><i /><i /></div>
-                <svg viewBox="0 0 400 120" preserveAspectRatio="none">
-                  <polyline points={(selected.factors || []).map(([, value], index) => `${50 + index * 100},${110 - Math.max(0, Math.min(100, value))}`,
-                      ).join(" ")} />
-                  {(selected.factors || []).map(([, value], index) => (
-                    <circle key={index} cx={50 + index * 100} cy={110 - Math.max(0, Math.min(100, value))} r="6" />
-                  ))}
-                </svg>
                 <div className="match-chart-columns">
                   {(selected.factors || []).map(([label, value]) => (
                     <div className="match-chart-column" key={label}>
@@ -3578,11 +3607,6 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
                   ))}
                 </div>
               </div>
-              <ul className="match-chart-values">
-                {(selected.factors || []).map(([label, value]) => (
-                  <li key={label}><span>{label}</span><b>{value}</b></li>
-                ))}
-              </ul>
             </div>
             <div className="matching-progress" aria-label="マッチング進行状況">
               {["候補", "事前相談", "条件調整", "書類審査", "条件合意"].map(
@@ -3627,7 +3651,7 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
                 <dd>{selected.soil}</dd>
               </div>
               <div>
-                <dt>{isExport ? "搬出予定量" : "受入可能量"}</dt>
+                <dt>{isExport ? "搬出予定量（表示例）" : "物理容量の残量（表示例）"}</dt>
                 <dd>{selected.capacity}</dd>
               </div>
               <div>
@@ -3653,66 +3677,46 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
                 ))}
               </div>
             </div>
-            <div className="match-actions">
-              {onPrepareReservation && isExport && (
-                <button className="outline" onClick={() => onPrepareReservation(selected)}>この搬出案件から予約下書きへ</button>
-              )}
-              <button
-                className="outline"
-                onClick={() =>
-                  setConfirm({
-                    title: "必要書類",
-                    message:
-                      "土質試験結果、位置図、搬出計画、車両一覧、搬入申請書を確認します。",
-                  })
-                }
-              >
-                必要書類を確認
-              </button>
-              <button
-                className="primary"
-                onClick={() => beginConsultation(selected)}
-              >
-                事前相談を開始
-              </button>
-            </div>
           </aside>
         )}
       </div>
-      {createOpen && (
-        <div className="overlay" onMouseDown={() => setCreateOpen(false)}>
+      {documentsOpen && selected && <MatchingDocuments candidate={selected} close={()=>setDocumentsOpen(false)}/>}
+      {createOpen && createPortal(
+        <div className="overlay matching-create-overlay" onMouseDown={() => setCreateOpen(false)}>
           <form
             className="modal form-modal matching-create-modal"
             aria-label="マッチング案件登録"
+            role="dialog" aria-modal="true"
+            onChange={event=>{ if(event.target.name) setDraft(prev=>({...prev,[event.target.name]:event.target.value})); }}
             onMouseDown={(event) => event.stopPropagation()}
             onSubmit={(event) => {
               event.preventDefault();
-              setCreateOpen(false);
+              if(draft.end < draft.start) { setDraftError("終了日は開始日以降を選択してください。");return; }
               setConfirm({
-                title: "案件登録の試作（未保存）",
-                message: "入力操作を確認しました。API未接続のため案件は登録されず、候補計算も行っていません。",
+                title: "入力内容の確認（未保存）",
+                message: `${draft.site}／${draft.soil}／${draft.volume} m³／${draft.start}〜${draft.end}／${draft.trips}台/日／最大距離${draft.distance} km。${draftStorageError || "下書きはこのタブに保持しました。"}API未接続のため登録・候補計算は行っていません。`,
               });
             }}
           >
-            <h2>マッチング案件登録</h2>
+            <h2>マッチング案件登録</h2><p>入力下書き・未保存。確認しても案件登録・候補計算は行いません。</p>{(draftError || draftStorageError) && <p role="alert">{draftError || draftStorageError}</p>}
             <div className="form-grid">
               <label>
                 案件区分
-                <select>
+                <select name="kind" value={draft.kind} onChange={()=>{}}>
                   <option>建設発生土を搬出したい</option>
                   <option>受け入れたい</option>
                 </select>
               </label>
               <label>
                 現場
-                <select>
+                <select name="site" value={draft.site} onChange={()=>{}}>
                   <option>サンプル現場A</option>
                   <option>サンプル現場B</option>
                 </select>
               </label>
               <label>
                 土質区分
-                <select>
+                <select name="soil" value={draft.soil} onChange={()=>{}}>
                   <option>第2種建設発生土</option>
                   <option>第3種建設発生土</option>
                   <option>第4種建設発生土</option>
@@ -3720,23 +3724,23 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
               </label>
               <label>
                 総土量（m³）
-                <input type="number" min="1" defaultValue="6400" required />
+                <input type="number" min="1" name="volume" value={draft.volume} onChange={()=>{}} required />
               </label>
               <label>
                 開始日
-                <input type="date" defaultValue="2026-09-01" required />
+                <input type="date"  name="start" value={draft.start} onChange={()=>{}} required />
               </label>
               <label>
                 終了日
-                <input type="date" defaultValue="2027-01-31" required />
+                <input type="date" min={draft.start} name="end" value={draft.end} onChange={()=>{}} required />
               </label>
               <label>
                 1日の予定台数
-                <input type="number" min="1" defaultValue="24" required />
+                <input type="number" min="1" name="trips" value={draft.trips} onChange={()=>{}} required />
               </label>
               <label>
                 最大運搬距離（km）
-                <input type="number" min="1" defaultValue="50" required />
+                <input type="number" min="1" name="distance" value={draft.distance} onChange={()=>{}} required />
               </label>
             </div>
             <div className="modal-actions">
@@ -3745,14 +3749,14 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
                 className="outline"
                 onClick={() => setCreateOpen(false)}
               >
-                キャンセル
+                閉じる（下書きを保持）
               </button>
               <button type="submit" className="primary">
-                登録して候補を計算
+                入力内容を確認（未保存）
               </button>
             </div>
           </form>
-        </div>
+        </div>, document.querySelector(".control-app-shell")
       )}
     </section>
   );
@@ -4468,7 +4472,9 @@ function OperationsMap({
   return (
     <div
       className={`operations-map ${readable ? "readable-map" : ""}`}
-      aria-label="インタラクティブ運行マップ"
+      tabIndex={readable ? 0 : undefined}
+      role={readable ? "region" : undefined}
+      aria-label={readable ? "運行地図と選択便の詳細" : "インタラクティブ運行マップ"}
       style={{
         "--control-map-image": `url("${import.meta.env.BASE_URL}ecodump-control-map.png")`,
       }}
@@ -4604,21 +4610,22 @@ function OperationsMap({
         >
           −
         </button>
-        <button aria-label="全地点を表示" onClick={fitAll}>
+        <button aria-label="全地点を表示" title="全地点を表示" onClick={fitAll}>
           <MapPinned />
         </button>
         {readable && <button aria-label="選択便の経路を表示" onClick={() => {
           if (selectedFrom && selectedTo) mapRef.current?.fitBounds(selectedRoadRoute?.points || [selectedFrom.position, selectedTo.position], {padding:[60,60], maxZoom:12, animate:false});
         }}><Route/></button>}
         <button
-          aria-label="現在地"
-          onClick={() =>
-            mapRef.current?.locate({
-              setView: true,
-              maxZoom: 15,
-              enableHighAccuracy: true,
-            })
-          }
+          aria-label={readable ? "選択便の位置例を表示" : "現在地"}
+          title={readable ? "選択便の位置例・実GPS未接続" : "現在地"}
+          disabled={readable && !selectedTripData?.vehicleId}
+          onClick={() => {
+            if (readable) {
+              const points = selectedRoadRoute?.points || (selectedFrom && selectedTo ? [selectedFrom.position, selectedTo.position] : []);
+              if (points.length) mapRef.current?.panTo(points[Math.min(points.length-1, Math.round((points.length-1)*tripRouteProgress(selectedTripData.status)))], {animate:false});
+            } else mapRef.current?.locate({setView:true,maxZoom:15,enableHighAccuracy:true});
+          }}
         >
           <MapPin />
         </button>
@@ -5018,11 +5025,13 @@ function ControlTopBar({
   theme,
   toggleTheme,
   onLogout,
+  siteRecords,
+  onGlobalResult,
 }) {
   const projects = [
-    ["首都圏サンプルプロジェクト", "稼働中 8現場"],
-    ["湾岸再開発プロジェクト", "稼働中 4現場"],
-    ["北関東造成プロジェクト", "準備中 3現場"],
+    ["首都圏サンプルプロジェクト", "名称の表示例"],
+    ["湾岸再開発プロジェクト", "名称の表示例"],
+    ["北関東造成プロジェクト", "名称の表示例"],
   ];
   const [projectOpen, setProjectOpen] = useState(false);
   const [project, setProject] = useState(projects[0][0]);
@@ -5047,11 +5056,10 @@ function ControlTopBar({
     return () => window.removeEventListener("keydown", closeTransientUi);
   }, [setMenuOpen]);
   const globalResults = [
-    [Building2, "サンプル現場A", "現場", "現場詳細", "32182"],
-    [Truck, "10t ダンプ 01", "車両", "車両一覧"],
-    [UserRound, "サンプル 運転者1", "運転手", "車両一覧"],
-    [Layers3, "湾岸第2受入ヤード", "受入候補", "UCRマッチング"],
-  ].filter(([, label, type]) => `${label}${type}`.includes(globalQuery));
+    ...(siteRecords || []).map(r => ({ Icon: Building2, id: r.id, label: r.field, type: "現場", meta: r.company || r.address, route: "現場詳細" })),
+    ...readVehicles().map(r => ({ Icon: Truck, id: r.id, label: r.number, type: "車両", meta: `${r.name} · ${r.company}`, route: "車両一覧", record: r })),
+    ...drivers.map(r => ({ Icon: UserRound, id: r.id, label: r.name, type: "ドライバー", meta: `${r.phone} · ${r.license}`, route: "ドライバー検索", record: r })),
+  ].filter(r => `${r.label} ${r.type} ${r.meta} ${r.id}`.toLowerCase().includes(globalQuery.trim().toLowerCase()));
   return (
     <>
       <header className="control-topbar">
@@ -5077,7 +5085,7 @@ function ControlTopBar({
           }}
           aria-expanded={projectOpen}
           aria-haspopup="menu"
-          title="表示するプロジェクトを切り替える"
+          title={`${project}・プロジェクト表示例（現場の絞り込みではありません）`}
         >
           <Building2 />
           <span>{project}</span>
@@ -5086,8 +5094,8 @@ function ControlTopBar({
         {projectOpen && (
           <div className="project-dropdown" role="menu">
             <div>
-              <b>プロジェクトを選択</b>
-              <small>表示する現場と運行情報が切り替わります</small>
+              <b>プロジェクト表示例</b>
+              <small>所属データは未設定です。名称のみ切り替え、現場・日付は各画面で選択します。</small>
             </div>
             {projects.map(([name, meta]) => (
               <button
@@ -5127,18 +5135,18 @@ function ControlTopBar({
               <b>検索結果</b>
               <small>{globalResults.length}件</small>
             </header>
-            {globalResults.map(([Icon, label, type, route, fieldId]) => (
+            {globalResults.map(({Icon, label, type, route, id, meta, record}) => (
               <button
-                key={`${type}-${label}`}
+                key={`${type}-${id}`}
                 onClick={() => {
-                  navigate(route, fieldId);
+                  onGlobalResult({ route, id, label, type, record });
                   setGlobalQuery("");
                 }}
               >
                 <Icon />
                 <span>
                   <b>{label}</b>
-                  <small>{type}</small>
+                  <small>{type} · {meta} · ID: {id}</small>
                 </span>
                 <ChevronRight />
               </button>
@@ -5440,54 +5448,54 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
   const [cargoFilter, setCargoFilter] = useState("すべての荷種");
   const [selectedTrip, setSelectedTrip] = useState("TR-20260820-02");
   const sharedTrips=useDemoTrips();
-  const trips=sharedTrips.filter((t) =>t.date===date).map(asControl);
+  const trips=sharedTrips.filter((t) =>t.date===date).map(asControl).sort((a,b)=>`${a.time} ${a.id}`.localeCompare(`${b.time} ${b.id}`));
   const setTrips=()=>setConfirm({title:"地図からの更新は未送信",message:"搬出管理・配車から同じ便を編集してください。",
     });
   const [operationMode, setOperationMode] = useState(null);
   const [mapTrip, setMapTrip] = useState(null);
   const [timelineExpanded, setTimelineExpanded] = useState(true);
-  const visibleTrips = trips.filter(
-    (trip) =>
-      (tripFilter === "すべてのステータス" || (tripFilter === "向かっているダンプ" ? ["運行中","遅延"].includes(trip.status) : trip.status === tripFilter)) &&
-      (siteFilter === "すべての現場" || trip.from.includes(siteFilter)) &&
-      (cargoFilter === "すべての荷種" || cargoFilter === "建設発生土"),
-  );
+  const scopedTrips = trips.filter(trip =>
+    (siteFilter === "すべての現場" || (roleMode === "receiving" ? trip.to : trip.from).includes(siteFilter)) &&
+    (cargoFilter === "すべての荷種" || cargoFilter === "建設発生土"));
+  const visibleTrips = scopedTrips.filter(trip => tripFilter === "すべてのステータス" ||
+    (tripFilter === "配車済み" ? !!trip.vehicleId && trip.booking !== "取消" :
+    tripFilter === "向かっているダンプ" ? ["運行中","遅延"].includes(trip.status) : trip.status === tripFilter));
   const hasActiveFilters =
     tripFilter !== "すべてのステータス" ||
     siteFilter !== "すべての現場" ||
     cargoFilter !== "すべての荷種";
   const selectedTripData =
     visibleTrips.find((trip) => trip.id === selectedTrip) || visibleTrips[0];
-  const summaries=[[ClipboardList, "予定総便数", visibleTrips.length, "便"],
+  const summaries=[[ClipboardList, "予定総便数", scopedTrips.length, "便"],
     [
       Truck,
       "配車済み",
-      visibleTrips.filter((t) =>t.vehicleId&&t.booking!=="取消").length,
+      scopedTrips.filter((t) =>t.vehicleId&&t.booking!=="取消").length,
       "便",
     ],
     [
       Navigation,
       "運行中",
-      visibleTrips.filter((t) => t.status === "運行中").length,
+      scopedTrips.filter((t) => t.status === "運行中").length,
       "便",
     ],
     [
       TriangleAlert,
       "遅延",
-      visibleTrips.filter((t) => t.status === "遅延").length,
+      scopedTrips.filter((t) => t.status === "遅延").length,
       "便",
       "warning",
     ],
     [
       Clock3,
       "待機中",
-      visibleTrips.filter((t) => t.status === "待機中").length,
+      scopedTrips.filter((t) => t.status === "待機中").length,
       "便",
     ],
     [
       ShieldCheck,
       "受入完了",
-      visibleTrips.filter((t) => t.status === "完了").length,
+      scopedTrips.filter((t) => t.status === "完了").length,
       "便",
       "complete",
     ],
@@ -5548,13 +5556,13 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
         </button>
         )}
         <label>
-          現場
+          {roleMode === "receiving" ? "受入場所" : "現場"}
           <select
             value={siteFilter}
             onChange={(event) => setSiteFilter(event.target.value)}
           >
-            <option>すべての現場</option>
-            {demoSites.map((site) => (
+            <option value="すべての現場">{roleMode === "receiving" ? "すべての受入場所" : "すべての現場"}</option>
+            {(roleMode === "receiving" ? demoLocations : demoSites).map((site) => (
               <option key={site.id}>{site.name}</option>
             ))}
           </select>
@@ -5577,7 +5585,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             onChange={(event) => setTripFilter(event.target.value)}
           >
             <option>すべてのステータス</option>
-            {roleMode === "receiving" && <option>向かっているダンプ</option>}<option>運行中</option>
+            {roleMode === "receiving" && <><option>向かっているダンプ</option><option>配車済み</option></>}<option>運行中</option>
             <option>遅延</option>
             <option>受入中</option>
             <option>完了</option>
@@ -5616,15 +5624,16 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             selectedTripData={selectedTripData}
             navigate={navigate}
             setConfirm={setConfirm}
+            readable={roleMode === "receiving"}
           />
         )}
         <div className="timeline-panel">
           <header>
             <div>
               <b>本日の運行タイムライン</b>
-              <small>選択中：{selectedTrip}</small>
+              <small>{selectedTripData ? `選択中：${selectedTripData.id}` : "対象便なし"}</small>
             </div>
-            <dl>
+            {roleMode !== "receiving" && <dl>
               <div>
                 <dt>計画</dt>
                 <dd>{`${visibleTrips.length}便`}</dd>
@@ -5641,7 +5650,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
                 <dt>完了</dt>
                 <dd>{`${visibleTrips.filter((t) => t.status === "完了").length}便`}</dd>
               </div>
-            </dl>
+            </dl>}
             <button
               className="timeline-detail-action"
               disabled={!selectedTripData}
@@ -5666,7 +5675,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             {visibleTrips.map((trip) => (
               <button
                 key={trip.id}
-                className={selectedTrip === trip.id ? "selected" : ""}
+                className={selectedTripData?.id === trip.id ? "selected" : ""}
                 aria-haspopup={roleMode === "receiving" ? "dialog" : undefined}
                 title={`${trip.id}：${trip.from} → ${trip.to}／${trip.status}／${trip.eta}`}
                 onClick={() => {
@@ -5727,7 +5736,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
                 ? navigate("搬出・受入スケジュール")
                 : setTripFilter(
                     label === "配車済み"
-                      ? "すべてのステータス"
+                      ? "配車済み"
                       : label === "受入完了"
                         ? "完了"
                         : label,
@@ -5981,6 +5990,7 @@ export function App() {
         return;
       }
       if (reviewOptions.menu) {
+        setSelected(null);
         nextReturn = null;
         setReviewReturn(null);
         setReviewPanel(false);
@@ -5991,8 +6001,9 @@ export function App() {
         !reviewOptions.restore &&
         reviewModuleFor(page) &&
         reviewModuleFor(p) &&
-        reviewModuleFor(page) !== reviewModuleFor(p)
+        (reviewModuleFor(page) !== reviewModuleFor(p) || (reviewOptions.related && page !== p))
       ) {
+        if (reviewCompany) sessionStorage.setItem("ecodump-return-company-name", JSON.stringify(document.querySelector(".review-company-detail h2")?.textContent || reviewCompany));
         nextReturn = {
           page,
           fieldId: selected,
@@ -6211,14 +6222,17 @@ export function App() {
   else if (page === "搬出・受入スケジュール")
     body = roleMode === "construction" ? (
       <ConstructionTransportPage {...{ navigate }}
+          focusField={navigationReview ? siteRecords.find(r => r.id === selected)?.field : undefined}
+          onFieldChange={navigationReview ? () => setSelected(null) : undefined}
           fieldRecords={navigationReview ? siteRecords : undefined}
           fieldOptions={
             navigationReview ? siteRecords.map((r) => r.field) : undefined
           }
           renderFieldContext={
             navigationReview
-              ? (fieldName, changeField) => (
+              ? (fieldName, changeField, renderSchedule) => (
                   <ReviewFieldContext
+                    renderSchedule={renderSchedule}
                     fieldName={fieldName}
                     records={siteRecords}
                     changeField={changeField}
@@ -6312,8 +6326,9 @@ export function App() {
         }
         fieldRecords={siteRecords}
         fieldOptions={siteRecords.map((r) => r.field)}
-        renderFieldContext={(fieldName, changeField) => (
+        renderFieldContext={(fieldName, changeField, renderSchedule) => (
           <ReviewFieldContext
+            renderSchedule={renderSchedule}
             fieldName={fieldName}
             records={siteRecords}
             changeField={changeField}
@@ -6350,6 +6365,13 @@ export function App() {
       data-theme={theme}
     >
       <ControlTopBar
+        siteRecords={siteRecords}
+        onGlobalResult={({route,id,label,type,record}) => {
+          if (type === "車両") sessionStorage.setItem("ecodump-vehicle-focus", id);
+          navigate(route, type === "現場" ? id : undefined);
+          if (type !== "現場") setQuery(label);
+          if (type === "ドライバー") setConfirm({ title: record.name, message: `ID：${id}／電話番号：${record.phone}／免許区分：${record.license}／免許期限：${record.expires}／配車状況：${record.status}` });
+        }}
         accountName={business.session?.displayName}
         {...{
           page,
@@ -6383,19 +6405,6 @@ export function App() {
       <aside className="sidebar">
         <>
             <div className="sidebar-suite-strip">
-              <button
-                className="sidebar-suite-logo"
-                type="button"
-                onClick={() => navigate("搬出・受入スケジュール")}
-                aria-label={`${roleMode === "construction" ? "施工側" : "受入側"}管理ホームへ戻る`}
-                title={`${roleMode === "construction" ? "施工側" : "受入側"}管理ホームへ戻る`}
-              >
-                <img
-                  className="brand-mark"
-                  src={`${import.meta.env.BASE_URL}ecodump-logo.png`}
-                  alt="ECO DUMP"
-                />
-              </button>
               {!collapsed && (
                 <nav className="sidebar-suite-nav" aria-label={`${roleMode === "construction" ? "施工側" : "受入側"}機能切替`}>
                   <button
@@ -6421,7 +6430,7 @@ export function App() {
                     disabled
                     title="運営管理画面でのみ閲覧できます"
                   >
-                    <span>総合</span><span>インフォメーション</span><span>（管理）</span>
+                    <span>総合</span><span>インフォメーション</span><span>（管理）</span><small>運営管理用・利用不可</small>
                   </button>
                 </nav>
               )}
@@ -6493,31 +6502,6 @@ export function App() {
               </span>
             </div>
           )}
-          <button
-            aria-label="通知"
-            title="通知"
-            onClick={() =>
-              setConfirm({
-                title: "通知",
-                message: "現在、新しい通知はありません。",
-              })
-            }
-          >
-            <span className="nav-icon">
-              <Bell />
-            </span>
-            <span>通知</span>
-          </button>
-          <button
-            onClick={() => setHelpOpen(true)}
-            aria-label="ヘルプ"
-            title="ヘルプ"
-          >
-            <span className="nav-icon">
-              <CircleHelp />
-            </span>
-            <span>ヘルプ</span>
-          </button>
           {!collapsed && (
             <>
               <b>お客様番号：0000-0000</b>
@@ -6540,7 +6524,7 @@ export function App() {
                   ? "現場詳細"
                   : page === "UCRマッチング" ? "発生土マッチ" : page
             }
-            onHelp={() => setHelpOpen(true)}
+            onHelp={() => setConfirm({ title: `${page}の操作`, message: pageHelp(page, roleMode) })}
             onClose={() =>
               navigate(
                 roleMode === "construction"
@@ -6564,6 +6548,7 @@ export function App() {
                       : reviewReturn.page}
                   へ戻る
                 </button>
+                {reviewReturn.companyId && <small>{readReviewContext("ecodump-return-company-name", reviewReturn.companyId)} の確認に戻ります</small>}
               </div>
             )}
             <ReviewWorkspace
@@ -6588,7 +6573,7 @@ export function App() {
             {!publicDemo && new URLSearchParams(location.search).get("workflowApi") === "1" && connectedPages.includes(page) && (
                 <DirectWorkflowPanel role={roleMode} />
               )}
-            {roleMode === "receiving" && page !== "UCRマッチング" && page !== "総合インフォメーション" && !livePage && <PrototypeNotice />}{!livePage&&roleMode==="construction"&&page==="搬出・受入スケジュール"&& (
+            {roleMode === "receiving" && !["UCRマッチング", "総合インフォメーション", "車両一覧"].includes(page) && !livePage && <PrototypeNotice />}{!livePage&&roleMode==="construction"&&page==="搬出・受入スケジュール"&& (
                 <ActionRequired navigate={navigate} />
               )}{body}
           </div>
@@ -6776,7 +6761,7 @@ export function App() {
               {confirm
                 ? confirm.message ||
                   "匿名サンプルデータの詳細画面です。情報を確認して操作できます。"
-                : "操作方法やよくある質問を確認できます。"}
+                : "左の業務メニューで管理領域を選び、隣のメニューで項目を開きます。上部ロゴで現在の役割のホームへ戻ります。検索結果には対象IDを表示します。各画面のヘルプではその画面の操作を確認できます。操作確認デモの変更は相手への送信・本番DB保存を行いません。"}
             </p>
             <button
               className="primary"

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as XLSX from 'xlsx';
-import {transportRows,reportTotals,transportWorkbook} from '../src/reports/transportReport.mjs';
+import {transportRows,reportTotals,transportWorkbook,formatReportQuantity} from '../src/reports/transportReport.mjs';
 import {receivingTrip} from '../src/receiving/liveModel.mjs';
 import {filters,summarize} from '../src/receiving/receivingSummary.mjs';
 const base={vehicleCompany:'モデル運送〈架空〉',id:'b',date:'2026-09-30',site:{id:'s',name:'A'},location:{id:'l',name:'栃木'},quantity:10,unit:'m3',status:'confirmed',trip:{id:'t',vehicleId:'v',vehicle:'01',plannedQuantity:10,unit:'m3',status:'receiver_arrived'}};
@@ -27,3 +27,11 @@ test('real XLSX round-trip has exactly visible rows, separate units, corrected c
 });
 
 test("export records the same named filters as the visible receiving list",()=>{const wb=transportWorkbook(transportRows([base]),{period:"2026-10-01",filters:{受入場所:"栃木",搬出元:"A",検索:"01",実績確定状態:"未確定"}});const text=JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets["集計"],{header:1}));for(const value of ["栃木","搬出元","検索","未確定"])assert.ok(text.includes(value));});
+
+test('quantity display and Excel formatting suppress floating noise without rounding the stored totals',()=>{
+ const quantity=7.1+7,rows=transportRows([{...base,quantity,trip:{...base.trip,plannedQuantity:quantity}}]);
+ assert.equal(formatReportQuantity(quantity),'14.1');assert.equal(formatReportQuantity(0),'0.0');assert.equal(formatReportQuantity(null),'未報告');
+ const workbook=transportWorkbook(rows),cell=workbook.Sheets['便別明細']['O2'];
+ assert.equal(cell.v,quantity);assert.equal(cell.z,'#,##0.0');assert.equal(XLSX.utils.format_cell(cell),'14.1');
+ assert.equal(reportTotals(rows)[0].planned,quantity);
+});

@@ -1061,3 +1061,10 @@ body:has(.driver-preview) {
 .driver-confirmation strong{display:block;font-size:24px;line-height:1.4}.driver-confirmation .primary,.driver-confirmation .secondary{width:100%;min-height:48px;white-space:normal;margin-top:10px}.driver-confirmation small{display:block;line-height:1.6;margin-top:10px}
 
 .report-action.unconfirmed{position:static;bottom:auto}
+
+/* Keep the approved phone layout; make supporting text and touch targets readable. */
+.driver-preview :is(.prototype-banner,.page-heading p,.eyebrow,.trip-top,.driver-chip,.trip-time small,.daily-summary span) { font-size:12px; }
+.driver-preview :is(.trip-top,.trip-footer,.prototype-banner) { flex-wrap:wrap; }
+.driver-preview .trip-card :is(strong,small,span) { overflow-wrap:anywhere; }
+.driver-preview :is(.icon-button,.back-button,.driver-bottom button) { min-height:44px; min-width:44px; }
+.driver-preview button:focus-visible { outline:3px solid var(--lime); outline-offset:2px; }

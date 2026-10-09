@@ -1,0 +1,120 @@
+/* Restrained refinements: keep the approved shell, palette and component geometry. */
+.control-app-shell .sidebar-suite-nav > button { font-size: 14px; white-space: normal; }
+.control-app-shell .sidebar-suite-nav > button:nth-child(3) { font-size: 12px; line-height: 1.2; padding-block: 6px; }
+.control-app-shell .suite-information-disabled small { font-size: 11px; color: #d2ded9; font-weight: 600; }
+.control-app-shell .control-project > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.control-app-shell .control-project > svg { flex-shrink: 0; }
+.control-app-shell.is-collapsed .sidebar-suite-strip { min-height: 0; flex-basis: 0; padding: 0; border: 0; }
+.compact-demo-notice { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; padding: 10px 14px; font-size: 13px; line-height: 1.6; }
+.compact-demo-notice > b { font-size: 13px; }
+.compact-demo-notice > details { flex: 1 1 180px; }
+.compact-demo-notice summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; text-decoration: underline; text-underline-offset: 3px; }
+.compact-demo-notice summary::before { content: '▸'; margin-right: 8px; }
+.compact-demo-notice details[open] summary::before { content: '▾'; }
+.compact-demo-notice p { margin: 4px 0 0; }
+.control-app-shell :is(button,input,select,textarea):focus-visible { outline: 3px solid var(--theme-accent); outline-offset: 2px; }
+.control-app-shell :is(.review-disclosure,.sidebar-collapse-row .collapse) { min-width: 44px; min-height: 44px; }
+.control-app-shell .global-search-results { max-height: min(65dvh,540px); overflow: auto; }
+.control-app-shell .global-search-results small { overflow-wrap: anywhere; }
+.control-app-shell .company-workspace .company-edit-controls > .primary { flex: 0 0 auto; width: 110px; min-width: 110px; min-height: 44px; }
+.control-app-shell .company-workspace .company-actions { justify-content: space-between; gap: 16px; }
+.control-app-shell .company-workspace .company-edit-controls { flex: 1 1 210px; }
+@media (min-width:761px) {
+  .control-app-shell .company-workspace .company-actions > span { order: -1; flex: 1 1 240px; }
+  .control-app-shell .company-workspace .company-edit-controls { flex: 0 1 auto; margin-left: auto; }
+}
+.control-app-shell :is(.service-table,.gf-table,.review-site-table) { font-variant-numeric: tabular-nums; }
+.control-app-shell :is(.review-note,.review-metric-note,.construction-data-boundary) { font-size: 13px; line-height: 1.6; }
+.control-app-shell .help-modal p { white-space: pre-line; line-height: 1.8; }
+.control-app-shell .results-table-wrap:focus-visible { outline: 2px solid var(--theme-accent); }
+.control-app-shell .review-site-table-scroll::before { content: '横にスクロールして全項目を確認できます'; display: block; font-size: 12px; color: var(--theme-muted); padding: 6px 0; }
+.control-app-shell .review-blocker-groups { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 12px; }
+.control-app-shell .review-blocker-groups article { display: grid; align-content: start; gap: 6px; padding: 10px; border: 1px solid var(--theme-border); border-radius: 6px; }
+.control-app-shell .review-blocker-groups small { font-size: 12px; line-height: 1.6; }
+.control-app-shell .review-blocker-groups summary { cursor: pointer; min-height: 44px; padding: 10px 0; font-size: 13px; }
+.control-app-shell .review-blocker-groups details button { display: block; width: 100%; margin-bottom: 6px; }
+.control-app-shell .review-blockers > button { margin-top: 10px; min-height: 44px; }
+.control-app-shell .review-field-schedule-link { margin: 8px 0 14px; min-height: 44px; }
+.control-app-shell .review-document-status-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.control-app-shell .review-document-status-filters button { min-height: 44px; }
+.control-app-shell .review-document-status-filters button[aria-pressed=true] { border-color: var(--theme-accent); box-shadow: inset 0 -3px var(--theme-accent); }
+.control-app-shell .navigation-review-return { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.control-app-shell .navigation-review-return small { color: var(--theme-muted); font-size: 13px; }
+@media (min-width:1280px) { .control-app-shell .matching-workspace { grid-template-columns: minmax(0,1fr) minmax(440px,480px); } }
+.control-app-shell .match-actions-top { margin: 14px 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.control-app-shell .match-actions-top button { min-height: 44px; flex: 1 1 180px; }
+.control-app-shell .matching-back-list { min-height: 44px; margin-bottom: 12px; }
+.control-app-shell :is(.matching-summary-scope,.matching-mode-guide) { font-size: 13px; line-height: 1.6; color: var(--theme-muted); margin: 10px 0; }
+.control-app-shell .matching-kpis article { padding: 12px 16px; }
+.control-app-shell .matching-kpis b { font-size: 26px; }
+.control-app-shell .matching-advanced { padding: 14px; margin: 12px 0; border: 1px solid var(--theme-border); border-radius: 8px; }
+.control-app-shell .matching-advanced small { flex-basis: 100%; color: var(--theme-muted); font-size: 13px; }
+.control-app-shell .matching-documents { width: min(850px,94vw); }
+.control-app-shell .matching-documents table { min-width: 570px; }
+.control-app-shell .matching-documents button { min-height: 44px; }
+.control-app-shell .matching-create-modal { max-height: calc(100dvh - 32px); overflow: auto; margin: 0; background: var(--theme-surface); color: var(--theme-text); border-color: var(--theme-border); }
+.control-app-shell .matching-create-modal :is(h2,label) { color: var(--theme-text); }
+.control-app-shell .matching-create-modal p { color: var(--theme-muted); }
+.control-app-shell .matching-create-modal :is(input,select) { background: var(--theme-surface-raised); color: var(--theme-text); border-color: var(--theme-border); }
+.control-app-shell > .overlay { z-index: 21000; }
+.control-app-shell > .matching-create-overlay { z-index: 20000; }
+.control-app-shell .cap-a-controls { flex-wrap: wrap; }
+.control-app-shell .cap-a-scroll { scrollbar-gutter: stable; }
+.control-app-shell .cap-a-scroll:focus-visible { outline: 3px solid var(--theme-accent); outline-offset: -3px; }
+.control-app-shell .cap-a summary { min-height: 44px; display: flex; align-items: center; }
+.control-app-shell .cap-a-table th:last-child,.control-app-shell .cap-a-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Receiving map uses the same readable legend and detail positions. */
+.role-receiving .readable-map { display: flex; flex-direction: column; background: var(--theme-surface); border: 1px solid var(--theme-border); border-radius: 8px; }
+.role-receiving .readable-map .leaflet-map { flex: 0 0 420px; height: 420px; min-height: 420px; }
+.role-receiving .readable-map .map-legend { position: static; width: auto; margin: 12px 16px; padding: 12px; color: var(--theme-text); background: var(--theme-surface-raised); border-color: var(--theme-border); }
+.role-receiving .readable-map .map-legend summary { cursor: pointer; min-height: 28px; }
+.role-receiving .readable-map .map-legend span { font-size: 13px; color: var(--theme-text); margin: 8px 0; }
+.role-receiving .readable-map .map-selection { position: static; max-width: none; margin: 0 16px 16px; gap: 8px; background: var(--theme-surface-raised); color: var(--theme-text); border-color: var(--theme-border); box-shadow: none; pointer-events: auto; padding: 16px; }
+.role-receiving .readable-map .map-selection :is(span,small,dd,strong) { color: var(--theme-text); font-size: 14px; white-space: normal; overflow-wrap: anywhere; }
+.role-receiving .readable-map .map-selection > b { color: var(--theme-text); font-size: 18px; }
+.role-receiving .readable-map .map-route-stages { min-width: 0; grid-template-columns: minmax(0,1fr) 16px minmax(0,1fr); }
+.role-receiving .readable-map .map-route-stages > span { display: grid; }
+.role-receiving .readable-map .map-load-details { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 12px; }
+.role-receiving .readable-map .map-load-details > div { display: block; }
+.role-receiving .readable-map .map-load-details :is(dt,dd) { margin: 4px 0; font-size: 14px; }
+.role-receiving .readable-map .map-tools { top: 14px; left: 14px; bottom: auto; }
+.role-receiving .readable-map .map-updated { position: static; margin: 0 16px 12px; background: var(--theme-surface); color: var(--theme-muted); font-size: 13px; }
+.role-receiving .readable-map .leaflet-tile-pane { filter: none; }
+.role-receiving.theme-dark .readable-map .leaflet-tile-pane { filter: brightness(.8) saturate(.7); }
+.role-receiving .readable-map .map-selection :is(.map-location-fresh,.map-location-stale) { color: var(--theme-muted) !important; font-size: 13px !important; }
+.role-receiving .readable-map .map-selection .map-tracking-status { color: var(--theme-text); font-size: 14px; }
+.role-receiving .readable-map .map-route-stages svg { color: var(--theme-text); }
+.role-receiving .readable-map .leaflet-control-attribution { background: var(--theme-surface); color: var(--theme-text); }
+.role-receiving .readable-map .leaflet-control-attribution a { color: var(--theme-text); }
+.role-receiving .readable-map .map-tools { gap: 4px; }
+.role-receiving .readable-map .map-tools button { width: 44px; height: 44px; min-height: 44px; }
+.control-app-shell .receiving-report-total { display:flex; flex-wrap:wrap; gap:8px 18px; font-variant-numeric:tabular-nums; line-height:1.8; }
+.role-receiving .control-workspace { align-items:stretch; }
+.role-receiving .readable-map { overflow: auto; }
+.control-app-shell .readable-map:focus-visible { outline: 3px solid var(--theme-accent); outline-offset: -3px; }
+@media (min-width:761px) {
+  .role-receiving .control-workspace { grid-template-rows: minmax(0,1fr); }
+  .role-receiving .readable-map { height: 100%; }
+}
+.role-receiving .timeline-panel header { flex-wrap:wrap; }
+.role-receiving .control-sample-note { background: var(--theme-surface); color: var(--theme-muted); }
+.role-receiving .action-strip { flex-wrap: wrap; gap: 10px; }
+.role-receiving .action-strip > button { height: auto; min-height: 44px; padding: 10px 14px; line-height: 1.5; white-space: normal; flex: 0 1 auto; }
+.role-receiving .service-table button { height: auto; min-height: 48px; padding-block: 10px; line-height: 1.5; white-space: normal; }
+.role-receiving .generic-tr button { height: auto; min-height: 48px; padding-block: 10px; line-height: 1.5; white-space: normal; }
+.role-receiving .control-workspace:not(.timeline-expanded) .timeline-list > button { grid-template-columns: 52px minmax(0,1fr) minmax(86px,auto); min-height: 100px; gap: 8px; }
+.role-receiving .control-workspace:not(.timeline-expanded) .timeline-list > button > b { white-space: normal; overflow-wrap: anywhere; text-overflow: clip; }
+.role-receiving .control-workspace:not(.timeline-expanded) .timeline-list .trip-route { grid-column: 1 / 3; }
+.role-receiving .control-workspace:not(.timeline-expanded) .timeline-list > button > small { display: block; }
+.role-receiving .control-workspace:not(.timeline-expanded) .trip-route > span { white-space: normal; overflow-wrap: anywhere; }
+.control-app-shell.theme-light .control-brand small { color: #66750f; }
+.control-app-shell.theme-light .review-document-row .checked > span:first-child { color: #66750f; }
+.control-app-shell.theme-light .review-document-row .missing > span:first-child { color: #805f19; }
+.control-app-shell.theme-light .trip-status.status-取消 { color: #546010; }
+.control-app-shell .trip-status.status-取消 { font-size: 12px; }
+/* Wrapped tablet controls use their content height, not the desktop row width. */
+@media (max-width:1100px) {
+  .control-app-shell.navigation-review .search-panel .search-line { flex: 0 0 auto; width: 100%; }
+  .control-app-shell .receiving-home .schedule-switches > :is(.receiving-toolbar,.receiving-quota-note) { flex: 0 0 auto; }
+}

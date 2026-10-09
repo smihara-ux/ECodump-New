@@ -10,6 +10,9 @@ export const bookingDate = (b) =>
       })
     : b.date;
 export const reportUnit = (u) => (u === "m3" ? "m³" : u);
+// Format only the presentation; totals and workbook values retain their precision.
+export const formatReportQuantity = (value) => value == null ? "未報告" :
+  new Intl.NumberFormat("ja-JP", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
 export function transportRows(bookings) {
   return bookings.map((b) => {
     const receipt = b.receiptRecord,

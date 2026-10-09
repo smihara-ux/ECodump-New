@@ -191,7 +191,7 @@ for (const theme of ["light", "dark"])
           ),
         ).toBeLessThanOrEqual(2);
         await expect(
-          page.getByText(name === "発生土マッチ" ? "操作プレビュー：変更は保存・送信されません。適合度・距離・件数はサンプルです。" : "受入側の操作試作 · API未接続"),
+          page.getByText(name === "発生土マッチ" ? "操作プレビュー：変更は保存・送信されません。適合度・距離・件数はサンプルです。" : "操作確認デモ・変更は未送信").first(),
         ).toBeVisible();
       }
     }

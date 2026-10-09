@@ -262,17 +262,17 @@ export function ReviewRelations({ page, navigate, companyId, siteId, siteOptions
           <tbody>
             {rows.map((p) => (
               <tr key={p.participationId} data-company-id={p.companyId} data-site-id={p.siteId}>
-                <td>
+                <td data-label="会社名・ID">
                   {p.name}
                   <small>{p.id}</small>
                 </td>
-                <td>{p.tier}</td>
-                <td>
+                <td data-label="区分">{p.tier}</td>
+                <td data-label="参加現場">
                   {demoSites.find((s) => s.id === p.siteId)?.name ||
                     p.siteName || "現場未設定"}
                 </td>
-                <td>{p.state}</td>
-                <td>
+                <td data-label="参加状況">{p.state}</td>
+                <td data-label="確認">
                   <button className="outline" onClick={() => open(p)}>
                     詳細
                   </button>
@@ -307,7 +307,7 @@ export function ReviewCompanyDetail({ companyId, siteId, siteOptions, navigate }
     navigate("労務安全");
     const params = new URLSearchParams(location.search);
     params.set("documentCategory", category);
-    history.replaceState(null, "", `${location.pathname}?${params}`);
+    history.replaceState(history.state, "", `${location.pathname}?${params}`);
   }
   return (
     <section className="review-company-detail" data-company-id={p.id} data-site-id={p.siteId}>

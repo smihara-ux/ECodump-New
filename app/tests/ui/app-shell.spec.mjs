@@ -142,6 +142,8 @@ test("construction dispatch shares a reasoned local assignment without claiming 
  await dialog.getByLabel('変更・取消理由').fill('検証用の割当');
  await dialog.getByRole('button',{name:'変更をデモ内に反映（未送信）'}).click();
  await expect(page.getByRole('row').filter({hasText:'TR-20260820-04'})).toContainText('成田 100 を 01-01');
+ await expect(page.locator('.compact-demo-notice')).toContainText('変更は未送信');
+ await page.locator('.compact-demo-notice summary').click();
  await expect(page.getByText(/相手への送信・API／DB保存は行いません/)).toBeVisible();
 });
 

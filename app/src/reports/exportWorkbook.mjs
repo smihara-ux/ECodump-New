@@ -16,8 +16,19 @@ export function buildOperationsWorkbook({ title, conditions, summaryRows, detail
     ...summaryRows,
   ];
   const summarySheet = XLSX.utils.aoa_to_sheet(summary);
+  summary.forEach((row, index) => {
+    const cell = summarySheet[XLSX.utils.encode_cell({r:index,c:2})];
+    if (String(row[0]).includes("数量") && cell?.t === "n") cell.z = "#,##0.0";
+  });
   summarySheet["!cols"] = [{ wch: 28 }, { wch: 22 }, { wch: 18 }];
   const detailSheet = XLSX.utils.aoa_to_sheet([detailHeaders, ...detailRows]);
+  detailHeaders.forEach((header, column) => {
+    if (!String(header).includes("数量")) return;
+    detailRows.forEach((_, index) => {
+      const cell = detailSheet[XLSX.utils.encode_cell({r:index+1,c:column})];
+      if (cell?.t === "n") cell.z = "#,##0.0";
+    });
+  });
   detailSheet["!cols"] = detailHeaders.map((header) => ({ wch: Math.max(12, String(header).length * 2 + 2) }));
   XLSX.utils.book_append_sheet(workbook, summarySheet, "集計");
   XLSX.utils.book_append_sheet(workbook, detailSheet, "便別明細");

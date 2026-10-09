@@ -1,3 +1,5 @@
+import { readReviewContext, writeReviewContext } from "../review/reviewContext.mjs";
+import { DemoNotice } from "../review/Readability.jsx";
 import { useEffect, useRef, useState } from "react";
 import { categories, companies, changeDocument, findParticipation, saveParticipation } from "./complianceModel.mjs";
 import { useCompliance, updateCompliance } from "./complianceStore.jsx";
@@ -31,6 +33,9 @@ export default function LaborWorkspace({
         return {};
       }
     });
+  const contextKey = `ecodump-review-labor:${companyId || focus.companyId || "all"}:${siteId || focus.siteId || "all"}`;
+  const savedView = readReviewContext(contextKey, {});
+  const [quick, setQuick] = useState(savedView.quick || "すべて");
   const [menu, setMenu] = useState("書類状況一覧"),
     [category, setCategory] = useState(() => {
       if (initialCategory) return initialCategory;
@@ -41,13 +46,15 @@ export default function LaborWorkspace({
       companies.find((c) => c.id === (companyId || focus.companyId))?.name ||
         "",
     ),
-    [statuses, setStatuses] = useState([]),
+    [statuses, setStatuses] = useState(savedView.statuses || []),
     [filter, setFilter] = useState(false),
     [selected, setSelected] = useState(null),
     [error, setError] = useState(""),
     [driverQuery, setDriverQuery] = useState("");
+  useEffect(() => { if (navigationReview) writeReviewContext(contextKey,{quick,statuses}); }, [contextKey,quick,statuses,navigationReview]);
   const rows = state.records
     .filter((r) => category === "すべて" || r.category === category)
+    .filter(r => quick === "すべて" || (quick === "確認待ち" ? r.status === "提出済" : r.status === "差戻し" || categories[r.category].some(d => !r.checks.includes(d))))
     .filter(
       (r) =>
         (!(companyId || focus.companyId) || r.companyId === (companyId || focus.companyId)) &&
@@ -62,7 +69,7 @@ export default function LaborWorkspace({
     if (navigationReview && !embedded) {
       const params = new URLSearchParams(location.search);
       params.set("documentCategory", c);
-      history.replaceState(null, "", `${location.pathname}?${params}`);
+      history.replaceState(history.state, "", `${location.pathname}?${params}`);
     }
   }
   const row = state.records.find((r) => r.id === selected);
@@ -111,7 +118,7 @@ export default function LaborWorkspace({
             </select>
           </label>
         )}
-        <p className="review-note">{demoNotice}</p>
+        <DemoNotice />
         {error && <p role="alert">{error}</p>}
         {menu === "元請帳票の確認" ? (
           renderDocuments()
@@ -135,18 +142,22 @@ export default function LaborWorkspace({
                 onClick={() => {
                   setQuery("");
                   setStatuses([]);
+                  setQuick("すべて");
                   sessionStorage.removeItem("ecodump-compliance-focus");
                   setFocus({});
                   if (navigationReview && !embedded) {
                     const params = new URLSearchParams(location.search);
                     params.delete("reviewCompany");params.delete("reviewSite");
-                    history.replaceState(null, "", `${location.pathname}?${params}`);
+                    history.replaceState(history.state, "", `${location.pathname}?${params}`);
                   }
                 }}
               >
                 検索条件をクリア
               </button>
             </div>
+            {navigationReview && <div className="review-document-status-filters" aria-label="書類の対応状態">
+              {["すべて","不足・差戻し","確認待ち"].map(label=><button key={label} className="outline" aria-pressed={quick===label} onClick={()=>setQuick(quick===label?"すべて":label)}>{label}</button>)}
+            </div>}
             {filter && (
               <form
                 className="review-filter"
@@ -509,62 +520,23 @@ export function ParticipationWorkspace({
   </section>;
 }
 export function ActionRequired({ navigate }) {
-  const s = useCompliance();
-  const rows = s.records.filter((r) =>
-    ["未提出", "差戻し", "提出済"].includes(r.status),
-  );
-  return (
-    <section className="review-blockers">
-      <h2>要対応事項（デモ）</h2>
-      <p>
-        一般のお知らせとは別に、参加情報・書類の不足と元請確認待ちを表示します。
-      </p>
-      <div className="review-actions">
-        {s.participants
-          .filter((p) => !p.contact || !p.email)
-          .map((p) => (
-            <button
-              key={p.participationId}
-              onClick={() => {
-                sessionStorage.setItem("ecodump-participant-focus", p.id);
-                sessionStorage.setItem("ecodump-participation-scope", JSON.stringify({companyId:p.id,siteId:p.siteId}));
-                navigate("代行登録申請");
-              }}
-            >
-              {p.name}：現場参加情報が不足
-            </button>
-          ))}
-        {rows
-          .sort((a, b) => (a.status === "提出済") - (b.status === "提出済"))
-          .slice(0, 4)
-          .map((r) => (
-            <button
-              key={r.id}
-              onClick={() => {
-                sessionStorage.setItem(
-                  "ecodump-compliance-focus",
-                  JSON.stringify({
-                    companyId: r.companyId,
-                    siteId: r.siteId,
-                    category: r.category,
-                  }),
-                );
-                navigate("労務安全");
-              }}
-            >
-              {companies.find((c) => c.id === r.companyId)?.name} · {r.category}
-              ：{r.status === "提出済" ? "元請確認待ち" : r.status}
-            </button>
-          ))}
-        <button
-          onClick={() => {
-            sessionStorage.removeItem("ecodump-compliance-focus");
-            navigate("労務安全");
-          }}
-        >
-          すべての書類状態を見る（{rows.length}件）
-        </button>
-      </div>
-    </section>
-  );
+  const s = useCompliance(), [showAll,setShowAll] = useState(false);
+  const rows = s.records.filter(r => ["未提出", "差戻し", "提出済"].includes(r.status));
+  const groups = s.participants.map(p => ({p, records: rows.filter(r => r.companyId === p.companyId && r.siteId === p.siteId)})).filter(({p,records}) => records.length || !p.contact || !p.email).sort((a,b) => Number(!!b.records.some(r=>r.status!=="提出済"))-Number(!!a.records.some(r=>r.status!=="提出済")));
+  function documents(r) { sessionStorage.setItem("ecodump-compliance-focus",JSON.stringify({companyId:r.companyId,siteId:r.siteId,category:r.category}));navigate("労務安全"); }
+  return <section className="review-blockers">
+    <h2>要対応事項（デモ）</h2>
+    <p>参加情報・不足書類・元請確認待ちを会社と現場ごとに表示します。</p>
+    <div className="review-actions review-blocker-groups">
+      {(showAll ? groups : groups.slice(0,3)).map(({p,records}) => <article key={p.participationId}>
+        <b>{p.name}</b><small>{p.siteName || demoSites.find(site=>site.id===p.siteId)?.name} · {p.tier}</small>
+        {(!p.contact || !p.email) && <button onClick={() => {sessionStorage.setItem("ecodump-participant-focus",p.id);sessionStorage.setItem("ecodump-participation-scope",JSON.stringify({companyId:p.id,siteId:p.siteId}));navigate("代行登録申請");}}>{p.name}：現場参加情報が不足</button>}
+        <details><summary>不足・差戻し {records.filter(r=>r.status!=="提出済").length}件 · 確認待ち {records.filter(r=>r.status==="提出済").length}件</summary>
+          {records.map(r=><button key={r.id} onClick={()=>documents(r)}>{r.category}：{r.status==="提出済"?"元請確認待ち":r.status}</button>)}
+        </details>
+      </article>)}
+    </div>
+    {groups.length>3 && <button className="outline" aria-expanded={showAll} onClick={()=>setShowAll(!showAll)}>{showAll?"重要な対象のみ表示":`すべての対象会社を表示（${groups.length}件）`}</button>}
+    <button className="outline" onClick={()=>{sessionStorage.removeItem("ecodump-compliance-focus");navigate("労務安全");}}>すべての書類状態を見る（{rows.length}件）</button>
+  </section>;
 }

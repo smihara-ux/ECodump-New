@@ -23,13 +23,18 @@ for(const theme of ['dark','light'])for(const width of [1440,390])test(`all cons
   const action=page.getByRole('button',{name:'ドライバー情報',exact:true}).first();
   expect(await action.evaluate(e=>{const range=document.createRange();range.selectNodeContents(e);const rect=range.getBoundingClientRect();return rect.height/parseFloat(getComputedStyle(e).lineHeight);})).toBeLessThan(1.2);
   await action.click();await expect(page.getByRole('dialog')).toContainText('電話番号');await capture('driver-detail');await page.getByRole('button',{name:'閉じる',exact:true}).last().click();
-  await page.goto(`${entry}&page=transport`);await expect(page.locator('.construction-trip-group')).toHaveCount(23);await expect(page.locator('.review-field-picker')).toHaveCount(0);
-  const boxes=await page.locator('.construction-trip-group').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,bottom:r.bottom};}));
-  for(let i=1;i<boxes.length;i++){expect(boxes[i].x).toBe(boxes[0].x);expect(boxes[i].width).toBe(boxes[0].width);expect(boxes[i].y).toBeGreaterThan(boxes[i-1].bottom);}
-  await page.locator('.construction-trip-group').first().evaluate(e=>e.scrollIntoView({block:'start'}));await capture('sites-first');await page.locator('.construction-trip-group').last().scrollIntoViewIfNeeded();await capture('sites-last');
-  await expect(page.locator('.review-site-empty')).toHaveCount(21);
-  await page.getByRole('combobox',{name:'現場',exact:true}).selectOption('成田空港モデル現場 A工区');await page.locator('.review-field-context > details > summary').click();
-  for(const field of fields){await page.getByRole('combobox',{name:'現場の詳細項目',exact:true}).selectOption(field);await capture(`field-${field}`);}
+  await page.goto(`${entry}&page=transport`);await expect(page.locator('.review-site-row')).toHaveCount(23);await expect(page.locator('.review-field-picker')).toHaveCount(0);
+  const boxes=await page.locator('.review-site-row').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,bottom:r.bottom};}));
+  for(let i=1;i<boxes.length;i++){expect(boxes[i].x).toBe(boxes[0].x);expect(boxes[i].width).toBe(boxes[0].width);expect(boxes[i].y).toBeGreaterThanOrEqual(boxes[i-1].bottom-1);}
+  await page.locator('.review-site-row').first().evaluate(e=>e.scrollIntoView({block:'start'}));await capture('sites-first');await page.locator('.review-site-row').last().scrollIntoViewIfNeeded();await capture('sites-last');
+  await page.locator('.review-site-row[data-field-id="32184"]').getByRole('button',{name:'現場詳細を開く',exact:true}).click();await page.locator('.review-site-inline-detail').getByLabel('現場の詳細項目').selectOption('搬出予定');await expect(page.locator('.review-site-empty')).toHaveCount(1);await capture('sites-empty');
+  await page.getByRole('combobox',{name:'現場',exact:true}).selectOption('成田空港モデル現場 A工区');
+  for(const field of fields){
+    const selector=page.getByRole('combobox',{name:'現場の詳細項目',exact:true});
+    await selector.selectOption(field);
+    await selector.evaluate(e=>e.scrollIntoView({block:'start'}));
+    await capture(`field-${field}`);
+  }
   await page.goto(`${entry}&page=dispatch`);await expect(page.getByRole('combobox',{name:'現場',exact:true}).locator('option')).toHaveCount(24);await page.getByRole('combobox',{name:'現場',exact:true}).selectOption('すべて');await capture('dispatch');
   await page.getByRole('button',{name:'予定を追加',exact:true}).click();await capture('dispatch-add');await page.getByRole('button',{name:'予定追加を閉じる',exact:true}).click();
   await page.getByRole('button',{name:'前日・前週からコピー',exact:true}).click();await capture('dispatch-copy');await page.getByRole('button',{name:'前日・前週からコピー',exact:true}).click();

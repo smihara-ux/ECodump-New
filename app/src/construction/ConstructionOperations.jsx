@@ -5,6 +5,8 @@ import { addDays, constructionTrips, matchesTripState, summarizeTrips, todayJst,
 } from "./operationsModel.mjs";
 import { downloadOperationsWorkbook } from "../reports/exportWorkbook.mjs";
 import "./constructionOperations.css";
+import { DemoNotice } from "../review/Readability.jsx";
+import ReviewSiteTable from "../review/ReviewSiteTable.jsx";
 import {useDemoTrips,demoNotice} from "../demo/store.jsx";
 import { demoSites, planProgress } from "../demo/model.mjs";
 const scrollSurface=()=>document.querySelector(".navigation-review-main") ||
@@ -68,6 +70,8 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
   renderFieldContext,
   fieldOptions,
   fieldRecords,
+  focusField,
+  onFieldChange,
 }) {
   const saved = readSaved();
   const today = todayJst();
@@ -77,6 +81,8 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
   const [destination,setDestination]=useState(saved.destination||"すべて"), [query,setQuery]=useState(saved.keyword||"");
   const [state,setState]=useState(saved.operationStatus||"すべて"), [view,setView]=useState(saved.view||"現場別"), [selected,setSelected]=useState(null);
   const listRef=useRef(null);
+  const changeField = value => { setField(value); onFieldChange?.(); };
+  useEffect(() => { if (focusField) { setField(focusField); setDestination("すべて"); setQuery(""); setState("すべて"); setView("現場別"); } }, [focusField]);
   useEffect(()=>sessionStorage.setItem(storageKey,JSON.stringify({date,field,destination,keyword:query,operationStatus:state,view,scrollTop:scrollSurface()?.scrollTop||0,
         }),
       ),[date,field,destination,query,state,view],
@@ -104,7 +110,7 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
   // The local combined workspace retains sites without trips as honest empty frames.
   const groups = fieldRecords && view === "現場別"
     ? fieldRecords.filter(r => (field === "すべて" || r.field === field) &&
-        (!query || `${r.field}${r.address}${r.id}`.includes(query) || rows.some(t => t.departure === r.field)) &&
+        (!query || `${r.company}${r.branch}${r.field}${r.address}${r.id}`.includes(query) || rows.some(t => t.departure === r.field)) &&
         ((state === "すべて" && destination === "すべて") || rows.some(t => t.departure === r.field)))
       .map(r => [r.field, rows.filter(t => t.departure === r.field)])
     : tripGroups;
@@ -116,11 +122,30 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
     );
     navigate("実績・帳票");
   };
+  const renderSchedule = (name,trips) => <div className="review-site-schedule">
+            {fieldRecords && <PlanProgress trips={allTrips} field={name}/>}
+            {!trips.length && <p className="review-site-empty">この現場の対象日（{date}）の搬出予定はありません。</p>}
+            {trips.length > 0 && <div className="construction-trip-table"><div className="trip-row trip-head"><span>便・状態</span><span>現場／受入先</span><span>運送会社・車両・運転手</span><span>予定／実績時刻</span><span>受入・伝票</span><span>操作</span></div>{trips.map((trip) => (
+                <article className="trip-row" key={trip.id}><div data-label="便・状態"><b>{trip.id}</b><small>{trip.tripNo} · {trip.operation}</small></div><div data-label="現場／受入先"><b>{trip.departure}</b><small>{trip.destination}</small></div><div data-label="運送会社・車両・運転手"><b>{trip.carrier}</b><small>{trip.vehicle} · {trip.driver}</small></div><div data-label="予定／実績時刻"><b>指定 {trip.siteScheduledAt}／{trip.receivingScheduledAt}</b><small>出発 {trip.departed||"未報告"} · 荷下ろし {" "}
+                      {trip.unloaded||"未報告"}</small></div><div data-label="受入・伝票"><b>{trip.received?`確認済み ${trip.received}`:"受入未確認"}</b><small>伝票 {trip.slip}</small></div><div data-label="操作"><button className="outline" onClick={()=>setSelected(trip)}>運行詳細</button></div><details><summary>補足情報</summary><p>土質：{trip.material}／予定 {trip.planned} {trip.unit}／報告 {value(trip.reported)}／受入確定 {" "}
+                      {value(trip.confirmed)}／問題：{trip.issue}</p></details></article>))}
+            </div>}
+  </div>;
+  const renderTripGroup = (name,trips) => (
+          <section className="construction-trip-group" key={name} data-field-name={name}><header><h2>{name}</h2><span>{trips.length}便／実車両 {" "}
+                {
+                  new Set(
+                    trips
+                      .filter((x) =>x.vehicleId&&x.booking!=="取消").map((x) => x.vehicleId),
+                  ).size}台</span></header>
+            {fieldRecords && view === "現場別" ? renderFieldContext?.(name, changeField, () => renderSchedule(name,trips)) : renderSchedule(name,trips)}
+          </section>
+  );
   return (
     <section className="transport-page construction-transport-v2">
     <div className="operation-sticky-controls"><div className="construction-actions"><button className="primary" onClick={openDispatch}>予定を作る</button><button className="outline" onClick={openDispatch}>今日の車両を見る</button><button className="outline" onClick={openResults}>伝票を確認する</button></div>
     <div className="construction-date-nav" aria-label="対象日を選択"><button onClick={()=>setDate(addDays(date,-1))}><ChevronLeft/>前日</button><button className={date===today?"active":""} onClick={()=>setDate(today)}>今日<span>{fmt(today)}</span></button><button onClick={()=>setDate(addDays(date,1))}>翌日<ChevronRight/></button><label><CalendarDays/>カレンダー<input aria-label="搬出管理の対象日" type="date" value={date} onChange={(e) =>e.target.value&&setDate(e.target.value)}/></label></div>
-    <div className="transport-toolbar"><label>現場<select disabled={embedded} value={field} onChange={(e) =>setField(e.target.value)}><option>すべて</option>{(
+    <div className="transport-toolbar"><label>現場<select disabled={embedded} value={field} onChange={(e) =>changeField(e.target.value)}><option>すべて</option>{(
                 fieldOptions || [...new Set(allTrips.map((x) => x.departure))]
               ).map((x) => (
                 <option key={x}>{x}</option>
@@ -129,38 +154,24 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
               ))}</select></label><label>検索<input value={query} onChange={(e) =>setQuery(e.target.value)} placeholder="便・現場・車両・ドライバー"/></label><div className="view-switch">{["現場別","受入場所別"].map((x) => (
               <button key={x} className={view===x?"active":""} onClick={()=>setView(x)}>{x}</button>))}</div><button className="primary" onClick={openResults}>搬出実績を見る</button></div>
     </div>
-      {!fieldRecords && renderFieldContext?.(field, setField)}
+      {!fieldRecords && renderFieldContext?.(field, changeField)}
       <div className="construction-progress-grid">{[["有効な予定便",summary.active,"有効予定"],["未搬出便",summary.notDeparted,"未搬出"],["搬出済み・受入未完了",summary.exportedPending,"搬出済み・受入未完了",
           ],["受入完了便",summary.received,"受入完了"],["取消便",summary.cancelled,"取消"],
         ].map(([label,count,key])=> (
           <button key={key} className={state===key?"active":""} onClick={()=>selectState(key)}><span>{label}</span><b>{count}<small>便</small></b></button>))}</div>
     <QuantityCards summary={summary}/>
     {!fieldRecords && <PlanProgress trips={allTrips} field={field}/>}
-    {fieldRecords && <h2 className="review-site-list-title">現場一覧 <small>{groups.length}現場</small></h2>}
-    <div className="construction-trip-list" ref={listRef}>{groups.map(([name,trips])=> (
-          <section className="construction-trip-group" key={name} data-field-name={name}><header><h2>{name}</h2><span>{trips.length}便／実車両 {" "}
-                {
-                  new Set(
-                    trips
-                      .filter((x) =>x.vehicleId&&x.booking!=="取消").map((x) => x.vehicleId),
-                  ).size}台</span></header>
-            {fieldRecords && renderFieldContext?.(name, setField)}
-            {fieldRecords && <PlanProgress trips={allTrips} field={name}/>}
-            {!trips.length && <p className="review-site-empty">この現場の対象日（{date}）の搬出予定はありません。</p>}
-            {trips.length > 0 && <div className="construction-trip-table"><div className="trip-row trip-head"><span>便・状態</span><span>現場／受入先</span><span>運送会社・車両・運転手</span><span>予定／実績時刻</span><span>受入・伝票</span><span>操作</span></div>{trips.map((trip) => (
-                <article className="trip-row" key={trip.id}><div data-label="便・状態"><b>{trip.id}</b><small>{trip.tripNo} · {trip.operation}</small></div><div data-label="現場／受入先"><b>{trip.departure}</b><small>{trip.destination}</small></div><div data-label="運送会社・車両・運転手"><b>{trip.carrier}</b><small>{trip.vehicle} · {trip.driver}</small></div><div data-label="予定／実績時刻"><b>指定 {trip.siteScheduledAt}／{trip.receivingScheduledAt}</b><small>出発 {trip.departed||"未報告"} · 荷下ろし {" "}
-                      {trip.unloaded||"未報告"}</small></div><div data-label="受入・伝票"><b>{trip.received?`確認済み ${trip.received}`:"受入未確認"}</b><small>伝票 {trip.slip}</small></div><div data-label="操作"><button className="outline" onClick={()=>setSelected(trip)}>運行詳細</button></div><details><summary>補足情報</summary><p>土質：{trip.material}／予定 {trip.planned} {trip.unit}／報告 {value(trip.reported)}／受入確定 {" "}
-                      {value(trip.confirmed)}／問題：{trip.issue}</p></details></article>))}
-            </div>}
-          </section>
-        ))}
-        {!groups.length && (
-          <div className="empty-state"><b>対象便はありません</b><span>日付または絞り込み条件を変更してください。</span></div>
-        )}
-      </div>
+    {fieldRecords && view === "現場別" ? <ReviewSiteTable
+      selectedField={field}
+      records={groups.map(([name])=>fieldRecords.find(r=>r.field===name))}
+      renderDetails={record=>renderTripGroup(record.field, rows.filter(t=>t.departure===record.field))}
+    /> : <div className="construction-trip-list" ref={listRef}>
+      {groups.map(([name,trips])=>renderTripGroup(name,trips))}
+      {!groups.length && <div className="empty-state"><b>対象便はありません</b><span>日付または絞り込み条件を変更してください。</span></div>}
+    </div>}
       {selected && (
         <TripDetail trip={selected} close={()=>setSelected(null)}/>
-      )}<p className="construction-data-boundary">{demoNotice}</p>
+      )}<DemoNotice className="construction-data-boundary" />
   </section>
   );
 }

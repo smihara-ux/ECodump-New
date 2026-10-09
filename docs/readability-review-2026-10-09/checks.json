@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-09",
+  "scope": "approved frontend readability and site-table release",
+  "e2e": {
+    "startTime": "2026-10-09T07:18:36.982Z",
+    "duration": 53896.426,
+    "expected": 195,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "unit": {
+    "passed": 39,
+    "failed": 0
+  },
+  "sites": {
+    "passed": 4,
+    "failed": 0
+  },
+  "staticPages": {
+    "states": 27,
+    "allPassed": true
+  },
+  "visual": {
+    "captures": 352,
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "widths": [
+      1440,
+      1280,
+      1024,
+      768,
+      390
+    ],
+    "errors": 0,
+    "pageOverflow": 0,
+    "controlClipping": 0
+  },
+  "contrast": {
+    "visibleSolidBackgroundChecks": 2548,
+    "low": 0,
+    "excludes": "images, transparency, gradients and full accessibility certification"
+  },
+  "candidate": {
+    "app/AGENTS.md": "3af1453d32a9f24ff011022b5cd42284171f6336ba8ab594cd0856a701d51413",
+    "app/scripts/check-pages-navigation.mjs": "e52c51329dc9d6b7e4733d86ea05941bf83076b9db179468aa703fccb9f458f9",
+    "app/src/AdminEntry.jsx": "e2890d6a07c917e8f8abe7aba831a989b3358d1baf9bba9a7b09bb68b41fe732",
+    "app/src/App.jsx": "6eb44d2c6f4c29ecf6f4388c415e6bdb51a4659cf30eef3cec53abdb3bb8ade0",
+    "app/src/construction/ConstructionOperations.jsx": "fe24018894ba42d2506e8e646c5a9514b100c3d5aa59647800707fd7e1b6d9e0",
+    "app/src/demo/DispatchWorkspace.jsx": "18e6859b75f187e79e894852377b61937862016eab32814fcd940dc68da22f99",
+    "app/src/demo/LaborWorkspace.jsx": "f44298404130743462660158d66fc9bac529baba42665f1e456b16c4be751227",
+    "app/src/demo/VehicleWorkspace.jsx": "1379b17b3f15d759f6da19c9c1a52a54a31429bf8b0c70c0ed239edc0aa7e129",
+    "app/src/driver/driver.css": "a3c6868d69c6a487ec3805742ccc53f1df93188050f7b5133addc6b8eb9aed38",
+    "app/src/receiving/CapacityChart.jsx": "431b9fad28948fcfeb03f15db2427f6e6ae99c16362e8acd6df52914ff841e88",
+    "app/src/receiving/ReceivingWorkspace.jsx": "844862646fb50c08e37747d933e0e4f377cacf99f88d924b0c43d5a88e0b97c5",
+    "app/src/receiving/TripList.jsx": "03a1699a4c350f0893b46634584a419c3c808d62c4baab6faa29768e7d7866c3",
+    "app/src/reports/exportWorkbook.mjs": "c1f7a12df00be690fa50f67cc4e773431aa16376ba54f60d05f7a3ea6a051adc",
+    "app/src/reports/transportReport.mjs": "b47be5b7c359334bafc308e43abc8987714a526ed1343086e50fd5ab0fc34d11",
+    "app/src/review/NavigationReview.jsx": "6cad85b1d0e2011bbad4873199ce1bee1dd116e4c9980d48d30e0880e47a8584",
+    "app/src/review/ReviewOperations.jsx": "25bb3ccb6109bccb06137db882659c2748335f2dcf2313833f6d605d0ab6b2d1",
+    "app/src/review/navigation-review.css": "e1f0cabb570539bb904321fe2732391efdce826c75352e266f303fb64f836fcc",
+    "app/src/styles.css": "f5e4bb07a08205bce0a7d815dd0c9a3f1da652c115bcbe7a4eaf1657d80d6cd8",
+    "app/tests/receiving-report.test.mjs": "35d4445903fa10d457b3bd2aeaf5c368ff27ed5b8836bbe911a4544c2ac1df97",
+    "app/tests/ui/app-shell.spec.mjs": "c4d7186d1afd9a8bf54362dbc9ffbede97d044f85b2e278d5696fb3798e8e13e",
+    "app/tests/ui/compliance-review.spec.mjs": "4e50f5bbf54cd70f73c75536473c37e2a75a20aa50f657df504b6de6a3fb821c",
+    "app/tests/ui/late-review.spec.mjs": "84f08f99b986a86ca7c2ddc8abf012865418d388668a8ceb5d0fe2810efee10c",
+    "app/tests/ui/navigation-review.spec.mjs": "07cbb9efffbee5027b6599c583fd32c3408141380a6e29b5db7905bcd8ce7d81",
+    "app/tests/ui/receiving-actual-form.spec.mjs": "2f9d21f0e6f36e48975aeb061a0130108e4d8864fe3186260cea6f1ddb49b086",
+    "app/tests/ui/receiving.spec.mjs": "81c58468c21c4190fa762ed6e7cb52b39b60e101bb7854cfd9094af274b01152",
+    "app/src/review/MatchingDocuments.jsx": "c3d51ea0f6b701a348def01f87f59cca46ba307735897fb67451b59a39f42dfa",
+    "app/src/review/Readability.jsx": "805ebcd6b23b314d95e2ad5c07dfe9ec52221be407675a5bcfd94e151c78c37d",
+    "app/src/review/ReviewSiteTable.jsx": "87c2ccbbc12d694f215a9d001e8500e1110d99da7cdb3f8c81cc77e897844a11",
+    "app/src/review/readability.css": "7cc57390e1e381574a5314cc2cbc5df9dcf6824ed385b356cac49dc7891324cb",
+    "app/tests/ui/field-table-review.spec.mjs": "779a2802baa930507b5b3292b9ba19e363e9b15b6ffddacfb03daac6053df93e",
+    "app/tests/ui/readability-review.spec.mjs": "6f5aa57de719d918658ec7d9fa194a530dd365726f75606b951cd955472554ec",
+    "app/tests/ui/fixtures/receiving-actual-form.mjs": "baf42cc26ca8dc5ec002901bd102cc1e4c2a51b7f1bd040ad86e888b3f9b7673"
+  },
+  "zoomEquivalent": {
+    "captures": 76,
+    "failures": 0,
+    "pageOverflow": 0,
+    "controlClipping": 0,
+    "method": "1440 physical pixels at 720 CSS pixels, deviceScaleFactor 2: browser zoom 200 percent equivalent; not a physical device test"
+  }
+}

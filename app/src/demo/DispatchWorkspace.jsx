@@ -1,3 +1,4 @@
+import { DemoNotice } from "../review/Readability.jsx";
 import { useEffect, useRef, useState } from "react";
 import {
   useDemoTrips,
@@ -180,7 +181,7 @@ export default function DispatchWorkspace({
   }
   return (
     <section className="construction-page dispatch-page">
-      <p className="review-note">{demoNotice}</p>
+      <DemoNotice />
       <div className="construction-hero">
         <div>
           <h2>配車・運行管理</h2>

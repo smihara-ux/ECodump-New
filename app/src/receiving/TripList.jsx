@@ -1,4 +1,4 @@
-import { transportRows } from "../reports/transportReport.mjs";
+import { transportRows, formatReportQuantity } from "../reports/transportReport.mjs";
 const time = (v) =>
   v && !Number.isNaN(new Date(v).getTime())
     ? new Date(v).toLocaleString("ja-JP", {
@@ -100,12 +100,12 @@ export default function TripList({ rows, onOpen }) {
                 荷下ろし報告：{time(r.unloaded)}
               </td>
               <td data-label="数量・伝票">
-                予定：{r.planned} {r.unit}
+                予定：{formatReportQuantity(r.planned)} {r.unit}
                 <br />
-                報告：{r.reported ?? "未提出"}{" "}
+                報告：{r.reported == null ? "未提出" : formatReportQuantity(r.reported)}{" "}
                 {r.reported !== null ? r.reportedUnit : ""}
                 <br />
-                受入確定：{r.confirmed ?? "未確定"}{" "}
+                受入確定：{r.confirmed == null ? "未確定" : formatReportQuantity(r.confirmed)}{" "}
                 {r.confirmed !== null ? r.confirmedUnit : ""}
                 <br />
                 伝票：

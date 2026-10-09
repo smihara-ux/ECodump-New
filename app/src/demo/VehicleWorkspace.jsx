@@ -1,3 +1,4 @@
+import { DemoNotice } from "../review/Readability.jsx";
 import { useEffect, useRef, useState } from "react";
 import { useDemoTrips, demoNotice } from "./store.jsx";
 import { demoVehicles, demoDrivers, demoCarrier, demoDay } from "./model.mjs";
@@ -13,7 +14,7 @@ export default function VehicleWorkspace({ query, setQuery }) {
   const trips = useDemoTrips(),
     [rows, setRows] = useState(readVehicles),
     [expired, setExpired] = useState(false),
-    [selected, setSelected] = useState(null),
+    [selected, setSelected] = useState(() => { const id = sessionStorage.getItem("ecodump-vehicle-focus"); return id && readVehicles().some(v => v.id === id) ? id : null; }),
     [editing, setEditing] = useState(null),
     [error, setError] = useState("");
   const visible = rows.filter(
@@ -21,6 +22,7 @@ export default function VehicleWorkspace({ query, setQuery }) {
       `${v.number} ${v.name} ${v.company}`.includes(query) &&
       (!expired || (v.expires && v.expires < demoDay())),
   );
+  useEffect(() => { sessionStorage.removeItem("ecodump-vehicle-focus"); }, []);
   function save(record) {
     try {
       const next = rows.some((r) => r.id === record.id)
@@ -38,10 +40,10 @@ export default function VehicleWorkspace({ query, setQuery }) {
   }
   return (
     <section className="vehicle-page">
-      <p className="review-note">
+      <DemoNotice>
         {demoNotice}{" "}
         車番・所属会社・最大積載量・車検期限を台帳として管理します。運行状態は便一覧で確認します。
-      </p>
+      </DemoNotice>
       <div className="review-filter">
         <label>
           車番・車両名・所属会社

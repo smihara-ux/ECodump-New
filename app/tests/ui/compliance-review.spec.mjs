@@ -6,8 +6,6 @@ const evidence='../tmp/ux-completion-2026-10-09/flows';
 const siteA=demoSites[0],siteB=demoSites[1];
 async function fieldCompanies(page,name=siteA.name){
   await page.getByRole('combobox',{name:'現場',exact:true}).selectOption(name);
-  const details=page.locator('.review-field-context > details');
-  if(!await details.evaluate(e=>e.open))await details.locator(':scope > summary').click();
   await page.getByRole('combobox',{name:'現場の詳細項目',exact:true}).selectOption('協力会社');
 }
 async function noOverflow(page){expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);}

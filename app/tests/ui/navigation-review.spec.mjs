@@ -20,11 +20,10 @@ for(const theme of ['light','dark'])for(const width of [390,768,1440,1920])test(
   await expect(page.locator('main .service-menu').getByRole('button',{name:'現場管理',exact:true})).toHaveCount(0);
   await page.getByRole('combobox',{name:'現場',exact:true}).selectOption('成田空港モデル現場 B工区');
   await expect(page.locator('.construction-trip-group > header h2')).toHaveText('成田空港モデル現場 B工区');
-  await expect(page.locator('.construction-trip-list')).not.toContainText('成田空港モデル現場 A工区');
-  await page.locator('.review-field-context summary').click();
+  await expect(page.locator('.review-site-inline-detail')).not.toContainText('成田空港モデル現場 A工区');
   const fieldMenu=page.getByRole('combobox',{name:'現場の詳細項目',exact:true});
   for(const section of ['搬出条件','車両・運転手','運行状況','搬出入記録・写真・伝票','数量実績','書類','協力会社','概要']){await fieldMenu.selectOption(section);await noOverflow(page);}
-  await page.locator('.review-field-context > details > summary').click();
+  await page.getByRole('button',{name:'詳細を閉じる',exact:true}).click();
   await page.screenshot({path:`${evidence}/late-construction-${theme}-${width}.png`});
   await module(page,'運行管理',width);await expect(page.locator('.daily-plan-form')).toBeHidden();
   await page.getByRole('button',{name:'予定を追加',exact:true}).click();await expect(page.locator('.daily-plan-form')).toBeVisible();
