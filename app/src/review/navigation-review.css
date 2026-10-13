@@ -216,6 +216,8 @@
 .navigation-review .gf-toolbar > b { margin-right: auto; }
 .navigation-review .gf-toolbar button { min-height: 44px; }
 .navigation-review .operation-sticky-controls { position: static; max-height: none; overflow: visible; }
+.navigation-review .operation-sticky-controls .construction-actions { display: flex; }
+.control-app-shell.navigation-review .operation-sticky-controls .construction-actions button { min-height: 44px; height: auto; }
 .navigation-review .operation-sticky-controls .transport-toolbar { max-height: none; overflow: visible; }
 .navigation-review .construction-date-nav { flex-wrap: wrap; }
 .navigation-review .transport-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }

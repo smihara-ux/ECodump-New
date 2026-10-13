@@ -124,9 +124,19 @@ test("requested changes are resubmitted by construction and need receiving appro
   await expect(page.locator(".receiving-detail")).toContainText("予約確定");
 });
 
-test("TOP opens the right view and creation form, while preserving site/date and contextual slip filtering", async ({ page }) => {
+for (const theme of ["light", "dark"]) for (const width of [390, 1440]) test(`TOP opens the right view and creation form, while preserving site/date and contextual slip filtering ${theme} ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 1000 });
+  await page.addInitScript(theme => localStorage.setItem("ecodump-theme", theme), theme);
   await page.goto("/?preview=app&role=construction&page=transport&demo=1&navigationReview=1");
   await expect(page.getByRole("heading", { name: "労務安全・現場参加の確認", exact: true })).toBeVisible();
+  for (const name of ["予定を作る", "今日の運行を見る", "伝票を確認する"]) {
+    const action = page.getByRole("button", { name, exact: true });
+    await expect(action).toBeVisible();
+    const box = await action.boundingBox();
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
+  }
   await page.getByRole("button", { name: "予定を作る", exact: true }).click();
   await expect(page.locator(".daily-plan-form")).toBeVisible();
   await page.getByRole("button", { name: "搬出管理へ戻る", exact: true }).click();

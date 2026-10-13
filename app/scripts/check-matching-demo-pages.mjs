@@ -38,6 +38,13 @@ try {
     page.on("pageerror", error => errors.push(error.message));
     await page.goto(`${origin}${prefix}?entry=1`);
     await page.getByText("デモで試す", { exact: true }).click();
+    await page.getByRole("button", { name: "施工側としてデモログイン →", exact: true }).click();
+    assert.equal(new URL(page.url()).searchParams.get("role"), "construction");
+    assert.equal(new URL(page.url()).searchParams.get("navigationReview"), "1");
+    await page.getByRole("button", { name: "予定を作る", exact: true }).click();
+    await page.locator(".daily-plan-form").waitFor();
+    await page.goto(`${origin}${prefix}?entry=1`);
+    await page.getByText("デモで試す", { exact: true }).click();
     await page.getByRole("button", { name: "マッチング成立の流れを試す →", exact: true }).click();
     assert.ok(page.url().startsWith(origin + prefix));
     await page.getByRole("button", { name: "この搬出条件で候補を確認（デモ）", exact: true }).click();
@@ -88,7 +95,7 @@ try {
     assert.deepEqual(errors, []);
     assert.deepEqual(writes, []);
     assert.deepEqual(missing, []);
-    results.push({ theme, width, entry: true, bothRoles: true, agreement: true, sharedReservation: true, receivingApproval: true, reload: true, originalScreen: true, apiWrites: 0 });
+    results.push({ theme, width, entry: true, constructionLogin: true, directPlanForm: true, bothRoles: true, agreement: true, sharedReservation: true, receivingApproval: true, reload: true, originalScreen: true, apiWrites: 0 });
     await context.close();
   }
   console.log(JSON.stringify({ staticPagesDemo: "local build only", passed: results.length, results }, null, 2));
