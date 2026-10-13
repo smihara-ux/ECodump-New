@@ -525,7 +525,7 @@ export function ActionRequired({ navigate }) {
   const groups = s.participants.map(p => ({p, records: rows.filter(r => r.companyId === p.companyId && r.siteId === p.siteId)})).filter(({p,records}) => records.length || !p.contact || !p.email).sort((a,b) => Number(!!b.records.some(r=>r.status!=="提出済"))-Number(!!a.records.some(r=>r.status!=="提出済")));
   function documents(r) { sessionStorage.setItem("ecodump-compliance-focus",JSON.stringify({companyId:r.companyId,siteId:r.siteId,category:r.category}));navigate("労務安全"); }
   return <section className="review-blockers">
-    <h2>要対応事項（デモ）</h2>
+    <h2>労務安全・現場参加の確認</h2>
     <p>参加情報・不足書類・元請確認待ちを会社と現場ごとに表示します。</p>
     <div className="review-actions review-blocker-groups">
       {(showAll ? groups : groups.slice(0,3)).map(({p,records}) => <article key={p.participationId}>
@@ -537,6 +537,6 @@ export function ActionRequired({ navigate }) {
       </article>)}
     </div>
     {groups.length>3 && <button className="outline" aria-expanded={showAll} onClick={()=>setShowAll(!showAll)}>{showAll?"重要な対象のみ表示":`すべての対象会社を表示（${groups.length}件）`}</button>}
-    <button className="outline" onClick={()=>{sessionStorage.removeItem("ecodump-compliance-focus");navigate("労務安全");}}>すべての書類状態を見る（{rows.length}件）</button>
+    <button className="outline" onClick={()=>{sessionStorage.removeItem("ecodump-compliance-focus");navigate("労務安全");}}>労務安全の書類状況を見る（{rows.length}件）</button>
   </section>;
 }

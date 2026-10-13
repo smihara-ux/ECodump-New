@@ -1,6 +1,10 @@
 import {useId,useState} from 'react';
 import './capacity-chart.css';
-export default function CapacityChart({name='受入場所'}){
+import {useDemoTrips} from '../demo/store.jsx';
+import {demoLocations} from '../demo/model.mjs';
+import SourceCapacityChart from './SourceCapacityChart.jsx';
+export default function CapacityChart({name='受入場所',locationId}){
+ const trips=useDemoTrips(),[breakdown,setBreakdown]=useState('状態別');
  const id=useId(),[year,setYear]=useState(2026),[month,setMonth]=useState('all'),[unit,setUnit]=useState('m³'),[selected,setSelected]=useState(8),[open,setOpen]=useState(false),[week,setWeek]=useState('all');
  const monthly=[[280,380],[330,330],[360,780],[420,220],[280,380],[440,240],[460,660],[350,280],[280,380],[360,300],[400,220],[330,200]];
  const count=month==='all'?12:new Date(year,Number(month),0).getDate();
@@ -8,7 +12,9 @@ export default function CapacityChart({name='受入場所'}){
  const shown=month==='all'||week==='all'?rows:rows.slice(Number(week)*7,Number(week)*7+7);
  const max=month==='all'?1500:75,detail=shown.find(r=>r.key===selected)||shown[0],fmt=n=>n.toLocaleString('ja-JP');
  const choose=(fn,v)=>{fn(v);setSelected(0);setOpen(false);};
- return <section className="cap-a" aria-labelledby={id}>
+ const switcher=<div className="cap-a-controls" aria-label="グラフの表示方法">{['状態別','搬出元現場別'].map(value=><button className="outline" key={value} aria-pressed={breakdown===value} onClick={()=>setBreakdown(value)}>{value}</button>)}</div>;
+ if(breakdown==='搬出元現場別')return <SourceCapacityChart name={name} locationId={locationId||demoLocations.find(location=>location.name===name)?.id} trips={trips} year={year} month={month} unit={unit} onYear={setYear} onMonth={setMonth} onUnit={setUnit} switcher={switcher}/>;
+ return <section className="cap-a" aria-labelledby={id}>{switcher}
  <div className="cap-a-caption"><strong>{name}</strong><span>架空データ・画面案</span></div>
  <header className="cap-a-header"><h3 id={id}>受入枠と予約量（表示例）</h3><div className="cap-a-controls"><select aria-label="容量グラフの年" value={year} onChange={e=>choose(setYear,Number(e.target.value))}>{[2025,2026,2027].map(y=><option key={y} value={y}>{y}年</option>)}</select><select aria-label="容量グラフの期間" value={month} onChange={e=>{choose(setMonth,e.target.value);setWeek('all');}}><option value="all">年間</option>{Array.from({length:12},(_,i)=><option key={i} value={i+1}>{i+1}月</option>)}</select><select aria-label="容量グラフの単位" value={unit} onChange={e=>choose(setUnit,e.target.value)}><option>m³</option><option>t</option></select>{month!=='all'&&<select aria-label="日別グラフの表示範囲" value={week} onChange={e=>{setWeek(e.target.value);setSelected(e.target.value==='all'?0:Number(e.target.value)*7);setOpen(false);}}><option value="all">月の全日</option>{Array.from({length:Math.ceil(count/7)},(_,i)=><option key={i} value={i}>{i*7+1}〜{Math.min(count,(i+1)*7)}日</option>)}</select>}</div></header>
  <p className="cap-a-hint">期間別の受入枠です。物理容量とは別です。年・単位を変えても共通の説明用数値を表示し、単位換算は行いません。</p>

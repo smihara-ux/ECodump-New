@@ -1,9 +1,14 @@
 import { DemoNotice } from "../review/Readability.jsx";
+import { readMatchingJourney } from "./matchingJourney.mjs";
+import { validateMatchingPlan } from "./matchingPlan.mjs";
+import { matchingRolePageUrl } from "./matchingRoutes.mjs";
+import MatchingPlanForm from "./MatchingPlanForm.jsx";
 import { useEffect, useRef, useState } from "react";
 import {
   useDemoTrips,
   writeDemoTrips,
   updateDemoTrip,
+  demoTrips,
   demoNotice,
 } from "./store.jsx";
 import {
@@ -30,6 +35,7 @@ export default function DispatchWorkspace({
   navigationReview = false,
   siteOptions,
 }) {
+  const planningSites = siteOptions?.length ? siteOptions : demoSites;
   const all = useDemoTrips(),
     saved = context(),
     [date, setDate] = useState(saved.date || demoDay()),
@@ -50,6 +56,13 @@ export default function DispatchWorkspace({
     [copyDate, setCopyDate] = useState(dayOffset(demoDay(), 1)),
     [sourceDate, setSourceDate] = useState(demoDay()),
     [copyConfirmed, setCopyConfirmed] = useState(false);
+  const [agreement, setAgreement] = useState(() => { try { return readMatchingJourney(localStorage).agreement; } catch { return null; } });
+  const [createMethod, setCreateMethod] = useState(() => sessionStorage.getItem("ecodump-matching-plan") ? "matching" : "direct");
+  useEffect(() => {
+    const refresh = () => { try { setAgreement(readMatchingJourney(localStorage).agreement); } catch { setAgreement(null); } };
+    window.addEventListener("ecodump-matching-updated", refresh); window.addEventListener("storage", refresh);
+    return () => { window.removeEventListener("ecodump-matching-updated", refresh); window.removeEventListener("storage", refresh); };
+  }, []);
   useEffect(() => {
     if (navigationReview)
       sessionStorage.setItem(
@@ -70,10 +83,11 @@ export default function DispatchWorkspace({
   function create(e) {
     e.preventDefault();
     const f = new FormData(e.currentTarget),
-      site = demoSites.find((s) => s.id === f.get("site")),
+      site = planningSites.find((s) => s.id === f.get("site")),
       loc = demoLocations.find((l) => l.id === f.get("location")),
       count = Number(f.get("count"));
     try {
+      if (!site || !loc) throw new Error("搬出元と受入先を選択してください。");
       writeDemoTrips((prev) => [
         ...prev,
         ...Array.from({ length: count }, (_, i) => ({
@@ -85,7 +99,7 @@ export default function DispatchWorkspace({
           locationId: loc.id,
           locationDatabaseId: loc.databaseId,
           destination: loc.name,
-          companyId: prev[0].companyId,
+          companyId: prev[0]?.companyId || "11000000-0000-4000-8000-000000000001",
           company: demoCompany,
           carrier: demoCarrier,
           vehicleId: "",
@@ -94,7 +108,7 @@ export default function DispatchWorkspace({
           driver: "未配車",
           planned: Number(f.get("quantity")),
           unit: f.get("unit"),
-          material: "第2種建設発生土",
+          material: f.get("soil"),
           departAt: f.get("time"),
           arriveAt: f.get("arrival"),
           siteScheduledAt: f.get("time"),
@@ -136,19 +150,24 @@ export default function DispatchWorkspace({
         throw new Error(
           "同じ対象日のコピーは既にデモへ反映済みです。二重登録しません。",
         );
-      writeDemoTrips((prev) => [
-        ...prev,
-        ...source.map((t) => ({
+      writeDemoTrips((prev) => {
+        if (prev.some(t => t.copiedFromDate === sourceDate && t.date === copyDate)) throw new Error("同じ対象日のコピーは既にデモへ反映済みです。二重登録しません。");
+        const reservationIds = new Map();
+        const copied = source.map((t) => {
+          const group = `${t.matchAgreementId}:${t.reservationId}`;
+          if (t.matchAgreementId && !reservationIds.has(group)) reservationIds.set(group, `MATCH-R-${crypto.randomUUID()}`);
+          return {
           ...t,
           id: `NARITA-${crypto.randomUUID()}`,
-          reservationId: `DEMO-R-${crypto.randomUUID()}`,
+          reservationId: t.matchAgreementId ? reservationIds.get(group) : `DEMO-R-${crypto.randomUUID()}`,
+          ...(t.matchAgreementId ? { matchingRequestKey: `copy-${crypto.randomUUID()}`, vehicleId: "", driverId: "", vehicle: "未配車", driver: "未配車", assignmentHistory: [] } : {}),
           date: copyDate,
           copiedFromDate: sourceDate,
           copiedFrom: t.id,
           assignmentVersion: 1,
           booking: "有効",
           reservation: "申請中",
-          operation: t.vehicleId ? "配車済み" : "未手配",
+          operation: !t.matchAgreementId && t.vehicleId ? "配車済み" : "未手配",
           reception: "未到着",
           reported: null,
           confirmed: null,
@@ -167,8 +186,15 @@ export default function DispatchWorkspace({
               message: `${t.id}から予定のみコピー（実績・伝票は引継がない／未送信）`,
             },
           ],
-        })),
-      ]);
+          };
+        });
+        const validated = [...prev];
+        for (const trip of copied) {
+          if (trip.matchAgreementId) validateMatchingPlan(trip.agreementSnapshot, { date: trip.date, count: 1, quantity: trip.planned, unit: trip.unit, soil: trip.material, siteId: trip.siteId, locationId: trip.locationDatabaseId, time: trip.departAt, arrival: trip.arriveAt, requestKey: trip.matchingRequestKey }, validated);
+          validated.push(trip);
+        }
+        return validated;
+      });
       setMessage(
         `${source.length}便を${copyDate}へ仮コピーしました。休業日・受入可否は未確認です。`,
       );
@@ -213,8 +239,8 @@ export default function DispatchWorkspace({
           現場
           <select value={site} onChange={(e) => setSite(e.target.value)}>
             <option>すべて</option>
-            {(siteOptions || demoSites.map(s => s.name)).map(name => (
-              <option key={name}>{name}</option>
+            {planningSites.map(item => (
+              <option key={item.id}>{item.name}</option>
             ))}
           </select>
         </label>
@@ -257,16 +283,18 @@ export default function DispatchWorkspace({
           </button>
         ))}
       </div>
-      {mode === "日単位の予定・割当" ? (
+      {mode === "日単位の予定・割当" && (!navigationReview || adding) && <div className="review-actions" aria-label="予定の作成方法"><button className="outline" aria-pressed={createMethod === "direct"} onClick={() => { setCreateMethod("direct"); sessionStorage.removeItem("ecodump-matching-plan"); }}>既存取引先で直接予定を作る</button><button className="outline" aria-pressed={createMethod === "matching"} onClick={() => setCreateMethod("matching")}>合意済み案件から作る</button></div>}
+      {mode === "日単位の予定・割当" && createMethod === "matching" ? ((!navigationReview || adding) && (agreement ? <MatchingPlanForm agreement={agreement} trips={all} onDateChange={value=>{setDate(value);setSite(agreement.sourceSiteName);}} onCancel={() => setAdding(false)} onCreated={created => { setDate(created[0].date); setSite(created[0].departure); setAdding(false); setMessage(`${created.length}便を同じ予約ID ${created[0].reservationId} で申請しました（デモ）。受入承認待ち・未配車です。`); setError(""); }} /> : <p role="status">成立済みの案件がありません。<button className="outline" onClick={() => navigate("UCRマッチング")}>発生土マッチで条件合意へ進む</button></p>)) : mode === "日単位の予定・割当" ? (
         <form
           className="daily-plan-form"
           hidden={navigationReview && !adding}
           onSubmit={create}
         >
+          <p className="matching-plan-context">既存取引先への直接予定作成です。登録後も受入側の予約承認が必要です。</p>
           <label>
             搬出元
             <select name="site">
-              {demoSites
+              {planningSites
                 .filter((s) => site === "すべて" || s.name === site)
                 .map((s) => (
                   <option key={s.id} value={s.id}>
@@ -306,6 +334,9 @@ export default function DispatchWorkspace({
               step="0.001"
               defaultValue="7"
             />
+          </label>
+          <label>
+            予定土質<select name="soil"><option>第2種建設発生土</option><option>第1種建設発生土</option><option>第3種建設発生土</option></select>
           </label>
           <label>
             単位
@@ -430,6 +461,7 @@ export default function DispatchWorkspace({
                   <small>
                     {t.operation}／{t.tripNo}
                   </small>
+                  {t.matchAgreementId && <small>予約：{t.reservation} · 合意 第{t.agreementRevision}版</small>}
                 </td>
                 <td data-label="現場／受入先">
                   {t.departure}
@@ -490,8 +522,10 @@ function AssignmentEditor({
     const vehicle = vehicles.find((v) => v.id === draft.vehicleId),
       driver = demoDrivers.find((d) => d.id === draft.driverId),
       loc = demoLocations.find((l) => l.id === draft.locationId),
-      site = demoSites.find((s) => s.id === draft.siteId);
+      site = demoSites.find((s) => s.id === draft.siteId) || { id: current.siteId, name: current.departure };
     try {
+      if (current.matchAgreementId && current.reservation !== "予約確定") throw new Error("受入側の予約承認後に配車してください。変更依頼中は予約を修正・再申請します。");
+      if (current.matchAgreementId && (draft.siteId !== current.siteId || draft.locationId !== current.locationId)) throw new Error("合意した現場・受入先は変更できません。相手を変更する場合は再相談してください。");
       if (!draft.reason.trim()) throw new Error("変更理由を入力してください。");
       updateDemoTrip(
         original.id,
@@ -508,7 +542,7 @@ function AssignmentEditor({
           locationDatabaseId: loc.databaseId,
           destination: loc.name,
           assignmentVersion: t.assignmentVersion + 1,
-          reservation: "変更依頼",
+          reservation: t.matchAgreementId && !t.vehicleId ? t.reservation : "変更依頼",
           reason: draft.reason,
           operation: t.operation === "未手配" ? "配車済み" : t.operation,
           assignmentHistory: [
@@ -551,6 +585,19 @@ function AssignmentEditor({
     } catch (e) {
       setError(e.message);
     }
+  }
+  function resubmit(e) {
+    e.preventDefault();
+    try {
+      const plan = { date: current.date, count: 1, quantity: Number(draft.planned), time: draft.departAt, arrival: draft.arriveAt, unit: current.unit, soil: current.material, siteId: current.siteId, locationId: current.locationDatabaseId, requestKey: `resubmit-${crypto.randomUUID()}` };
+      if (!draft.reason.trim()) throw new Error("修正理由を入力してください。");
+      updateDemoTrip(current.id, trip => {
+        if (trip.reservation !== "変更依頼") throw new Error("変更依頼中の予約だけ再申請できます。");
+        validateMatchingPlan(trip.agreementSnapshot, plan, demoTrips().filter(row => row.id !== trip.id));
+        return { ...trip, planned: plan.quantity, departAt: plan.time, arriveAt: plan.arrival, receivingScheduledAt: plan.arrival, reservation: "申請中", reason: draft.reason, history: [...trip.history, { at: new Date().toISOString(), message: `施工側が予約を修正・再申請（デモ）：${draft.reason}` }] };
+      }, current.assignmentVersion);
+      close();
+    } catch (issue) { setError(issue.message); }
   }
   function cancel() {
     try {
@@ -651,7 +698,7 @@ function AssignmentEditor({
         >
           <div className="review-filter">
             {[
-              ["siteId", "搬出現場", demoSites],
+              ["siteId", "搬出現場", demoSites.some(site => site.id === current.siteId) ? demoSites : [...demoSites, {id:current.siteId,name:current.departure}]],
               ["locationId", "受入先", demoLocations],
               ["vehicleId", "車両", vehicles],
               ["driverId", "ドライバー", demoDrivers],
@@ -663,6 +710,7 @@ function AssignmentEditor({
                   <select
                     aria-label={label}
                     required
+                    disabled={Boolean(current.matchAgreementId) && ["siteId", "locationId"].includes(key)}
                     value={draft[key]}
                     onChange={(e) =>
                       setDraft({ ...draft, [key]: e.target.value })
@@ -687,11 +735,13 @@ function AssignmentEditor({
             </label>
           </div>
           <p>
-            仮変更は同じブラウザの3画面に反映します。変更後は受入側の再確認とドライバーの配車版確認が必要です。実通知は送信しません。
+            {current.matchAgreementId && !current.vehicleId
+              ? "承認済み予約に車両・ドライバーを割り当てます。予約承認は保持し、ドライバーは新しい配車版を確認します。"
+              : "仮変更は同じブラウザの3画面に反映します。変更後は受入側の再確認とドライバーの配車版確認が必要です。"}実通知は送信しません。
           </p>
           <div className="review-actions">
             {(!navigationReview || action !== "取消") && (
-              <button className="primary">変更をデモ内に反映（未送信）</button>
+              <button className="primary" disabled={Boolean(current.matchAgreementId) && current.reservation !== "予約確定"}>変更をデモ内に反映（未送信）</button>
             )}
             {(!navigationReview || action === "取消") && (
               <button
@@ -723,6 +773,7 @@ function AssignmentEditor({
         </form>
       )}
       {error && <p role="alert">{error}</p>}
+      {current.matchAgreementId && <div className="journey-section"><p>搬出案件 {current.sourceCaseId} · 合意 {current.matchAgreementId} 第{current.agreementRevision}版 · 予約 {current.reservation}</p><button className="outline" onClick={() => location.assign(matchingRolePageUrl("receiving", "receiving-reservations", current.id))}>受入側でこの予約を確認</button>{current.reservation === "変更依頼" && <form onSubmit={resubmit} aria-label="予約の修正・再申請"><div className="review-filter"><label>再申請する数量（{current.unit}）<input type="number" min="0.001" step="0.001" required value={draft.planned} onChange={event => setDraft({ ...draft, planned: event.target.value })} /></label><label>再申請の受入指定時刻<input type="time" required value={draft.arriveAt} onChange={event => setDraft({ ...draft, arriveAt: event.target.value })} /></label><label>修正理由<input required value={draft.reason} onChange={event => setDraft({ ...draft, reason: event.target.value })} /></label><button className="primary">修正して予約を再申請（デモ）</button></div></form>}</div>}
       <section hidden={navigationReview && action !== "履歴"}>
         <h3>変更前後・適用日時</h3>
         {current.history.length ? (

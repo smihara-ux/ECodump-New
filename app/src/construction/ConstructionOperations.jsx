@@ -99,7 +99,8 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
   const saveContext=()=>sessionStorage.setItem(storageKey,JSON.stringify({...readSaved(),date,field,destination,keyword:query,operationStatus:state,view,scrollTop:scrollSurface()?.scrollTop||0,
       }),
     );
-  const openDispatch=()=>{saveContext();navigate("配車・運行管理");};
+  const openDispatch=()=>{saveContext();sessionStorage.setItem("ecodump-dispatch-add","1");sessionStorage.removeItem("ecodump-matching-plan");navigate("配車・運行管理");};
+  const openOperations=()=>{saveContext();navigate("運行管制");};
   const baseRows=allTrips.filter((trip)=>trip.date===date&&(field==="すべて"||trip.departure===field)&&(destination==="すべて"||trip.destination===destination)&&(!query||`${trip.id}${trip.departure}${trip.destination}${trip.carrier}${trip.vehicle}${trip.driver}`.includes(query,
         )),
   );
@@ -115,7 +116,7 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
       .map(r => [r.field, rows.filter(t => t.departure === r.field)])
     : tripGroups;
   const selectState=(next)=>setState((current) => (current === next ? "すべて" : next));
-  const openResults=()=>{sessionStorage.setItem("ecodump-construction-results-filters",JSON.stringify({dateFrom:date,dateTo:date,field,destination,state,query,
+  const openResults=(slipsOnly=false)=>{sessionStorage.setItem("ecodump-construction-results-filters",JSON.stringify({dateFrom:date,dateTo:date,field,destination,state,query,slipsOnly,
       }),
     );sessionStorage.setItem(storageKey,JSON.stringify({...readSaved(),date,field,destination,keyword:query,operationStatus:state,view,scrollTop:scrollSurface()?.scrollTop||0,
       }),
@@ -143,7 +144,7 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
   );
   return (
     <section className="transport-page construction-transport-v2">
-    <div className="operation-sticky-controls"><div className="construction-actions"><button className="primary" onClick={openDispatch}>予定を作る</button><button className="outline" onClick={openDispatch}>今日の車両を見る</button><button className="outline" onClick={openResults}>伝票を確認する</button></div>
+    <div className="operation-sticky-controls"><div className="construction-actions"><button className="primary" onClick={openDispatch}>予定を作る</button><button className="outline" onClick={openOperations}>今日の運行を見る</button><button className="outline" onClick={()=>openResults(true)}>伝票を確認する</button></div>
     <div className="construction-date-nav" aria-label="対象日を選択"><button onClick={()=>setDate(addDays(date,-1))}><ChevronLeft/>前日</button><button className={date===today?"active":""} onClick={()=>setDate(today)}>今日<span>{fmt(today)}</span></button><button onClick={()=>setDate(addDays(date,1))}>翌日<ChevronRight/></button><label><CalendarDays/>カレンダー<input aria-label="搬出管理の対象日" type="date" value={date} onChange={(e) =>e.target.value&&setDate(e.target.value)}/></label></div>
     <div className="transport-toolbar"><label>現場<select disabled={embedded} value={field} onChange={(e) =>changeField(e.target.value)}><option>すべて</option>{(
                 fieldOptions || [...new Set(allTrips.map((x) => x.departure))]
@@ -151,8 +152,7 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
                 <option key={x}>{x}</option>
               ))}</select></label><label>受入先<select value={destination} onChange={(e) =>setDestination(e.target.value)}><option>すべて</option>{[...new Set(allTrips.map((x) => x.destination))].map((x) => (
                 <option key={x}>{x}</option>
-              ))}</select></label><label>検索<input value={query} onChange={(e) =>setQuery(e.target.value)} placeholder="便・現場・車両・ドライバー"/></label><div className="view-switch">{["現場別","受入場所別"].map((x) => (
-              <button key={x} className={view===x?"active":""} onClick={()=>setView(x)}>{x}</button>))}</div><button className="primary" onClick={openResults}>搬出実績を見る</button></div>
+              ))}</select></label><label>検索<input value={query} onChange={(e) =>setQuery(e.target.value)} placeholder="便・現場・車両・ドライバー"/></label><button className="primary" onClick={()=>openResults(false)}>搬出実績を見る</button></div>
     </div>
       {!fieldRecords && renderFieldContext?.(field, changeField)}
       <div className="construction-progress-grid">{[["有効な予定便",summary.active,"有効予定"],["未搬出便",summary.notDeparted,"未搬出"],["搬出済み・受入未完了",summary.exportedPending,"搬出済み・受入未完了",
@@ -161,6 +161,7 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
           <button key={key} className={state===key?"active":""} onClick={()=>selectState(key)}><span>{label}</span><b>{count}<small>便</small></b></button>))}</div>
     <QuantityCards summary={summary}/>
     {!fieldRecords && <PlanProgress trips={allTrips} field={field}/>}
+    <div className="schedule-list-heading"><h3>搬出・受入スケジュール · {view}</h3><div className="view-switch">{["現場別","受入場所別"].map(x=><button key={x} aria-pressed={view===x} className={view===x?"active":""} onClick={()=>setView(x)}>{x}</button>)}</div><span role="status">{date} · {view}で表示中</span></div>
     {fieldRecords && view === "現場別" ? <ReviewSiteTable
       selectedField={field}
       records={groups.map(([name])=>fieldRecords.find(r=>r.field===name))}
@@ -182,15 +183,15 @@ export function ConstructionResultsPage({ plans, navigate, initialField="すべ�
       );}catch{return{};}})();
   const today=todayJst(), all=useDemoTrips();
   const [dateFrom,setDateFrom]=useState(saved.dateFrom||today),[dateTo,setDateTo]=useState(saved.dateTo||today),[field,setField]=useState(initialField!=="すべて"?initialField:saved.field||"すべて",
-    ),[destination,setDestination]=useState(saved.destination||"すべて"),[state,setState]=useState(saved.state||"すべて"),[query,setQuery]=useState(saved.query||"");
+    ),[destination,setDestination]=useState(saved.destination||"すべて"),[state,setState]=useState(saved.state||"すべて"),[query,setQuery]=useState(saved.query||""),[slipsOnly,setSlipsOnly]=useState(Boolean(saved.slipsOnly));
   const rows=all.filter(
-    (x) =>x.date>=dateFrom&&x.date<=dateTo&&(field==="すべて"||x.departure===field)&&(destination==="すべて"||x.destination===destination)&&matchesTripState(x,state)&&(!query||`${x.id}${x.departure}${x.destination}${x.carrier}${x.vehicle}${x.driver}`.includes(query,
+    (x) =>x.date>=dateFrom&&x.date<=dateTo&&(field==="すべて"||x.departure===field)&&(destination==="すべて"||x.destination===destination)&&matchesTripState(x,state)&&(!slipsOnly||x.slip!=="確認済み")&&(!query||`${x.id}${x.departure}${x.destination}${x.carrier}${x.vehicle}${x.driver}`.includes(query,
         )),
   );
   const summary=summarizeTrips(rows);
   useEffect(()=>{if(initialField!=="すべて")setField(initialField);},[initialField]);
-  useEffect(()=>sessionStorage.setItem("ecodump-construction-results-filters",JSON.stringify({dateFrom,dateTo,field,destination,state,query}),
-      ),[dateFrom,dateTo,field,destination,state,query],
+  useEffect(()=>sessionStorage.setItem("ecodump-construction-results-filters",JSON.stringify({dateFrom,dateTo,field,destination,state,query,slipsOnly}),
+      ),[dateFrom,dateTo,field,destination,state,query,slipsOnly],
   );
   const exportExcel=()=>downloadOperationsWorkbook({filename:`搬出実績_${dateFrom}_${dateTo}`,title:"ECO DUMP 搬出実績",conditions:{期間:`${dateFrom}〜${dateTo}`,現場:field,受入先:destination,状態:state,検索:query||"指定なし",
       },summaryRows:[["対象便数","便",rows.length],...["m³","t"].flatMap((unit) =>{const q=summary.quantities.find((x) =>x.unit===unit);return [["予定数量",unit,q.planned],["報告数量",unit,q.reported],["受入確定数量",unit,q.confirmed],["未完了の残予定",unit,q.remaining],["確定便の予定差異",unit,q.variance],
@@ -206,7 +207,7 @@ export function ConstructionResultsPage({ plans, navigate, initialField="すべ�
               <option key={x}>{x}</option>
             ))}</select></label><label>受入先<select value={destination} onChange={(e) =>setDestination(e.target.value)}><option>すべて</option>{[...new Set(all.map((x) => x.destination))].map((x) => (
               <option key={x}>{x}</option>
-            ))}</select></label><label>検索<input value={query} onChange={(e) =>setQuery(e.target.value)} placeholder="便・現場・車両・ドライバー"/></label><label>状態<select value={state} onChange={(e) =>setState(e.target.value)}>{["すべて","有効予定","未搬出","搬出済み・受入未完了","受入完了","取消",
+            ))}</select></label><label>検索<input value={query} onChange={(e) =>setQuery(e.target.value)} placeholder="便・現場・車両・ドライバー"/></label><label>伝票<select value={slipsOnly?"未確認":"すべて"} onChange={e=>setSlipsOnly(e.target.value==="未確認")}><option>すべて</option><option>未確認</option></select></label><label>状態<select value={state} onChange={(e) =>setState(e.target.value)}>{["すべて","有効予定","未搬出","搬出済み・受入未完了","受入完了","取消",
             ].map((x) => (
               <option key={x}>{x}</option>
             ))}</select></label><button className="outline" onClick={()=>{sessionStorage.setItem(storageKey,JSON.stringify({...readSaved(),date:dateFrom,field,destination,keyword:query,operationStatus:state,

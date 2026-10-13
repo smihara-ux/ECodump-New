@@ -106,14 +106,13 @@ test('matching filters apply to candidates, documents stay scoped, and input dra
  await expect(page.locator('.match-detail')).toHaveCount(0);
  await page.getByRole('button',{name:'詳細条件をクリア',exact:true}).click();
  await page.getByRole('button',{name:'新しい案件を登録',exact:true}).click();
- await page.getByLabel('総土量（m³）',{exact:true}).fill('9876');
- await page.getByRole('button',{name:'閉じる（下書きを保持）',exact:true}).click();
+ await page.getByLabel('総数量（m³）',{exact:true}).fill('9876');
+ await page.getByRole('button',{name:'変更せず戻る',exact:true}).click();
  await page.getByRole('button',{name:'新しい案件を登録',exact:true}).click();
- await expect(page.getByLabel('総土量（m³）',{exact:true})).toHaveValue('9876');
- await page.getByRole('button',{name:'入力内容を確認（未保存）',exact:true}).click();
- await expect(page.getByRole('dialog',{name:'入力内容の確認（未保存）',exact:true})).toContainText('9876 m³');
- await page.keyboard.press('Escape');
- await expect(page.getByLabel('総土量（m³）',{exact:true})).toHaveValue('9876');
+ await expect(page.getByLabel('総数量（m³）',{exact:true})).toHaveValue('9876');
+ await page.getByRole('button',{name:'搬出案件を登録して候補へ（デモ）',exact:true}).click();
+ await expect(page.getByRole('dialog').getByRole('alert')).toContainText('この期間と日別上限では総数量を搬出できません');
+ await expect(page.getByLabel('総数量（m³）',{exact:true})).toHaveValue('9876');
 });
 test('capacity chart keeps vertical bars and day window with the same scoped breakdown',async({page})=>{
  await page.goto(`${entry}&page=matching`);
@@ -179,32 +178,30 @@ test('manual site selection replaces global search scope across results and brow
  await expect(page.locator('.review-site-inline-detail')).not.toContainText('32184');
 });
 
-test('mobile matching form is visible, traps keyboard focus and retains draft after confirmation',async({page})=>{
+test('mobile matching registration keeps heading, keyboard focus and a retained role-specific draft',async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.goto(`${entry}&page=matching`);
  const opener=page.getByRole('button',{name:'新しい案件を登録',exact:true});await opener.click();
- const form=page.getByRole('dialog',{name:'マッチング案件登録',exact:true});
+ const form=page.getByRole('dialog',{name:'搬出案件登録',exact:true});
  const heading=await form.locator('h2').boundingBox();expect(heading.y).toBeGreaterThanOrEqual(0);
  expect(heading.y+heading.height).toBeLessThanOrEqual(844);
- expect(await form.locator('h2').evaluate(e=>{const r=e.getBoundingClientRect();return [r.y+1,r.y+r.height/2,r.bottom-1].every(y=>e.contains(document.elementFromPoint(r.x+r.width/2,y)));})).toBe(true);
- await form.getByRole('combobox',{name:'案件区分',exact:true}).focus();await page.keyboard.press('Shift+Tab');
- await expect(form.getByRole('button',{name:'入力内容を確認（未保存）',exact:true})).toBeFocused();
- await page.keyboard.press('Tab');await expect(form.getByRole('combobox',{name:'案件区分',exact:true})).toBeFocused();
- await form.getByLabel('総土量（m³）',{exact:true}).fill('6543');
- await form.getByRole('button',{name:'入力内容を確認（未保存）',exact:true}).click();
- await expect(page.getByRole('dialog',{name:'入力内容の確認（未保存）',exact:true})).toContainText('6543 m³');
- await page.keyboard.press('Escape');await expect(form.getByLabel('総土量（m³）',{exact:true})).toHaveValue('6543');
+ await form.getByRole('button',{name:'条件の編集を閉じる',exact:true}).focus();await page.keyboard.press('Shift+Tab');
+ await expect(form.getByRole('button',{name:'搬出案件を登録して候補へ（デモ）',exact:true})).toBeFocused();
+ await page.keyboard.press('Tab');await expect(form.getByRole('button',{name:'条件の編集を閉じる',exact:true})).toBeFocused();
+ await form.getByLabel('総数量（m³）',{exact:true}).fill('6543');
  await page.keyboard.press('Escape');await expect(form).toHaveCount(0);await expect(opener).toBeFocused();
+ await opener.click();await expect(page.getByLabel('総数量（m³）',{exact:true})).toHaveValue('6543');
+ await page.getByRole('button',{name:'搬出案件を登録して候補へ（デモ）',exact:true}).click();
+ await expect(page.getByRole('dialog')).toHaveCount(0);await expect(page.locator('.journey-source')).toContainText('6,543 m³');
 });
 
-test('unavailable draft storage preserves input and never reports that it was retained in storage',async({page})=>{
- await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='ecodump-matching-create-draft')throw new DOMException('Storage unavailable','QuotaExceededError');return original.call(this,key,value);};});
+test('unavailable draft and local registration storage preserves input without claiming successful registration',async({page})=>{
+ await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='ecodump-matching-journey-v1'||key.includes(':draft:construction:source:'))throw new DOMException('Storage unavailable','QuotaExceededError');return original.call(this,key,value);};});
  await page.goto(`${entry}&page=matching`);await page.getByRole('button',{name:'新しい案件を登録',exact:true}).click();
- const form=page.getByRole('dialog',{name:'マッチング案件登録',exact:true});
- await form.getByLabel('総土量（m³）',{exact:true}).fill('4321');
+ const form=page.getByRole('dialog',{name:'搬出案件登録',exact:true});
+ await form.getByLabel('総数量（m³）',{exact:true}).fill('4321');
  await expect(form.getByRole('alert')).toContainText('入力は画面内に残っています');
- await form.getByRole('button',{name:'入力内容を確認（未保存）',exact:true}).click();
- const confirmation=page.getByRole('dialog',{name:'入力内容の確認（未保存）',exact:true});
- await expect(confirmation).toContainText('4321 m³');await expect(confirmation).toContainText('保持できません');
- await expect(confirmation).not.toContainText('保持しました');await page.keyboard.press('Escape');
- await expect(form.getByLabel('総土量（m³）',{exact:true})).toHaveValue('4321');
+ await form.getByRole('button',{name:'搬出案件を登録して候補へ（デモ）',exact:true}).click();
+ await expect(form.getByRole('alert')).toContainText('操作は完了していません');
+ await expect(form.getByLabel('総数量（m³）',{exact:true})).toHaveValue('4321');
+ expect(await page.evaluate(()=>localStorage.getItem('ecodump-matching-journey-v1'))).toBeNull();
 });

@@ -1,0 +1,116 @@
+/* The journey adds behavior inside the existing matching composition and theme. */
+.matching-journey-entry { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+.matching-journey-entry p { margin: 0; }
+.matching-journey .journey-demo-note { color: var(--theme-muted); line-height: 1.6; }
+.matching-journey .journey-role-bar { margin-top: 12px; align-items: center; flex-wrap: wrap; }
+.journey-role-bar > div { display: grid; gap: 5px; margin-right: auto; min-width: 0; }
+.journey-role-bar small { color: var(--theme-muted); }
+.matching-journey .journey-progress { padding: 18px 0; }
+.matching-journey .journey-progress span { font-size: 12px; }
+.matching-journey .journey-next,
+.matching-journey .journey-feedback,
+.matching-journey .journey-error { padding: 12px 14px; border: 1px solid var(--theme-border); background: var(--theme-surface); line-height: 1.6; margin: 8px 0; }
+.matching-journey .journey-next b { color: var(--theme-accent); margin-right: 8px; }
+.matching-journey .journey-next { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.matching-journey .journey-next p { flex: 1 1 300px; margin: 0; }
+.matching-journey .matching-list { align-self: start; }
+.matching-journey .journey-comparison summary { min-height: 30px; cursor: pointer; }
+.matching-journey .journey-error { border-color: var(--theme-accent); }
+.matching-journey .journey-source { padding: 16px; }
+.matching-journey h3 { font-size: 16px; margin: 0 0 8px; }
+.matching-journey p { line-height: 1.6; }
+.matching-journey .journey-terms dt { font-size: 12px; }
+.matching-journey .journey-terms dd { font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.matching-journey .journey-candidate { grid-template-columns: 64px minmax(0,1fr) 112px; min-height: 116px; }
+.matching-journey .journey-candidate:disabled { opacity: 1; cursor: default; }
+.matching-journey .journey-candidate .match-score b { font-size: 20px; }
+.matching-journey .journey-candidate .match-score span,
+.matching-journey .journey-candidate .match-main small,
+.matching-journey .journey-candidate .match-main p,
+.matching-journey .journey-candidate .match-main span,
+.matching-journey .journey-candidate .match-status { font-size: 12px; }
+.matching-journey .journey-detail { position: static; }
+.matching-journey .journey-route { grid-template-columns: 24px minmax(0,1fr) 18px minmax(0,1fr); }
+.matching-journey .journey-route b { font-size: 14px; line-height: 1.6; }
+.matching-journey .journey-checks { display: grid; gap: 12px; padding: 0; margin: 14px 0 0; list-style: none; }
+.matching-journey .journey-checks li { display: grid; gap: 4px; }
+.matching-journey .journey-checks span { color: var(--theme-muted); font-size: 12px; line-height: 1.7; }
+.matching-journey .journey-section { border-top: 1px solid var(--theme-border); padding-top: 16px; margin-top: 16px; scroll-margin-top: 90px; }
+.matching-journey .journey-section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.journey-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.matching-journey .journey-history { padding: 16px; border-top: 1px solid var(--theme-border); }
+.matching-journey .journey-history summary { cursor: pointer; font-weight: 700; min-height: 30px; }
+.matching-journey .journey-history ol { padding-left: 22px; display: grid; gap: 14px; }
+.matching-journey .journey-history li small { display: block; color: var(--theme-muted); margin-top: 4px; }
+.matching-journey .journey-checkbox { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; line-height: 1.6; font-size: 14px; }
+.matching-journey .journey-checkbox input { flex: 0 0 20px; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--theme-accent); }
+.matching-journey .journey-documents { margin-top: 12px; padding: 12px; border: 1px solid var(--theme-border); }
+.matching-journey .journey-documents article + article { border-top: 1px solid var(--theme-border); margin-top: 12px; padding-top: 12px; }
+.matching-journey .journey-documents h4 { margin: 4px 0 8px; }
+.matching-journey .journey-confirmations { padding: 0; list-style: none; display: grid; gap: 8px; }
+.matching-journey .journey-confirmations li { display: grid; grid-template-columns: 20px 60px minmax(0,1fr); align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--theme-border); font-size: 14px; }
+.matching-journey .journey-confirmations svg { width: 18px; color: var(--theme-accent); }
+.matching-journey .journey-blockers { color: var(--theme-muted); line-height: 1.6; padding-left: 20px; font-size: 13px; }
+.matching-journey .journey-agreed { border-left: 4px solid var(--theme-accent); padding: 16px; background: var(--theme-surface-raised); }
+.matching-journey .journey-agreed small { display: block; margin-top: 8px; line-height: 1.7; overflow-wrap: anywhere; }
+.matching-journey .journey-after { padding-left: 24px; display: grid; gap: 12px; }
+.matching-journey .journey-after li { padding-left: 4px; }
+.matching-journey .journey-after span { display: block; color: var(--theme-muted); margin-top: 4px; }
+.matching-journey button { min-height: 42px; white-space: normal; line-height: 1.5; }
+.matching-journey button:disabled:not(.journey-candidate) { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.matching-journey button:focus-visible,
+.matching-journey summary:focus-visible { outline: 3px solid var(--theme-accent); outline-offset: 3px; }
+.journey-dialog { width: min(680px,calc(100vw - 28px)); max-height: calc(100dvh - 40px); overflow: auto; }
+.journey-dialog .journey-form { margin-top: 18px; gap: 16px; }
+.journey-dialog .journey-form label { display: grid; gap: 6px; font-size: 14px; }
+.journey-dialog .journey-form input,
+.journey-dialog .journey-form select { min-width: 0; width: 100%; min-height: 42px; }
+.journey-dialog button { min-height: 42px; }
+.matching-plan-context { grid-column: 1 / -1; overflow-wrap: anywhere; line-height: 1.7; }
+.matching-plan-context h3 { margin: 0 0 8px; }
+.matching-plan-context p { margin: 6px 0; }
+.schedule-list-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 0; }
+.schedule-list-heading h3 { margin: 0; }
+.schedule-list-heading [role="status"] { color: var(--theme-muted); font-size: 13px; }
+.matching-journey .matching-hero > .journey-actions { flex: 0 1 260px; margin-top: 0; }
+.matching-journey .journey-section .service-table td { overflow-wrap: anywhere; min-width: 100px; }
+.matching-journey .journey-section .service-table td:first-child { min-width: 160px; }
+.control-app-shell .matching-journey .journey-reservations-table { width: 100% !important; min-width: 0 !important; height: auto !important; table-layout: fixed !important; }
+.control-app-shell .matching-journey .journey-reservations-table tr { display: table-row; height: auto; }
+.control-app-shell .matching-journey .journey-reservations-table :is(th,td) { white-space: normal !important; min-width: 0 !important; height: auto !important; vertical-align: top; line-height: 1.65; overflow-wrap: anywhere; }
+.control-app-shell .matching-journey .journey-reservations-table :is(th,td):nth-child(1) { width: 50% !important; }
+.control-app-shell .matching-journey .journey-reservations-table :is(th,td):nth-child(2) { width: 28% !important; }
+.control-app-shell .matching-journey .journey-reservations-table :is(th,td):nth-child(3) { width: 22% !important; }
+.control-app-shell .matching-journey .journey-reservations-table small { white-space: normal; overflow-wrap: anywhere; }
+.receiving-detail :where(p,h2,small,dd), .matching-plan-context { overflow-wrap: anywhere; }
+.cap-a-table details p { overflow-wrap: anywhere; min-width: 160px; }
+.cap-a-controls button { min-height: 42px; }
+.cap-a-controls button[aria-pressed="true"] { border-color: var(--theme-accent); font-weight: 700; }
+.cap-a-source > .cap-a-controls { padding: 16px 22px 6px; gap: 12px; }
+.cap-a-source > .cap-a-controls label { display: grid; gap: 6px; }
+.control-app-shell .cap-a-source .cap-a-table { overflow-x: auto; }
+.control-app-shell .cap-a-source .cap-a-table table { display: table; table-layout: fixed; width: 100%; min-width: 460px; height: auto; }
+.control-app-shell .cap-a-source .cap-a-table thead { display: table-header-group; }
+.control-app-shell .cap-a-source .cap-a-table tbody { display: table-row-group; }
+.control-app-shell .cap-a-source .cap-a-table tr { display: table-row; height: auto; }
+.control-app-shell .cap-a-source .cap-a-table :is(th,td) { display: table-cell; width: auto; white-space: normal; vertical-align: top; }
+.control-app-shell .cap-a-source .cap-a-table :is(th,td):last-child { text-align: left; }
+.cap-a-source .cap-a-detail > button { margin: 12px 18px; }
+@media (max-width: 760px) {
+  .control-app-shell .matching-journey .journey-reservations-table,
+  .control-app-shell .matching-journey .journey-reservations-table tbody { display: block; }
+  .control-app-shell .matching-journey .journey-reservations-table thead { display: none; }
+  .control-app-shell .matching-journey .journey-reservations-table tbody tr { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; padding: 14px; border-bottom: 1px solid var(--theme-border); }
+  .control-app-shell .matching-journey .journey-reservations-table td { display: block; padding: 0; border: 0; }
+  .control-app-shell .matching-journey .journey-reservations-table :is(th,td):nth-child(n) { width: auto !important; }
+  .control-app-shell .matching-journey .journey-reservations-table td:first-child { grid-column: 1 / -1; }
+  .control-app-shell .matching-journey .journey-reservations-table td::before { content: attr(data-label); display: block; font-size: 12px; color: var(--theme-muted); margin-bottom: 4px; }
+  .matching-journey .matching-hero > .journey-actions { flex-basis: auto; }
+  .matching-journey .journey-progress span { font-size: 10px; }
+  .matching-journey .journey-candidate { grid-template-columns: 58px minmax(0,1fr); gap: 10px; }
+  .matching-journey .journey-candidate .match-status { grid-column: 2; justify-self: start; }
+  .matching-journey .journey-role-bar > button { width: 100%; }
+  .matching-journey .journey-terms { grid-template-columns: minmax(0,1fr); }
+  .journey-dialog .journey-form { grid-template-columns: minmax(0,1fr); }
+  .journey-actions button { flex: 1 1 180px; }
+}

@@ -40,6 +40,7 @@ import ReceivingLiveHome from "./business/ReceivingLiveHome.jsx";
 import ConnectedApp from "./integration/ConnectedApp.jsx";
 import DirectWorkflowPanel from "./workflow/DirectWorkflowPanel.jsx";
 import MatchingWorkflowPanel from "./matching/SharedMatching.jsx";
+import MatchingJourneyDemo from "./demo/MatchingJourneyDemo.jsx";
 import {
   Bell,
   Building2,
@@ -239,7 +240,7 @@ function useDialogAccessibility() {
     const focusableSelector =
       'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
     const syncDialog = () => {
-      const next = [...document.querySelectorAll('[role="dialog"]')].at(-1);
+      const next = [...document.querySelectorAll('dialog[open], [role="dialog"]')].at(-1);
       if (next === dialog) return;
       if (next) {
         if (!dialog) returnFocus = document.activeElement;
@@ -1737,8 +1738,8 @@ function TransportSchedulePage({
           />
         </label>
         <div className="transport-primary-actions" aria-label="主な操作">
-          <button className="primary" onClick={() => navigate?.("配車・運行管理")}>予定を作る</button>
-          <button className="outline" onClick={() => navigate?.("配車・運行管理")}>今日の車両を見る</button>
+          <button className="primary" onClick={() => { sessionStorage.setItem("ecodump-dispatch-add","1"); navigate?.("配車・運行管理"); }}>予定を作る</button>
+          <button className="outline" onClick={() => navigate?.("運行管制")}>今日の運行を見る</button>
           <button className="outline" onClick={() => navigate?.("実績・帳票")}>伝票を確認する</button>
         </div>
       </div>
@@ -3375,8 +3376,18 @@ const matchingCandidates = [
   },
 ];
 
-function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案件を探す", onPrepareReservation,
+function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案件を探す", onPrepareReservation, navigate, siteOptions,
 }) {
+  const [registrationRequested, setRegistrationRequested] = useState(false);
+  const [journeyOpen, setJourneyOpen] = useState(() => new URLSearchParams(location.search).get("matchingDemo") === "1");
+  const showJourney = open => {
+    const url = new URL(location.href);
+    if (open) url.searchParams.set("matchingDemo", "1");
+    else url.searchParams.delete("matchingDemo");
+    history.replaceState(history.state, "", url);
+    setJourneyOpen(open);
+    if (!open) setRegistrationRequested(false);
+  };
   const [mode, setMode] = useState(initialMode);
   const exportCandidates = matchingCandidates.map((item, index) => ({ ...item,
     id: `SOIL-EXPORT-${index + 1}`, destination: `サンプル搬出現場 ${String.fromCharCode(65 + index)}`,
@@ -3430,6 +3441,7 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
   if (!publicDemo && new URLSearchParams(location.search).get("matchingApi") === "1") {
     return <MatchingWorkflowPanel role={role} />;
   }
+  if (journeyOpen) return <MatchingJourneyDemo role={role} navigate={navigate} siteOptions={siteOptions} initialRegistration={registrationRequested} onExit={() => showJourney(false)} />;
   return (
     <section className="matching-page">
       <p role="note">操作プレビュー：変更は保存・送信されません。適合度・距離・件数はサンプルです。</p>
@@ -3441,10 +3453,11 @@ function MatchingPage({ setConfirm, role = "receiving", initialMode = "搬出案
             搬出時期・土量・土質・距離・受入条件を確認する共通画面です。施工側は受入候補、受入側は搬出案件を確認できます。
           </p>
         </div>
-        <button className="primary" onClick={() => setCreateOpen(true)}>
+        <button className="primary" onClick={() => { const params = new URLSearchParams(location.search); if (params.get("matchingDemo") !== "0" && (params.get("demo") === "1" || publicDemo)) { setRegistrationRequested(true); showJourney(true); } else setCreateOpen(true); }}>
           <Plus /> 新しい案件を登録
         </button>
       </div>
+      <div className="matching-journey-entry"><p>マッチングが成立するまでの流れを確認できます。</p><button className="outline" onClick={() => showJourney(true)}>マッチング成立デモを試す</button></div>
       <p className="matching-summary-scope">全体の表示例（集計時点・期間は未設定） · 下の検索結果とは別のサンプルです</p>
       <div className="matching-kpis">
         <article>
@@ -6254,7 +6267,7 @@ export function App() {
       <DispatchWorkspace
         navigate={navigate}
         navigationReview={navigationReview}
-        siteOptions={navigationReview ? siteRecords.map(r => r.field) : undefined}
+        siteOptions={navigationReview ? siteRecords.map(r => ({ id: r.databaseId || r.id, name: r.field })) : undefined}
       />
     );
   else if (page === "実績・帳票")
@@ -6265,11 +6278,15 @@ export function App() {
     body = (
       <MatchingPage
         setConfirm={setConfirm}
+        navigate={navigate}
+        siteOptions={siteRecords.map(record => ({ id: record.databaseId || record.id, name: record.field }))}
         role={roleMode}
         key={roleMode}
         onPrepareReservation={roleMode === "receiving" ? (candidate) => {
           receivingModel.setSelectedTrip(null);
           receivingModel.setReservationDraft({ source: "発生土マッチ", site: candidate.destination, partner: "サンプル施工会社 A",
+            soil: candidate.soil, unit: "m³", sourceCaseId: candidate.id, locationId: receivingModel.selectedLocation,
+            totalVolume: candidate.capacity,
                 });
           navigate("搬入予約・受付");
         } : undefined}

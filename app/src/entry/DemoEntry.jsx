@@ -53,7 +53,7 @@ export default function DemoEntry() {
             <button className="entry-primary" type="submit">{mode === 'register' ? '登録内容を確認する' : 'ログイン'}</button>
             <p className="entry-muted">入力内容は送信・保存されません。本番認証は未接続です。</p>
           </form>}
-          <details className="entry-demo-options"><summary>デモで試す</summary><p>入力不要で、役割別のサンプルアカウントを体験できます。</p><div>{roles.map(item => <button key={item.id} onClick={() => demoLogin(item.id)}>{item.name}としてデモログイン →</button>)}</div><small>手入力で試す場合：利用区分のID（construction / receiving / driver）に @sample.invalid を付けたメールアドレス、パスワードは demo-only。</small></details>
+          <details className="entry-demo-options"><summary>デモで試す</summary><p>入力不要で、役割別のサンプルアカウントを体験できます。</p><div>{roles.map(item => <button key={item.id} onClick={() => demoLogin(item.id)}>{item.name}としてデモログイン →</button>)}<button onClick={() => window.location.assign('./?preview=app&role=construction&page=matching&demo=1&navigationReview=1&matchingDemo=1')}>マッチング成立の流れを試す →</button></div><small>手入力で試す場合：利用区分のID（construction / receiving / driver）に @sample.invalid を付けたメールアドレス、パスワードは demo-only。</small></details>
         </section>
         <footer className="entry-footer"><a href="./review.html?v=20261009-share">操作確認ガイド</a><button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>{theme === 'light' ? 'ダーク' : 'ライト'}表示に切り替え</button></footer>
       </div>

@@ -118,6 +118,8 @@ test("従来サンプルの搬出候補から申請、直接予約も申請止�
   await page
     .getByRole("button", { name: "この搬出案件から予約下書きへ" })
     .click();
+  await expect(page.getByRole("combobox", { name: "予定土質", exact: true })).toHaveValue("第2種建設発生土");
+  await expect(page.getByRole("combobox", { name: "数量単位", exact: true })).toHaveValue("m³");
   await page.getByRole("checkbox").check();
   await page
     .getByRole("button", { name: "申請を試作に追加（未送信）" })

@@ -4,6 +4,8 @@ import DailyCapacity from './DailyCapacity.jsx';
 import TripList,{demoReportRows,transportRows} from './TripList';
 import {downloadTransportWorkbook,reportTotals,formatReportQuantity} from '../reports/transportReport.mjs';
 import {DemoNotice} from '../review/Readability';
+import { matchingRolePageUrl } from '../demo/matchingRoutes.mjs';
+import { validateMatchingPlan } from '../demo/matchingPlan.mjs';
 import DateControls from './DateControls';
 import {useReceivingView,useListPosition} from './viewState';
 import CapacityChart from './CapacityChart';
@@ -50,7 +52,7 @@ export function useReceivingWorkspace() {
       const site=demoSites.find(s=>s.name===r.site),location=demoLocations.find(l=>l.id===r.locationId);
       return {...r,siteId:site?.id||r.site,departure:r.site,destination:location?.name||'未設定',company:r.partner||demoCompany,driverId:r.driverId||'',vehicleId:r.vehicleId||'',departAt:r.departAt||'08:30',arriveAt:r.eta,booking:'有効',reported:null,confirmed:null,received:null,slip:'未提出',material:r.soil,assignmentVersion:1,operation:'未手配',issue:'なし',correctionHistory:'訂正なし',history:r.history||[]};});
   });
-  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [selectedTrip, setSelectedTrip] = useState(() => new URLSearchParams(location.search).get("matchTrip"));
   const [selectedLocation, setSelectedLocation] = useState("Y-01");
   const [reservationDraft, setReservationDraft] = useState(null);
   const [notice, setNotice] = useState("");
@@ -167,18 +169,6 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
       <div className="receiving-sticky-controls"><div className="schedule-switches">
         <DateControls value={day} onChange={setDay} todayValue={baseDate}/>
         <button onClick={()=>navigate('受入実績・帳票')}>受入実績を見る</button><details className="receiving-quota-note"><summary>受入枠と残量：算定条件未設定</summary><p>日次枠は受入場所管理で確認できます。契約枠・物理容量とは別です。未消化予約、部分受入、取消・訂正の消化ルールと同時予約の制御は決定待ちのため、受入可能残量・新規予約可能量は算出していません。</p><button onClick={()=>navigate('受入場所管理')}>受入条件・日次枠の設定を見る</button></details>
-        <div className="view-switch">
-          {["受入場所別", "現場別"].map((value) => (
-            <button
-              key={value}
-              className={view === value ? "active" : ""}
-              aria-pressed={view === value}
-              onClick={() => setView(value)}
-            >
-              {value}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="receiving-toolbar">
@@ -233,6 +223,8 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
       <div className="receiving-heading">
         <div>
           <h2>搬出・受入スケジュール</h2>
+          <div className="view-switch">{["受入場所別", "現場別"].map(value => <button key={value} className={view === value ? "active" : ""} aria-pressed={view === value} onClick={() => setView(value)}>{value}</button>)}</div>
+          <p role="status">{day} · {view}で表示中。日付・検索・受入場所の条件は保持しています。</p>
           <p>
             1便ごとの到着と受入状況。荷下ろし報告後も、実績確定までは「受入中」に含めます。
           </p>
@@ -507,7 +499,7 @@ function Locations({ m }) {
             </p>
           ) : (
             <>
-              <CapacityChart key={location.id} name={location.name}/><dl className="receiving-definitions">
+              <CapacityChart key={location.id} name={location.name} locationId={location.id}/><dl className="receiving-definitions">
                 {[
                   ["所在地", location.address],
                   ["営業時間", location.hours],
@@ -641,6 +633,7 @@ function ReservationForm({ m }) {
           ...data,
           planned: Number(data.planned),
           source: m.reservationDraft.source,
+          sourceCaseId: m.reservationDraft.sourceCaseId || null,
           agreement: "条件合意済み（試作確認）",
           reservation: "申請中",
           reception: "未到着",
@@ -668,6 +661,7 @@ function ReservationForm({ m }) {
         {m.reservationDraft.source} ·
         条件合意と予約確定は別です。追加後に受入側の承認が必要です。
       </p>
+      {m.reservationDraft.sourceCaseId && <p>搬出案件 {m.reservationDraft.sourceCaseId} · 案件総量 {m.reservationDraft.totalVolume} · 下の予定数量は1便分です。条件合意を模した入力確認で、実際の成立案件からの引き継ぎではありません。</p>}
       <div className="receiving-form-grid">
         <Field label="取引先">
           <input
@@ -684,7 +678,7 @@ function ReservationForm({ m }) {
           />
         </Field>
         <Field label="予約先の受入場所">
-          <select name="locationId">
+          <select name="locationId" defaultValue={m.reservationDraft.locationId || m.locations[0]?.id}>
             {m.locations.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.name}
@@ -715,13 +709,13 @@ function ReservationForm({ m }) {
           />
         </Field>
         <Field label="数量単位">
-          <select name="unit">
+          <select name="unit" defaultValue={m.reservationDraft.unit || "m³"}>
             <option>m³</option>
             <option>t</option>
           </select>
         </Field>
         <Field label="予定土質">
-          <select name="soil">
+          <select name="soil" defaultValue={m.reservationDraft.soil || soils[0]}>
             {soils.map((v) => (
               <option key={v}>{v}</option>
             ))}
@@ -759,16 +753,23 @@ function ReservationDetail({ trip: t, m }) {
     t.receipt === "実績確定" || ["受入不可", "取消"].includes(t.reservation);
   const act = (action) => {
     try {
-      const updated = transitionTrip(t, action, {
+      const input = {
         reason,
         eta,
         planned,
         actual,
         actualSoil,
         unit: t.unit,
-      });
+      };
       m.setTrips((prev) =>
-        prev.map((row) => (row.id === t.id ? updated : row)),
+        prev.map((row) => {
+          if (row.id !== t.id) return row;
+          if (row.matchAgreementId) {
+            if (row.assignmentVersion !== t.assignmentVersion) throw new Error("別の画面で便が変更されました。最新の内容を確認してください。");
+            if (["approve", "resubmit"].includes(action)) validateMatchingPlan(row.agreementSnapshot, { date: row.date, count: 1, quantity: Number(action === "resubmit" ? planned : row.planned), unit: row.unit, soil: row.soil, siteId: row.siteId, locationId: row.locationDatabaseId, time: row.departAt, arrival: action === "resubmit" ? eta : row.eta, requestKey: `review-${crypto.randomUUID()}` }, prev.filter(item => item.id !== row.id));
+          }
+          return transitionTrip(row, action, input);
+        }),
       );
       setError("");
       setConfirming(false);
@@ -789,7 +790,7 @@ function ReservationDetail({ trip: t, m }) {
               {t.reservationId} · {t.source}
             </small>
             <h2>
-              {t.id} / 車両 第{t.rotation || t.sequence}便
+              {t.id} / {t.vehicleId ? `車両 第${t.rotation || t.sequence || "—"}便` : "未配車の予定便"}
             </h2>
           </div>
           <Badge>{t.reservation}</Badge>
@@ -838,6 +839,7 @@ function ReservationDetail({ trip: t, m }) {
             </div>
           ))}
         </dl>
+        {t.matchAgreementId && <div className="receiving-card"><b>同じ成立案件からの予約</b><p>搬出案件 {t.sourceCaseId} · 受入案件 {t.targetCaseId}</p><p>合意 {t.matchAgreementId} 第{t.agreementRevision}版 · 相談 {t.consultationId}</p><p>合意期間 {t.agreementSnapshot.terms.start}〜{t.agreementSnapshot.terms.end} · 土質 {t.agreementSnapshot.terms.soil}</p><button className="outline" onClick={() => window.location.assign(matchingRolePageUrl("receiving", "matching", t.id))}>この案件の成立内容へ戻る</button><button className="outline" onClick={() => {sessionStorage.setItem("ecodump-dispatch-focus",t.id);sessionStorage.setItem("ecodump-construction-schedule-filters",JSON.stringify({date:t.date,field:t.site}));window.location.assign(matchingRolePageUrl("construction","dispatch"));}}>施工側で予定・配車を確認</button></div>}
         {!terminal && (
           <>
             <div className="receiving-form-grid">
@@ -880,7 +882,7 @@ function ReservationDetail({ trip: t, m }) {
                   </button>
                 </>
               )}
-              {t.reservation === "変更依頼" && (
+              {t.reservation === "変更依頼" && !t.matchAgreementId && (
                 <button className="primary" onClick={() => act("resubmit")}>
                   変更内容で再申請を試す
                 </button>

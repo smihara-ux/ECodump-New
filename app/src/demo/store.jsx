@@ -8,6 +8,7 @@ function read() {
   try {
     const d = JSON.parse(localStorage.getItem(key) || "null");
     if (d?.day === demoDay() && Array.isArray(d.trips)) return d.trips;
+    if (Array.isArray(d?.trips)) return [...createNaritaDemo(), ...d.trips.filter(trip => trip.matchAgreementId)];
   } catch {}
   return createNaritaDemo();
 }
@@ -53,7 +54,7 @@ export function updateDemoTrip(id, patch, expectedVersion) {
   );
 }
 export const demoNotice =
-  "成田モデル・ブラウザ内共有デモ。役割画面間で仮状態を共有します。相手への送信・API／DB保存は行いません。日付が変わると予定のデモ状態は初期化されます。";
+  "成田モデル・ブラウザ内共有デモ。役割画面間で仮状態を共有します。相手への送信・API／DB保存は行いません。日付が変わると通常の予定サンプルは初期化し、登録したマッチング予約は保持します。";
 export function useDemoTrips() {
   return useSyncExternalStore(
     (fn) => {

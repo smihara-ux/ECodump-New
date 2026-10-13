@@ -35,8 +35,10 @@ jobs:
       - run: npm run build
       - run: npm run test:sites
       - run: node --test tests/compliance-context.test.mjs
+      - run: node --test tests/matching-journey.test.mjs tests/matching-plan.test.mjs
       - run: npx playwright install --with-deps chromium
       - run: node scripts/check-pages-navigation.mjs
+      - run: node scripts/check-matching-demo-pages.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
