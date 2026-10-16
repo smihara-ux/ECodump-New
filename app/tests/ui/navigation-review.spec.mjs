@@ -34,7 +34,7 @@ for(const theme of ['light','dark'])for(const width of [390,768,1440,1920])test(
   await page.getByRole('button',{name:'割当編集を閉じる',exact:true}).click();
   await choose(page,width<=1024?'運行管制':'運行ダッシュボード',width);
   await page.getByRole('combobox',{name:'現場',exact:true}).selectOption('すべて');
-  await expect(page.locator('.review-metrics')).toContainText('有効予定5便');await expect(page.locator('.review-metrics')).toContainText('取消1便');
+  await expect(page.locator('.review-metrics').getByRole('button',{name:/予定台数 実3台 延べ5台/})).toBeVisible();await expect(page.locator('.review-metrics').getByRole('button',{name:/取消台数 実1台 延べ1台/})).toBeVisible();
   await expect(page.getByText('本日の運行サマリー',{exact:true})).toHaveCount(0);
   await page.locator('.navigation-review-main').evaluate(e=>e.scrollTop=0);
   await page.screenshot({path:`${evidence}/late-operations-${theme}-${width}.png`});
@@ -48,7 +48,7 @@ for(const theme of ['light','dark'])for(const width of [390,768,1440,1920])test(
   await page.locator('.review-map-section').scrollIntoViewIfNeeded();
   await page.screenshot({path:`${evidence}/late-map-${theme}-${width}.png`});
   await page.getByRole('button',{name:'便一覧へ戻る',exact:true}).click();
-  await page.getByRole('button',{name:/未手配\s*1\s*便/}).click();await expect(page.locator('.review-timeline')).toContainText('未手配');await expect(page.locator('.review-timeline')).not.toContainText('現場待機中');
+  await page.getByRole('combobox',{name:'運行の表示条件',exact:true}).selectOption('未手配');await expect(page.locator('.review-timeline')).toContainText('未手配');await expect(page.locator('.review-timeline')).not.toContainText('現場待機中');
   await page.getByRole('button',{name:'すべての便を表示',exact:true}).click();await expect(page.locator('.review-timeline > button')).toHaveCount(6);await expect(page).toHaveURL(/page=control/);await noOverflow(page);
   await module(page,'労務安全',width);await expect(page.locator('.gf-tabs')).toHaveCount(0);
   for(const category of categories){await page.getByRole('combobox',{name:'表示する書類',exact:true}).selectOption(category);await expect(page.locator('.review-document-row h4')).toHaveText([category,category,category]);await noOverflow(page);}
@@ -97,7 +97,7 @@ test('dispatch cancel requires a second confirmation and keeps a record',async({
 
 test('retained labor and relationship submenus render distinct content',async({page})=>{
   await page.goto(`${entry}&page=labor`);
-  await choose(page,'元請帳票の確認',1280);await expect(page.locator('.gf-page')).toContainText('元請帳票の確認');
+  await expect(page.getByRole('button',{name:'元請帳票の確認',exact:true})).toHaveCount(0);await expect(page.locator('.review-document-company[data-company-id="NC-01"] .review-document-row')).toHaveCount(6);
   await choose(page,'配下協力会社検索',1280);await expect(page.getByRole('heading',{name:'配下協力会社検索',exact:true})).toBeVisible();
   await expect(page.locator('main .service-menu').getByRole('button',{name:'ドライバー検索',exact:true})).toHaveCount(0);
   await module(page,'基本台帳',1280);await choose(page,'ドライバー検索',1280);await expect(page.locator('.driver-search-page')).toBeVisible();

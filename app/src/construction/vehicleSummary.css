@@ -1,0 +1,19 @@
+.vehicle-summary { min-width: 0; }
+.vehicle-summary > h3 { margin: 0 0 10px; font-size: 16px; }
+.vehicle-summary .vehicle-metrics { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.vehicle-summary .vehicle-metrics > :is(button,article) { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; min-width: 0; min-height: 44px; height: auto; text-align: left; }
+.vehicle-summary .vehicle-metrics .vehicle-actual { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px; margin-top: 8px; line-height: 1.4; }
+.vehicle-summary .vehicle-actual > span { font-size: 14px; font-weight: 500; }
+.vehicle-summary .vehicle-actual > small { margin-left: 0; font-size: 14px; }
+.vehicle-summary .vehicle-extended { display: block; margin-top: 2px; font-size: 14px; line-height: 1.6; }
+.vehicle-summary .vehicle-unassigned { display: block; margin: 6px 0 0; font-size: 12px; line-height: 1.6; white-space: normal; overflow-wrap: anywhere; }
+.vehicle-count-explanation { margin-top: 8px; font-size: 13px; line-height: 1.6; }
+.vehicle-count-explanation > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+.vehicle-count-explanation > summary::before { content: "▸"; margin-right: 8px; }
+.vehicle-count-explanation[open] > summary::before { content: "▾"; }
+.vehicle-excluded { font-size: 13px; }
+@media(max-width:760px) { .vehicle-summary .vehicle-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+
+.construction-state-select { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; font-size: 14px; }
+.construction-state-select select { min-height: 44px; min-width: 180px; }
+.results-period-total { line-height: 1.6; overflow-wrap: anywhere; }

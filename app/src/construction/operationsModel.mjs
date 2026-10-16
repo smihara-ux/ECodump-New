@@ -38,15 +38,35 @@ export function constructionTrips(plans, baseDate = todayJst()) {
   });
 }
 
-export const isActiveTrip = (trip) => trip.booking !== "取消";
+export const isRejectedTrip = (trip) => trip.reservation === "受入不可";
+export const isCancelledTrip = (trip) => !isRejectedTrip(trip) &&
+  (trip.booking === "取消" || trip.reservation === "取消" || trip.operation === "取消");
+export const isActiveTrip = (trip) => !isRejectedTrip(trip) && !isCancelledTrip(trip);
+export const isReceivedTrip = (trip) => trip.confirmed != null || Boolean(trip.received);
+
+export function summarizeVehicles(rows) {
+  const groups = [
+    ["有効予定", "予定台数", rows.filter(isActiveTrip)],
+    ["受入完了", "受入完了台数", rows.filter(row => isActiveTrip(row) && isReceivedTrip(row))],
+    ["受入待ち", "受入待ち台数", rows.filter(row => isActiveTrip(row) && !isReceivedTrip(row))],
+    ["取消", "取消台数", rows.filter(isCancelledTrip)],
+  ];
+  return groups.map(([key, label, trips]) => ({
+    key, label,
+    actual: new Set(trips.filter(trip => trip.vehicleId).map(trip => trip.vehicleId)).size,
+    extended: trips.length,
+    unassigned: trips.filter(trip => !trip.vehicleId).length,
+  }));
+}
 
 export function matchesTripState(trip, filter) {
   if (filter === "すべて") return true;
   if (filter === "有効予定") return isActiveTrip(trip);
   if (filter === "未搬出") return isActiveTrip(trip) && !trip.departed;
-  if (filter === "搬出済み・受入未完了") return isActiveTrip(trip) && Boolean(trip.departed) && !trip.received;
-  if (filter === "受入完了") return isActiveTrip(trip) && Boolean(trip.received);
-  if (filter === "取消") return !isActiveTrip(trip);
+  if (filter === "搬出済み・受入未完了") return isActiveTrip(trip) && Boolean(trip.departed) && !isReceivedTrip(trip);
+  if (filter === "受入完了") return isActiveTrip(trip) && isReceivedTrip(trip);
+  if (filter === "受入待ち") return isActiveTrip(trip) && !isReceivedTrip(trip);
+  if (filter === "取消") return isCancelledTrip(trip);
   if (filter === "伝票確認待ち") return trip.slip === "確認待ち";
   return trip.operation === filter;
 }
@@ -55,9 +75,9 @@ export function summarizeTrips(rows) {
   const values = {
     active: rows.filter(isActiveTrip).length,
     notDeparted: rows.filter((row) => isActiveTrip(row) && !row.departed).length,
-    exportedPending: rows.filter((row) => isActiveTrip(row) && row.departed && !row.received).length,
-    received: rows.filter((row) => isActiveTrip(row) && row.received).length,
-    cancelled: rows.filter((row) => !isActiveTrip(row)).length,
+    exportedPending: rows.filter((row) => isActiveTrip(row) && row.departed && !isReceivedTrip(row)).length,
+    received: rows.filter((row) => isActiveTrip(row) && isReceivedTrip(row)).length,
+    cancelled: rows.filter(isCancelledTrip).length,
   };
   values.quantities = ["m³", "t"].map((unit) => {
     const unitRows = rows.filter((row) => isActiveTrip(row) && row.unit === unit);

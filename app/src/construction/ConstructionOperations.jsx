@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight, FileSpreadsheet, Truck, X,
 } from "lucide-react";
-import { addDays, constructionTrips, matchesTripState, summarizeTrips, todayJst,
+import { addDays, constructionTrips, matchesTripState, summarizeTrips, summarizeVehicles, todayJst,
 } from "./operationsModel.mjs";
 import { downloadOperationsWorkbook } from "../reports/exportWorkbook.mjs";
 import "./constructionOperations.css";
 import { DemoNotice } from "../review/Readability.jsx";
 import ReviewSiteTable from "../review/ReviewSiteTable.jsx";
+import VehicleSummary from "./VehicleSummary.jsx";
 import {useDemoTrips,demoNotice} from "../demo/store.jsx";
 import { demoSites, planProgress } from "../demo/model.mjs";
 const scrollSurface=()=>document.querySelector(".navigation-review-main") ||
@@ -54,7 +55,7 @@ function TripDetail({ trip, close }) {
   );
 }
 
-function QuantityCards({ summary, period = "当日の数量" }) {
+function QuantityCards({ summary, period = "当日の搬出量" }) {
   return (
     <div className="construction-quantity-grid">{summary.quantities.map((row)=> (
         <article key={row.unit} className={row.remaining<0?"over":""}><header><b>{row.unit}</b><span>{period}</span></header><dl><div><dt>予定</dt><dd>{row.planned.toFixed(1)}</dd></div><div><dt>報告</dt><dd>{row.reported.toFixed(1)}</dd></div><div><dt>受入確定</dt><dd>{row.confirmed.toFixed(1)}</dd></div><div><dt>未完了の残予定</dt><dd>{row.remaining.toFixed(1)}</dd></div><div><dt>確定便の予定差異</dt><dd>{row.variance > 0 ? "+" : ""}{row.variance.toFixed(1)}</dd></div></dl>{row.remaining<0&& (
@@ -133,12 +134,7 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
             </div>}
   </div>;
   const renderTripGroup = (name,trips) => (
-          <section className="construction-trip-group" key={name} data-field-name={name}><header><h2>{name}</h2><span>{trips.length}便／実車両 {" "}
-                {
-                  new Set(
-                    trips
-                      .filter((x) =>x.vehicleId&&x.booking!=="取消").map((x) => x.vehicleId),
-                  ).size}台</span></header>
+          <section className="construction-trip-group" key={name} data-field-name={name}><header><h2>{name}</h2><span>表示対象：実 {new Set(trips.filter(trip=>trip.vehicleId).map(trip=>trip.vehicleId)).size}台／延べ {trips.length}台</span></header>
             {fieldRecords && view === "現場別" ? renderFieldContext?.(name, changeField, () => renderSchedule(name,trips)) : renderSchedule(name,trips)}
           </section>
   );
@@ -155,10 +151,8 @@ export function ConstructionTransportPage({ plans, navigate, initialField="す�
               ))}</select></label><label>検索<input value={query} onChange={(e) =>setQuery(e.target.value)} placeholder="便・現場・車両・ドライバー"/></label><button className="primary" onClick={()=>openResults(false)}>搬出実績を見る</button></div>
     </div>
       {!fieldRecords && renderFieldContext?.(field, changeField)}
-      <div className="construction-progress-grid">{[["有効な予定便",summary.active,"有効予定"],["未搬出便",summary.notDeparted,"未搬出"],["搬出済み・受入未完了",summary.exportedPending,"搬出済み・受入未完了",
-          ],["受入完了便",summary.received,"受入完了"],["取消便",summary.cancelled,"取消"],
-        ].map(([label,count,key])=> (
-          <button key={key} className={state===key?"active":""} onClick={()=>selectState(key)}><span>{label}</span><b>{count}<small>便</small></b></button>))}</div>
+      <label className="construction-state-select">運搬状態<select value={state} onChange={e=>setState(e.target.value)} aria-label="運搬状態">{["すべて","有効予定","受入完了","受入待ち","取消","未搬出","搬出済み・受入未完了"].map(key=><option key={key}>{key}</option>)}</select></label>
+      <VehicleSummary rows={baseRows} selected={state} onSelect={selectState}/>
     <QuantityCards summary={summary}/>
     {!fieldRecords && <PlanProgress trips={allTrips} field={field}/>}
     <div className="schedule-list-heading"><h3>搬出・受入スケジュール · {view}</h3><div className="view-switch">{["現場別","受入場所別"].map(x=><button key={x} aria-pressed={view===x} className={view===x?"active":""} onClick={()=>setView(x)}>{x}</button>)}</div><span role="status">{date} · {view}で表示中</span></div>
@@ -193,8 +187,8 @@ export function ConstructionResultsPage({ plans, navigate, initialField="すべ�
   useEffect(()=>sessionStorage.setItem("ecodump-construction-results-filters",JSON.stringify({dateFrom,dateTo,field,destination,state,query,slipsOnly}),
       ),[dateFrom,dateTo,field,destination,state,query,slipsOnly],
   );
-  const exportExcel=()=>downloadOperationsWorkbook({filename:`搬出実績_${dateFrom}_${dateTo}`,title:"ECO DUMP 搬出実績",conditions:{期間:`${dateFrom}〜${dateTo}`,現場:field,受入先:destination,状態:state,検索:query||"指定なし",
-      },summaryRows:[["対象便数","便",rows.length],...["m³","t"].flatMap((unit) =>{const q=summary.quantities.find((x) =>x.unit===unit);return [["予定数量",unit,q.planned],["報告数量",unit,q.reported],["受入確定数量",unit,q.confirmed],["未完了の残予定",unit,q.remaining],["確定便の予定差異",unit,q.variance],
+  const exportExcel=()=>downloadOperationsWorkbook({filename:`搬出実績_${dateFrom}_${dateTo}`,title:"ECO DUMP 搬出実績",conditions:{期間:`${dateFrom}〜${dateTo}`,現場:field,受入先:destination,状態:state,検索:query||"指定なし",伝票:slipsOnly?"未確認":"すべて",
+      },summaryRows:[["期間内対象運搬件数","件",rows.length],...summarizeVehicles(rows).flatMap(metric=>[[`${metric.label}（実台数）`,"台",metric.actual],[`${metric.label}（延べ台数）`,"台",metric.extended]]),...["m³","t"].flatMap((unit) =>{const q=summary.quantities.find((x) =>x.unit===unit);return [["予定数量",unit,q.planned],["報告数量",unit,q.reported],["受入確定数量",unit,q.confirmed],["未完了の残予定",unit,q.remaining],["確定便の予定差異",unit,q.variance],
           ];
         }),
       ],detailHeaders:["対象日","便番号","車両の当日便順","現場","受入先","運送会社","車両番号","ドライバー","単位","予定数量","報告数量","受入確定数量","搬出出発","荷下ろし報告","受入確認","伝票状態",
@@ -203,7 +197,7 @@ export function ConstructionResultsPage({ plans, navigate, initialField="すべ�
       ]),
     });
   return (
-    <section className="construction-page results-page construction-results-v2"><div className="construction-hero"><div><span>RESULTS & REPORTS</span><h2>搬出実績</h2><p>予定・報告・受入確定を分け、画面と同じ対象便をExcelへ出力します。</p></div><button className="primary" disabled={!rows.length} onClick={exportExcel}><FileSpreadsheet/>Excel帳票</button></div><div className="results-filter operation-sticky-controls"><label>開始日<input type="date" value={dateFrom} onChange={(e) =>{if(e.target.value){setDateFrom(e.target.value);if(e.target.value>dateTo)setDateTo(e.target.value);}}}/></label><label>終了日<input type="date" value={dateTo} min={dateFrom} onChange={(e) =>e.target.value&&setDateTo(e.target.value<dateFrom?dateFrom:e.target.value)}/></label><label>現場<select disabled={embedded} value={field} onChange={(e) =>setField(e.target.value)}><option>すべて</option>{[...new Set(all.map((x) => x.departure))].map((x) => (
+    <section className="construction-page results-page construction-results-v2"><div className="construction-hero"><div><span>RESULTS & REPORTS</span><h2>搬出実績</h2><p>選択した開始日〜終了日の期間内累計です。予定・報告・受入確定を分け、画面と同じ条件でExcelへ出力します。</p></div><button className="primary" disabled={!rows.length} onClick={exportExcel}><FileSpreadsheet/>Excel帳票</button></div><div className="results-filter operation-sticky-controls"><label>開始日<input type="date" value={dateFrom} onChange={(e) =>{if(e.target.value){setDateFrom(e.target.value);if(e.target.value>dateTo)setDateTo(e.target.value);}}}/></label><label>終了日<input type="date" value={dateTo} min={dateFrom} onChange={(e) =>e.target.value&&setDateTo(e.target.value<dateFrom?dateFrom:e.target.value)}/></label><label>現場<select disabled={embedded} value={field} onChange={(e) =>setField(e.target.value)}><option>すべて</option>{[...new Set(all.map((x) => x.departure))].map((x) => (
               <option key={x}>{x}</option>
             ))}</select></label><label>受入先<select value={destination} onChange={(e) =>setDestination(e.target.value)}><option>すべて</option>{[...new Set(all.map((x) => x.destination))].map((x) => (
               <option key={x}>{x}</option>
@@ -212,7 +206,7 @@ export function ConstructionResultsPage({ plans, navigate, initialField="すべ�
               <option key={x}>{x}</option>
             ))}</select></label><button className="outline" onClick={()=>{sessionStorage.setItem(storageKey,JSON.stringify({...readSaved(),date:dateFrom,field,destination,keyword:query,operationStatus:state,
               }),
-            );navigate("搬出・受入スケジュール");}}>搬出管理へ戻る</button></div><div className="construction-kpis"><article><span>対象便</span><b>{rows.length}<small>便</small></b></article><article><span>受入完了</span><b>{summary.received}<small>便</small></b></article><article className="warning"><span>未確定</span><b>{rows.filter((x) =>x.confirmed==null&&x.booking!=="取消").length}<small>便</small></b></article><article><span>取消</span><b>{summary.cancelled}<small>便</small></b></article></div><QuantityCards summary={summary} period={`${dateFrom}〜${dateTo} の数量`}/><div className="results-table-wrap"><table className="service-table"><thead><tr>{["対象日","便番号","現場／受入先","予定","報告","受入確定","状態","伝票",
+            );navigate("搬出・受入スケジュール");}}>搬出管理へ戻る</button></div><p className="results-period-total" role="status">期間内累計：{dateFrom}〜{dateTo}（開始日・終了日を含む） · 現場 {field} · 受入先 {destination} · 状態 {state}{slipsOnly?" · 未確認伝票のみ":""}</p><VehicleSummary rows={rows} className="construction-kpis" period="期間内の台数"/><QuantityCards summary={summary} period={`${dateFrom}〜${dateTo} の期間内累計`}/><div className="results-table-wrap"><table className="service-table"><thead><tr>{["対象日","便番号","現場／受入先","予定","報告","受入確定","状態","伝票",
               ].map((x) => (
                 <th key={x}>{embedded&&x==="現場／受入先"?"受入先":x}</th>))}</tr></thead><tbody>{rows.map((x) => (
               <tr key={x.id}><td>{x.date}</td><td>{x.id}<small>{x.tripNo}</small></td><td>{embedded? (
@@ -221,6 +215,6 @@ export function ConstructionResultsPage({ plans, navigate, initialField="すべ�
                     <>{x.departure}<small>{x.destination}</small></>
                   )}</td><td>{x.planned} {x.unit}</td><td>{x.reported==null?"未報告": `${x.reported} ${x.reportedUnit || x.unit}`}</td><td>{x.confirmed==null?"未確定":`${x.confirmed} ${x.unit}`}</td><td>{x.booking==="取消"?"取消":x.operation}</td><td>{x.slip}<small>{x.ticketId||"原票未提出"}</small></td></tr>))}</tbody></table>{!rows.length&& (
           <div className="empty-state">対象便はありません。</div>
-        )}</div><p className="results-accounting-note">Excelは実体のある.xlsx形式で、集計・便別明細の2シートです。m³とtは換算せず、未確定数量を確定合計に含めません。残予定は未完了便の予定数量、予定差異は確定した便の実績−予定です。</p></section>
+        )}</div><p className="results-accounting-note">開始日〜終了日を含む期間内のデータを、現場・受入先・状態・検索・伝票の条件で絞って累計しています。全期間の総搬出計画とは別の集計です。Excelは実体のある.xlsx形式で、集計・便別明細の2シートです。m³とtは換算せず、未確定数量を確定合計に含めません。残予定は未完了便の予定数量、予定差異は確定した便の実績−予定です。</p></section>
   );
 }

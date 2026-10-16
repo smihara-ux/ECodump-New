@@ -6,8 +6,8 @@ const entry = "/?preview=app&role=construction&page=transport";
 test("施工の対象日・進捗・詳細・実績条件を一つの流れで維持", async ({ page }) => {
   await page.goto(entry);
   const date = await page.getByLabel("搬出管理の対象日").inputValue();
-  await expect(page.getByRole("button", { name: /有効な予定便 5便/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /取消便 1便/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /予定台数 実3台 延べ5台/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /取消台数 実1台 延べ1台/ })).toBeVisible();
   await expect(page.getByText("未完了の残予定").first()).toBeVisible();
   await page.getByRole("button", { name: "運行詳細" }).first().click();
   const dialog = page.getByRole("dialog");
@@ -28,7 +28,7 @@ test("施工の対象日・進捗・詳細・実績条件を一つの流れで�
 test("Excel帳票は画面条件と同じ実体xlsxの2シート", async ({ page }) => {
   await page.goto(entry);
   await page.getByRole("button", { name: "搬出実績を見る" }).click();
-  const displayed = Number((await page.locator(".construction-kpis article").first().innerText()).match(/\d+/)?.[0]);
+  const displayed = await page.locator(".results-table-wrap tbody tr").count();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Excel帳票" }).click();
   const file = await download;
@@ -44,7 +44,7 @@ for (const theme of ["light", "dark"]) {
     await page.addInitScript((value)=>localStorage.setItem("ecodump-theme", value), theme);
     await page.goto(entry);
     await expect(page.locator(".trip-row").filter({ hasText: "運行詳細" })).toHaveCount(6);
-    await page.getByRole("button", { name: /取消便/ }).click();
+    await page.getByRole("button", { name: /取消台数/ }).click();
     await expect(page.locator(".trip-row").filter({ hasText: "運行詳細" })).toHaveCount(1);
     await page.getByLabel("搬出管理の対象日").fill("2026-01-01");
     await expect(page.getByText("対象便はありません")).toBeVisible();
@@ -60,7 +60,7 @@ for (const theme of ["light", "dark"]) {
 
 test("未搬出の状態と検索を実績へ引き継ぎ、空の日付で壊れない", async ({page})=>{
  await page.goto(entry);
- await page.getByRole("button",{name:/未搬出便 1便/}).click();
+ await page.getByRole("combobox",{name:"運搬状態",exact:true}).selectOption("未搬出");
  await page.getByRole("textbox",{name:"検索",exact:true}).fill("TR-20260820-04");
  await page.getByRole("button",{name:"搬出実績を見る",exact:true}).click();
  await expect(page.getByRole("combobox",{name:"状態",exact:true})).toHaveValue("未搬出");

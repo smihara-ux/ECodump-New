@@ -125,11 +125,11 @@ test("construction mode opens field-based home and role menus", async ({ page })
   }
   await expect(page.getByRole("button", { name: "発生土マッチ", exact: true })).toHaveCount(1);
   await expect(page.getByLabel("搬出管理の対象日")).toHaveValue(/\d{4}-\d{2}-\d{2}/);
-  await expect(page.getByRole("button", { name: /有効な予定便/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /搬出済み・受入未完了/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /予定台数/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /受入待ち台数/ })).toBeVisible();
   await expect(page.getByText(/累計受入確定/).first()).toBeVisible();
-  await page.getByRole("button", { name: /未搬出便/ }).click();
-  await expect(page.locator(".construction-progress-grid").getByRole("button", { name: /未搬出便/ })).toHaveClass(/active/);
+  await page.getByRole("combobox", { name: "運搬状態", exact: true }).selectOption("未搬出");
+  await expect(page.getByRole("combobox", { name: "運搬状態", exact: true })).toHaveValue("未搬出");
   await expect(page.getByRole("button", { name: "搬出実績を見る" })).toBeVisible();
 });
 
@@ -228,7 +228,7 @@ for (const theme of ["light", "dark"]) {
       await page.goto("/?preview=app&role=construction&page=labor");
       await expect(page.locator(".page-header h1")).toHaveText("労務安全");
       const menu = page.locator(".service-menu");
-      await expect(menu.getByRole("button")).toHaveCount(4);
+      await expect(menu.getByRole("button")).toHaveCount(3);
       for (const name of ["新規入場時等教育実施報告書", "【元請会社】新規入場者調査票", "その他の安全書類", "是正依頼内容の確認・返信", "書類一括出力", "共通メニュー", "現場掲示板"]) {
         await expect(menu.getByRole("button", {name, exact: true})).toHaveCount(0);
       }
@@ -236,7 +236,7 @@ for (const theme of ["light", "dark"]) {
         await page.locator(".gf-tabs").getByRole("button", {name: category, exact:true}).click();
         await expect(page.locator(".gf-tabs").getByRole("button", {name:category, exact:true})).toHaveClass(/active/);
       }
-      for (const name of ["元請帳票の確認", "配下協力会社検索"]) {
+      for (const name of ["配下協力会社検索"]) {
         await menu.getByRole("button", {name, exact:true}).click();
         await expect(page.locator(".service-main h2")).toHaveText(name);
       }

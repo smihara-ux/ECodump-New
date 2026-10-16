@@ -9,12 +9,10 @@ import "./review.css";
 import ReviewDocuments from "../review/ReviewDocuments.jsx";
 const menus = [
   "書類状況一覧",
-  "元請帳票の確認",
   "配下協力会社検索",
   "ドライバー検索",
 ];
 export default function LaborWorkspace({
-  renderDocuments,
   renderDrivers,
   navigationReview = false,
   embedded = false,
@@ -120,9 +118,7 @@ export default function LaborWorkspace({
         )}
         <DemoNotice />
         {error && <p role="alert">{error}</p>}
-        {menu === "元請帳票の確認" ? (
-          renderDocuments()
-        ) : menu === "ドライバー検索" ? (
+        {menu === "ドライバー検索" ? (
           renderDrivers(driverQuery, setDriverQuery)
         ) : menu === "配下協力会社検索" ? (
           <CompanySearch state={state} />
@@ -130,7 +126,7 @@ export default function LaborWorkspace({
           <section className="gf-page">
             <h2>書類状況一覧</h2>
             <p>
-              現場参加会社の必要書類をカテゴリ・版ごとに確認します。実書類の要否は運用に合わせて設定します。
+              元請・一次・二次の現場参加会社の書類を、この一覧でカテゴリ・版・履歴ごとに確認します。元請確認の操作も各書類の「確認・提出・履歴」にまとめています。
             </p>
             <div className="gf-toolbar">
               <b>検索結果：{navigationReview ? new Set(rows.map(r => `${r.companyId}:${r.siteId}`)).size : rows.length}件{navigationReview ? "（会社）" : ""}</b>

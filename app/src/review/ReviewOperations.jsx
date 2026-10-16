@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { readReviewContext, writeReviewContext } from "./reviewContext.mjs";
 import { demoSites, demoDay, asControl } from "../demo/model.mjs";
 import { useDemoTrips } from "../demo/store.jsx";
+import VehicleSummary from "../construction/VehicleSummary.jsx";
+import { isActiveTrip, matchesTripState } from "../construction/operationsModel.mjs";
 const savedContext = () => {
   try {
     return JSON.parse(
@@ -63,26 +65,17 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
                 : asControl(t).status,
     }));
   trips.sort((a,b) => `${a.time} ${a.id}`.localeCompare(`${b.time} ${b.id}`));
-  const active = trips.filter((t) => t.booking !== "取消");
   const match = (t, key) =>
     key === "すべて" ||
     (key === "有効予定"
-      ? t.booking !== "取消"
+      ? isActiveTrip(t)
       : key === "配車済み"
-        ? !!t.vehicleId && t.booking !== "取消"
+        ? !!t.vehicleId && isActiveTrip(t)
+        : ["受入完了", "受入待ち", "取消"].includes(key)
+          ? matchesTripState(t, key)
         : t.status === key);
   const visible = trips.filter((t) => match(t, filter));
   const chosen = visible.find((t) => t.id === selected) || visible[0];
-  const metrics = [
-    ["有効予定", active.length],
-    ["未手配", active.filter((t) => t.status === "未手配").length],
-    ["配車済み", active.filter((t) => t.vehicleId).length],
-    ["運行中", active.filter((t) => t.status === "運行中").length],
-    ["遅延", active.filter((t) => t.status === "遅延").length],
-    ["受入中", active.filter((t) => t.status === "受入中").length],
-    ["完了", active.filter((t) => t.status === "完了").length],
-    ["取消", trips.length - active.length],
-  ];
   function dispatch(add = false) {
     if (add) sessionStorage.setItem("ecodump-dispatch-add", "1");
     if (chosen && !add)
@@ -130,33 +123,7 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
         </button>
       </div>
       <details className="review-operation-conditions"><summary>詳しい条件</summary><div className="review-operation-toolbar"><label>荷種<select value={cargo} onChange={e=>setCargo(e.target.value)}>{["すべての荷種","建設発生土","コンクリートがら"].map(c=><option key={c}>{c}</option>)}</select></label><button className="outline" onClick={()=>{setCargo("すべての荷種");setFilter("有効予定");if(!initialSite)setSite("すべて");}}>条件をクリア</button></div></details>
-      <div className="review-metrics" aria-label="本日の運行集計">
-        {metrics.map(([key, count]) => (
-          <button
-            key={key}
-            aria-pressed={filter === key}
-            className={filter === key ? "active" : ""}
-            onClick={() => setFilter(filter === key ? "すべて" : key)}
-          >
-            <span>{key === "完了" ? "受入完了" : key}</span>
-            <b>
-              {count}
-              <small>便</small>
-            </b>
-          </button>
-        ))}
-        <div>
-          <span>実車両</span>
-          <b>
-            {
-              new Set(active.filter((t) => t.vehicleId).map((t) => t.vehicleId))
-                .size
-            }
-            <small>台</small>
-          </b>
-        </div>
-      </div>
-      <p className="review-metric-note">配車済みは運行中・受入完了などを含みます。実車両は重複を除いた台数です。</p>
+      <VehicleSummary rows={trips} className="review-metrics" selected={filter} onSelect={key=>setFilter(filter===key?"すべて":key)}/>
       <div className="review-list-heading"><small className="review-operation-count" role="status">{date} · {site} · 表示 {visible.length}便（時刻順）</small>
         <h2>本日の運行タイムライン</h2>
         <label>
@@ -169,6 +136,8 @@ export default function ReviewOperations({ navigate, renderMap, onDetail, initia
             {[
               "有効予定",
               "すべて",
+              "受入完了",
+              "受入待ち",
               "未手配",
               "配車済み",
               "運行中",

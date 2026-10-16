@@ -1,3 +1,4 @@
+import VehicleSummary from "../construction/VehicleSummary.jsx";
 import { DemoNotice } from "../review/Readability.jsx";
 import { readMatchingJourney } from "./matchingJourney.mjs";
 import { validateMatchingPlan } from "./matchingPlan.mjs";
@@ -409,37 +410,7 @@ export default function DispatchWorkspace({
           </button>
         </section>
       )}
-      <div className="construction-kpis">
-        <article>
-          <span>有効予定便</span>
-          <b>{rows.filter((t) => t.booking !== "取消").length}便</b>
-        </article>
-        <article>
-          <span>未手配便</span>
-          <b>
-            {rows.filter((t) => !t.vehicleId && t.booking !== "取消").length}便
-          </b>
-        </article>
-        <article>
-          <span>手配済み便</span>
-          <b>
-            {rows.filter((t) => t.vehicleId && t.booking !== "取消").length}便
-          </b>
-        </article>
-        <article>
-          <span>実車両</span>
-          <b>
-            {
-              new Set(
-                rows
-                  .filter((t) => t.vehicleId && t.booking !== "取消")
-                  .map((t) => t.vehicleId),
-              ).size
-            }
-            台
-          </b>
-        </article>
-      </div>
+      <VehicleSummary rows={rows} className="construction-kpis"/>
       {error && <p role="alert">{error}</p>}
       {message && <p role="status">{message}</p>}
       <div className="results-table-wrap">

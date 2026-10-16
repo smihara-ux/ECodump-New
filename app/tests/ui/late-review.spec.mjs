@@ -47,7 +47,7 @@ for(const theme of ['dark','light'])for(const width of [1440,390])test(`all cons
   await expect(page.locator('.review-document-company')).toHaveCount(3);await expect(page.locator('.review-document-row')).toHaveCount(18);await capture('documents-all');
   for(const c of categories){await page.getByRole('combobox',{name:'表示する書類',exact:true}).selectOption(c);await capture(`documents-${c}`);}
   await page.getByRole('button',{name:'確認・提出・履歴',exact:true}).last().click();await capture('document-detail');await page.getByRole('button',{name:'書類確認を閉じる',exact:true}).click();
-  for(const label of ['元請帳票の確認','配下協力会社検索']){await choose(page,label,width);await capture(`labor-${label}`);}
+  for(const label of ['配下協力会社検索']){await choose(page,label,width);await capture(`labor-${label}`);}
   await page.goto(`${entry}&page=results`);await capture('results');
   await page.goto(`${entry}&page=agencies`);await capture('relations-cooperative');await page.getByRole('button',{name:'詳細',exact:true}).last().click();
   for(const label of ['会社情報','現場参加情報','不足書類']){await page.getByRole('tab',{name:new RegExp(`^${label}`)}).click();await capture(`relations-detail-${label}`);}

@@ -63,7 +63,7 @@ test('operation rows are time ordered and return preserves selected trip and sta
  await page.getByRole('button',{name:'すべての便を表示',exact:true}).click();
  const times=await page.locator('.review-timeline time').allTextContents();
  expect(times).toEqual([...times].sort());
- await page.getByRole('button',{name:/遅延\s*1\s*便/}).click();
+ await page.getByRole('combobox',{name:'運行の表示条件',exact:true}).selectOption('遅延');
  await page.locator('.review-timeline > button').click();
  await expect(page.locator('.map-selection')).toContainText('TR-20260820-02');
  await page.getByRole('button',{name:'配車を組む',exact:true}).click();
