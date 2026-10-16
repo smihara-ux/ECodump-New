@@ -12,7 +12,8 @@ export const confirmed = (t) =>
 export const filters = {
   有効予定: (t) => !cancelled(t),
   未到着: (t) => !cancelled(t) && t.reception === "未到着",
-  受入完了: (t) => confirmed(t),
+  受入完了: (t) => !cancelled(t) && confirmed(t),
+  受入待ち: (t) => !cancelled(t) && !confirmed(t),
   残予定量: (t) => !cancelled(t) && !confirmed(t),
   予定: (t) => !cancelled(t),
   実績: (t) => confirmed(t),

@@ -92,6 +92,7 @@ test("6カテゴリの項目と検索、仮提出・差戻し・再提出・元�
 
 test("日次便枠・数量枠は別設定、取消と未配車を正しく集計", async ({ page }) => {
   await page.goto(`${receiving}&page=receiving-locations`);
+  await page.getByText("日次の受入枠を確認・設定",{exact:true}).click();
   const section = page.locator(".daily-capacity");
   await section.getByLabel("当日受付の便数枠").fill("2");
   await section.getByLabel("当日受付の数量枠").fill("10");
@@ -127,6 +128,7 @@ test("配車変更は3画面共通。過去便を変更せず、版変更で本�
   await receive
     .getByRole("button", { name: "TR-20260820-03の予約詳細", exact: true })
     .click();
+  await receive.getByRole("tab",{name:"受付",exact:true}).click();
   await expect(receive.locator(".receiving-detail")).toContainText(
     "成田 100 を 01-01",
   );
@@ -220,6 +222,7 @@ test("ドライバー本人確認→到着→荷下ろし→伝票→受入確�
     .setInputFiles(
       fileURLToPath(new URL("../../public/ecodump-logo.png", import.meta.url)),
     );
+  await receipt.getByRole("button", {name:"数量入力へ",exact:true}).click();
   await receipt.getByLabel("伝票番号", { exact: true }).fill("NARITA-DEMO-03");
   await receipt.getByLabel("原票の数量", { exact: true }).fill("6.9");
   await receipt.getByRole("button", { name: "提出前の内容を見る" }).click();

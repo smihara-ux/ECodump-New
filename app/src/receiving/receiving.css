@@ -1,4 +1,15 @@
 /* Receiving-only surfaces reuse the existing ECO DUMP palette and schedule anatomy. */
+.role-receiving .receiving-vehicle-metrics { display:grid; gap:10px; margin:12px 0 0; }
+.role-receiving .receiving-vehicle-metrics > :is(button,article) { padding:16px; border:1px solid var(--ui-line); border-radius:8px; background:var(--ui-panel); color:var(--ui-text); }
+.role-receiving .receiving-vehicle-metrics .vehicle-actual { font-size:28px; }
+.role-receiving .receiving-vehicle-metrics > button.active { border-color:var(--ui-primary); box-shadow:inset 4px 0 var(--ui-primary); }
+.role-receiving .receiving-advanced { padding:12px 16px; border:1px solid var(--ui-line); border-radius:8px; background:var(--ui-panel); }
+.role-receiving .receiving-advanced > summary { min-height:44px; align-content:center; cursor:pointer; font-weight:700; }
+.role-receiving .receiving-master-navigation { display:flex; flex-wrap:wrap; gap:12px; align-items:end; padding:12px; margin-bottom:16px; border:1px solid var(--ui-line); border-radius:8px; background:var(--ui-panel); }
+.role-receiving .receiving-master-navigation label { display:grid; gap:6px; min-width:200px; }
+.role-receiving .receiving-master-navigation :is(button,select) { min-height:44px; padding:10px 12px; color:var(--ui-text); background:var(--ui-panel); border:1px solid var(--ui-line); border-radius:7px; }
+.role-receiving .receiving-period-total { overflow-wrap:anywhere; padding:10px 0; }
+.role-receiving .control-user { flex-shrink:0; }
 .receiving-prototype {
   margin: 14px 18px 0;
   display: flex;
@@ -488,3 +499,30 @@
 .control-app-shell .receiving-home .schedule-switches>.receiving-quota-note{flex:0 0 auto}
 }
 .receiving-sticky-controls{position:sticky;top:0;z-index:12;background:var(--ui-panel);padding:8px;border-radius:8px;box-shadow:0 5px 8px #00000008}.receiving-sticky-controls .receiving-toolbar{margin-bottom:0}.receiving-sticky-controls .schedule-switches{flex-wrap:wrap}.control-app-shell .receiving-workspace .daily-capacity form input,.control-app-shell .daily-capacity select{min-height:44px;max-width:100%}@media(max-width:760px){.receiving-sticky-controls{max-height:190px;overflow:auto}.receiving-sticky-controls .receiving-quota-note{display:none}}
+
+/* Scoped workflow refinements preserve the shared construction shell. */
+.role-receiving .receiving-detail-tabs {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0;}
+.role-receiving .receiving-detail-tabs [aria-selected=true] {background:var(--ui-primary);color:var(--ui-primary-text);border-color:var(--ui-primary);}
+.role-receiving .receiving-reservation-panel {min-width:0;}
+.role-receiving .receiving-next-action {border-left:4px solid var(--ui-primary);background:var(--ui-panel);padding:12px 16px;margin-top:16px;display:grid;gap:6px;}
+.role-receiving .receiving-next-action span {font-size:13px;line-height:1.7;}
+.role-receiving .receiving-next-action button {justify-self:start;}
+.role-receiving .receiving-primary-actions {display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 0;}
+.role-receiving .receiving-primary-actions p {flex-basis:100%;}
+.role-receiving .receiving-field-error {color:var(--ui-text);border-left:3px solid #cc8045;padding-left:8px;}
+.role-receiving .receiving-other-actions {margin-top:8px;padding:8px 12px;border:1px solid var(--ui-line);border-radius:7px;}
+.role-receiving .receiving-reservation-panel [aria-invalid=true] {border-color:#cc8045;}
+.role-receiving .receiving-heading > button.primary {flex:0 1 auto;width:auto;}
+@media(max-width:600px){
+ .role-receiving .receiving-detail-tabs {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .role-receiving .receiving-primary-actions > button {width:100%;}
+ .role-receiving .receiving-next-action {padding:12px;}
+}
+
+.role-receiving .receiving-filter-actions {display:flex;flex-wrap:wrap;gap:10px;}
+.role-receiving .receiving-filter-actions [aria-pressed=true] {background:var(--ui-primary);color:var(--ui-primary-text);}
+.role-receiving .receiving-row-next {display:block;line-height:1.7;padding:6px 0;}
+.role-receiving .receiving-trip-list td details {font-size:12px;}
+.role-receiving .receiving-trip-list td summary {min-height:44px;align-content:center;cursor:pointer;}
+
+.role-receiving .receiving-local-receipt img {display:block;max-width:100%;max-height:300px;object-fit:contain;margin:12px 0;border:1px solid var(--ui-line);border-radius:8px;}

@@ -6,7 +6,7 @@ const expandLocationTrips = async (page, locationName) => {
   const card = page
     .locator(".receiving-card")
     .filter({ has: page.getByRole("heading", { name: locationName, exact: true }) });
-  const details = card.locator("details");
+  const details = card.locator(":scope > details");
   if ((await details.getAttribute("open")) === null) {
     await details.getByText("便一覧・従来の予約詳細").click();
   }
@@ -67,8 +67,8 @@ for (const viewport of [
     expect((await download).suggestedFilename()).toContain("試作");
     await nav(page, "受入管理").click();
     await expect(
-      page.locator(".receiving-kpis article").filter({ hasText: "完了" }),
-    ).toContainText("2");
+      page.locator('.vehicle-summary [data-vehicle-state="受入完了"]'),
+    ).toContainText("延べ 2台");
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth > innerWidth + 2,
@@ -143,6 +143,7 @@ test("変更依頼・再申請・受入不可・取消と検索", async ({ page 
   await page.goto(entry);
   await expandLocationTrips(page, "栃木モデル採石場〈架空〉");
   await page.getByRole("button", { name: "TR-20260820-04の予約詳細" }).click();
+  await page.getByText("その他の操作（変更・取消など）",{exact:true}).click();
   await page.getByRole("button", { name: "変更依頼（試作）" }).click();
   await expect(page.getByRole("alert")).toContainText("理由");
   await page.getByLabel("判断・変更・差異の理由").fill("時間変更");
@@ -150,6 +151,7 @@ test("変更依頼・再申請・受入不可・取消と検索", async ({ page 
   await page.getByLabel("到着予定の変更").fill("14:00");
   await page.getByRole("button", { name: "変更内容で再申請を試す" }).click();
   await page.getByRole("button", { name: "受入不可（理由必須）" }).click();
+  await page.getByRole("button",{name:"理由を確認して受入不可にする（試作）"}).click();
   await expect(page.locator(".receiving-state-grid")).toContainText("受入不可");
   await nav(page, "受入管理").click();
   await expect(
@@ -158,7 +160,9 @@ test("変更依頼・再申請・受入不可・取消と検索", async ({ page 
   await expandLocationTrips(page, "茨城モデル採石場〈架空〉");
   await page.getByRole("button", { name: "TR-20260820-02の予約詳細" }).click();
   await page.getByLabel("判断・変更・差異の理由").fill("工事中止");
+  await page.getByText("その他の操作（変更・取消など）",{exact:true}).click();
   await page.getByRole("button", { name: "予約取消（理由必須）" }).click();
+  await page.getByRole("button",{name:"理由を確認して予約取消にする（試作）"}).click();
   await expect(page.locator(".receiving-state-grid")).toContainText("取消");
 });
 for (const theme of ["light", "dark"])

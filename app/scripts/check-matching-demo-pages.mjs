@@ -35,6 +35,9 @@ try {
       await route.fulfill({ response });
     });
     const page = await context.newPage();
+    page.setDefaultTimeout(15_000);
+    page.setDefaultNavigationTimeout(20_000);
+    console.log(`Checking static matching: ${theme} ${width}`);
     page.on("pageerror", error => errors.push(error.message));
     await page.goto(`${origin}${prefix}?entry=1`);
     await page.getByText("デモで試す", { exact: true }).click();
@@ -62,6 +65,7 @@ try {
     await page.locator(".journey-role-bar").getByRole("button", { name: "受入側の確認画面へ（デモ）", exact: true }).click();
     await page.locator(".role-receiving").waitFor();
     await review("受入側");
+    console.log(`Agreement reached: ${theme} ${width}`);
     await page.getByRole("heading", { name: "マッチング成立（デモ）", exact: true }).waitFor();
     await page.reload();
     await page.getByRole("button", { name: "成立内容を確認", exact: true }).click();
@@ -86,6 +90,8 @@ try {
       await page.getByRole("button", { name: "予約を承認（試作）", exact: true }).click();
       assert.match(await page.locator(".receiving-detail").innerText(), /予約確定/);
     }
+    console.log(`Two reservations approved: ${theme} ${width}`);
+    await page.getByRole("tab", {name:"予約条件",exact:true}).click();
     await page.getByRole("button", { name: "この案件の成立内容へ戻る", exact: true }).click();
     await page.getByRole("heading", { name: "マッチング成立（デモ）", exact: true }).waitFor();
     assert.match(await page.locator(".journey-after").innerText(), /承認済み 2便/);

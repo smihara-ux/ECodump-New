@@ -1,6 +1,8 @@
+import ReservationDetail from './ReservationDetail.jsx';
 import {useDemoTrips,writeDemoTrips,demoNotice} from '../demo/store.jsx';
 import {asReceiving,mergeReceiving,demoLocations,demoSites,demoCompany} from '../demo/model.mjs';
 import DailyCapacity from './DailyCapacity.jsx';
+import ReceivingVehicleSummary, {receivingVehicleExport} from './ReceivingVehicleSummary.jsx';
 import TripList,{demoReportRows,transportRows} from './TripList';
 import {downloadTransportWorkbook,reportTotals,formatReportQuantity} from '../reports/transportReport.mjs';
 import {DemoNotice} from '../review/Readability';
@@ -56,6 +58,7 @@ export function useReceivingWorkspace() {
   const [selectedLocation, setSelectedLocation] = useState("Y-01");
   const [reservationDraft, setReservationDraft] = useState(null);
   const [notice, setNotice] = useState("");
+  const [returnPage, setReturnPage] = useState('搬入予約・受付');
   return {
     locations,
     setLocations,
@@ -69,6 +72,8 @@ export function useReceivingWorkspace() {
     setReservationDraft,
     notice,
     setNotice,
+    returnPage,
+    setReturnPage,
   };
 }
 export function PrototypeNotice() {
@@ -90,6 +95,7 @@ const Field = ({ label, children }) => (
 
 export function ReceivingWorkspace({ page, model: m, navigate }) {
   const openTrip = (id) => {
+    m.setReturnPage?.(page);
     m.setSelectedTrip(id);
     navigate("搬入予約・受付");
   };
@@ -119,12 +125,13 @@ export function ReceivingWorkspace({ page, model: m, navigate }) {
           newReservation={newReservation}
         />
       )}
-      {page === "受入場所管理" && <><div className="receiving-prototype" role="note">容量の定義は未確定です。以下の数量設定はサンプルで、物理容量・月間処理能力・契約枠の空き容量を示しません。</div><Locations m={m} /><DailyCapacity locations={m.locations} trips={m.trips}/></>}
+      {page === "受入場所管理" && <><Locations m={m} /><details className="receiving-advanced"><summary>日次の受入枠を確認・設定</summary><p>数量設定はサンプルです。物理容量・月間処理能力・契約枠の空き容量を示しません。</p><DailyCapacity locations={m.locations} trips={m.trips}/></details></>}
       {page === "搬入予約・受付" && (
         <Reservations
           m={m}
           openTrip={openTrip}
           newReservation={newReservation}
+          navigate={navigate}
         />
       )}
       {page === "受入実績・帳票" && <Results m={m} openTrip={openTrip} navigate={navigate}/>}
@@ -145,6 +152,8 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
   const setQuery=value=>updateScreen({query:value});
   const setTraffic=value=>updateScreen({traffic:value});
   const setView=value=>updateScreen({view:value});
+  const status=screen.homeStatus||'すべて';
+  const setStatus=homeStatus=>updateScreen({homeStatus});
   const homeRef=useListPosition(`${scope}:home`);
   const [selection,setSelection]=useState(null);
   const show=(rows,kind,unit)=>setSelection({ids:rows.map(t=>t.id),kind,unit,date:day});
@@ -163,7 +172,7 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
         query,
       ),
   );
-  const counts = ['有効予定','未到着','待機','受入中','受入完了','取消','未確認伝票'].map(label=>[label,filtered.filter(filters[label]).length,Truck]);
+  const displayed=filtered.filter(t=>!filters[status]||filters[status](t));
   return (
     <div className="transport-page receiving-home" ref={homeRef}>
       <div className="receiving-sticky-controls"><div className="schedule-switches">
@@ -185,6 +194,7 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
             ))}
           </select>
         </Field>
+        <Field label="運搬・受付状態"><select value={status} onChange={e=>setStatus(e.target.value)}>{['すべて','有効予定','受入完了','受入待ち','取消','未到着','待機','受入中','未確認伝票'].map(s=><option key={s}>{s}</option>)}</select></Field>
         <Field label="混雑状況">
           <select value={traffic} onChange={(e) => setTraffic(e.target.value)}>
             {["すべて", "空きあり", "やや混雑", "混雑"].map((v) => (
@@ -204,20 +214,8 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
           直接予約を試す
         </button>}
       </div>
-      </div>      <div className="receiving-kpis">
-        {counts.map(([label, count, Icon]) => (
-          <article key={label}><button onClick={()=>show(filtered,label)} aria-label={`${label}の明細`}>
-            <span>
-              <Icon size={16} />
-              {day === baseDate ? label : label.replace("本日", "選択日の")}
-            </span>
-            <strong>
-              {count}
-              <small>便</small>
-            </strong></button>
-          </article>
-        ))}
       </div>
+      <ReceivingVehicleSummary rows={filtered} selected={status} onSelect={key=>setStatus(status===key?'すべて':key)}/>
       <QuantitySummary rows={filtered} onSelect={(kind,unit)=>show(filtered,kind,unit)}/>
       {selection&&<HomeDrilldown selection={selection} rows={m.trips} close={()=>setSelection(null)} m={m} navigate={navigate} openTrip={openTrip}/>}
       <div className="receiving-heading">
@@ -229,18 +227,15 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
             1便ごとの到着と受入状況。荷下ろし報告後も、実績確定までは「受入中」に含めます。
           </p>
         </div>
-        <Badge>
-          {new Set(filtered.filter(filters["予定"]).map((t) => t.vehicleId||t.vehicle).filter(v=>v!=="未配車")).size}台 / 延べ
-          {filtered.filter(filters["予定"]).length}便
-        </Badge>
+        <Badge>{receivingVehicleExport(displayed).予定台数}</Badge>
       </div>
       {view === "受入場所別"
         ? places
             .filter(
-              (l) => !query || filtered.some((t) => t.locationId === l.id),
+              (l) => (!query&&status==='すべて') || displayed.some((t) => t.locationId === l.id),
             )
             .map((l) => {
-              const list = filtered.filter((t) => t.locationId === l.id);
+              const list = displayed.filter((t) => t.locationId === l.id);
               return (
                 <article className="receiving-card" key={l.id}>
                   <div className="receiving-heading">
@@ -303,18 +298,18 @@ export function ReceivingHome({ m, openTrip, navigate, newReservation }) {
                 </article>
               );
             })
-        : [...new Set(filtered.map((t) => t.site))].map((site) => (
+        : [...new Set(displayed.map((t) => t.site))].map((site) => (
             <article className="receiving-card" key={site}>
               <h3>{site}</h3>
-              <SiteSummary rows={filtered.filter(t=>t.site===site)} onOpen={show}/>
+              <SiteSummary rows={displayed.filter(t=>t.site===site)} onOpen={show}/>
               <TripTable
-                trips={filtered.filter((t) => t.site === site)}
+                trips={displayed.filter((t) => t.site === site)}
                 locations={m.locations}
                 openTrip={openTrip}
               />
             </article>
           ))}
-      {!filtered.length && (
+      {!displayed.length && (
         <p className="receiving-empty">
           該当する予定便はありません。日付と絞り込み条件をご確認ください。
         </p>
@@ -499,7 +494,7 @@ function Locations({ m }) {
             </p>
           ) : (
             <>
-              <CapacityChart key={location.id} name={location.name} locationId={location.id}/><dl className="receiving-definitions">
+              <details className="receiving-advanced"><summary>容量グラフの表示例を見る（サンプル）</summary><CapacityChart key={location.id} name={location.name} locationId={location.id}/></details><dl className="receiving-definitions">
                 {[
                   ["所在地", location.address],
                   ["営業時間", location.hours],
@@ -550,23 +545,26 @@ function Locations({ m }) {
   );
 }
 
-function Reservations({ m, openTrip, newReservation }) {
-  const [filter, setFilter] = useState("すべて");
-  const [query, setQuery] = useState("");
+function Reservations({ m, openTrip, newReservation, navigate }) {
+  const [screen,update]=useReceivingView('demo:reservations',{filter:'すべて',query:'',date:''});
+  const {filter,query,date}=screen;
+  const setFilter=filter=>update({filter}),setQuery=query=>update({query});
+  const listRef=useListPosition('demo:reservations',!m.selectedTrip&&!m.reservationDraft);
   useEffect(()=>{const id=sessionStorage.getItem('ecodump-receiving-focus');if(id){sessionStorage.removeItem('ecodump-receiving-focus');m.setSelectedTrip(id);}},[]);
   const selected = m.trips.find((t) => t.id === m.selectedTrip);
-  const list = m.trips.filter(
-    (t) =>
-      (filter === "すべて" ||
-        t.reservation === filter ||
-        t.reception === filter) &&
-      `${t.id}${t.reservationId}${t.site}${t.vehicle}`.includes(query),
-  );
+  const list=m.trips.filter(t=>{
+    const matches=filter==='すべて'||t.reservation===filter||t.reception===filter||
+      (filter==='承認待ち'&&t.reservation==='申請中')||
+      (filter==='到着受付待ち'&&t.reservation==='予約確定'&&t.reception==='未到着')||
+      (filter==='数量確認待ち'&&t.driverReport&&t.receipt!=='実績確定'&&!['取消','受入不可'].includes(t.reservation));
+    const text=`${t.id} ${t.reservationId} ${t.site} ${t.partner} ${t.driver} ${t.vehicle} ${m.locations.find(l=>l.id===t.locationId)?.name||''}`.toLocaleLowerCase();
+    return matches&&(!date||t.date===date)&&text.includes(query.trim().toLocaleLowerCase());
+  });
   if (m.reservationDraft) return <ReservationForm m={m} />;
   if (selected)
-    return <ReservationDetail key={selected.id} trip={selected} m={m} />;
+    return <ReservationDetail key={`${selected.id}:${selected.assignmentVersion}`} trip={selected} m={m} navigate={navigate}/>;
   return (
-    <>
+    <section ref={listRef}>
       <div className="receiving-heading">
         <div>
           <h2>搬入予約・受付</h2>
@@ -579,10 +577,14 @@ function Reservations({ m, openTrip, newReservation }) {
         </button>
       </div>
       <div className="receiving-toolbar">
+        <Field label="予約日（空欄は全日）"><input type="date" value={date} onChange={e=>update({date:e.target.value})}/></Field>
         <Field label="予約・受付状態">
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             {[
               "すべて",
+              "承認待ち",
+              "到着受付待ち",
+              "数量確認待ち",
               "申請中",
               "変更依頼",
               "予約確定",
@@ -601,14 +603,17 @@ function Reservations({ m, openTrip, newReservation }) {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="便ID・予約ID・現場・車両"
+            placeholder="便ID・予約ID・現場・取引先・車両・担当"
           />
         </Field>
       </div>
+      <div className="receiving-filter-actions" aria-label="対応が必要な予約を絞り込む">{['すべて','承認待ち','到着受付待ち','数量確認待ち'].map(value=><button key={value} aria-pressed={filter===value} onClick={()=>setFilter(value)}>{value}</button>)}</div>
+      <div className="receiving-heading"><p role="status">{date||'全日'} · {filter} · {list.length}件{query&&` · 検索「${query}」`}</p>{(filter!=='すべて'||query||date)&&<button onClick={()=>update({filter:'すべて',query:'',date:''})}>予約の絞り込みを解除</button>}</div>
+      {!list.length&&<div className="receiving-empty"><p>現在の日付・状態・検索条件に一致する予約はありません。条件を変えるか、絞り込みを解除してください。</p></div>}
       <div className="receiving-card">
         <TripTable trips={list} locations={m.locations} openTrip={openTrip} />
       </div>
-    </>
+    </section>
   );
 }
 
@@ -740,290 +745,36 @@ function ReservationForm({ m }) {
   );
 }
 
-function ReservationDetail({ trip: t, m }) {
-  const [reason, setReason] = useState("");
-  const [eta, setEta] = useState(t.eta);
-  const [planned, setPlanned] = useState(t.planned);
-  const [actual, setActual] = useState(t.actual);
-  const [actualSoil, setActualSoil] = useState(t.actualSoil || t.soil);
-  const [error, setError] = useState("");
-  const [confirming, setConfirming] = useState(false);
-  const location = m.locations.find((l) => l.id === t.locationId);
-  const terminal =
-    t.receipt === "実績確定" || ["受入不可", "取消"].includes(t.reservation);
-  const act = (action) => {
-    try {
-      const input = {
-        reason,
-        eta,
-        planned,
-        actual,
-        actualSoil,
-        unit: t.unit,
-      };
-      m.setTrips((prev) =>
-        prev.map((row) => {
-          if (row.id !== t.id) return row;
-          if (row.matchAgreementId) {
-            if (row.assignmentVersion !== t.assignmentVersion) throw new Error("別の画面で便が変更されました。最新の内容を確認してください。");
-            if (["approve", "resubmit"].includes(action)) validateMatchingPlan(row.agreementSnapshot, { date: row.date, count: 1, quantity: Number(action === "resubmit" ? planned : row.planned), unit: row.unit, soil: row.soil, siteId: row.siteId, locationId: row.locationDatabaseId, time: row.departAt, arrival: action === "resubmit" ? eta : row.eta, requestKey: `review-${crypto.randomUUID()}` }, prev.filter(item => item.id !== row.id));
-          }
-          return transitionTrip(row, action, input);
-        }),
-      );
-      setError("");
-      setConfirming(false);
-      m.setNotice(
-        "状態を試作内で変更しました。DB保存・通知・相手への送信はしていません。",
-      );
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-  return (
-    <>
-      <button onClick={() => m.setSelectedTrip(null)}>← 予約一覧へ</button>
-      <article className="receiving-card receiving-detail">
-        <div className="receiving-heading">
-          <div>
-            <small>
-              {t.reservationId} · {t.source}
-            </small>
-            <h2>
-              {t.id} / {t.vehicleId ? `車両 第${t.rotation || t.sequence || "—"}便` : "未配車の予定便"}
-            </h2>
-          </div>
-          <Badge>{t.reservation}</Badge>
-        </div>
-        <div className="receiving-state-grid">
-          {[
-            ["条件合意", t.agreement],
-            ["予約", t.reservation],
-            ["運行", t.tripStatus],
-            ["受入実績", t.receipt],
-          ].map(([k, v]) => (
-            <div key={k}>
-              <small>{k}</small>
-              <b>{v}</b>
-            </div>
-          ))}
-        </div>
-        <dl className="receiving-definitions">
-          {[
-            ["搬入日・到着予定", `${t.date} ${t.eta}`],
-            ["搬出元 / 取引先", `${t.site} / ${t.partner}`],
-            ["受入場所", location?.name],
-            ["入口", location?.entrance],
-            ["車両 / ドライバー", `${t.vehicle} / ${t.driver}`],
-            ["予定数量 / 土質", `${t.planned} ${t.unit} / ${t.soil}`],
-            [
-              "実績数量 / 土質",
-              t.actual === ""
-                ? "未入力"
-                : `${t.actual} ${t.unit} / ${t.actualSoil}`,
-            ],
-            ["受付状態", t.reception],
-            [
-              "ドライバー荷下ろし報告",
-              t.driverReport
-                ? "報告済み（サンプル）・実績確定とは別"
-                : "未報告",
-            ],
-            ["遅延", t.delay || "なし"],
-            ["判断理由", t.reason || "—"],
-            ["差異理由", t.differenceReason || "—"],
-          ].map(([k, v]) => (
-            <div key={k}>
-              <dt>{k}</dt>
-              <dd>{v}</dd>
-            </div>
-          ))}
-        </dl>
-        {t.matchAgreementId && <div className="receiving-card"><b>同じ成立案件からの予約</b><p>搬出案件 {t.sourceCaseId} · 受入案件 {t.targetCaseId}</p><p>合意 {t.matchAgreementId} 第{t.agreementRevision}版 · 相談 {t.consultationId}</p><p>合意期間 {t.agreementSnapshot.terms.start}〜{t.agreementSnapshot.terms.end} · 土質 {t.agreementSnapshot.terms.soil}</p><button className="outline" onClick={() => window.location.assign(matchingRolePageUrl("receiving", "matching", t.id))}>この案件の成立内容へ戻る</button><button className="outline" onClick={() => {sessionStorage.setItem("ecodump-dispatch-focus",t.id);sessionStorage.setItem("ecodump-construction-schedule-filters",JSON.stringify({date:t.date,field:t.site}));window.location.assign(matchingRolePageUrl("construction","dispatch"));}}>施工側で予定・配車を確認</button></div>}
-        {!terminal && (
-          <>
-            <div className="receiving-form-grid">
-              <Field label="判断・変更・差異の理由">
-                <textarea
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder="変更依頼・受入不可・取消・遅延・数量差異では必須"
-                />
-              </Field>
-              {["未到着"].includes(t.reception) && (
-                <Field label="到着予定の変更">
-                  <input
-                    type="time"
-                    value={eta}
-                    onChange={(e) => setEta(e.target.value)}
-                  />
-                </Field>
-              )}
-              {t.reservation === "変更依頼" && (
-                <Field label={`変更後の予定数量（${t.unit}）`}>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={planned}
-                    onChange={(e) => setPlanned(e.target.value)}
-                  />
-                </Field>
-              )}
-            </div>
-            <div className="receiving-actions">
-              {t.reservation === "申請中" && (
-                <>
-                  <button className="primary" onClick={() => act("approve")}>
-                    予約を承認（試作）
-                  </button>
-                  <button onClick={() => act("change")}>
-                    変更依頼（試作）
-                  </button>
-                </>
-              )}
-              {t.reservation === "変更依頼" && !t.matchAgreementId && (
-                <button className="primary" onClick={() => act("resubmit")}>
-                  変更内容で再申請を試す
-                </button>
-              )}
-              {t.reservation === "予約確定" && t.reception === "未到着" && (
-                <>
-                  <button className="primary" onClick={() => act("arrive")}>
-                    到着受付（試作）
-                  </button>
-                  <button onClick={() => act("delay")}>
-                    遅延・到着予定を反映（試作）
-                  </button>
-                </>
-              )}
-              {t.reception === "待機" && (
-                <button className="primary" onClick={() => act("start")}>
-                  受入開始（試作）
-                </button>
-              )}
-              {!t.driverReport && (
-                <button onClick={() => act("reject")}>
-                  受入不可（理由必須）
-                </button>
-              )}
-              {t.reception === "未到着" && (
-                <button onClick={() => act("cancel")}>
-                  予約取消（理由必須）
-                </button>
-              )}
-            </div>
-            {t.reception === "受入中" && (
-              <div className="receiving-private">
-                <h3>ドライバー報告の受信を試す</h3>
-                <p>
-                  実際のアプリとは未接続です。このボタンは外部報告のサンプルを反映するだけで、受入実績を確定しません。
-                </p>
-                <button onClick={() => act("driver-report")}>
-                  荷下ろし完了のサンプル報告を反映
-                </button>
-              </div>
-            )}
-            {t.driverReport && (
-              <div className="receiving-private">
-                <h3>受入内容の確認</h3>
-                <p>
-                  予定 {t.planned} {t.unit} /
-                  実績を別に入力してください。単位の自動換算は行いません。
-                </p>
-                <div className="receiving-form-grid">
-                  <Field label={`実績数量（${t.unit}）`}>
-                    <input
-                      type="number"
-                      min="0.1"
-                      step="0.1"
-                      value={actual}
-                      onChange={(e) => setActual(e.target.value)}
-                    />
-                  </Field>
-                  <Field label="確認した土質">
-                    <select
-                      value={actualSoil}
-                      onChange={(e) => setActualSoil(e.target.value)}
-                    >
-                      {soils.map((v) => (
-                        <option key={v}>{v}</option>
-                      ))}
-                    </select>
-                  </Field>
-                </div>
-                <div className="receiving-actions">
-                  <button onClick={() => act("review")}>
-                    受入内容を確認（試作）
-                  </button>
-                  {t.receipt === "内容確認済み" && (
-                    <button
-                      className="primary"
-                      onClick={() => setConfirming(true)}
-                    >
-                      実績確定の確認へ
-                    </button>
-                  )}
-                </div>
-                {confirming && (
-                  <div
-                    className="receiving-confirm"
-                    role="group"
-                    aria-label="実績確定の確認"
-                  >
-                    <b>
-                      確認済み数量 {t.actual} {t.unit} / {t.actualSoil}
-                    </b>
-                    <p>
-                      この確認済み値を試作内で確定します。未反映の入力値は含みません。正式な受入証明は発行されません。
-                    </p>
-                    <button className="primary" onClick={() => act("confirm")}>
-                      この内容で実績確定を試す
-                    </button>
-                    <button onClick={() => setConfirming(false)}>戻る</button>
-                  </div>
-                )}
-              </div>
-            )}
-          </>
-        )}
-        {t.receipt === "実績確定" && (
-          <div className="receiving-private">
-            <h3>実績確定（試作）</h3>
-            <p>
-              {t.actual} {t.unit} · {t.confirmedBy} · {t.confirmedAt}
-            </p>
-            <p>正式記録は未保存です。確定後の訂正申請は未実装です。</p>
-          </div>
-        )}
-        {error && (
-          <p className="receiving-error" role="alert">
-            {error}
-          </p>
-        )}
-        <details>
-          <summary>この試作内の操作履歴</summary>
-          <ul>
-            {t.history.map((entry, i) => (
-              <li key={i}>{entry}</li>
-            ))}
-          </ul>
-        </details>
-      </article>
-    </>
-  );
-}
 
-function Results({m,openTrip,navigate}){
- const [screen,update]=useReceivingView('demo',{date:demoDate,locationId:'すべて',query:''});
- const end=screen.resultsEnd||screen.date, setEnd=resultsEnd=>update({resultsEnd}), source=screen.resultsSource||'', setSource=resultsSource=>update({resultsSource});
- const [error,setError]=useState(''),[busy,setBusy]=useState(false);
- const root=useListPosition('demo:results');
- const receiptState=screen.receiptState||'すべて';
- const csv=()=>{const url=URL.createObjectURL(new Blob([receiptCsv(trips)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='ECO_DUMP_受入実績_試作.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
- const trips=m.trips.filter(t=>(receiptState==='すべて'||t.receipt===receiptState)&&t.date>=screen.date&&t.date<=end&&(screen.locationId==='すべて'||t.locationId===screen.locationId)&&(!source||t.site===source)&&`${t.id}${t.site}${t.vehicle}${m.locations.find(l=>l.id===t.locationId)?.name}`.includes(screen.query||''));
- const rows=demoReportRows(trips,m.locations);
- return <section ref={root}><button onClick={()=>navigate('搬出・受入スケジュール')}>受入管理へ戻る</button><h2>受入実績・帳票（共有デモ）</h2><p>画面とExcelは同じ対象便。予定・報告・受入確定数量を分離。確定合計は受入確定値のみ、取消後の確定実績は保持。tとm³は別集計です。</p><div className="receiving-toolbar receiving-sticky-controls"><DateControls value={screen.date} onChange={date=>{update({date});setEnd(date);}} todayValue={demoDate}/><label>期間終了<input type="date" min={screen.date} value={end} onChange={e=>e.target.value&&setEnd(e.target.value<screen.date?screen.date:e.target.value)}/></label><label>受入場所<select value={screen.locationId} onChange={e=>update({locationId:e.target.value})}><option>すべて</option>{m.locations.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</select></label><label>搬出元<select value={source} onChange={e=>setSource(e.target.value)}><option value="">すべて</option>{[...new Set(m.trips.map(t=>t.site))].map(s=><option key={s}>{s}</option>)}</select></label><label>検索<input value={screen.query} onChange={e=>update({query:e.target.value})}/></label><label>実績確定状態<select value={receiptState} onChange={e=>update({receiptState:e.target.value})}>{['すべて','未確定','内容確認済み','実績確定'].map(s=><option key={s}>{s}</option>)}</select></label><button onClick={csv}>試作CSVを出力</button><button disabled={busy} onClick={async()=>{setBusy(true);try{await downloadTransportWorkbook(rows,{context:'受入',period:`${screen.date}〜${end}`,sample:true,filters:{受入場所:m.locations.find(l=>l.id===screen.locationId)?.name||screen.locationId,搬出元:source||'すべて',検索:screen.query||'指定なし',実績確定状態:receiptState}});}catch(e){setError(e.message);}finally{setBusy(false);}}}>{busy?'作成中…':'Excel帳票を出力'}</button></div>{error&&<p role="alert">{error}</p>}{reportTotals(rows).map(t=><p className="receiving-report-total" key={t.unit}><b>{t.unit}</b><span>対象 {t.count}件 · {t.vehicles}台</span><span>有効予定 {formatReportQuantity(t.planned)} {t.unit}</span><span>報告 {formatReportQuantity(t.reported)} {t.unit}</span><span>受入確定 {formatReportQuantity(t.confirmed)} {t.unit}</span><span>未確定 {t.pending}件 · 取消・受入不可 {t.cancelled}件</span></p>)}<TripList rows={rows} onOpen={openTrip}/></section>;
+function Results({m,openTrip,navigate}) {
+  const [screen,update]=useReceivingView('demo',{date:demoDate,locationId:'すべて',query:''});
+  const end=screen.resultsEnd&&screen.resultsEnd>=screen.date?screen.resultsEnd:screen.date;
+  const source=screen.resultsSource||'',receiptState=screen.receiptState||'すべて';
+  const [error,setError]=useState(''),[busy,setBusy]=useState(false);
+  const root=useListPosition('demo:results');
+  const trips=m.trips.filter(t=>(receiptState==='すべて'||t.receipt===receiptState)&&t.date>=screen.date&&t.date<=end&&(screen.locationId==='すべて'||t.locationId===screen.locationId)&&(!source||t.site===source)&&`${t.id}${t.site}${t.vehicle}${m.locations.find(l=>l.id===t.locationId)?.name}`.includes(screen.query||''));
+  const rows=demoReportRows(trips,m.locations);
+  const locationName=m.locations.find(l=>l.id===screen.locationId)?.name||screen.locationId;
+  const csv=()=>{const url=URL.createObjectURL(new Blob([receiptCsv(trips)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='ECO_DUMP_受入実績_試作.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+  async function excel(){setBusy(true);try{await downloadTransportWorkbook(rows,{context:'受入',period:`${screen.date}〜${end}`,sample:true,filters:{受入場所:locationName,搬出元:source||'すべて',検索:screen.query||'指定なし',実績確定状態:receiptState,...receivingVehicleExport(trips)}});}catch(e){setError(e.message);}finally{setBusy(false);}}
+  return <section ref={root}>
+    <div className="receiving-heading"><div><h2>受入実績・帳票（共有デモ）</h2><p>選択した開始日〜終了日を含む期間内累計です。画面とExcelは同じ絞り込み条件で集計します。</p></div><button onClick={()=>navigate('搬出・受入スケジュール')}>受入管理へ戻る</button></div>
+    <div className="receiving-toolbar receiving-sticky-controls">
+      <DateControls label="開始日" value={screen.date} onChange={date=>update({date,resultsEnd:end<date?date:end})} todayValue={demoDate}/>
+      <Field label="終了日"><input type="date" min={screen.date} value={end} onChange={e=>e.target.value&&update({resultsEnd:e.target.value<screen.date?screen.date:e.target.value})}/></Field>
+      <Field label="受入場所"><select value={screen.locationId} onChange={e=>update({locationId:e.target.value})}><option>すべて</option>{m.locations.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}</select></Field>
+      <Field label="搬出元"><select value={source} onChange={e=>update({resultsSource:e.target.value})}><option value="">すべて</option>{[...new Set(m.trips.map(t=>t.site))].map(s=><option key={s}>{s}</option>)}</select></Field>
+      <Field label="検索"><input value={screen.query} onChange={e=>update({query:e.target.value})}/></Field>
+      <Field label="実績確定状態"><select value={receiptState} onChange={e=>update({receiptState:e.target.value})}>{['すべて','未確定','内容確認済み','実績確定'].map(s=><option key={s}>{s}</option>)}</select></Field>
+      <button onClick={csv}>試作CSVを出力</button><button className="primary" disabled={busy} onClick={excel}>{busy?'作成中…':'Excel帳票を出力'}</button>
+    </div>
+    {error&&<p role="alert">{error}</p>}
+    <p className="receiving-period-total" role="status">期間内累計：{screen.date}〜{end}（開始日・終了日を含む） · 受入場所 {locationName} · 搬出元 {source||'すべて'} · 状態 {receiptState}</p>
+    <ReceivingVehicleSummary rows={trips} period="期間内の台数"/>
+    {reportTotals(rows).map(t=><p className="receiving-report-total" key={t.unit}><b>{t.unit}</b><span>対象 {t.count}件 · {t.vehicles}台</span><span>有効予定 {formatReportQuantity(t.planned)} {t.unit}</span><span>報告 {formatReportQuantity(t.reported)} {t.unit}</span><span>受入確定 {formatReportQuantity(t.confirmed)} {t.unit}</span><span>未確定 {t.pending}件 · 取消・受入不可 {t.cancelled}件</span></p>)}
+    <TripList rows={rows} onOpen={openTrip}/>
+    <details className="receiving-advanced"><summary>集計の対象・数量の数え方</summary><p>予定・ドライバー報告・受入確定を分け、確定合計には受入側で確定した数量だけを計上します。取消後の確定実績は保持し、tとm³は合算しません。全期間の計画量とは別の集計です。</p></details>
+  </section>;
 }
 
 function Settings({ navigate, newReservation }) {

@@ -1,3 +1,4 @@
+import {reservationStep} from './reservationWorkflow.mjs';
 import { transportRows, formatReportQuantity } from "../reports/transportReport.mjs";
 const time = (v) =>
   v && !Number.isNaN(new Date(v).getTime())
@@ -11,6 +12,7 @@ const time = (v) =>
     : "未記録";
 export function demoReportRows(trips, locations) {
   return trips.map((t) => ({
+    nextStep: reservationStep(t),
     id: t.id,
     bookingId: t.reservationId,
     date: t.date,
@@ -93,11 +95,8 @@ export default function TripList({ rows, onOpen }) {
                   refused: "受入不可",
                 }[r.status] || r.status}
                 <br />
-                到着報告：{time(r.arrival)}
-                <br />
-                受付：{time(r.entry)}
-                <br />
-                荷下ろし報告：{time(r.unloaded)}
+                {r.nextStep&&<small className="receiving-row-next">対応：{r.nextStep.owner}<br/>次：{r.nextStep.next}</small>}
+                <details><summary>受付・荷下ろしの記録</summary>到着報告：{time(r.arrival)}<br/>受付：{time(r.entry)}<br/>荷下ろし報告：{time(r.unloaded)}</details>
               </td>
               <td data-label="数量・伝票">
                 予定：{formatReportQuantity(r.planned)} {r.unit}

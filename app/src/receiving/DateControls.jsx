@@ -3,6 +3,7 @@ export default function DateControls({
   value,
   onChange,
   todayValue = today(),
+  label = "表示日",
 }) {
   return (
     <div className="receiving-toolbar" role="group" aria-label="日付選択">
@@ -10,9 +11,9 @@ export default function DateControls({
       <button onClick={() => onChange(todayValue)}>今日</button>
       <button onClick={() => onChange(moveDay(value, 1))}>翌日</button>
       <label>
-        カレンダー
+        {label === "表示日" ? "カレンダー" : label}
         <input
-          aria-label="表示日"
+          aria-label={label}
           type="date"
           value={value}
           onInput={(e) => {

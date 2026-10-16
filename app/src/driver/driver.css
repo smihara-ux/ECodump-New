@@ -37,6 +37,15 @@
 .driver-preview * {
   box-sizing: border-box;
 }
+.driver-preview .driver-count-disclosure { margin:16px 0; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--surface); }
+.driver-preview .driver-count-disclosure > summary { min-height:44px; align-content:center; cursor:pointer; font-weight:700; }
+.driver-preview .driver-vehicle-metrics { display:grid; gap:8px; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.driver-preview .driver-vehicle-metrics > :is(button,article) { padding:12px; background:var(--raised); color:var(--text); border:1px solid var(--line); border-radius:8px; font:inherit; }
+.driver-preview .driver-vehicle-metrics > button.active { border-color:var(--lime); }
+.driver-preview .driver-vehicle-metrics .vehicle-actual { font-size:25px; }
+.driver-preview .driver-count-disclosure .vehicle-count-explanation { font-size:12px; }
+.driver-preview .driver-count-disclosure p { font-size:12px; margin:8px 0; }
+.driver-preview .driver-period-total { font-size:13px; overflow-wrap:anywhere; }
 .driver-preview button,
 .driver-dialog button {
   font: inherit;
@@ -1068,3 +1077,23 @@ body:has(.driver-preview) {
 .driver-preview .trip-card :is(strong,small,span) { overflow-wrap:anywhere; }
 .driver-preview :is(.icon-button,.back-button,.driver-bottom button) { min-height:44px; min-width:44px; }
 .driver-preview button:focus-visible { outline:3px solid var(--lime); outline-offset:2px; }
+/* Three-step receipt input uses the existing phone, palette and button styles. */
+.driver-app .receipt-steps {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;padding:0;gap:8px;margin:16px 0;}
+.driver-app .receipt-steps li {display:grid;justify-items:center;gap:5px;padding:10px 4px;border-bottom:2px solid var(--line);font-size:12px;line-height:1.6;}
+.driver-app .receipt-steps li[aria-current=step] {border-color:var(--lime);font-weight:700;}
+.driver-app .receipt-steps li span {display:grid;place-items:center;width:24px;height:24px;border:1px solid var(--line);border-radius:50%;}
+.driver-app .receipt-actions {display:grid;gap:10px;margin:16px 0;}
+.driver-app .receipt-actions button {width:100%;}
+.driver-app .receipt-photo {display:block;max-width:100%;max-height:260px;object-fit:contain;margin:12px auto;border:1px solid var(--line);border-radius:8px;}
+.driver-app .receipt-field-error {border-left:3px solid #c68230;padding-left:8px;color:var(--text);line-height:1.7;}
+.driver-app .demo-receipt [aria-invalid=true] {border-color:#c68230;}
+.driver-app .driver-next-action {padding:12px;border-left:3px solid var(--lime);margin:12px 0;line-height:1.7;font-size:13px;}
+.driver-app .driver-next-action b,.driver-app .driver-next-action span {display:block;}
+.driver-preview {--receipt-touch-height:48px;}
+.driver-app .demo-receipt :is(input,select,button),.driver-app .driver-next-action button {min-height:var(--receipt-touch-height);}
+@media(max-height:930px),(max-width:450px){.driver-preview {--receipt-touch-height:54px;}}
+@media(max-width:370px){.driver-preview {--receipt-touch-height:64px;}}
+@media(max-height:800px){.driver-preview {--receipt-touch-height:60px;}}
+@media(max-height:680px){.driver-preview {--receipt-touch-height:72px;}}
+
+.driver-app .demo-receipt :is(input,select) {padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);}

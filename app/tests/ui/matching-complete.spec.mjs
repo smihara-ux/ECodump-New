@@ -72,6 +72,7 @@ for (const theme of ["light", "dark"]) for (const width of [390, 1440]) {
       await page.getByRole("button", { name: "予約を承認（試作）", exact: true }).click();
       await expect(page.locator(".receiving-detail")).toContainText("予約確定");
     }
+    await page.getByRole("tab",{name:"予約条件",exact:true}).click();
     await page.getByRole("button", { name: "この案件の成立内容へ戻る", exact: true }).click();
     await expect(page.locator(".journey-after")).toContainText("承認済み 2便");
     await expectReservationTextFits(page);
@@ -111,8 +112,10 @@ test("requested changes are resubmitted by construction and need receiving appro
   await registerAndAgree(page); const rows = await createPlans(page);
   await page.goto(`/?preview=app&role=receiving&page=receiving-reservations&demo=1&matchTrip=${rows[0].id}`);
   await page.getByLabel("判断・変更・差異の理由", { exact: true }).fill("到着予定を調整してください");
+  await page.getByText("その他の操作（変更・取消など）",{exact:true}).click();
   await page.getByRole("button", { name: "変更依頼（試作）", exact: true }).click();
   await expect(page.getByRole("button", { name: "変更内容で再申請を試す", exact: true })).toHaveCount(0);
+  await page.getByRole("tab",{name:"予約条件",exact:true}).click();
   await page.getByRole("button", { name: "施工側で予定・配車を確認", exact: true }).click();
   const form = page.getByRole("form", { name: "予約の修正・再申請", exact: true });
   await form.getByLabel("再申請の受入指定時刻", { exact: true }).fill("10:30");
@@ -149,6 +152,7 @@ for (const theme of ["light", "dark"]) for (const width of [390, 1440]) test(`TO
 
 test("source-site vertical chart shows scoped same-unit trips and maintains the existing state chart", async ({ page }) => {
   await page.goto("/?preview=app&role=receiving&page=receiving-locations&demo=1");
+  await page.getByText("容量グラフの表示例を見る（サンプル）",{exact:true}).click();
   await page.getByRole("button", { name: "搬出元現場別", exact: true }).click();
   const chart = page.getByRole("region", { name: "搬出元現場別の数量グラフ", exact: true });
   await expect(chart).toContainText("成田空港モデル現場 A工区");
@@ -226,6 +230,7 @@ test("cancelled assigned matching trips are excluded from current assignment and
   await registerAndAgree(page); const rows = await createPlans(page);
   await page.goto(`/?preview=app&role=receiving&page=receiving-reservations&demo=1&matchTrip=${rows[0].id}`);
   await page.getByRole("button", { name: "予約を承認（試作）", exact: true }).click();
+  await page.getByRole("tab",{name:"予約条件",exact:true}).click();
   await page.getByRole("button", { name: "施工側で予定・配車を確認", exact: true }).click();
   let dialog = page.getByRole("dialog");
   await page.getByRole("tab", { name: "割当", exact: true }).click();

@@ -144,9 +144,9 @@ test('company editing draft survives a different module and reload',async({page}
 test('receiving control counts remain scoped and clicking assigned filters the actual trips',async({page})=>{
  await page.goto('/?preview=app&role=receiving&page=control&demo=1');
  await expect(page.locator('.timeline-panel header dl')).toHaveCount(0);
- await page.getByRole('button',{name:/配車済み\s*4\s*便/}).click();
+ await page.getByRole('combobox',{name:'状態',exact:true}).selectOption('配車済み');
  await expect(page.locator('.timeline-list > button')).toHaveCount(4);
- await expect(page.locator('.control-summary')).toContainText('4');
+ await expect(page.locator('.vehicle-metrics > button')).toHaveCount(4);
  await page.getByRole('combobox',{name:'受入場所',exact:true}).selectOption('栃木モデル採石場〈架空〉');
  await expect(page.locator('.timeline-list > button')).toHaveCount(2);
  await expect(page.locator('.timeline-panel header')).toContainText('選択中：TR-20260820-01');

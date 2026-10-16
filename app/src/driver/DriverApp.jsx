@@ -4,10 +4,13 @@ import DriverConfirmation from './DriverConfirmation.jsx';
 import DemoInbox from './DemoInbox.jsx';
 import DemoReceipt, {DemoReceiptSummary} from './DemoReceipt.jsx';
 import DayControls from './DayControls.jsx';
+import DriverVehicleSummary from './DriverVehicleSummary.jsx';
+import {readDriverView,writeDriverView,driverReceiptLabel,driverNextStep} from './driverView.mjs';
+import {matchesTripState} from '../construction/operationsModel.mjs';
 import {nextAssignment} from './dayView.mjs';
 import { publicDemo } from '../publicDemo.mjs';
 import PhoneStatus from './PhoneStatus.jsx';
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -159,12 +162,14 @@ const navs = [
 ];
 
 export default function DriverApp() {
+  const [initialView]=useState(readDriverView);
   const sharedTrips=useDemoTrips();
   const trips=sharedTrips.map(asDriver);
   const [acknowledgements,setAcknowledgements]=useState(()=>{try{return JSON.parse(localStorage.getItem("ecodump-driver-confirmations-v1")||"{}");}catch{return {};}});
   const confirmed=(t)=>Boolean(acknowledgements[`${t.date}:${t.id}:${t.driverId}:${t.vehicleId}:${t.assignmentVersion}`]);
-  const [date,setDate]=useState(businessDate);
-  const [endDate,setEndDate]=useState(businessDate);
+  const [date,setDateValue]=useState(initialView.date);
+  const [endDate,setEndDate]=useState(initialView.endDate);
+  const setDate=value=>{setDateValue(value);setEndDate(end=>end<value?value:end);};
   const [allEvents, setEvents] = useState([]);
   const events=allEvents.filter(e=>trips.some(t=>t.id===e.tripId&&(e.businessDay||businessDate(new Date(e.at)))===t.date));
   const [ready, setReady] = useState(false);
@@ -172,7 +177,7 @@ export default function DriverApp() {
   const busyRef = useRef(false);
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
-  const [tab, setTab] = useState("today");
+  const [tab, setTab] = useState(initialView.tab);
   const [selected, setSelected] = useState(null);
   const [dialog, setDialog] = useState(null);
   const [theme, setTheme] = useState(() => {
@@ -182,7 +187,8 @@ export default function DriverApp() {
       return "light";
     }
   });
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState(initialView.filter);
+  const [dayFilter,setDayFilter]=useState(initialView.state);
   const [issueType, setIssueType] = useState("遅延");
   const [memo, setMemo] = useState("");
   const [photos, setPhotos] = useState([]);
@@ -191,13 +197,16 @@ export default function DriverApp() {
   const [demoState, setDemoState] = useState("unsent");
   const [demoNotice, setDemoNotice] = useState("");
   const content = useRef(null);
+  const listScroll=useRef(initialView.scroll);
   const trip = trips.filter(t=>t.driverId===DEMO_DRIVER).find((t) => t.id === selected);
   const ownTrips=trips.filter(t=>t.driverId===DEMO_DRIVER);
   const todays = ownTrips.filter(t=>t.date===date);
+  const visibleToday=todays.filter(t=>matchesTripState(t,dayFilter));
   const dayItems=todays.map(t=>({id:t.id,sequence:t.sequence,status:t.cancelled?'cancelled':isHeld(t.id,events)?'refused':['assigned','site_arrived','in_transit','receiver_arrived','unloaded'][tripStage(t,events)],actual:t.confirmed!=null?{quantity:t.confirmed}:null,receiptStatus:t.slip==='確認済み'?'confirmed':'pending'}));
   const nextChoice=nextAssignment(dayItems);
   const next=ownTrips.find(t=>t.id===nextChoice.trip?.id);
   const currentStage = trip ? tripStage(trip, events) : 0;
+  const nextStep=trip?driverNextStep(trip,{stage:currentStage,acknowledged:confirmed(trip),held:isHeld(trip.id,events),isNext:next?.id===trip.id}):null;
   const pending = events.filter((e) => e.delivery === "unsent").length;
   const history = ownTrips
     .filter(t=>t.date>=date&&t.date<=endDate)
@@ -212,9 +221,8 @@ export default function DriverApp() {
       .catch((e) => setError(e.message));
   }, []);
   useEffect(()=>{const restore=()=>{if(document.visibilityState==='visible'&&!busyRef.current)readDrafts().then(setEvents).catch(e=>setError(e.message));};window.addEventListener('focus',restore);window.addEventListener('online',restore);document.addEventListener('visibilitychange',restore);return()=>{window.removeEventListener('focus',restore);window.removeEventListener('online',restore);document.removeEventListener('visibilitychange',restore);};},[]);
-  useEffect(() => {
-    content.current?.scrollTo(0, 0);
-  }, [tab, selected]);
+  useLayoutEffect(() => {content.current?.scrollTo(0,selected?0:listScroll.current[tab]||0);},[tab,selected]);
+  useEffect(()=>{writeDriverView({tab,date,endDate,filter,state:dayFilter,scroll:listScroll.current});},[tab,date,endDate,filter,dayFilter]);
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(""), 4500);
@@ -230,6 +238,7 @@ export default function DriverApp() {
     }
   };
   const chooseTab = (value) => {
+    if(!selected)listScroll.current[tab]=content.current?.scrollTop||0;
     setTab(value);
     setSelected(null);
     setError("");
@@ -351,6 +360,8 @@ export default function DriverApp() {
     }
   };
   const openTrip = (id) => {
+    listScroll.current[tab]=content.current?.scrollTop||0;
+    writeDriverView({tab,date,endDate,filter,state:dayFilter,scroll:listScroll.current});
     setSelected(id);
     setError("");
   };
@@ -476,7 +487,7 @@ export default function DriverApp() {
                   onClick={() => setSelected(null)}
                 >
                   <ArrowLeft size={18} />
-                  {tab === "history" ? "運行履歴" : "今日の運行"}へ戻る
+                  {navs.find(([key])=>key===tab)?.[2]||'今日の運行'}へ戻る
                 </button>
                 <div className="eyebrow">
                   {trip.date} · 本人の当日{trip.sequence}便目
@@ -495,6 +506,7 @@ export default function DriverApp() {
                       : "端末内の仮進捗"}
                   </small>
                 </div>
+                <div className="driver-next-action" aria-label="現在の状態と次の対応"><b>{nextStep.state}</b><span>対応：{nextStep.owner}</span><p>{nextStep.next}</p>{nextStep.receipt&&<button className="secondary" onClick={()=>{const target=document.getElementById('demo-receipt'),container=content.current;if(target&&container)container.scrollTo({top:container.scrollTop+target.getBoundingClientRect().top-container.getBoundingClientRect().top,behavior:'smooth'});}}>この便の伝票・数量を確認</button>}</div>
                 <DriverConfirmation trip={trip} acknowledged={confirmed(trip)} onConfirm={()=>{const key=`${trip.date}:${trip.id}:${trip.driverId}:${trip.vehicleId}:${trip.assignmentVersion}`;try{const next={...acknowledgements,[key]:true};localStorage.setItem('ecodump-driver-confirmations-v1',JSON.stringify(next));setAcknowledgements(next);}catch{setError('確認状態を端末に保存できません。');}}} onMismatch={()=>{setIssueType('その他');setMemo('本人・車両・行先が割当内容と異なります。');setDialog('issue');}}/>
                 {currentStage<4&&trip.baseStage===0&&<button className="primary" disabled={!ready||busy||trip.cancelled||next?.id!==trip.id||!confirmed(trip)||trip.reservation!=="予約確定"} onClick={()=>setDialog('stage')}>次の操作：{stages[currentStage+1]}を報告</button>}
                 <section className="detail-section">
@@ -714,26 +726,29 @@ export default function DriverApp() {
                   <h1>{date===businessDate()?'今日の運行':'指定日の運行'}</h1>
                   <p>{demoDrivers[0].name} さん、お疲れさまです。</p>
                 </div>
-                <DayControls date={date} onDate={setDate} items={dayItems}/>
+                <DayControls date={date} onDate={setDate} items={dayItems} hideProgress/>
                 <p className="muted">進捗は端末内の表示例です。実API・受入側には未送信です。</p>
-                {next ? (
+                {next && dayFilter==='すべて' ? (
                   <TripCard item={next} featured />
-                ) : (
+                ) : dayFilter==='すべて' ? (
                   <div className="empty-state">
                     <ShieldCheck />
                     <h2>{todays.length?'次の運行なし':'対象日の割当なし'}</h2>
                     <p>{nextChoice.reason}</p>
                   </div>
-                )}
+                ) : null}
+                <DriverVehicleSummary rows={todays} period="対象日の台数" selected={dayFilter} onSelect={key=>setDayFilter(dayFilter===key?'すべて':key)}/>
+                <label className="field">表示する運搬<select value={dayFilter} onChange={e=>setDayFilter(e.target.value)}>{['すべて','有効予定','受入完了','受入待ち','取消'].map(s=><option key={s}>{s}</option>)}</select></label>
                 <div className="section-title">
                   <h2>{date===businessDate()?'本日のスケジュール':'指定日のスケジュール'}</h2>
                   <small>実車両 {new Set(todays.filter(t=>!t.cancelled).map(t=>t.vehicleId)).size}台 · 本人の当日{todays.length}便</small>
                 </div>
-                {todays
-                  .filter((t) => t.id !== next?.id)
+                {visibleToday
+                  .filter((t) => dayFilter!=='すべて'||t.id !== next?.id)
                   .map((t) => (
                     <TripCard key={t.id} item={t} />
                   ))}
+                {!visibleToday.length&&<p role="status">この条件に該当する運搬はありません。</p>}
                 <button
                   className="queue-link"
                   onClick={() => chooseTab("profile")}
@@ -749,7 +764,9 @@ export default function DriverApp() {
             ) : tab === "history" ? (
               <>
                 <div className="eyebrow">TRIP HISTORY</div>
-                <h1>運行履歴</h1><DayControls date={date} onDate={setDate} end={endDate} onEnd={setEndDate} items={history.map(t=>({id:t.id,status:t.cancelled?'cancelled':tripStage(t,events)===4?'unloaded':'assigned'}))}/>
+                <h1>運行履歴</h1><DayControls date={date} onDate={setDate} end={endDate} onEnd={setEndDate} hideProgress items={history.map(t=>({id:t.id,status:t.cancelled?'cancelled':tripStage(t,events)===4?'unloaded':'assigned'}))}/>
+                <p className="driver-period-total">期間内累計：{date}〜{endDate}（開始日・終了日を含む）</p>
+                <DriverVehicleSummary rows={history} period="期間内の台数"/>
                 <p className="muted">
                   過去のサンプル記録と、荷下ろし報告の下書き
                 </p>
@@ -765,7 +782,7 @@ export default function DriverApp() {
                   history.map((t) => (
                     <div key={t.id}>
                       <div className="history-date">
-                        {t.date} · 受入実績は未確定
+                        {t.date} · {driverReceiptLabel(t)}
                       </div>
                       <TripCard item={t} />
                     </div>

@@ -25,6 +25,9 @@ import ReceivingLocationsConnected from "./receiving/ReceivingLocationsConnected
 import ReceivingConnected from "./receiving/ReceivingConnected";
 import CapacityChart from "./receiving/CapacityChart";
 import ReceivingTripMap from "./receiving/ReceivingTripMap";
+import ReceivingVehicleSummary from "./receiving/ReceivingVehicleSummary.jsx";
+import ReceivingSettingsNavigation, {receivingMasterPages} from "./receiving/ReceivingSettingsNavigation.jsx";
+import {matchesTripState} from "./construction/operationsModel.mjs";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import "leaflet/dist/leaflet.css";
@@ -5277,8 +5280,9 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
     (siteFilter === "すべての現場" || (roleMode === "receiving" ? trip.to : trip.from).includes(siteFilter)) &&
     (cargoFilter === "すべての荷種" || cargoFilter === "建設発生土"));
   const visibleTrips = scopedTrips.filter(trip => tripFilter === "すべてのステータス" ||
+    (roleMode === "receiving" && ["有効予定","受入完了","受入待ち","取消"].includes(tripFilter) ? matchesTripState(trip,tripFilter) :
     (tripFilter === "配車済み" ? !!trip.vehicleId && trip.booking !== "取消" :
-    tripFilter === "向かっているダンプ" ? ["運行中","遅延"].includes(trip.status) : trip.status === tripFilter));
+    tripFilter === "向かっているダンプ" ? ["運行中","遅延"].includes(trip.status) : trip.status === tripFilter)));
   const hasActiveFilters =
     tripFilter !== "すべてのステータス" ||
     siteFilter !== "すべての現場" ||
@@ -5541,7 +5545,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
           </button>
         </div>
       </section>
-      <section className="control-summary">
+      {roleMode === "receiving" ? <ReceivingVehicleSummary rows={scopedTrips} selected={tripFilter} onSelect={key=>setTripFilter(tripFilter===key?'すべてのステータス':key)}/> : <section className="control-summary">
         <div className="summary-title">
           <b>本日の運行サマリー</b>
           <small>{`対象日 ${date}・成田モデル`}</small>
@@ -5572,7 +5576,7 @@ function ControlTowerPage({ navigate, setConfirm, collapsed, setCollapsed, roleM
             </span>
           </button>
         ))}
-      </section>
+      </section>}
       {operationMode && (
         <ControlOperationModal
           mode={operationMode}
@@ -6114,6 +6118,8 @@ export function App() {
       <ReceivingWorkspace key={page} page={page} model={receivingModel} navigate={navigate} />
     );
   }
+  if (roleMode === "receiving" && receivingMasterPages.includes(page))
+    body = <ReceivingSettingsNavigation page={page} navigate={navigate}>{body}</ReceivingSettingsNavigation>;
   if (livePage) {
     if (page === "UCRマッチング") body = (
         <MatchingWorkflowPanel key={`${roleMode}:${business.session.userId}`} role={roleMode} account={business.session} embedded onReservation={openBusinessBooking} onManagement={()=>navigate("搬出・受入スケジュール")} />
