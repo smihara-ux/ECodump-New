@@ -32,7 +32,7 @@ export default function DemoEntry() {
   return <main className="demo-entry entry-auth" data-theme={theme}>
     <div className="entry-wrap">
       <section className="entry-hero" aria-labelledby="entry-headline">
-        <img className="entry-road" src={`${import.meta.env.BASE_URL}entry/connection-road.jpg`} alt="" fetchPriority="high" />
+        <img className="entry-road" src={`${import.meta.env.BASE_URL}entry/connection-road-dump-20261111.jpg`} alt="" fetchPriority="high" />
         <header className="entry-header"><a href="./?entry=1"><img src={`${import.meta.env.BASE_URL}ecodump-logo.png`} alt="ECO DUMP" /><span>ECO DUMP<small>建設循環物流プラットフォーム</small></span></a></header>
         <div className="entry-intro"><h1 id="entry-headline">現場と受入先を、<br /><em>ひとつにつなぐ。</em></h1><p>搬出予定から受入・運行・伝票管理まで。<br />ひとつの入口から、あなたの業務へ。</p></div>
         <div className="entry-hero-footer"><span>CONNECT<br />CONSTRUCTION<br />FOR A CLEANER TOMORROW</span><p>土がつながる。<br />未来が動き出す。</p></div>
